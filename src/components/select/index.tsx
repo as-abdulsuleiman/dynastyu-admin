@@ -25,7 +25,7 @@ const SelectCard: FC<SelectCardProps> = ({
   return (
     <div className={className}>
       <Select value={selectedItem} onValueChange={onValueChange}>
-        {items.map((a, index) => {
+        {items?.map((a, index) => {
           return (
             <SelectItem
               key={index}
@@ -33,7 +33,7 @@ const SelectCard: FC<SelectCardProps> = ({
               icon={UserCircleIcon}
               className="cursor-pointer"
             >
-              {a.name}
+              {a?.name}
             </SelectItem>
           );
         })}
