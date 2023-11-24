@@ -21,7 +21,7 @@ import {
   Icon,
 } from "@tremor/react";
 import { useRouter } from "next/navigation";
-import { SortOrder, useGetUsersQuery } from "@/services/graphql";
+import { SortOrder, User, useGetUsersQuery } from "@/services/graphql";
 import { InformationCircleIcon } from "@heroicons/react/solid";
 import UsersTable from "@/components/users-table";
 import { Loader2 } from "lucide-react";
@@ -162,7 +162,7 @@ const Users: FC<UsersProps> = ({}) => {
           </TabPanel>
         </TabPanels>
       </TabGroup>
-      <UsersTable users={usersData?.users} />
+      <UsersTable users={usersData} />
     </main>
   );
 };

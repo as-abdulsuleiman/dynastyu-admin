@@ -22,7 +22,7 @@ import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 interface UsersTableProps {
-  users: User[];
+  users: any;
 }
 
 const UsersTable: FC<UsersTableProps> = ({ users }) => {
@@ -39,14 +39,14 @@ const UsersTable: FC<UsersTableProps> = ({ users }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {users?.map((item) => {
+          {users?.users?.map((item: User) => {
             if (item.accountType)
               return (
                 <TableRow key={item?.id}>
                   <TableCell>
                     <Flex alignItems="center" justifyContent="start">
                       <Avatar>
-                        <AvatarImage src={item?.avatar} alt="@shadcn" />
+                        <AvatarImage src={item?.avatar || ""} alt="@shadcn" />
                         <AvatarFallback>
                           {item?.firstname?.charAt(0)}
                           {item?.surname?.charAt(0)}
