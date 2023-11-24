@@ -35,8 +35,7 @@ const Page: FC<SignInProps> = ({}) => {
       password: "",
     },
   });
-  const onSubmit = async (data: FormData) => {
-    console.log("data", data?.email);
+  const onSubmit = async (data: any) => {
     setLoading(true);
     try {
       await login(data.email, data.password);
