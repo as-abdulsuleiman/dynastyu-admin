@@ -39,25 +39,10 @@ import { projectAuth } from "@/services/firebase/config";
 //     useGetUserLazyQuery,
 //   } from "@services/graphql";
 
-export type SignUpPayload = {
-  // userName: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  phone: string;
-  avatar?: string;
-  confirmPassword?: string;
-};
-
 const AuthContext = createContext<{
-  isLoggedIn: boolean;
-  isInitializing: boolean;
-  login: (
-    email: string,
-    password: string,
-    type?: "apple" | "google"
-  ) => Promise<void>;
+  isLoggedIn?: boolean;
+  isInitializing?: boolean;
+  login?: (email: string, password: string) => Promise<void>;
   refetch: () => void;
   logout: () => void;
   changePassword: (currentPassword: string, newPassword: string) => void;
@@ -71,8 +56,8 @@ const AuthContext = createContext<{
   changePassword: (_currentPassword, _newPassword) => null,
 });
 
-export const ProvideAuth = ({ children }: { children: React.ReactNode }) => {
-  const authValue = useAuthProvider();
+export const ProvideAuth = ({ children }: { children: any }) => {
+  const authValue: any = useAuthProvider();
   return (
     <AuthContext.Provider value={authValue}>{children}</AuthContext.Provider>
   );
@@ -102,7 +87,7 @@ function useAuthProvider() {
           },
         },
       });
-      if (!dbUser.data?.user) {
+      if (!dbUser?.data?.user) {
         return (window.location.href = "http://localhost:3000/sign-in");
       } else {
         return setUser(dbUser?.data?.user as User);
