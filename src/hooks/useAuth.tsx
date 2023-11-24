@@ -40,9 +40,9 @@ import { projectAuth } from "@/services/firebase/config";
 //   } from "@services/graphql";
 
 const AuthContext = createContext<{
-  isLoggedIn?: boolean;
-  isInitializing?: boolean;
-  login?: (email: string, password: string) => Promise<void>;
+  isLoggedIn: boolean;
+  isInitializing: boolean;
+  login: (email: string, password: string) => Promise<void>;
   refetch: () => void;
   logout: () => void;
   changePassword: (currentPassword: string, newPassword: string) => void;
