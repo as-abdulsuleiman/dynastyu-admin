@@ -160,7 +160,7 @@ export default function Home() {
     },
   ];
 
-  const chartdata = useMemo(() => {
+  const chartdata: any = useMemo(() => {
     return userData?.users?.map((a) => {
       return {
         date: format(new Date(a?.createdAt), "MMM dd"),
