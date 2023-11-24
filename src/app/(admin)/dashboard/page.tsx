@@ -64,7 +64,7 @@ export default function Home() {
     authStore: { user },
   } = useRootStore();
   const router = useRouter();
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState<any | null>(null);
 
   const { data: coachesData, loading: loadingCoaches } = useGetCoachesQuery({});
   const { data: atheletesData, loading: loadingAtheletes } =
@@ -249,10 +249,7 @@ export default function Home() {
                     categories={["2022", "2023"]}
                     colors={["emerald", "indigo"]}
                     yAxisWidth={30}
-                    onValueChange={(v) => {
-                      setValue(v);
-                      console.log("v", v);
-                    }}
+                    onValueChange={(v) => setValue(v)}
                     connectNulls={true}
                   />
                 </>
