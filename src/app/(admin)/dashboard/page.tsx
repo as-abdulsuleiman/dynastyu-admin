@@ -164,7 +164,7 @@ export default function Home() {
     return userData?.users?.map((a) => {
       return {
         date: format(new Date(a?.createdAt), "MMM dd"),
-        "2022": "50",
+        "2022": 50,
         "2023": 78,
       };
     });
