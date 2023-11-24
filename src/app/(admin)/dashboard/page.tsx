@@ -59,120 +59,12 @@ type Kpi = {
   loading: boolean;
 };
 
-type IconProps = {
-  className: string;
-  color: string;
-};
-
-const usNumberformatter = (number: number, decimals = 0) =>
-  Intl.NumberFormat("us", {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  })
-    .format(Number(number))
-    .toString();
-
-const formatters: { [key: string]: any } = {
-  Sales: (number: number) => `$ ${usNumberformatter(number)}`,
-  Profit: (number: number) => `$ ${usNumberformatter(number)}`,
-  Customers: (number: number) => `${usNumberformatter(number)}`,
-  Delta: (number: number) => `${usNumberformatter(number, 2)}%`,
-};
-
-const Kpis = {
-  Sales: "Sales",
-  Profit: "Profit",
-  Customers: "Customers",
-};
-
-const kpiList = [Kpis.Sales, Kpis.Profit, Kpis.Customers];
-
-export type DailyPerformance = {
-  date: string;
-  Sales: number;
-  Profit: number;
-  Customers: number;
-};
-
-export type SalesPerson = {
-  name: string;
-  leads: number;
-  sales: string;
-  quota: string;
-  variance: string;
-  region: string;
-  status: string;
-};
-
-export const salesPeople: SalesPerson[] = [
-  {
-    name: "Peter Doe",
-    leads: 45,
-    sales: "1,000,000",
-    quota: "1,200,000",
-    variance: "low",
-    region: "Region A",
-    status: "overperforming",
-  },
-  {
-    name: "Lena Whitehouse",
-    leads: 35,
-    sales: "900,000",
-    quota: "1,000,000",
-    variance: "low",
-    region: "Region B",
-    status: "average",
-  },
-  {
-    name: "Phil Less",
-    leads: 52,
-    sales: "930,000",
-    quota: "1,000,000",
-    variance: "medium",
-    region: "Region C",
-    status: "underperforming",
-  },
-  {
-    name: "John Camper",
-    leads: 22,
-    sales: "390,000",
-    quota: "250,000",
-    variance: "low",
-    region: "Region A",
-    status: "overperforming",
-  },
-  {
-    name: "Max Balmoore",
-    leads: 49,
-    sales: "860,000",
-    quota: "750,000",
-    variance: "low",
-    region: "Region B",
-    status: "overperforming",
-  },
-];
-
-const deltaTypes: { [key: string]: DeltaType } = {
-  average: "unchanged",
-  overperforming: "moderateIncrease",
-  underperforming: "moderateDecrease",
-};
-
 export default function Home() {
   const {
     authStore: { user },
   } = useRootStore();
   const router = useRouter();
   const [value, setValue] = useState(null);
-
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const selectedKpi = kpiList[selectedIndex];
-  const [selectedStatus, setSelectedStatus] = useState("all");
-  const [selectedNames, setSelectedNames] = useState<string[]>([]);
-
-  const isSalesPersonSelected = (salesPerson: SalesPerson) =>
-    (salesPerson.status === selectedStatus || selectedStatus === "all") &&
-    (selectedNames.includes(salesPerson.name) || selectedNames.length === 0);
 
   const { data: coachesData, loading: loadingCoaches } = useGetCoachesQuery({});
   const { data: atheletesData, loading: loadingAtheletes } =
@@ -268,33 +160,6 @@ export default function Home() {
     },
   ];
 
-  const performance: DailyPerformance[] = [
-    {
-      date: "2023-05-01",
-      Sales: 900.73,
-      Profit: 173,
-      Customers: 73,
-    },
-    {
-      date: "2023-05-02",
-      Sales: 1000.74,
-      Profit: 174.6,
-      Customers: 74,
-    },
-    {
-      date: "2023-05-03",
-      Sales: 1100.93,
-      Profit: 293.1,
-      Customers: 293,
-    },
-    {
-      date: "2023-05-04",
-      Sales: 1200.9,
-      Profit: 290.2,
-      Customers: 29,
-    },
-  ];
-
   const chartdata = useMemo(() => {
     return userData?.users?.map((a) => {
       return {
@@ -304,6 +169,7 @@ export default function Home() {
       };
     });
   }, [userData?.users]);
+
   return (
     <main className="w-full h-full">
       <Title>Dashboard Overview</Title>
@@ -373,7 +239,7 @@ export default function Home() {
                           tooltip="Shows daily increase or decrease of particular domain"
                         />
                       </Flex>
-                      <Text> Daily change per domain </Text>
+                      <Text>Daily change per user </Text>
                     </div>
                   </div>
                   <LineChart
