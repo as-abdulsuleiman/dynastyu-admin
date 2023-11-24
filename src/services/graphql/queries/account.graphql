@@ -1,0 +1,26 @@
+query getAccountTypes(
+  $where: AccountTypeWhereInput
+  $orderBy: [AccountTypeOrderByWithRelationInput!]
+  $cursor: AccountTypeWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [AccountTypeScalarFieldEnum!]
+) {
+  accountTypes(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    id
+    uuid
+    title
+    createdAt
+    role {
+      id
+      title
+    }
+  }
+}

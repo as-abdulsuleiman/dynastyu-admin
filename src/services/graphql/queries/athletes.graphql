@@ -1,0 +1,166 @@
+query getAthletes(
+  $where: AthleteProfileWhereInput
+  $orderBy: [AthleteProfileOrderByWithRelationInput!]
+  $cursor: AthleteProfileWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [AthleteProfileScalarFieldEnum!]
+) {
+  athleteProfiles(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    skip: $skip
+    take: $take
+    distinct: $distinct
+  ) {
+    id
+    uuid
+    createdAt
+    verified
+    school {
+      id
+      name
+      schoolType {
+        name
+        id
+      }
+    }
+    schoolId
+    userId
+    user {
+      id
+      firstname
+      surname
+      email
+      avatar
+      username
+      city
+      state
+    }
+    country {
+      name
+      id
+      flag
+      abbreviation
+    }
+    position {
+      name
+      id
+      uuid
+      shortName
+    }
+     verifiedBy{
+      id
+      user{
+        id
+        firstname
+        surname
+      }
+    }
+  }
+}
+
+query getPositions(
+  $where: PositionWhereInput
+  $orderBy: [PositionOrderByWithRelationInput!]
+  $cursor: PositionWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [PositionScalarFieldEnum!]
+) {
+  positions(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    name
+    id
+    uuid
+    shortName
+  }
+}
+
+query getPositionCategories(
+  $where: PositionCategoryWhereInput
+  $orderBy: [PositionCategoryOrderByWithRelationInput!]
+  $cursor: PositionCategoryWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [PositionCategoryScalarFieldEnum!]
+) {
+  positionCategories(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    name
+    id
+    uuid
+  }
+}
+
+query getCountry($where: CountryWhereUniqueInput!) {
+  country(where: $where) {
+    id
+    name
+    flag
+    abbreviation
+  }
+}
+
+
+mutation updateAthlete($data: AthleteProfileUpdateInput!, $where: AthleteProfileWhereUniqueInput!) {
+  updateOneAthleteProfile(where: $where, data: $data) {
+    id
+    uuid
+    createdAt
+    school {
+      id
+      name
+      schoolType {
+        name
+        id
+      }
+    }
+    schoolId
+    userId
+    user {
+      id
+      firstname
+      surname
+      email
+      avatar
+      username
+      city
+      state
+    }
+    country {
+      name
+      id
+      flag
+      abbreviation
+    }
+    position {
+      name
+      id
+      uuid
+      shortName
+    }
+    verified
+    verifiedBy{
+      id
+      user{
+        id
+        firstname
+        surname
+      }
+    }
+  }
+}

@@ -1,0 +1,164 @@
+mutation createPost($data: PostCreateInput!) {
+  createOnePost(data: $data) {
+    id
+    caption
+    images
+    videos
+    uuid
+    createdAt
+    updatedAt
+  }
+}
+
+query getPosts(
+  $where: PostWhereInput
+  $orderBy: [PostOrderByWithRelationInput!]
+  $cursor: PostWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [PostScalarFieldEnum!]
+  $userId: BigInt
+) {
+  posts(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    _count {
+      postLikes
+      comments
+    }
+    id
+    uuid
+    caption
+    images
+    videos
+    videosAspectRatio
+    user {
+      firstname
+      avatar
+      id
+      username
+      email
+      followedBy{
+        followerId
+        followingId
+        follower{
+          id
+          username
+          firstname
+          surname
+          email
+        }
+        following{
+          id
+          username
+          firstname
+          surname
+          email
+        }
+      }
+    }
+    postLikes(where: { userId: { equals: $userId } }) {
+      id
+      user {
+        id
+        firstname
+      }
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+query getPost($where: PostWhereUniqueInput!, $userId: BigInt) {
+  post(where: $where) {
+    _count {
+      postLikes
+      comments
+    }
+    id
+    uuid
+    caption
+    images
+    videos
+    videosAspectRatio
+    user {
+      firstname
+      avatar
+      id
+      username
+      email
+    }
+    postLikes(where: { userId: { equals: $userId } }) {
+      id
+      user {
+        id
+        firstname
+      }
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+query getPostLike($where: PostLikeWhereUniqueInput!) {
+  postLike(where: $where) {
+    id
+    user {
+      id
+      firstname
+    }
+  }
+}
+
+query getPostLikes($where: PostLikeWhereInput) {
+  postLikes(where: $where) {
+    id
+    user {
+      id
+      firstname
+    }
+  }
+}
+
+query getMedia($where: PostWhereInput) {
+  posts(where: $where) {
+    images
+    videos
+  }
+}
+mutation likePost($data: PostLikeCreateInput!) {
+  createOnePostLike(data: $data) {
+    id
+  }
+}
+
+mutation deletePostLike($where: PostLikeWhereUniqueInput!) {
+  deleteOnePostLike(where: $where) {
+    id
+  }
+}
+
+mutation processVideo($data: ProcessVideoInput!) {
+  processVideo(data: $data) {
+    jobId
+    aspectRatio
+  }
+}
+
+mutation flagPost($data: PostFlagCreateInput!) {
+  createOnePostFlag(data: $data) {
+    id
+  }
+}
+
+mutation deletePost($where: PostWhereUniqueInput!) {
+  deleteOnePost(where: $where) {
+    id
+    uuid
+  }
+}

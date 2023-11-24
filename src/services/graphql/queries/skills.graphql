@@ -1,0 +1,131 @@
+query getSkillTypes(
+  $where: SkillTypeWhereInput
+  $orderBy: [SkillTypeOrderByWithRelationInput!]
+  $cursor: SkillTypeWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [SkillTypeScalarFieldEnum!]
+) {
+  skillTypes(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    name
+    id
+    uuid
+    mask
+    unit
+    options
+    numberOfVideos
+    secondFieldName
+    description
+    secondValueOptions
+    videosLabels
+  }
+}
+
+query getSkills(
+  $where: SkillsWhereInput
+  $orderBy: [SkillsOrderByWithRelationInput!]
+  $cursor: SkillsWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [SkillsScalarFieldEnum!]
+) {
+  findManySkills(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    id
+    videos
+    secondValue
+    value
+    skillType {
+      id
+      name
+      options
+      numberOfVideos
+      secondFieldName
+      secondValueOptions
+      videosLabels
+    }
+    athlete {
+      id
+    }
+  }
+}
+
+query skillsTypes($where: SkillsWhereInput, $orderBy: [SkillTypeOrderByWithRelationInput!]) {
+  skillTypes(orderBy: $orderBy) {
+    id
+    name
+    options
+    numberOfVideos
+    secondFieldName
+    secondValueOptions
+    videosLabels
+    description
+    unit
+    skills(where: $where) {
+      id
+      videos
+      secondValue
+      value
+    }
+  }
+}
+
+mutation createSkill($data: SkillsCreateInput!) {
+  createOneSkills(data: $data) {
+    id
+    videos
+    secondValue
+    value
+    skillType {
+      id
+      name
+      options
+      numberOfVideos
+      secondFieldName
+      secondValueOptions
+      videosLabels
+    }
+  }
+}
+
+mutation upsertOneSkill(
+  $where: SkillsWhereUniqueInput!
+  $create: SkillsCreateInput!
+  $update: SkillsUpdateInput!
+) {
+  upsertOneSkills(create: $create, where: $where, update: $update) {
+    id
+    videos
+  }
+}
+
+mutation upsertOneSkill(
+  $where: SkillsWhereUniqueInput!
+  $create: SkillsCreateInput!
+  $update: SkillsUpdateInput!
+) {
+  upsertOneSkills(create: $create, where: $where, update: $update) {
+    id
+    videos
+  }
+}
+
+mutation updateOneSkill($data: SkillsUpdateInput!, $where: SkillsWhereUniqueInput!) {
+  updateOneSkills(data: $data, where: $where) {
+    id
+    videos
+  }
+}

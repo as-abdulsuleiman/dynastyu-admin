@@ -1,0 +1,315 @@
+fragment SchoolCommonParts on School {
+  id
+  uuid
+  name
+  email
+  schoolType {
+    id
+    name
+  }
+  logo
+  description
+  secondaryColor
+  primaryColor
+  description
+  city
+  state
+  latitude
+  longitude
+  radius
+  address
+  yearFounded
+  division
+  conference
+  yearlyTuition
+  undergradStudents
+}
+
+fragment SkillCommonParts on Skills {
+  id
+  value
+  verified
+  skillType {
+    id
+    name
+    description
+    secondFieldName
+    unit
+    isPrimaryForRecruitment
+    icon
+  }
+}
+
+query getSchools(
+  $where: SchoolWhereInput
+  $orderBy: [SchoolOrderByWithRelationInput!]
+  $cursor: SchoolWhereUniqueInput
+  $take: Int
+  $skip: Int
+) {
+  schools(where: $where, orderBy: $orderBy, cursor: $cursor, take: $take, skip: $skip) {
+    ...SchoolCommonParts
+  }
+}
+
+query getSchool($where: SchoolWhereUniqueInput!) {
+  school(where: $where) {
+    ...SchoolCommonParts
+  }
+}
+
+mutation createInterest($data: InterestedSchoolsCreateInput!) {
+  createOneInterestedSchools(data: $data) {
+    athlete {
+      id
+    }
+  }
+}
+
+query interestedSchools(
+  $where: InterestedSchoolsWhereInput
+  $orderBy: [InterestedSchoolsOrderByWithRelationInput!]
+  $cursor: InterestedSchoolsWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [InterestedSchoolsScalarFieldEnum!]
+) {
+  findManyInterestedSchools(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    userId
+    schoolId
+    AthleteCommitment
+    school {
+      id
+      name
+      logo
+    }
+    athleteId
+    athlete {
+      id
+      position {
+        id
+        name
+      }
+      skills {
+        ...SkillCommonParts
+      }
+    }
+    User {
+      id
+      firstname
+      surname
+      uuid
+      username
+      avatar
+    }
+  }
+}
+
+mutation updateInterest(
+  $data: InterestedSchoolsUpdateInput!
+  $where: InterestedSchoolsWhereUniqueInput!
+) {
+  updateOneInterestedSchools(data: $data, where: $where) {
+    schoolId
+    userId
+  }
+}
+
+mutation updateInterests(
+  $data: InterestedSchoolsUpdateManyMutationInput!
+  $where: InterestedSchoolsWhereInput
+) {
+  updateManyInterestedSchools(data: $data, where: $where) {
+    count
+  }
+}
+
+mutation updateSchool($data: SchoolUpdateInput!, $where: SchoolWhereUniqueInput!) {
+  updateOneSchool(data: $data, where: $where) {
+    ...SchoolCommonParts
+  }
+}
+
+query recruitedAthletes(
+  $where: RecruitedAthleteWhereInput
+  $orderBy: [RecruitedAthleteOrderByWithRelationInput!]
+  $cursor: RecruitedAthleteWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [RecruitedAthleteScalarFieldEnum!]
+) {
+  recruitedAthletes(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    athlete {
+      id
+      graduationYear
+      position {
+        name
+        category {
+          name
+        }
+      }
+      skills {
+        ...SkillCommonParts
+      }
+    }
+    User {
+      id
+      firstname
+      surname
+      avatar
+    }
+    school {
+      id
+      name
+      logo
+    }
+  }
+}
+
+query prospectAthletes(
+  $where: ProspectedAthleteWhereInput
+  $orderBy: [ProspectedAthleteOrderByWithRelationInput!]
+  $cursor: ProspectedAthleteWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [ProspectedAthleteScalarFieldEnum!]
+) {
+  prospectedAthletes(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    athlete {
+      id
+      graduationYear
+      position {
+        name
+        category {
+          name
+        }
+      }
+      skills {
+        ...SkillCommonParts
+      }
+    }
+    User {
+      id
+      firstname
+      surname
+      avatar
+    }
+    school {
+      id
+      name
+      logo
+    }
+  }
+}
+
+mutation createRecruit($data: RecruitedAthleteCreateInput!) {
+  createOneRecruitedAthlete(data: $data) {
+    athleteId
+    schoolId
+    userId
+  }
+}
+
+mutation createProspect($data: ProspectedAthleteCreateInput!) {
+  createOneProspectedAthlete(data: $data) {
+    athleteId
+    schoolId
+    userId
+  }
+}
+
+mutation deleteProspect($where: ProspectedAthleteWhereUniqueInput!) {
+  deleteOneProspectedAthlete(where: $where) {
+    athleteId
+    schoolId
+  }
+}
+
+mutation deleteInterest($where: InterestedSchoolsWhereUniqueInput!) {
+  deleteOneInterestedSchools(where: $where) {
+    athleteId
+    schoolId
+  }
+}
+
+mutation deleteRecruit($where: RecruitedAthleteWhereUniqueInput!) {
+  deleteOneRecruitedAthlete(where: $where) {
+    athleteId
+    schoolId
+  }
+}
+
+query evaluations(
+  $where: EvaluationWhereInput
+  $orderBy: [EvaluationOrderByWithRelationInput!]
+  $cursor: EvaluationWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [EvaluationScalarFieldEnum!]
+) {
+  evaluations(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    evaluationType
+    createdAt
+    note
+    images
+    videos
+    athleteId
+    schoolId
+    athlete {
+      user {
+        id
+        firstname
+        surname
+        avatar
+      }
+    }
+    createdBy {
+      id
+      firstname
+      surname
+      avatar
+      coachProfile {
+        title
+      }
+    }
+  }
+}
+
+mutation createEvaluation($data: EvaluationCreateInput!) {
+  createOneEvaluation(data: $data) {
+    evaluationType
+    note
+    images
+    videos
+    athleteId
+    schoolId
+  }
+}

@@ -1,0 +1,525 @@
+fragment UserCommonParts on User {
+  id
+  firstname
+  surname
+  email
+  isActive
+  avatar
+  dob
+  username
+  address
+  firebaseUid
+  city
+  state
+  createdAt
+  _count {
+    following
+    followedBy
+  }
+  following { 
+    followingId
+    following{
+      id
+      firstname
+      surname
+      username
+    }
+  }
+  athleteProfile {
+    id
+    uuid
+    graduationYear
+    hudlLink
+    recruitingContactName
+    recruitingPhoneNumber
+    recruitingRelationship
+    coachContactName
+    coachContactPhoneNumber
+    coachContactTitle
+    createdAt
+    playerCardUrl
+    verified
+    gpa
+    school {
+      id
+      name
+      logo
+      schoolType {
+        name
+        id
+      }
+    }
+    schoolId
+    transcripts {
+      name
+      url
+      id
+      uuid
+    }
+    position {
+      name
+      shortName
+      id
+    }
+    skills {
+      id
+      videos
+      value
+      skillType {
+        name
+        id
+        unit
+        options
+        numberOfVideos
+        secondFieldName
+        description
+        secondValueOptions
+      }
+    }
+    userId
+    country {
+      name
+      id
+      flag
+      abbreviation
+    }
+  }
+  coachProfile {
+    id
+    userId
+    title
+    city
+    state
+    country {
+      name
+      id
+      flag
+      abbreviation
+    }
+    school {
+      id
+      name
+      email
+      logo
+      description
+      secondaryColor
+      primaryColor
+      description
+      city
+      latitude
+      longitude
+      radius
+      address
+      yearFounded
+      division
+      conference
+      yearlyTuition
+      undergradStudents
+      schoolType {
+        name
+        id
+      }
+    }
+    schoolId
+  }
+  accountType {
+    id
+    title
+    createdAt
+    role {
+      id
+      title
+    }
+  }
+}
+
+query getFollowers(
+  $where: FollowsWhereInput
+  $orderBy: [FollowsOrderByWithRelationInput!]
+  $cursor: FollowsWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [FollowsScalarFieldEnum!]
+) {
+  findManyFollows(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    follower {
+      id
+      firstname
+      surname
+      email
+      avatar
+      dob
+      username
+      address
+      _count {
+        following
+        followedBy
+      }
+      athleteProfile {
+        id
+        uuid
+        gpa
+        createdAt
+        hudlLink
+        recruitingContactName
+        recruitingPhoneNumber
+        recruitingRelationship
+        playerCardUrl
+        verified
+        school {
+          id
+          name
+          schoolType {
+            name
+            id
+          }
+        }
+        schoolId
+        transcripts {
+          name
+          url
+          id
+          uuid
+        }
+        position {
+          name
+          shortName
+          id
+        }
+        skills {
+          id
+          videos
+          value
+          skillType {
+            name
+            id
+            unit
+            options
+            numberOfVideos
+            secondFieldName
+            description
+            secondValueOptions
+          }
+        }
+        userId
+        country {
+          name
+          id
+          flag
+          abbreviation
+        }
+      }
+      accountType {
+        id
+        title
+        createdAt
+        role {
+          id
+          title
+        }
+      }
+    }
+    following {
+      id
+      firstname
+      surname
+      email
+      avatar
+      dob
+      username
+      address
+      _count {
+        following
+        followedBy
+      }
+      athleteProfile {
+        id
+        uuid
+        gpa
+        createdAt
+        hudlLink
+        recruitingContactName
+        recruitingPhoneNumber
+        recruitingRelationship
+        playerCardUrl
+        school {
+          id
+          name
+          schoolType {
+            name
+            id
+          }
+        }
+        schoolId
+        transcripts {
+          name
+          url
+          id
+          uuid
+        }
+        position {
+          name
+          shortName
+          id
+        }
+        skills {
+          id
+          videos
+          value
+          skillType {
+            name
+            id
+            unit
+            options
+            numberOfVideos
+            secondFieldName
+            description
+            secondValueOptions
+          }
+        }
+        userId
+        country {
+          name
+          id
+          flag
+          abbreviation
+        }
+      }
+      accountType {
+        id
+        title
+        createdAt
+        role {
+          id
+          title
+        }
+      }
+    }
+  }
+}
+
+query getUser($where: UserWhereUniqueInput!, $userId: BigInt) {
+  user(where: $where) {
+    ...UserCommonParts
+    followedBy(where: { followerId: { equals: $userId } }) {
+      followerId
+      follower {
+        id
+        firstname
+        surname
+      }
+    }
+  }
+}
+
+query GetUsers(
+  $where: UserWhereInput
+  $orderBy: [UserOrderByWithRelationInput!]
+  $cursor: UserWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [UserScalarFieldEnum!]
+) {
+  users(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    ...UserCommonParts
+    id
+    firstname
+    surname
+    email
+    avatar
+    username
+    city
+    state
+    athleteProfile {
+      country {
+        name
+        id
+        flag
+        abbreviation
+      }
+    }
+  }
+}
+
+query getBlockedUsers(
+  $where: BlocksWhereInput
+  $orderBy: [BlocksOrderByWithRelationInput!]
+  $cursor: BlocksWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [BlocksScalarFieldEnum!]
+) {
+  findManyBlocks(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    blocked {
+      id
+      firstname
+      username
+      surname
+      avatar
+      accountType {
+        id
+        title
+      }
+    }
+  }
+}
+
+mutation createOneUser($data: UserCreateInput!) {
+  createOneUser(data: $data) {
+    ...UserCommonParts
+  }
+}
+
+mutation updateUser($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
+  updateOneUser(where: $where, data: $data) {
+    id
+    firstname
+    surname
+    email
+    avatar
+    dob
+    username
+    address
+    city
+    state
+    _count {
+      following
+      followedBy
+    }
+    athleteProfile {
+      id
+      uuid
+      gpa
+      createdAt
+      hudlLink
+      recruitingContactName
+      recruitingPhoneNumber
+      recruitingRelationship
+      playerCardUrl
+      verified
+      graduationYear
+      school {
+        id
+        name
+        email
+        logo
+        description
+        secondaryColor
+        primaryColor
+        description
+        city
+        latitude
+        longitude
+        radius
+        address
+        yearFounded
+        division
+        conference
+        yearlyTuition
+        undergradStudents
+        schoolType {
+          name
+          id
+        }
+      }
+      schoolId
+      transcripts {
+        name
+        url
+        id
+        uuid
+      }
+      position {
+        name
+        shortName
+        id
+      }
+      skills {
+        id
+        videos
+        value
+        skillType {
+          name
+          id
+          unit
+          options
+          numberOfVideos
+          secondFieldName
+          description
+          secondValueOptions
+        }
+      }
+      userId
+      country {
+        name
+        id
+        flag
+        abbreviation
+      }
+    }
+    accountType {
+      id
+      title
+      createdAt
+      role {
+        id
+        title
+      }
+    }
+  }
+}
+
+mutation followUser($data: FollowsCreateInput!) {
+  createOneFollows(data: $data) {
+    followerId
+    followingId
+  }
+}
+
+mutation blockUser($data: BlocksCreateInput!) {
+  createOneBlocks(data: $data) {
+    blockedId
+    blockedById
+  }
+}
+
+mutation unBlockUser($where: BlocksWhereUniqueInput!) {
+  deleteOneBlocks(where: $where) {
+    blockedId
+    blockedById
+  }
+}
+
+mutation unFollowUser($where: FollowsWhereUniqueInput!) {
+  deleteOneFollows(where: $where) {
+    followerId
+    followingId
+  }
+}
+
+mutation deleteUser($where: UserWhereUniqueInput!) {
+  deleteOneUser(where: $where) {
+    id
+  }
+}

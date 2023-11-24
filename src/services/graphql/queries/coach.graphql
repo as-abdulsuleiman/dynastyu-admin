@@ -1,0 +1,46 @@
+query getCoaches(
+  $where: CoachProfileWhereInput
+  $orderBy: [CoachProfileOrderByWithRelationInput!]
+  $cursor: CoachProfileWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [CoachProfileScalarFieldEnum!]
+) {
+  coachProfiles(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    skip: $skip
+    take: $take
+    distinct: $distinct
+  ) {
+    id
+    title
+    schoolId
+    user {
+      firstname
+      surname
+      id
+      avatar
+    }
+  }
+}
+
+mutation registerCoach($data: UserCreateInput!) {
+  registerCoach(data: $data) {
+    coach {
+      id
+      firstname
+      surname
+      email
+      coachProfile {
+        id
+        title
+        school {
+          id
+          name
+        }
+      }
+    }
+  }
+}
