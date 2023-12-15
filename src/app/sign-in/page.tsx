@@ -13,8 +13,11 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
+import * as yup from "yup";
 
 interface SignInProps {}
+
+type FormData = yup.InferType<typeof SignInValidator>;
 
 const Page: FC<SignInProps> = ({}) => {
   const { toast } = useToast();
@@ -35,7 +38,7 @@ const Page: FC<SignInProps> = ({}) => {
       password: "",
     },
   });
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormData) => {
     setLoading(true);
     try {
       await login(data.email, data.password);

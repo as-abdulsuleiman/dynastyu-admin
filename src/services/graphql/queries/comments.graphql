@@ -1,0 +1,77 @@
+query getComment($where: CommentWhereUniqueInput!) {
+  comment(where: $where) {
+    id
+    uuid
+    user {
+      firstname
+      surname
+      id
+      avatar
+    }
+    text
+    createdAt
+    _count {
+      commentLikes
+    }
+  }
+}
+
+query getCommentLike($where: CommentLikeWhereInput!) {
+  commentLikes(where: $where) {
+    id
+  }
+}
+
+query getComments(
+  $where: CommentWhereInput
+  $orderBy: [CommentOrderByWithRelationInput!]
+  $cursor: CommentWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [CommentScalarFieldEnum!]
+  $userId: BigInt
+) {
+  comments(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    id
+    uuid
+    user {
+      firstname
+      surname
+      id
+      avatar
+    }
+    text
+    createdAt
+    commentLikes(where: { userId: { equals: $userId } }) {
+      id
+    }
+    _count {
+      commentLikes
+    }
+  }
+}
+
+mutation createComment($data: CommentCreateInput!) {
+  createOneComment(data: $data) {
+    id
+  }
+}
+
+mutation likeComment($data: CommentLikeCreateInput!) {
+  createOneCommentLike(data: $data) {
+    id
+  }
+}
+
+mutation unLikeComment($where: CommentLikeWhereUniqueInput!) {
+  deleteOneCommentLike(where: $where) {
+    id
+  }
+}

@@ -483,6 +483,15 @@ export type AggregateInterestedSchools = {
   _sum?: Maybe<InterestedSchoolsSumAggregate>;
 };
 
+export type AggregateNotification = {
+  __typename?: 'AggregateNotification';
+  _avg?: Maybe<NotificationAvgAggregate>;
+  _count?: Maybe<NotificationCountAggregate>;
+  _max?: Maybe<NotificationMaxAggregate>;
+  _min?: Maybe<NotificationMinAggregate>;
+  _sum?: Maybe<NotificationSumAggregate>;
+};
+
 export type AggregatePosition = {
   __typename?: 'AggregatePosition';
   _avg?: Maybe<PositionAvgAggregate>;
@@ -544,6 +553,15 @@ export type AggregateRecruitedAthlete = {
   _max?: Maybe<RecruitedAthleteMaxAggregate>;
   _min?: Maybe<RecruitedAthleteMinAggregate>;
   _sum?: Maybe<RecruitedAthleteSumAggregate>;
+};
+
+export type AggregateRepost = {
+  __typename?: 'AggregateRepost';
+  _avg?: Maybe<RepostAvgAggregate>;
+  _count?: Maybe<RepostCountAggregate>;
+  _max?: Maybe<RepostMaxAggregate>;
+  _min?: Maybe<RepostMinAggregate>;
+  _sum?: Maybe<RepostSumAggregate>;
 };
 
 export type AggregateRole = {
@@ -2719,6 +2737,7 @@ export type CoachProfile = {
   user: User;
   userId: Scalars['BigInt']['output'];
   uuid: Scalars['String']['output'];
+  verified: Scalars['Boolean']['output'];
   verifiedAthletes: Array<AthleteProfile>;
 };
 
@@ -2766,6 +2785,7 @@ export type CoachProfileCountAggregate = {
   updatedAt: Scalars['Int']['output'];
   userId: Scalars['Int']['output'];
   uuid: Scalars['Int']['output'];
+  verified: Scalars['Int']['output'];
 };
 
 export type CoachProfileCountOrderByAggregateInput = {
@@ -2780,6 +2800,7 @@ export type CoachProfileCountOrderByAggregateInput = {
   updatedAt?: InputMaybe<SortOrder>;
   userId?: InputMaybe<SortOrder>;
   uuid?: InputMaybe<SortOrder>;
+  verified?: InputMaybe<SortOrder>;
 };
 
 export type CoachProfileCreateInput = {
@@ -2794,6 +2815,7 @@ export type CoachProfileCreateInput = {
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   user: UserCreateNestedOneWithoutCoachProfileInput;
   uuid?: InputMaybe<Scalars['String']['input']>;
+  verified?: InputMaybe<Scalars['Boolean']['input']>;
   verifiedAthletes?: InputMaybe<AthleteProfileCreateNestedManyWithoutVerifiedByInput>;
 };
 
@@ -2808,6 +2830,7 @@ export type CoachProfileCreateManyCountryInput = {
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   userId: Scalars['BigInt']['input'];
   uuid?: InputMaybe<Scalars['String']['input']>;
+  verified?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type CoachProfileCreateManyCountryInputEnvelope = {
@@ -2827,6 +2850,7 @@ export type CoachProfileCreateManyInput = {
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   userId: Scalars['BigInt']['input'];
   uuid?: InputMaybe<Scalars['String']['input']>;
+  verified?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type CoachProfileCreateManySchoolInput = {
@@ -2840,6 +2864,7 @@ export type CoachProfileCreateManySchoolInput = {
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   userId: Scalars['BigInt']['input'];
   uuid?: InputMaybe<Scalars['String']['input']>;
+  verified?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type CoachProfileCreateManySchoolInputEnvelope = {
@@ -2904,6 +2929,7 @@ export type CoachProfileCreateWithoutCountryInput = {
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   user: UserCreateNestedOneWithoutCoachProfileInput;
   uuid?: InputMaybe<Scalars['String']['input']>;
+  verified?: InputMaybe<Scalars['Boolean']['input']>;
   verifiedAthletes?: InputMaybe<AthleteProfileCreateNestedManyWithoutVerifiedByInput>;
 };
 
@@ -2918,6 +2944,7 @@ export type CoachProfileCreateWithoutSchoolInput = {
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   user: UserCreateNestedOneWithoutCoachProfileInput;
   uuid?: InputMaybe<Scalars['String']['input']>;
+  verified?: InputMaybe<Scalars['Boolean']['input']>;
   verifiedAthletes?: InputMaybe<AthleteProfileCreateNestedManyWithoutVerifiedByInput>;
 };
 
@@ -2932,6 +2959,7 @@ export type CoachProfileCreateWithoutUserInput = {
   title?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   uuid?: InputMaybe<Scalars['String']['input']>;
+  verified?: InputMaybe<Scalars['Boolean']['input']>;
   verifiedAthletes?: InputMaybe<AthleteProfileCreateNestedManyWithoutVerifiedByInput>;
 };
 
@@ -2947,6 +2975,7 @@ export type CoachProfileCreateWithoutVerifiedAthletesInput = {
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   user: UserCreateNestedOneWithoutCoachProfileInput;
   uuid?: InputMaybe<Scalars['String']['input']>;
+  verified?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type CoachProfileGroupBy = {
@@ -2967,6 +2996,7 @@ export type CoachProfileGroupBy = {
   updatedAt: Scalars['DateTime']['output'];
   userId: Scalars['BigInt']['output'];
   uuid: Scalars['String']['output'];
+  verified: Scalars['Boolean']['output'];
 };
 
 export type CoachProfileListRelationFilter = {
@@ -2988,6 +3018,7 @@ export type CoachProfileMaxAggregate = {
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   userId?: Maybe<Scalars['BigInt']['output']>;
   uuid?: Maybe<Scalars['String']['output']>;
+  verified?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type CoachProfileMaxOrderByAggregateInput = {
@@ -3002,6 +3033,7 @@ export type CoachProfileMaxOrderByAggregateInput = {
   updatedAt?: InputMaybe<SortOrder>;
   userId?: InputMaybe<SortOrder>;
   uuid?: InputMaybe<SortOrder>;
+  verified?: InputMaybe<SortOrder>;
 };
 
 export type CoachProfileMinAggregate = {
@@ -3017,6 +3049,7 @@ export type CoachProfileMinAggregate = {
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   userId?: Maybe<Scalars['BigInt']['output']>;
   uuid?: Maybe<Scalars['String']['output']>;
+  verified?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type CoachProfileMinOrderByAggregateInput = {
@@ -3031,6 +3064,7 @@ export type CoachProfileMinOrderByAggregateInput = {
   updatedAt?: InputMaybe<SortOrder>;
   userId?: InputMaybe<SortOrder>;
   uuid?: InputMaybe<SortOrder>;
+  verified?: InputMaybe<SortOrder>;
 };
 
 export type CoachProfileOrderByRelationAggregateInput = {
@@ -3054,6 +3088,7 @@ export type CoachProfileOrderByWithAggregationInput = {
   updatedAt?: InputMaybe<SortOrder>;
   userId?: InputMaybe<SortOrder>;
   uuid?: InputMaybe<SortOrder>;
+  verified?: InputMaybe<SortOrder>;
 };
 
 export type CoachProfileOrderByWithRelationInput = {
@@ -3071,6 +3106,7 @@ export type CoachProfileOrderByWithRelationInput = {
   user?: InputMaybe<UserOrderByWithRelationInput>;
   userId?: InputMaybe<SortOrder>;
   uuid?: InputMaybe<SortOrder>;
+  verified?: InputMaybe<SortOrder>;
   verifiedAthletes?: InputMaybe<AthleteProfileOrderByRelationAggregateInput>;
 };
 
@@ -3090,7 +3126,8 @@ export enum CoachProfileScalarFieldEnum {
   Title = 'title',
   UpdatedAt = 'updatedAt',
   UserId = 'userId',
-  Uuid = 'uuid'
+  Uuid = 'uuid',
+  Verified = 'verified'
 }
 
 export type CoachProfileScalarWhereInput = {
@@ -3108,6 +3145,7 @@ export type CoachProfileScalarWhereInput = {
   updatedAt?: InputMaybe<DateTimeFilter>;
   userId?: InputMaybe<BigIntFilter>;
   uuid?: InputMaybe<StringFilter>;
+  verified?: InputMaybe<BoolFilter>;
 };
 
 export type CoachProfileScalarWhereWithAggregatesInput = {
@@ -3125,6 +3163,7 @@ export type CoachProfileScalarWhereWithAggregatesInput = {
   updatedAt?: InputMaybe<DateTimeWithAggregatesFilter>;
   userId?: InputMaybe<BigIntWithAggregatesFilter>;
   uuid?: InputMaybe<StringWithAggregatesFilter>;
+  verified?: InputMaybe<BoolWithAggregatesFilter>;
 };
 
 export type CoachProfileSchoolIdUserIdCompoundUniqueInput = {
@@ -3159,6 +3198,7 @@ export type CoachProfileUpdateInput = {
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutCoachProfileNestedInput>;
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+  verified?: InputMaybe<BoolFieldUpdateOperationsInput>;
   verifiedAthletes?: InputMaybe<AthleteProfileUpdateManyWithoutVerifiedByNestedInput>;
 };
 
@@ -3171,6 +3211,7 @@ export type CoachProfileUpdateManyMutationInput = {
   title?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+  verified?: InputMaybe<BoolFieldUpdateOperationsInput>;
 };
 
 export type CoachProfileUpdateManyWithWhereWithoutCountryInput = {
@@ -3252,6 +3293,7 @@ export type CoachProfileUpdateWithoutCountryInput = {
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutCoachProfileNestedInput>;
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+  verified?: InputMaybe<BoolFieldUpdateOperationsInput>;
   verifiedAthletes?: InputMaybe<AthleteProfileUpdateManyWithoutVerifiedByNestedInput>;
 };
 
@@ -3266,6 +3308,7 @@ export type CoachProfileUpdateWithoutSchoolInput = {
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutCoachProfileNestedInput>;
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+  verified?: InputMaybe<BoolFieldUpdateOperationsInput>;
   verifiedAthletes?: InputMaybe<AthleteProfileUpdateManyWithoutVerifiedByNestedInput>;
 };
 
@@ -3280,6 +3323,7 @@ export type CoachProfileUpdateWithoutUserInput = {
   title?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+  verified?: InputMaybe<BoolFieldUpdateOperationsInput>;
   verifiedAthletes?: InputMaybe<AthleteProfileUpdateManyWithoutVerifiedByNestedInput>;
 };
 
@@ -3295,6 +3339,7 @@ export type CoachProfileUpdateWithoutVerifiedAthletesInput = {
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutCoachProfileNestedInput>;
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+  verified?: InputMaybe<BoolFieldUpdateOperationsInput>;
 };
 
 export type CoachProfileUpsertWithWhereUniqueWithoutCountryInput = {
@@ -3337,6 +3382,7 @@ export type CoachProfileWhereInput = {
   user?: InputMaybe<UserRelationFilter>;
   userId?: InputMaybe<BigIntFilter>;
   uuid?: InputMaybe<StringFilter>;
+  verified?: InputMaybe<BoolFilter>;
   verifiedAthletes?: InputMaybe<AthleteProfileListRelationFilter>;
 };
 
@@ -3353,6 +3399,7 @@ export type Comment = {
   commentLikes: Array<CommentLike>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['BigInt']['output'];
+  notifications: Array<Notification>;
   post: Post;
   postId: Scalars['BigInt']['output'];
   text: Scalars['String']['output'];
@@ -3372,6 +3419,16 @@ export type CommentCommentLikesArgs = {
   where?: InputMaybe<CommentLikeWhereInput>;
 };
 
+
+export type CommentNotificationsArgs = {
+  cursor?: InputMaybe<NotificationWhereUniqueInput>;
+  distinct?: InputMaybe<Array<NotificationScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<NotificationOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<NotificationWhereInput>;
+};
+
 export type CommentAvgAggregate = {
   __typename?: 'CommentAvgAggregate';
   id?: Maybe<Scalars['Float']['output']>;
@@ -3388,6 +3445,7 @@ export type CommentAvgOrderByAggregateInput = {
 export type CommentCount = {
   __typename?: 'CommentCount';
   commentLikes: Scalars['Int']['output'];
+  notifications: Scalars['Int']['output'];
 };
 
 export type CommentCountAggregate = {
@@ -3416,6 +3474,7 @@ export type CommentCreateInput = {
   commentLikes?: InputMaybe<CommentLikeCreateNestedManyWithoutCommentInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutCommentInput>;
   post: PostCreateNestedOneWithoutCommentsInput;
   text: Scalars['String']['input'];
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
@@ -3481,8 +3540,19 @@ export type CommentCreateNestedOneWithoutCommentLikesInput = {
   create?: InputMaybe<CommentCreateWithoutCommentLikesInput>;
 };
 
+export type CommentCreateNestedOneWithoutNotificationsInput = {
+  connect?: InputMaybe<CommentWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<CommentCreateOrConnectWithoutNotificationsInput>;
+  create?: InputMaybe<CommentCreateWithoutNotificationsInput>;
+};
+
 export type CommentCreateOrConnectWithoutCommentLikesInput = {
   create: CommentCreateWithoutCommentLikesInput;
+  where: CommentWhereUniqueInput;
+};
+
+export type CommentCreateOrConnectWithoutNotificationsInput = {
+  create: CommentCreateWithoutNotificationsInput;
   where: CommentWhereUniqueInput;
 };
 
@@ -3499,6 +3569,18 @@ export type CommentCreateOrConnectWithoutUserInput = {
 export type CommentCreateWithoutCommentLikesInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutCommentInput>;
+  post: PostCreateNestedOneWithoutCommentsInput;
+  text: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  user: UserCreateNestedOneWithoutCommentsInput;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CommentCreateWithoutNotificationsInput = {
+  commentLikes?: InputMaybe<CommentLikeCreateNestedManyWithoutCommentInput>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   post: PostCreateNestedOneWithoutCommentsInput;
   text: Scalars['String']['input'];
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
@@ -3510,6 +3592,7 @@ export type CommentCreateWithoutPostInput = {
   commentLikes?: InputMaybe<CommentLikeCreateNestedManyWithoutCommentInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutCommentInput>;
   text: Scalars['String']['input'];
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   user: UserCreateNestedOneWithoutCommentsInput;
@@ -3520,6 +3603,7 @@ export type CommentCreateWithoutUserInput = {
   commentLikes?: InputMaybe<CommentLikeCreateNestedManyWithoutCommentInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutCommentInput>;
   post: PostCreateNestedOneWithoutCommentsInput;
   text: Scalars['String']['input'];
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
@@ -3544,14 +3628,26 @@ export type CommentGroupBy = {
 
 export type CommentLike = {
   __typename?: 'CommentLike';
+  _count?: Maybe<CommentLikeCount>;
   comment: Comment;
   commentId: Scalars['BigInt']['output'];
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['BigInt']['output'];
+  notifications: Array<Notification>;
   updatedAt: Scalars['DateTime']['output'];
   user: User;
   userId: Scalars['BigInt']['output'];
   uuid: Scalars['String']['output'];
+};
+
+
+export type CommentLikeNotificationsArgs = {
+  cursor?: InputMaybe<NotificationWhereUniqueInput>;
+  distinct?: InputMaybe<Array<NotificationScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<NotificationOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<NotificationWhereInput>;
 };
 
 export type CommentLikeAvgAggregate = {
@@ -3565,6 +3661,11 @@ export type CommentLikeAvgOrderByAggregateInput = {
   commentId?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
   userId?: InputMaybe<SortOrder>;
+};
+
+export type CommentLikeCount = {
+  __typename?: 'CommentLikeCount';
+  notifications: Scalars['Int']['output'];
 };
 
 export type CommentLikeCountAggregate = {
@@ -3591,6 +3692,7 @@ export type CommentLikeCreateInput = {
   comment: CommentCreateNestedOneWithoutCommentLikesInput;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutCommentLikeInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   user: UserCreateNestedOneWithoutCommentLikesInput;
   uuid?: InputMaybe<Scalars['String']['input']>;
@@ -3645,8 +3747,19 @@ export type CommentLikeCreateNestedManyWithoutUserInput = {
   createMany?: InputMaybe<CommentLikeCreateManyUserInputEnvelope>;
 };
 
+export type CommentLikeCreateNestedOneWithoutNotificationsInput = {
+  connect?: InputMaybe<CommentLikeWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<CommentLikeCreateOrConnectWithoutNotificationsInput>;
+  create?: InputMaybe<CommentLikeCreateWithoutNotificationsInput>;
+};
+
 export type CommentLikeCreateOrConnectWithoutCommentInput = {
   create: CommentLikeCreateWithoutCommentInput;
+  where: CommentLikeWhereUniqueInput;
+};
+
+export type CommentLikeCreateOrConnectWithoutNotificationsInput = {
+  create: CommentLikeCreateWithoutNotificationsInput;
   where: CommentLikeWhereUniqueInput;
 };
 
@@ -3658,6 +3771,16 @@ export type CommentLikeCreateOrConnectWithoutUserInput = {
 export type CommentLikeCreateWithoutCommentInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutCommentLikeInput>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  user: UserCreateNestedOneWithoutCommentLikesInput;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CommentLikeCreateWithoutNotificationsInput = {
+  comment: CommentCreateNestedOneWithoutCommentLikesInput;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   user: UserCreateNestedOneWithoutCommentLikesInput;
   uuid?: InputMaybe<Scalars['String']['input']>;
@@ -3667,6 +3790,7 @@ export type CommentLikeCreateWithoutUserInput = {
   comment: CommentCreateNestedOneWithoutCommentLikesInput;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutCommentLikeInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   uuid?: InputMaybe<Scalars['String']['input']>;
 };
@@ -3753,10 +3877,16 @@ export type CommentLikeOrderByWithRelationInput = {
   commentId?: InputMaybe<SortOrder>;
   createdAt?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
+  notifications?: InputMaybe<NotificationOrderByRelationAggregateInput>;
   updatedAt?: InputMaybe<SortOrder>;
   user?: InputMaybe<UserOrderByWithRelationInput>;
   userId?: InputMaybe<SortOrder>;
   uuid?: InputMaybe<SortOrder>;
+};
+
+export type CommentLikeRelationFilter = {
+  is?: InputMaybe<CommentLikeWhereInput>;
+  isNot?: InputMaybe<CommentLikeWhereInput>;
 };
 
 export enum CommentLikeScalarFieldEnum {
@@ -3809,6 +3939,7 @@ export type CommentLikeUpdateInput = {
   comment?: InputMaybe<CommentUpdateOneRequiredWithoutCommentLikesNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutCommentLikeNestedInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutCommentLikesNestedInput>;
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -3859,6 +3990,16 @@ export type CommentLikeUpdateManyWithoutUserNestedInput = {
   upsert?: InputMaybe<Array<CommentLikeUpsertWithWhereUniqueWithoutUserInput>>;
 };
 
+export type CommentLikeUpdateOneWithoutNotificationsNestedInput = {
+  connect?: InputMaybe<CommentLikeWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<CommentLikeCreateOrConnectWithoutNotificationsInput>;
+  create?: InputMaybe<CommentLikeCreateWithoutNotificationsInput>;
+  delete?: InputMaybe<Scalars['Boolean']['input']>;
+  disconnect?: InputMaybe<Scalars['Boolean']['input']>;
+  update?: InputMaybe<CommentLikeUpdateWithoutNotificationsInput>;
+  upsert?: InputMaybe<CommentLikeUpsertWithoutNotificationsInput>;
+};
+
 export type CommentLikeUpdateWithWhereUniqueWithoutCommentInput = {
   data: CommentLikeUpdateWithoutCommentInput;
   where: CommentLikeWhereUniqueInput;
@@ -3872,6 +4013,16 @@ export type CommentLikeUpdateWithWhereUniqueWithoutUserInput = {
 export type CommentLikeUpdateWithoutCommentInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutCommentLikeNestedInput>;
+  updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutCommentLikesNestedInput>;
+  uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+};
+
+export type CommentLikeUpdateWithoutNotificationsInput = {
+  comment?: InputMaybe<CommentUpdateOneRequiredWithoutCommentLikesNestedInput>;
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutCommentLikesNestedInput>;
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -3881,6 +4032,7 @@ export type CommentLikeUpdateWithoutUserInput = {
   comment?: InputMaybe<CommentUpdateOneRequiredWithoutCommentLikesNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutCommentLikeNestedInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
 };
@@ -3897,6 +4049,11 @@ export type CommentLikeUpsertWithWhereUniqueWithoutUserInput = {
   where: CommentLikeWhereUniqueInput;
 };
 
+export type CommentLikeUpsertWithoutNotificationsInput = {
+  create: CommentLikeCreateWithoutNotificationsInput;
+  update: CommentLikeUpdateWithoutNotificationsInput;
+};
+
 export type CommentLikeWhereInput = {
   AND?: InputMaybe<Array<CommentLikeWhereInput>>;
   NOT?: InputMaybe<Array<CommentLikeWhereInput>>;
@@ -3905,6 +4062,7 @@ export type CommentLikeWhereInput = {
   commentId?: InputMaybe<BigIntFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<BigIntFilter>;
+  notifications?: InputMaybe<NotificationListRelationFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   user?: InputMaybe<UserRelationFilter>;
   userId?: InputMaybe<BigIntFilter>;
@@ -3987,6 +4145,7 @@ export type CommentOrderByWithRelationInput = {
   commentLikes?: InputMaybe<CommentLikeOrderByRelationAggregateInput>;
   createdAt?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
+  notifications?: InputMaybe<NotificationOrderByRelationAggregateInput>;
   post?: InputMaybe<PostOrderByWithRelationInput>;
   postId?: InputMaybe<SortOrder>;
   text?: InputMaybe<SortOrder>;
@@ -4054,6 +4213,7 @@ export type CommentUpdateInput = {
   commentLikes?: InputMaybe<CommentLikeUpdateManyWithoutCommentNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutCommentNestedInput>;
   post?: InputMaybe<PostUpdateOneRequiredWithoutCommentsNestedInput>;
   text?: InputMaybe<StringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
@@ -4115,6 +4275,16 @@ export type CommentUpdateOneRequiredWithoutCommentLikesNestedInput = {
   upsert?: InputMaybe<CommentUpsertWithoutCommentLikesInput>;
 };
 
+export type CommentUpdateOneWithoutNotificationsNestedInput = {
+  connect?: InputMaybe<CommentWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<CommentCreateOrConnectWithoutNotificationsInput>;
+  create?: InputMaybe<CommentCreateWithoutNotificationsInput>;
+  delete?: InputMaybe<Scalars['Boolean']['input']>;
+  disconnect?: InputMaybe<Scalars['Boolean']['input']>;
+  update?: InputMaybe<CommentUpdateWithoutNotificationsInput>;
+  upsert?: InputMaybe<CommentUpsertWithoutNotificationsInput>;
+};
+
 export type CommentUpdateWithWhereUniqueWithoutPostInput = {
   data: CommentUpdateWithoutPostInput;
   where: CommentWhereUniqueInput;
@@ -4128,6 +4298,18 @@ export type CommentUpdateWithWhereUniqueWithoutUserInput = {
 export type CommentUpdateWithoutCommentLikesInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutCommentNestedInput>;
+  post?: InputMaybe<PostUpdateOneRequiredWithoutCommentsNestedInput>;
+  text?: InputMaybe<StringFieldUpdateOperationsInput>;
+  updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutCommentsNestedInput>;
+  uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+};
+
+export type CommentUpdateWithoutNotificationsInput = {
+  commentLikes?: InputMaybe<CommentLikeUpdateManyWithoutCommentNestedInput>;
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
   post?: InputMaybe<PostUpdateOneRequiredWithoutCommentsNestedInput>;
   text?: InputMaybe<StringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
@@ -4139,6 +4321,7 @@ export type CommentUpdateWithoutPostInput = {
   commentLikes?: InputMaybe<CommentLikeUpdateManyWithoutCommentNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutCommentNestedInput>;
   text?: InputMaybe<StringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutCommentsNestedInput>;
@@ -4149,6 +4332,7 @@ export type CommentUpdateWithoutUserInput = {
   commentLikes?: InputMaybe<CommentLikeUpdateManyWithoutCommentNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutCommentNestedInput>;
   post?: InputMaybe<PostUpdateOneRequiredWithoutCommentsNestedInput>;
   text?: InputMaybe<StringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
@@ -4172,6 +4356,11 @@ export type CommentUpsertWithoutCommentLikesInput = {
   update: CommentUpdateWithoutCommentLikesInput;
 };
 
+export type CommentUpsertWithoutNotificationsInput = {
+  create: CommentCreateWithoutNotificationsInput;
+  update: CommentUpdateWithoutNotificationsInput;
+};
+
 export type CommentWhereInput = {
   AND?: InputMaybe<Array<CommentWhereInput>>;
   NOT?: InputMaybe<Array<CommentWhereInput>>;
@@ -4179,6 +4368,7 @@ export type CommentWhereInput = {
   commentLikes?: InputMaybe<CommentLikeListRelationFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<BigIntFilter>;
+  notifications?: InputMaybe<NotificationListRelationFilter>;
   post?: InputMaybe<PostRelationFilter>;
   postId?: InputMaybe<BigIntFilter>;
   text?: InputMaybe<StringFilter>;
@@ -4203,6 +4393,7 @@ export type Country = {
   flag: Scalars['String']['output'];
   id: Scalars['BigInt']['output'];
   name: Scalars['String']['output'];
+  schools: Array<School>;
   updatedAt: Scalars['DateTime']['output'];
   uuid: Scalars['String']['output'];
 };
@@ -4227,6 +4418,16 @@ export type CountryCoachProfilesArgs = {
   where?: InputMaybe<CoachProfileWhereInput>;
 };
 
+
+export type CountrySchoolsArgs = {
+  cursor?: InputMaybe<SchoolWhereUniqueInput>;
+  distinct?: InputMaybe<Array<SchoolScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<SchoolOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<SchoolWhereInput>;
+};
+
 export type CountryAvgAggregate = {
   __typename?: 'CountryAvgAggregate';
   id?: Maybe<Scalars['Float']['output']>;
@@ -4240,6 +4441,7 @@ export type CountryCount = {
   __typename?: 'CountryCount';
   athleteProfiles: Scalars['Int']['output'];
   coachProfiles: Scalars['Int']['output'];
+  schools: Scalars['Int']['output'];
 };
 
 export type CountryCountAggregate = {
@@ -4272,6 +4474,7 @@ export type CountryCreateInput = {
   flag: Scalars['String']['input'];
   id?: InputMaybe<Scalars['BigInt']['input']>;
   name: Scalars['String']['input'];
+  schools?: InputMaybe<SchoolCreateNestedManyWithoutCountryInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   uuid?: InputMaybe<Scalars['String']['input']>;
 };
@@ -4298,6 +4501,12 @@ export type CountryCreateNestedOneWithoutCoachProfilesInput = {
   create?: InputMaybe<CountryCreateWithoutCoachProfilesInput>;
 };
 
+export type CountryCreateNestedOneWithoutSchoolsInput = {
+  connect?: InputMaybe<CountryWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<CountryCreateOrConnectWithoutSchoolsInput>;
+  create?: InputMaybe<CountryCreateWithoutSchoolsInput>;
+};
+
 export type CountryCreateOrConnectWithoutAthleteProfilesInput = {
   create: CountryCreateWithoutAthleteProfilesInput;
   where: CountryWhereUniqueInput;
@@ -4308,6 +4517,11 @@ export type CountryCreateOrConnectWithoutCoachProfilesInput = {
   where: CountryWhereUniqueInput;
 };
 
+export type CountryCreateOrConnectWithoutSchoolsInput = {
+  create: CountryCreateWithoutSchoolsInput;
+  where: CountryWhereUniqueInput;
+};
+
 export type CountryCreateWithoutAthleteProfilesInput = {
   abbreviation: Scalars['String']['input'];
   coachProfiles?: InputMaybe<CoachProfileCreateNestedManyWithoutCountryInput>;
@@ -4315,6 +4529,7 @@ export type CountryCreateWithoutAthleteProfilesInput = {
   flag: Scalars['String']['input'];
   id?: InputMaybe<Scalars['BigInt']['input']>;
   name: Scalars['String']['input'];
+  schools?: InputMaybe<SchoolCreateNestedManyWithoutCountryInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   uuid?: InputMaybe<Scalars['String']['input']>;
 };
@@ -4322,6 +4537,19 @@ export type CountryCreateWithoutAthleteProfilesInput = {
 export type CountryCreateWithoutCoachProfilesInput = {
   abbreviation: Scalars['String']['input'];
   athleteProfiles?: InputMaybe<AthleteProfileCreateNestedManyWithoutCountryInput>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  flag: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  name: Scalars['String']['input'];
+  schools?: InputMaybe<SchoolCreateNestedManyWithoutCountryInput>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CountryCreateWithoutSchoolsInput = {
+  abbreviation: Scalars['String']['input'];
+  athleteProfiles?: InputMaybe<AthleteProfileCreateNestedManyWithoutCountryInput>;
+  coachProfiles?: InputMaybe<CoachProfileCreateNestedManyWithoutCountryInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   flag: Scalars['String']['input'];
   id?: InputMaybe<Scalars['BigInt']['input']>;
@@ -4411,6 +4639,7 @@ export type CountryOrderByWithRelationInput = {
   flag?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
   name?: InputMaybe<SortOrder>;
+  schools?: InputMaybe<SchoolOrderByRelationAggregateInput>;
   updatedAt?: InputMaybe<SortOrder>;
   uuid?: InputMaybe<SortOrder>;
 };
@@ -4460,6 +4689,7 @@ export type CountryUpdateInput = {
   flag?: InputMaybe<StringFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
   name?: InputMaybe<StringFieldUpdateOperationsInput>;
+  schools?: InputMaybe<SchoolUpdateManyWithoutCountryNestedInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
 };
@@ -4494,6 +4724,16 @@ export type CountryUpdateOneWithoutCoachProfilesNestedInput = {
   upsert?: InputMaybe<CountryUpsertWithoutCoachProfilesInput>;
 };
 
+export type CountryUpdateOneWithoutSchoolsNestedInput = {
+  connect?: InputMaybe<CountryWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<CountryCreateOrConnectWithoutSchoolsInput>;
+  create?: InputMaybe<CountryCreateWithoutSchoolsInput>;
+  delete?: InputMaybe<Scalars['Boolean']['input']>;
+  disconnect?: InputMaybe<Scalars['Boolean']['input']>;
+  update?: InputMaybe<CountryUpdateWithoutSchoolsInput>;
+  upsert?: InputMaybe<CountryUpsertWithoutSchoolsInput>;
+};
+
 export type CountryUpdateWithoutAthleteProfilesInput = {
   abbreviation?: InputMaybe<StringFieldUpdateOperationsInput>;
   coachProfiles?: InputMaybe<CoachProfileUpdateManyWithoutCountryNestedInput>;
@@ -4501,6 +4741,7 @@ export type CountryUpdateWithoutAthleteProfilesInput = {
   flag?: InputMaybe<StringFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
   name?: InputMaybe<StringFieldUpdateOperationsInput>;
+  schools?: InputMaybe<SchoolUpdateManyWithoutCountryNestedInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
 };
@@ -4508,6 +4749,19 @@ export type CountryUpdateWithoutAthleteProfilesInput = {
 export type CountryUpdateWithoutCoachProfilesInput = {
   abbreviation?: InputMaybe<StringFieldUpdateOperationsInput>;
   athleteProfiles?: InputMaybe<AthleteProfileUpdateManyWithoutCountryNestedInput>;
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  flag?: InputMaybe<StringFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  name?: InputMaybe<StringFieldUpdateOperationsInput>;
+  schools?: InputMaybe<SchoolUpdateManyWithoutCountryNestedInput>;
+  updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+};
+
+export type CountryUpdateWithoutSchoolsInput = {
+  abbreviation?: InputMaybe<StringFieldUpdateOperationsInput>;
+  athleteProfiles?: InputMaybe<AthleteProfileUpdateManyWithoutCountryNestedInput>;
+  coachProfiles?: InputMaybe<CoachProfileUpdateManyWithoutCountryNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   flag?: InputMaybe<StringFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
@@ -4526,6 +4780,11 @@ export type CountryUpsertWithoutCoachProfilesInput = {
   update: CountryUpdateWithoutCoachProfilesInput;
 };
 
+export type CountryUpsertWithoutSchoolsInput = {
+  create: CountryCreateWithoutSchoolsInput;
+  update: CountryUpdateWithoutSchoolsInput;
+};
+
 export type CountryWhereInput = {
   AND?: InputMaybe<Array<CountryWhereInput>>;
   NOT?: InputMaybe<Array<CountryWhereInput>>;
@@ -4537,6 +4796,7 @@ export type CountryWhereInput = {
   flag?: InputMaybe<StringFilter>;
   id?: InputMaybe<BigIntFilter>;
   name?: InputMaybe<StringFilter>;
+  schools?: InputMaybe<SchoolListRelationFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   uuid?: InputMaybe<StringFilter>;
 };
@@ -6134,6 +6394,7 @@ export type Mutation = {
   createManyEvaluation: AffectedRowsOutput;
   createManyFollows: AffectedRowsOutput;
   createManyInterestedSchools: AffectedRowsOutput;
+  createManyNotification: AffectedRowsOutput;
   createManyPosition: AffectedRowsOutput;
   createManyPositionCategory: AffectedRowsOutput;
   createManyPost: AffectedRowsOutput;
@@ -6141,6 +6402,7 @@ export type Mutation = {
   createManyPostLike: AffectedRowsOutput;
   createManyProspectedAthlete: AffectedRowsOutput;
   createManyRecruitedAthlete: AffectedRowsOutput;
+  createManyRepost: AffectedRowsOutput;
   createManyRole: AffectedRowsOutput;
   createManySchool: AffectedRowsOutput;
   createManySchoolType: AffectedRowsOutput;
@@ -6158,6 +6420,7 @@ export type Mutation = {
   createOneEvaluation: Evaluation;
   createOneFollows: Follows;
   createOneInterestedSchools: InterestedSchools;
+  createOneNotification: Notification;
   createOnePosition: Position;
   createOnePositionCategory: PositionCategory;
   createOnePost: Post;
@@ -6165,6 +6428,7 @@ export type Mutation = {
   createOnePostLike: PostLike;
   createOneProspectedAthlete: ProspectedAthlete;
   createOneRecruitedAthlete: RecruitedAthlete;
+  createOneRepost: Repost;
   createOneRole: Role;
   createOneSchool: School;
   createOneSchoolType: SchoolType;
@@ -6182,6 +6446,7 @@ export type Mutation = {
   deleteManyEvaluation: AffectedRowsOutput;
   deleteManyFollows: AffectedRowsOutput;
   deleteManyInterestedSchools: AffectedRowsOutput;
+  deleteManyNotification: AffectedRowsOutput;
   deleteManyPosition: AffectedRowsOutput;
   deleteManyPositionCategory: AffectedRowsOutput;
   deleteManyPost: AffectedRowsOutput;
@@ -6189,6 +6454,7 @@ export type Mutation = {
   deleteManyPostLike: AffectedRowsOutput;
   deleteManyProspectedAthlete: AffectedRowsOutput;
   deleteManyRecruitedAthlete: AffectedRowsOutput;
+  deleteManyRepost: AffectedRowsOutput;
   deleteManyRole: AffectedRowsOutput;
   deleteManySchool: AffectedRowsOutput;
   deleteManySchoolType: AffectedRowsOutput;
@@ -6206,6 +6472,7 @@ export type Mutation = {
   deleteOneEvaluation?: Maybe<Evaluation>;
   deleteOneFollows?: Maybe<Follows>;
   deleteOneInterestedSchools?: Maybe<InterestedSchools>;
+  deleteOneNotification?: Maybe<Notification>;
   deleteOnePosition?: Maybe<Position>;
   deleteOnePositionCategory?: Maybe<PositionCategory>;
   deleteOnePost?: Maybe<Post>;
@@ -6213,6 +6480,7 @@ export type Mutation = {
   deleteOnePostLike?: Maybe<PostLike>;
   deleteOneProspectedAthlete?: Maybe<ProspectedAthlete>;
   deleteOneRecruitedAthlete?: Maybe<RecruitedAthlete>;
+  deleteOneRepost?: Maybe<Repost>;
   deleteOneRole?: Maybe<Role>;
   deleteOneSchool?: Maybe<School>;
   deleteOneSchoolType?: Maybe<SchoolType>;
@@ -6233,6 +6501,7 @@ export type Mutation = {
   updateManyEvaluation: AffectedRowsOutput;
   updateManyFollows: AffectedRowsOutput;
   updateManyInterestedSchools: AffectedRowsOutput;
+  updateManyNotification: AffectedRowsOutput;
   updateManyPosition: AffectedRowsOutput;
   updateManyPositionCategory: AffectedRowsOutput;
   updateManyPost: AffectedRowsOutput;
@@ -6240,6 +6509,7 @@ export type Mutation = {
   updateManyPostLike: AffectedRowsOutput;
   updateManyProspectedAthlete: AffectedRowsOutput;
   updateManyRecruitedAthlete: AffectedRowsOutput;
+  updateManyRepost: AffectedRowsOutput;
   updateManyRole: AffectedRowsOutput;
   updateManySchool: AffectedRowsOutput;
   updateManySchoolType: AffectedRowsOutput;
@@ -6257,6 +6527,7 @@ export type Mutation = {
   updateOneEvaluation?: Maybe<Evaluation>;
   updateOneFollows?: Maybe<Follows>;
   updateOneInterestedSchools?: Maybe<InterestedSchools>;
+  updateOneNotification?: Maybe<Notification>;
   updateOnePosition?: Maybe<Position>;
   updateOnePositionCategory?: Maybe<PositionCategory>;
   updateOnePost?: Maybe<Post>;
@@ -6264,6 +6535,7 @@ export type Mutation = {
   updateOnePostLike?: Maybe<PostLike>;
   updateOneProspectedAthlete?: Maybe<ProspectedAthlete>;
   updateOneRecruitedAthlete?: Maybe<RecruitedAthlete>;
+  updateOneRepost?: Maybe<Repost>;
   updateOneRole?: Maybe<Role>;
   updateOneSchool?: Maybe<School>;
   updateOneSchoolType?: Maybe<SchoolType>;
@@ -6282,6 +6554,7 @@ export type Mutation = {
   upsertOneEvaluation: Evaluation;
   upsertOneFollows: Follows;
   upsertOneInterestedSchools: InterestedSchools;
+  upsertOneNotification: Notification;
   upsertOnePosition: Position;
   upsertOnePositionCategory: PositionCategory;
   upsertOnePost: Post;
@@ -6289,6 +6562,7 @@ export type Mutation = {
   upsertOnePostLike: PostLike;
   upsertOneProspectedAthlete: ProspectedAthlete;
   upsertOneRecruitedAthlete: RecruitedAthlete;
+  upsertOneRepost: Repost;
   upsertOneRole: Role;
   upsertOneSchool: School;
   upsertOneSchoolType: SchoolType;
@@ -6359,6 +6633,12 @@ export type MutationCreateManyInterestedSchoolsArgs = {
 };
 
 
+export type MutationCreateManyNotificationArgs = {
+  data: Array<NotificationCreateManyInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
 export type MutationCreateManyPositionArgs = {
   data: Array<PositionCreateManyInput>;
   skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
@@ -6397,6 +6677,12 @@ export type MutationCreateManyProspectedAthleteArgs = {
 
 export type MutationCreateManyRecruitedAthleteArgs = {
   data: Array<RecruitedAthleteCreateManyInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationCreateManyRepostArgs = {
+  data: Array<RepostCreateManyInput>;
   skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -6493,6 +6779,11 @@ export type MutationCreateOneInterestedSchoolsArgs = {
 };
 
 
+export type MutationCreateOneNotificationArgs = {
+  data: NotificationCreateInput;
+};
+
+
 export type MutationCreateOnePositionArgs = {
   data: PositionCreateInput;
 };
@@ -6525,6 +6816,11 @@ export type MutationCreateOneProspectedAthleteArgs = {
 
 export type MutationCreateOneRecruitedAthleteArgs = {
   data: RecruitedAthleteCreateInput;
+};
+
+
+export type MutationCreateOneRepostArgs = {
+  data: RepostCreateInput;
 };
 
 
@@ -6613,6 +6909,11 @@ export type MutationDeleteManyInterestedSchoolsArgs = {
 };
 
 
+export type MutationDeleteManyNotificationArgs = {
+  where?: InputMaybe<NotificationWhereInput>;
+};
+
+
 export type MutationDeleteManyPositionArgs = {
   where?: InputMaybe<PositionWhereInput>;
 };
@@ -6645,6 +6946,11 @@ export type MutationDeleteManyProspectedAthleteArgs = {
 
 export type MutationDeleteManyRecruitedAthleteArgs = {
   where?: InputMaybe<RecruitedAthleteWhereInput>;
+};
+
+
+export type MutationDeleteManyRepostArgs = {
+  where?: InputMaybe<RepostWhereInput>;
 };
 
 
@@ -6733,6 +7039,11 @@ export type MutationDeleteOneInterestedSchoolsArgs = {
 };
 
 
+export type MutationDeleteOneNotificationArgs = {
+  where: NotificationWhereUniqueInput;
+};
+
+
 export type MutationDeleteOnePositionArgs = {
   where: PositionWhereUniqueInput;
 };
@@ -6765,6 +7076,11 @@ export type MutationDeleteOneProspectedAthleteArgs = {
 
 export type MutationDeleteOneRecruitedAthleteArgs = {
   where: RecruitedAthleteWhereUniqueInput;
+};
+
+
+export type MutationDeleteOneRepostArgs = {
+  where: RepostWhereUniqueInput;
 };
 
 
@@ -6878,6 +7194,12 @@ export type MutationUpdateManyInterestedSchoolsArgs = {
 };
 
 
+export type MutationUpdateManyNotificationArgs = {
+  data: NotificationUpdateManyMutationInput;
+  where?: InputMaybe<NotificationWhereInput>;
+};
+
+
 export type MutationUpdateManyPositionArgs = {
   data: PositionUpdateManyMutationInput;
   where?: InputMaybe<PositionWhereInput>;
@@ -6917,6 +7239,12 @@ export type MutationUpdateManyProspectedAthleteArgs = {
 export type MutationUpdateManyRecruitedAthleteArgs = {
   data: RecruitedAthleteUpdateManyMutationInput;
   where?: InputMaybe<RecruitedAthleteWhereInput>;
+};
+
+
+export type MutationUpdateManyRepostArgs = {
+  data: RepostUpdateManyMutationInput;
+  where?: InputMaybe<RepostWhereInput>;
 };
 
 
@@ -7022,6 +7350,12 @@ export type MutationUpdateOneInterestedSchoolsArgs = {
 };
 
 
+export type MutationUpdateOneNotificationArgs = {
+  data: NotificationUpdateInput;
+  where: NotificationWhereUniqueInput;
+};
+
+
 export type MutationUpdateOnePositionArgs = {
   data: PositionUpdateInput;
   where: PositionWhereUniqueInput;
@@ -7061,6 +7395,12 @@ export type MutationUpdateOneProspectedAthleteArgs = {
 export type MutationUpdateOneRecruitedAthleteArgs = {
   data: RecruitedAthleteUpdateInput;
   where: RecruitedAthleteWhereUniqueInput;
+};
+
+
+export type MutationUpdateOneRepostArgs = {
+  data: RepostUpdateInput;
+  where: RepostWhereUniqueInput;
 };
 
 
@@ -7181,6 +7521,13 @@ export type MutationUpsertOneInterestedSchoolsArgs = {
 };
 
 
+export type MutationUpsertOneNotificationArgs = {
+  create: NotificationCreateInput;
+  update: NotificationUpdateInput;
+  where: NotificationWhereUniqueInput;
+};
+
+
 export type MutationUpsertOnePositionArgs = {
   create: PositionCreateInput;
   update: PositionUpdateInput;
@@ -7227,6 +7574,13 @@ export type MutationUpsertOneRecruitedAthleteArgs = {
   create: RecruitedAthleteCreateInput;
   update: RecruitedAthleteUpdateInput;
   where: RecruitedAthleteWhereUniqueInput;
+};
+
+
+export type MutationUpsertOneRepostArgs = {
+  create: RepostCreateInput;
+  update: RepostUpdateInput;
+  where: RepostWhereUniqueInput;
 };
 
 
@@ -7594,6 +7948,780 @@ export type NestedStringWithAggregatesFilter = {
   not?: InputMaybe<NestedStringWithAggregatesFilter>;
   notIn?: InputMaybe<Array<Scalars['String']['input']>>;
   startsWith?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type Notification = {
+  __typename?: 'Notification';
+  body: Scalars['String']['output'];
+  comment?: Maybe<Comment>;
+  commentId?: Maybe<Scalars['BigInt']['output']>;
+  commentLike?: Maybe<CommentLike>;
+  commentLikeId?: Maybe<Scalars['BigInt']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['BigInt']['output'];
+  navigateToPage: Scalars['String']['output'];
+  post?: Maybe<Post>;
+  postId?: Maybe<Scalars['BigInt']['output']>;
+  postLike?: Maybe<PostLike>;
+  postLikeId?: Maybe<Scalars['BigInt']['output']>;
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  user: User;
+  userId: Scalars['BigInt']['output'];
+  uuid: Scalars['String']['output'];
+};
+
+export type NotificationAvgAggregate = {
+  __typename?: 'NotificationAvgAggregate';
+  commentId?: Maybe<Scalars['Float']['output']>;
+  commentLikeId?: Maybe<Scalars['Float']['output']>;
+  id?: Maybe<Scalars['Float']['output']>;
+  postId?: Maybe<Scalars['Float']['output']>;
+  postLikeId?: Maybe<Scalars['Float']['output']>;
+  userId?: Maybe<Scalars['Float']['output']>;
+};
+
+export type NotificationAvgOrderByAggregateInput = {
+  commentId?: InputMaybe<SortOrder>;
+  commentLikeId?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  postId?: InputMaybe<SortOrder>;
+  postLikeId?: InputMaybe<SortOrder>;
+  userId?: InputMaybe<SortOrder>;
+};
+
+export type NotificationCountAggregate = {
+  __typename?: 'NotificationCountAggregate';
+  _all: Scalars['Int']['output'];
+  body: Scalars['Int']['output'];
+  commentId: Scalars['Int']['output'];
+  commentLikeId: Scalars['Int']['output'];
+  createdAt: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  navigateToPage: Scalars['Int']['output'];
+  postId: Scalars['Int']['output'];
+  postLikeId: Scalars['Int']['output'];
+  title: Scalars['Int']['output'];
+  updatedAt: Scalars['Int']['output'];
+  userId: Scalars['Int']['output'];
+  uuid: Scalars['Int']['output'];
+};
+
+export type NotificationCountOrderByAggregateInput = {
+  body?: InputMaybe<SortOrder>;
+  commentId?: InputMaybe<SortOrder>;
+  commentLikeId?: InputMaybe<SortOrder>;
+  createdAt?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  navigateToPage?: InputMaybe<SortOrder>;
+  postId?: InputMaybe<SortOrder>;
+  postLikeId?: InputMaybe<SortOrder>;
+  title?: InputMaybe<SortOrder>;
+  updatedAt?: InputMaybe<SortOrder>;
+  userId?: InputMaybe<SortOrder>;
+  uuid?: InputMaybe<SortOrder>;
+};
+
+export type NotificationCreateInput = {
+  body: Scalars['String']['input'];
+  comment?: InputMaybe<CommentCreateNestedOneWithoutNotificationsInput>;
+  commentLike?: InputMaybe<CommentLikeCreateNestedOneWithoutNotificationsInput>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  navigateToPage: Scalars['String']['input'];
+  post?: InputMaybe<PostCreateNestedOneWithoutNotificationsInput>;
+  postLike?: InputMaybe<PostLikeCreateNestedOneWithoutNotificationsInput>;
+  title: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  user: UserCreateNestedOneWithoutNotificationInput;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type NotificationCreateManyCommentInput = {
+  body: Scalars['String']['input'];
+  commentLikeId?: InputMaybe<Scalars['BigInt']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  navigateToPage: Scalars['String']['input'];
+  postId?: InputMaybe<Scalars['BigInt']['input']>;
+  postLikeId?: InputMaybe<Scalars['BigInt']['input']>;
+  title: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  userId: Scalars['BigInt']['input'];
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type NotificationCreateManyCommentInputEnvelope = {
+  data: Array<NotificationCreateManyCommentInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type NotificationCreateManyCommentLikeInput = {
+  body: Scalars['String']['input'];
+  commentId?: InputMaybe<Scalars['BigInt']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  navigateToPage: Scalars['String']['input'];
+  postId?: InputMaybe<Scalars['BigInt']['input']>;
+  postLikeId?: InputMaybe<Scalars['BigInt']['input']>;
+  title: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  userId: Scalars['BigInt']['input'];
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type NotificationCreateManyCommentLikeInputEnvelope = {
+  data: Array<NotificationCreateManyCommentLikeInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type NotificationCreateManyInput = {
+  body: Scalars['String']['input'];
+  commentId?: InputMaybe<Scalars['BigInt']['input']>;
+  commentLikeId?: InputMaybe<Scalars['BigInt']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  navigateToPage: Scalars['String']['input'];
+  postId?: InputMaybe<Scalars['BigInt']['input']>;
+  postLikeId?: InputMaybe<Scalars['BigInt']['input']>;
+  title: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  userId: Scalars['BigInt']['input'];
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type NotificationCreateManyPostInput = {
+  body: Scalars['String']['input'];
+  commentId?: InputMaybe<Scalars['BigInt']['input']>;
+  commentLikeId?: InputMaybe<Scalars['BigInt']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  navigateToPage: Scalars['String']['input'];
+  postLikeId?: InputMaybe<Scalars['BigInt']['input']>;
+  title: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  userId: Scalars['BigInt']['input'];
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type NotificationCreateManyPostInputEnvelope = {
+  data: Array<NotificationCreateManyPostInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type NotificationCreateManyPostLikeInput = {
+  body: Scalars['String']['input'];
+  commentId?: InputMaybe<Scalars['BigInt']['input']>;
+  commentLikeId?: InputMaybe<Scalars['BigInt']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  navigateToPage: Scalars['String']['input'];
+  postId?: InputMaybe<Scalars['BigInt']['input']>;
+  title: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  userId: Scalars['BigInt']['input'];
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type NotificationCreateManyPostLikeInputEnvelope = {
+  data: Array<NotificationCreateManyPostLikeInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type NotificationCreateNestedManyWithoutCommentInput = {
+  connect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<NotificationCreateOrConnectWithoutCommentInput>>;
+  create?: InputMaybe<Array<NotificationCreateWithoutCommentInput>>;
+  createMany?: InputMaybe<NotificationCreateManyCommentInputEnvelope>;
+};
+
+export type NotificationCreateNestedManyWithoutCommentLikeInput = {
+  connect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<NotificationCreateOrConnectWithoutCommentLikeInput>>;
+  create?: InputMaybe<Array<NotificationCreateWithoutCommentLikeInput>>;
+  createMany?: InputMaybe<NotificationCreateManyCommentLikeInputEnvelope>;
+};
+
+export type NotificationCreateNestedManyWithoutPostInput = {
+  connect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<NotificationCreateOrConnectWithoutPostInput>>;
+  create?: InputMaybe<Array<NotificationCreateWithoutPostInput>>;
+  createMany?: InputMaybe<NotificationCreateManyPostInputEnvelope>;
+};
+
+export type NotificationCreateNestedManyWithoutPostLikeInput = {
+  connect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<NotificationCreateOrConnectWithoutPostLikeInput>>;
+  create?: InputMaybe<Array<NotificationCreateWithoutPostLikeInput>>;
+  createMany?: InputMaybe<NotificationCreateManyPostLikeInputEnvelope>;
+};
+
+export type NotificationCreateNestedOneWithoutUserInput = {
+  connect?: InputMaybe<NotificationWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<NotificationCreateOrConnectWithoutUserInput>;
+  create?: InputMaybe<NotificationCreateWithoutUserInput>;
+};
+
+export type NotificationCreateOrConnectWithoutCommentInput = {
+  create: NotificationCreateWithoutCommentInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationCreateOrConnectWithoutCommentLikeInput = {
+  create: NotificationCreateWithoutCommentLikeInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationCreateOrConnectWithoutPostInput = {
+  create: NotificationCreateWithoutPostInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationCreateOrConnectWithoutPostLikeInput = {
+  create: NotificationCreateWithoutPostLikeInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationCreateOrConnectWithoutUserInput = {
+  create: NotificationCreateWithoutUserInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationCreateWithoutCommentInput = {
+  body: Scalars['String']['input'];
+  commentLike?: InputMaybe<CommentLikeCreateNestedOneWithoutNotificationsInput>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  navigateToPage: Scalars['String']['input'];
+  post?: InputMaybe<PostCreateNestedOneWithoutNotificationsInput>;
+  postLike?: InputMaybe<PostLikeCreateNestedOneWithoutNotificationsInput>;
+  title: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  user: UserCreateNestedOneWithoutNotificationInput;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type NotificationCreateWithoutCommentLikeInput = {
+  body: Scalars['String']['input'];
+  comment?: InputMaybe<CommentCreateNestedOneWithoutNotificationsInput>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  navigateToPage: Scalars['String']['input'];
+  post?: InputMaybe<PostCreateNestedOneWithoutNotificationsInput>;
+  postLike?: InputMaybe<PostLikeCreateNestedOneWithoutNotificationsInput>;
+  title: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  user: UserCreateNestedOneWithoutNotificationInput;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type NotificationCreateWithoutPostInput = {
+  body: Scalars['String']['input'];
+  comment?: InputMaybe<CommentCreateNestedOneWithoutNotificationsInput>;
+  commentLike?: InputMaybe<CommentLikeCreateNestedOneWithoutNotificationsInput>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  navigateToPage: Scalars['String']['input'];
+  postLike?: InputMaybe<PostLikeCreateNestedOneWithoutNotificationsInput>;
+  title: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  user: UserCreateNestedOneWithoutNotificationInput;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type NotificationCreateWithoutPostLikeInput = {
+  body: Scalars['String']['input'];
+  comment?: InputMaybe<CommentCreateNestedOneWithoutNotificationsInput>;
+  commentLike?: InputMaybe<CommentLikeCreateNestedOneWithoutNotificationsInput>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  navigateToPage: Scalars['String']['input'];
+  post?: InputMaybe<PostCreateNestedOneWithoutNotificationsInput>;
+  title: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  user: UserCreateNestedOneWithoutNotificationInput;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type NotificationCreateWithoutUserInput = {
+  body: Scalars['String']['input'];
+  comment?: InputMaybe<CommentCreateNestedOneWithoutNotificationsInput>;
+  commentLike?: InputMaybe<CommentLikeCreateNestedOneWithoutNotificationsInput>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  navigateToPage: Scalars['String']['input'];
+  post?: InputMaybe<PostCreateNestedOneWithoutNotificationsInput>;
+  postLike?: InputMaybe<PostLikeCreateNestedOneWithoutNotificationsInput>;
+  title: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type NotificationGroupBy = {
+  __typename?: 'NotificationGroupBy';
+  _avg?: Maybe<NotificationAvgAggregate>;
+  _count?: Maybe<NotificationCountAggregate>;
+  _max?: Maybe<NotificationMaxAggregate>;
+  _min?: Maybe<NotificationMinAggregate>;
+  _sum?: Maybe<NotificationSumAggregate>;
+  body: Scalars['String']['output'];
+  commentId?: Maybe<Scalars['BigInt']['output']>;
+  commentLikeId?: Maybe<Scalars['BigInt']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['BigInt']['output'];
+  navigateToPage: Scalars['String']['output'];
+  postId?: Maybe<Scalars['BigInt']['output']>;
+  postLikeId?: Maybe<Scalars['BigInt']['output']>;
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  userId: Scalars['BigInt']['output'];
+  uuid: Scalars['String']['output'];
+};
+
+export type NotificationListRelationFilter = {
+  every?: InputMaybe<NotificationWhereInput>;
+  none?: InputMaybe<NotificationWhereInput>;
+  some?: InputMaybe<NotificationWhereInput>;
+};
+
+export type NotificationMaxAggregate = {
+  __typename?: 'NotificationMaxAggregate';
+  body?: Maybe<Scalars['String']['output']>;
+  commentId?: Maybe<Scalars['BigInt']['output']>;
+  commentLikeId?: Maybe<Scalars['BigInt']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['BigInt']['output']>;
+  navigateToPage?: Maybe<Scalars['String']['output']>;
+  postId?: Maybe<Scalars['BigInt']['output']>;
+  postLikeId?: Maybe<Scalars['BigInt']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  userId?: Maybe<Scalars['BigInt']['output']>;
+  uuid?: Maybe<Scalars['String']['output']>;
+};
+
+export type NotificationMaxOrderByAggregateInput = {
+  body?: InputMaybe<SortOrder>;
+  commentId?: InputMaybe<SortOrder>;
+  commentLikeId?: InputMaybe<SortOrder>;
+  createdAt?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  navigateToPage?: InputMaybe<SortOrder>;
+  postId?: InputMaybe<SortOrder>;
+  postLikeId?: InputMaybe<SortOrder>;
+  title?: InputMaybe<SortOrder>;
+  updatedAt?: InputMaybe<SortOrder>;
+  userId?: InputMaybe<SortOrder>;
+  uuid?: InputMaybe<SortOrder>;
+};
+
+export type NotificationMinAggregate = {
+  __typename?: 'NotificationMinAggregate';
+  body?: Maybe<Scalars['String']['output']>;
+  commentId?: Maybe<Scalars['BigInt']['output']>;
+  commentLikeId?: Maybe<Scalars['BigInt']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['BigInt']['output']>;
+  navigateToPage?: Maybe<Scalars['String']['output']>;
+  postId?: Maybe<Scalars['BigInt']['output']>;
+  postLikeId?: Maybe<Scalars['BigInt']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  userId?: Maybe<Scalars['BigInt']['output']>;
+  uuid?: Maybe<Scalars['String']['output']>;
+};
+
+export type NotificationMinOrderByAggregateInput = {
+  body?: InputMaybe<SortOrder>;
+  commentId?: InputMaybe<SortOrder>;
+  commentLikeId?: InputMaybe<SortOrder>;
+  createdAt?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  navigateToPage?: InputMaybe<SortOrder>;
+  postId?: InputMaybe<SortOrder>;
+  postLikeId?: InputMaybe<SortOrder>;
+  title?: InputMaybe<SortOrder>;
+  updatedAt?: InputMaybe<SortOrder>;
+  userId?: InputMaybe<SortOrder>;
+  uuid?: InputMaybe<SortOrder>;
+};
+
+export type NotificationOrderByRelationAggregateInput = {
+  _count?: InputMaybe<SortOrder>;
+};
+
+export type NotificationOrderByWithAggregationInput = {
+  _avg?: InputMaybe<NotificationAvgOrderByAggregateInput>;
+  _count?: InputMaybe<NotificationCountOrderByAggregateInput>;
+  _max?: InputMaybe<NotificationMaxOrderByAggregateInput>;
+  _min?: InputMaybe<NotificationMinOrderByAggregateInput>;
+  _sum?: InputMaybe<NotificationSumOrderByAggregateInput>;
+  body?: InputMaybe<SortOrder>;
+  commentId?: InputMaybe<SortOrder>;
+  commentLikeId?: InputMaybe<SortOrder>;
+  createdAt?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  navigateToPage?: InputMaybe<SortOrder>;
+  postId?: InputMaybe<SortOrder>;
+  postLikeId?: InputMaybe<SortOrder>;
+  title?: InputMaybe<SortOrder>;
+  updatedAt?: InputMaybe<SortOrder>;
+  userId?: InputMaybe<SortOrder>;
+  uuid?: InputMaybe<SortOrder>;
+};
+
+export type NotificationOrderByWithRelationInput = {
+  body?: InputMaybe<SortOrder>;
+  comment?: InputMaybe<CommentOrderByWithRelationInput>;
+  commentId?: InputMaybe<SortOrder>;
+  commentLike?: InputMaybe<CommentLikeOrderByWithRelationInput>;
+  commentLikeId?: InputMaybe<SortOrder>;
+  createdAt?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  navigateToPage?: InputMaybe<SortOrder>;
+  post?: InputMaybe<PostOrderByWithRelationInput>;
+  postId?: InputMaybe<SortOrder>;
+  postLike?: InputMaybe<PostLikeOrderByWithRelationInput>;
+  postLikeId?: InputMaybe<SortOrder>;
+  title?: InputMaybe<SortOrder>;
+  updatedAt?: InputMaybe<SortOrder>;
+  user?: InputMaybe<UserOrderByWithRelationInput>;
+  userId?: InputMaybe<SortOrder>;
+  uuid?: InputMaybe<SortOrder>;
+};
+
+export type NotificationRelationFilter = {
+  is?: InputMaybe<NotificationWhereInput>;
+  isNot?: InputMaybe<NotificationWhereInput>;
+};
+
+export enum NotificationScalarFieldEnum {
+  Body = 'body',
+  CommentId = 'commentId',
+  CommentLikeId = 'commentLikeId',
+  CreatedAt = 'createdAt',
+  Id = 'id',
+  NavigateToPage = 'navigateToPage',
+  PostId = 'postId',
+  PostLikeId = 'postLikeId',
+  Title = 'title',
+  UpdatedAt = 'updatedAt',
+  UserId = 'userId',
+  Uuid = 'uuid'
+}
+
+export type NotificationScalarWhereInput = {
+  AND?: InputMaybe<Array<NotificationScalarWhereInput>>;
+  NOT?: InputMaybe<Array<NotificationScalarWhereInput>>;
+  OR?: InputMaybe<Array<NotificationScalarWhereInput>>;
+  body?: InputMaybe<StringFilter>;
+  commentId?: InputMaybe<BigIntNullableFilter>;
+  commentLikeId?: InputMaybe<BigIntNullableFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<BigIntFilter>;
+  navigateToPage?: InputMaybe<StringFilter>;
+  postId?: InputMaybe<BigIntNullableFilter>;
+  postLikeId?: InputMaybe<BigIntNullableFilter>;
+  title?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  userId?: InputMaybe<BigIntFilter>;
+  uuid?: InputMaybe<StringFilter>;
+};
+
+export type NotificationScalarWhereWithAggregatesInput = {
+  AND?: InputMaybe<Array<NotificationScalarWhereWithAggregatesInput>>;
+  NOT?: InputMaybe<Array<NotificationScalarWhereWithAggregatesInput>>;
+  OR?: InputMaybe<Array<NotificationScalarWhereWithAggregatesInput>>;
+  body?: InputMaybe<StringWithAggregatesFilter>;
+  commentId?: InputMaybe<BigIntNullableWithAggregatesFilter>;
+  commentLikeId?: InputMaybe<BigIntNullableWithAggregatesFilter>;
+  createdAt?: InputMaybe<DateTimeWithAggregatesFilter>;
+  id?: InputMaybe<BigIntWithAggregatesFilter>;
+  navigateToPage?: InputMaybe<StringWithAggregatesFilter>;
+  postId?: InputMaybe<BigIntNullableWithAggregatesFilter>;
+  postLikeId?: InputMaybe<BigIntNullableWithAggregatesFilter>;
+  title?: InputMaybe<StringWithAggregatesFilter>;
+  updatedAt?: InputMaybe<DateTimeWithAggregatesFilter>;
+  userId?: InputMaybe<BigIntWithAggregatesFilter>;
+  uuid?: InputMaybe<StringWithAggregatesFilter>;
+};
+
+export type NotificationSumAggregate = {
+  __typename?: 'NotificationSumAggregate';
+  commentId?: Maybe<Scalars['BigInt']['output']>;
+  commentLikeId?: Maybe<Scalars['BigInt']['output']>;
+  id?: Maybe<Scalars['BigInt']['output']>;
+  postId?: Maybe<Scalars['BigInt']['output']>;
+  postLikeId?: Maybe<Scalars['BigInt']['output']>;
+  userId?: Maybe<Scalars['BigInt']['output']>;
+};
+
+export type NotificationSumOrderByAggregateInput = {
+  commentId?: InputMaybe<SortOrder>;
+  commentLikeId?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  postId?: InputMaybe<SortOrder>;
+  postLikeId?: InputMaybe<SortOrder>;
+  userId?: InputMaybe<SortOrder>;
+};
+
+export type NotificationUpdateInput = {
+  body?: InputMaybe<StringFieldUpdateOperationsInput>;
+  comment?: InputMaybe<CommentUpdateOneWithoutNotificationsNestedInput>;
+  commentLike?: InputMaybe<CommentLikeUpdateOneWithoutNotificationsNestedInput>;
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  navigateToPage?: InputMaybe<StringFieldUpdateOperationsInput>;
+  post?: InputMaybe<PostUpdateOneWithoutNotificationsNestedInput>;
+  postLike?: InputMaybe<PostLikeUpdateOneWithoutNotificationsNestedInput>;
+  title?: InputMaybe<StringFieldUpdateOperationsInput>;
+  updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutNotificationNestedInput>;
+  uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+};
+
+export type NotificationUpdateManyMutationInput = {
+  body?: InputMaybe<StringFieldUpdateOperationsInput>;
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  navigateToPage?: InputMaybe<StringFieldUpdateOperationsInput>;
+  title?: InputMaybe<StringFieldUpdateOperationsInput>;
+  updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+};
+
+export type NotificationUpdateManyWithWhereWithoutCommentInput = {
+  data: NotificationUpdateManyMutationInput;
+  where: NotificationScalarWhereInput;
+};
+
+export type NotificationUpdateManyWithWhereWithoutCommentLikeInput = {
+  data: NotificationUpdateManyMutationInput;
+  where: NotificationScalarWhereInput;
+};
+
+export type NotificationUpdateManyWithWhereWithoutPostInput = {
+  data: NotificationUpdateManyMutationInput;
+  where: NotificationScalarWhereInput;
+};
+
+export type NotificationUpdateManyWithWhereWithoutPostLikeInput = {
+  data: NotificationUpdateManyMutationInput;
+  where: NotificationScalarWhereInput;
+};
+
+export type NotificationUpdateManyWithoutCommentLikeNestedInput = {
+  connect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<NotificationCreateOrConnectWithoutCommentLikeInput>>;
+  create?: InputMaybe<Array<NotificationCreateWithoutCommentLikeInput>>;
+  createMany?: InputMaybe<NotificationCreateManyCommentLikeInputEnvelope>;
+  delete?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<NotificationScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  set?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  update?: InputMaybe<Array<NotificationUpdateWithWhereUniqueWithoutCommentLikeInput>>;
+  updateMany?: InputMaybe<Array<NotificationUpdateManyWithWhereWithoutCommentLikeInput>>;
+  upsert?: InputMaybe<Array<NotificationUpsertWithWhereUniqueWithoutCommentLikeInput>>;
+};
+
+export type NotificationUpdateManyWithoutCommentNestedInput = {
+  connect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<NotificationCreateOrConnectWithoutCommentInput>>;
+  create?: InputMaybe<Array<NotificationCreateWithoutCommentInput>>;
+  createMany?: InputMaybe<NotificationCreateManyCommentInputEnvelope>;
+  delete?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<NotificationScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  set?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  update?: InputMaybe<Array<NotificationUpdateWithWhereUniqueWithoutCommentInput>>;
+  updateMany?: InputMaybe<Array<NotificationUpdateManyWithWhereWithoutCommentInput>>;
+  upsert?: InputMaybe<Array<NotificationUpsertWithWhereUniqueWithoutCommentInput>>;
+};
+
+export type NotificationUpdateManyWithoutPostLikeNestedInput = {
+  connect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<NotificationCreateOrConnectWithoutPostLikeInput>>;
+  create?: InputMaybe<Array<NotificationCreateWithoutPostLikeInput>>;
+  createMany?: InputMaybe<NotificationCreateManyPostLikeInputEnvelope>;
+  delete?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<NotificationScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  set?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  update?: InputMaybe<Array<NotificationUpdateWithWhereUniqueWithoutPostLikeInput>>;
+  updateMany?: InputMaybe<Array<NotificationUpdateManyWithWhereWithoutPostLikeInput>>;
+  upsert?: InputMaybe<Array<NotificationUpsertWithWhereUniqueWithoutPostLikeInput>>;
+};
+
+export type NotificationUpdateManyWithoutPostNestedInput = {
+  connect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<NotificationCreateOrConnectWithoutPostInput>>;
+  create?: InputMaybe<Array<NotificationCreateWithoutPostInput>>;
+  createMany?: InputMaybe<NotificationCreateManyPostInputEnvelope>;
+  delete?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<NotificationScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  set?: InputMaybe<Array<NotificationWhereUniqueInput>>;
+  update?: InputMaybe<Array<NotificationUpdateWithWhereUniqueWithoutPostInput>>;
+  updateMany?: InputMaybe<Array<NotificationUpdateManyWithWhereWithoutPostInput>>;
+  upsert?: InputMaybe<Array<NotificationUpsertWithWhereUniqueWithoutPostInput>>;
+};
+
+export type NotificationUpdateOneWithoutUserNestedInput = {
+  connect?: InputMaybe<NotificationWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<NotificationCreateOrConnectWithoutUserInput>;
+  create?: InputMaybe<NotificationCreateWithoutUserInput>;
+  delete?: InputMaybe<Scalars['Boolean']['input']>;
+  disconnect?: InputMaybe<Scalars['Boolean']['input']>;
+  update?: InputMaybe<NotificationUpdateWithoutUserInput>;
+  upsert?: InputMaybe<NotificationUpsertWithoutUserInput>;
+};
+
+export type NotificationUpdateWithWhereUniqueWithoutCommentInput = {
+  data: NotificationUpdateWithoutCommentInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationUpdateWithWhereUniqueWithoutCommentLikeInput = {
+  data: NotificationUpdateWithoutCommentLikeInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationUpdateWithWhereUniqueWithoutPostInput = {
+  data: NotificationUpdateWithoutPostInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationUpdateWithWhereUniqueWithoutPostLikeInput = {
+  data: NotificationUpdateWithoutPostLikeInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationUpdateWithoutCommentInput = {
+  body?: InputMaybe<StringFieldUpdateOperationsInput>;
+  commentLike?: InputMaybe<CommentLikeUpdateOneWithoutNotificationsNestedInput>;
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  navigateToPage?: InputMaybe<StringFieldUpdateOperationsInput>;
+  post?: InputMaybe<PostUpdateOneWithoutNotificationsNestedInput>;
+  postLike?: InputMaybe<PostLikeUpdateOneWithoutNotificationsNestedInput>;
+  title?: InputMaybe<StringFieldUpdateOperationsInput>;
+  updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutNotificationNestedInput>;
+  uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+};
+
+export type NotificationUpdateWithoutCommentLikeInput = {
+  body?: InputMaybe<StringFieldUpdateOperationsInput>;
+  comment?: InputMaybe<CommentUpdateOneWithoutNotificationsNestedInput>;
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  navigateToPage?: InputMaybe<StringFieldUpdateOperationsInput>;
+  post?: InputMaybe<PostUpdateOneWithoutNotificationsNestedInput>;
+  postLike?: InputMaybe<PostLikeUpdateOneWithoutNotificationsNestedInput>;
+  title?: InputMaybe<StringFieldUpdateOperationsInput>;
+  updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutNotificationNestedInput>;
+  uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+};
+
+export type NotificationUpdateWithoutPostInput = {
+  body?: InputMaybe<StringFieldUpdateOperationsInput>;
+  comment?: InputMaybe<CommentUpdateOneWithoutNotificationsNestedInput>;
+  commentLike?: InputMaybe<CommentLikeUpdateOneWithoutNotificationsNestedInput>;
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  navigateToPage?: InputMaybe<StringFieldUpdateOperationsInput>;
+  postLike?: InputMaybe<PostLikeUpdateOneWithoutNotificationsNestedInput>;
+  title?: InputMaybe<StringFieldUpdateOperationsInput>;
+  updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutNotificationNestedInput>;
+  uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+};
+
+export type NotificationUpdateWithoutPostLikeInput = {
+  body?: InputMaybe<StringFieldUpdateOperationsInput>;
+  comment?: InputMaybe<CommentUpdateOneWithoutNotificationsNestedInput>;
+  commentLike?: InputMaybe<CommentLikeUpdateOneWithoutNotificationsNestedInput>;
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  navigateToPage?: InputMaybe<StringFieldUpdateOperationsInput>;
+  post?: InputMaybe<PostUpdateOneWithoutNotificationsNestedInput>;
+  title?: InputMaybe<StringFieldUpdateOperationsInput>;
+  updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutNotificationNestedInput>;
+  uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+};
+
+export type NotificationUpdateWithoutUserInput = {
+  body?: InputMaybe<StringFieldUpdateOperationsInput>;
+  comment?: InputMaybe<CommentUpdateOneWithoutNotificationsNestedInput>;
+  commentLike?: InputMaybe<CommentLikeUpdateOneWithoutNotificationsNestedInput>;
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  navigateToPage?: InputMaybe<StringFieldUpdateOperationsInput>;
+  post?: InputMaybe<PostUpdateOneWithoutNotificationsNestedInput>;
+  postLike?: InputMaybe<PostLikeUpdateOneWithoutNotificationsNestedInput>;
+  title?: InputMaybe<StringFieldUpdateOperationsInput>;
+  updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+};
+
+export type NotificationUpsertWithWhereUniqueWithoutCommentInput = {
+  create: NotificationCreateWithoutCommentInput;
+  update: NotificationUpdateWithoutCommentInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationUpsertWithWhereUniqueWithoutCommentLikeInput = {
+  create: NotificationCreateWithoutCommentLikeInput;
+  update: NotificationUpdateWithoutCommentLikeInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationUpsertWithWhereUniqueWithoutPostInput = {
+  create: NotificationCreateWithoutPostInput;
+  update: NotificationUpdateWithoutPostInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationUpsertWithWhereUniqueWithoutPostLikeInput = {
+  create: NotificationCreateWithoutPostLikeInput;
+  update: NotificationUpdateWithoutPostLikeInput;
+  where: NotificationWhereUniqueInput;
+};
+
+export type NotificationUpsertWithoutUserInput = {
+  create: NotificationCreateWithoutUserInput;
+  update: NotificationUpdateWithoutUserInput;
+};
+
+export type NotificationWhereInput = {
+  AND?: InputMaybe<Array<NotificationWhereInput>>;
+  NOT?: InputMaybe<Array<NotificationWhereInput>>;
+  OR?: InputMaybe<Array<NotificationWhereInput>>;
+  body?: InputMaybe<StringFilter>;
+  comment?: InputMaybe<CommentRelationFilter>;
+  commentId?: InputMaybe<BigIntNullableFilter>;
+  commentLike?: InputMaybe<CommentLikeRelationFilter>;
+  commentLikeId?: InputMaybe<BigIntNullableFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<BigIntFilter>;
+  navigateToPage?: InputMaybe<StringFilter>;
+  post?: InputMaybe<PostRelationFilter>;
+  postId?: InputMaybe<BigIntNullableFilter>;
+  postLike?: InputMaybe<PostLikeRelationFilter>;
+  postLikeId?: InputMaybe<BigIntNullableFilter>;
+  title?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  user?: InputMaybe<UserRelationFilter>;
+  userId?: InputMaybe<BigIntFilter>;
+  uuid?: InputMaybe<StringFilter>;
+};
+
+export type NotificationWhereUniqueInput = {
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  userId?: InputMaybe<Scalars['BigInt']['input']>;
+  uuid?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type NullableBoolFieldUpdateOperationsInput = {
@@ -8381,9 +9509,11 @@ export type Post = {
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['BigInt']['output'];
   images: Array<Scalars['String']['output']>;
+  notifications: Array<Notification>;
   postFlag: Array<PostFlag>;
   postLikes: Array<PostLike>;
   postReports: Array<PostReport>;
+  reposts: Array<Repost>;
   school?: Maybe<School>;
   schoolId?: Maybe<Scalars['BigInt']['output']>;
   updatedAt: Scalars['DateTime']['output'];
@@ -8403,6 +9533,16 @@ export type PostCommentsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<CommentWhereInput>;
+};
+
+
+export type PostNotificationsArgs = {
+  cursor?: InputMaybe<NotificationWhereUniqueInput>;
+  distinct?: InputMaybe<Array<NotificationScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<NotificationOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<NotificationWhereInput>;
 };
 
 
@@ -8435,6 +9575,16 @@ export type PostPostReportsArgs = {
   where?: InputMaybe<PostReportWhereInput>;
 };
 
+
+export type PostRepostsArgs = {
+  cursor?: InputMaybe<RepostWhereUniqueInput>;
+  distinct?: InputMaybe<Array<RepostScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<RepostOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<RepostWhereInput>;
+};
+
 export type PostAvgAggregate = {
   __typename?: 'PostAvgAggregate';
   id?: Maybe<Scalars['Float']['output']>;
@@ -8451,9 +9601,11 @@ export type PostAvgOrderByAggregateInput = {
 export type PostCount = {
   __typename?: 'PostCount';
   comments: Scalars['Int']['output'];
+  notifications: Scalars['Int']['output'];
   postFlag: Scalars['Int']['output'];
   postLikes: Scalars['Int']['output'];
   postReports: Scalars['Int']['output'];
+  reposts: Scalars['Int']['output'];
 };
 
 export type PostCountAggregate = {
@@ -8492,9 +9644,11 @@ export type PostCreateInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   images?: InputMaybe<PostCreateimagesInput>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostInput>;
   postFlag?: InputMaybe<PostFlagCreateNestedManyWithoutPostInput>;
   postLikes?: InputMaybe<PostLikeCreateNestedManyWithoutPostInput>;
   postReports?: InputMaybe<PostReportCreateNestedManyWithoutPostInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutPostInput>;
   school?: InputMaybe<SchoolCreateNestedOneWithoutPostsInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   user: UserCreateNestedOneWithoutPostsInput;
@@ -8574,6 +9728,12 @@ export type PostCreateNestedOneWithoutCommentsInput = {
   create?: InputMaybe<PostCreateWithoutCommentsInput>;
 };
 
+export type PostCreateNestedOneWithoutNotificationsInput = {
+  connect?: InputMaybe<PostWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<PostCreateOrConnectWithoutNotificationsInput>;
+  create?: InputMaybe<PostCreateWithoutNotificationsInput>;
+};
+
 export type PostCreateNestedOneWithoutPostFlagInput = {
   connect?: InputMaybe<PostWhereUniqueInput>;
   connectOrCreate?: InputMaybe<PostCreateOrConnectWithoutPostFlagInput>;
@@ -8592,8 +9752,19 @@ export type PostCreateNestedOneWithoutPostReportsInput = {
   create?: InputMaybe<PostCreateWithoutPostReportsInput>;
 };
 
+export type PostCreateNestedOneWithoutRepostsInput = {
+  connect?: InputMaybe<PostWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<PostCreateOrConnectWithoutRepostsInput>;
+  create?: InputMaybe<PostCreateWithoutRepostsInput>;
+};
+
 export type PostCreateOrConnectWithoutCommentsInput = {
   create: PostCreateWithoutCommentsInput;
+  where: PostWhereUniqueInput;
+};
+
+export type PostCreateOrConnectWithoutNotificationsInput = {
+  create: PostCreateWithoutNotificationsInput;
   where: PostWhereUniqueInput;
 };
 
@@ -8612,6 +9783,11 @@ export type PostCreateOrConnectWithoutPostReportsInput = {
   where: PostWhereUniqueInput;
 };
 
+export type PostCreateOrConnectWithoutRepostsInput = {
+  create: PostCreateWithoutRepostsInput;
+  where: PostWhereUniqueInput;
+};
+
 export type PostCreateOrConnectWithoutSchoolInput = {
   create: PostCreateWithoutSchoolInput;
   where: PostWhereUniqueInput;
@@ -8627,9 +9803,30 @@ export type PostCreateWithoutCommentsInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   images?: InputMaybe<PostCreateimagesInput>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostInput>;
   postFlag?: InputMaybe<PostFlagCreateNestedManyWithoutPostInput>;
   postLikes?: InputMaybe<PostLikeCreateNestedManyWithoutPostInput>;
   postReports?: InputMaybe<PostReportCreateNestedManyWithoutPostInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutPostInput>;
+  school?: InputMaybe<SchoolCreateNestedOneWithoutPostsInput>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  user: UserCreateNestedOneWithoutPostsInput;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+  videos?: InputMaybe<PostCreatevideosInput>;
+  videosAspectRatio?: InputMaybe<PostCreatevideosAspectRatioInput>;
+  visibility?: InputMaybe<Visibility>;
+};
+
+export type PostCreateWithoutNotificationsInput = {
+  caption: Scalars['String']['input'];
+  comments?: InputMaybe<CommentCreateNestedManyWithoutPostInput>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  images?: InputMaybe<PostCreateimagesInput>;
+  postFlag?: InputMaybe<PostFlagCreateNestedManyWithoutPostInput>;
+  postLikes?: InputMaybe<PostLikeCreateNestedManyWithoutPostInput>;
+  postReports?: InputMaybe<PostReportCreateNestedManyWithoutPostInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutPostInput>;
   school?: InputMaybe<SchoolCreateNestedOneWithoutPostsInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   user: UserCreateNestedOneWithoutPostsInput;
@@ -8645,8 +9842,10 @@ export type PostCreateWithoutPostFlagInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   images?: InputMaybe<PostCreateimagesInput>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostInput>;
   postLikes?: InputMaybe<PostLikeCreateNestedManyWithoutPostInput>;
   postReports?: InputMaybe<PostReportCreateNestedManyWithoutPostInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutPostInput>;
   school?: InputMaybe<SchoolCreateNestedOneWithoutPostsInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   user: UserCreateNestedOneWithoutPostsInput;
@@ -8662,8 +9861,10 @@ export type PostCreateWithoutPostLikesInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   images?: InputMaybe<PostCreateimagesInput>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostInput>;
   postFlag?: InputMaybe<PostFlagCreateNestedManyWithoutPostInput>;
   postReports?: InputMaybe<PostReportCreateNestedManyWithoutPostInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutPostInput>;
   school?: InputMaybe<SchoolCreateNestedOneWithoutPostsInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   user: UserCreateNestedOneWithoutPostsInput;
@@ -8679,8 +9880,29 @@ export type PostCreateWithoutPostReportsInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   images?: InputMaybe<PostCreateimagesInput>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostInput>;
   postFlag?: InputMaybe<PostFlagCreateNestedManyWithoutPostInput>;
   postLikes?: InputMaybe<PostLikeCreateNestedManyWithoutPostInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutPostInput>;
+  school?: InputMaybe<SchoolCreateNestedOneWithoutPostsInput>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  user: UserCreateNestedOneWithoutPostsInput;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+  videos?: InputMaybe<PostCreatevideosInput>;
+  videosAspectRatio?: InputMaybe<PostCreatevideosAspectRatioInput>;
+  visibility?: InputMaybe<Visibility>;
+};
+
+export type PostCreateWithoutRepostsInput = {
+  caption: Scalars['String']['input'];
+  comments?: InputMaybe<CommentCreateNestedManyWithoutPostInput>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  images?: InputMaybe<PostCreateimagesInput>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostInput>;
+  postFlag?: InputMaybe<PostFlagCreateNestedManyWithoutPostInput>;
+  postLikes?: InputMaybe<PostLikeCreateNestedManyWithoutPostInput>;
+  postReports?: InputMaybe<PostReportCreateNestedManyWithoutPostInput>;
   school?: InputMaybe<SchoolCreateNestedOneWithoutPostsInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   user: UserCreateNestedOneWithoutPostsInput;
@@ -8696,9 +9918,11 @@ export type PostCreateWithoutSchoolInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   images?: InputMaybe<PostCreateimagesInput>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostInput>;
   postFlag?: InputMaybe<PostFlagCreateNestedManyWithoutPostInput>;
   postLikes?: InputMaybe<PostLikeCreateNestedManyWithoutPostInput>;
   postReports?: InputMaybe<PostReportCreateNestedManyWithoutPostInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutPostInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   user: UserCreateNestedOneWithoutPostsInput;
   uuid?: InputMaybe<Scalars['String']['input']>;
@@ -8713,9 +9937,11 @@ export type PostCreateWithoutUserInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   images?: InputMaybe<PostCreateimagesInput>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostInput>;
   postFlag?: InputMaybe<PostFlagCreateNestedManyWithoutPostInput>;
   postLikes?: InputMaybe<PostLikeCreateNestedManyWithoutPostInput>;
   postReports?: InputMaybe<PostReportCreateNestedManyWithoutPostInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutPostInput>;
   school?: InputMaybe<SchoolCreateNestedOneWithoutPostsInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   uuid?: InputMaybe<Scalars['String']['input']>;
@@ -9156,14 +10382,26 @@ export type PostGroupBy = {
 
 export type PostLike = {
   __typename?: 'PostLike';
+  _count?: Maybe<PostLikeCount>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['BigInt']['output'];
+  notifications: Array<Notification>;
   post: Post;
   postId: Scalars['BigInt']['output'];
   updatedAt: Scalars['DateTime']['output'];
   user: User;
   userId: Scalars['BigInt']['output'];
   uuid: Scalars['String']['output'];
+};
+
+
+export type PostLikeNotificationsArgs = {
+  cursor?: InputMaybe<NotificationWhereUniqueInput>;
+  distinct?: InputMaybe<Array<NotificationScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<NotificationOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<NotificationWhereInput>;
 };
 
 export type PostLikeAvgAggregate = {
@@ -9177,6 +10415,11 @@ export type PostLikeAvgOrderByAggregateInput = {
   id?: InputMaybe<SortOrder>;
   postId?: InputMaybe<SortOrder>;
   userId?: InputMaybe<SortOrder>;
+};
+
+export type PostLikeCount = {
+  __typename?: 'PostLikeCount';
+  notifications: Scalars['Int']['output'];
 };
 
 export type PostLikeCountAggregate = {
@@ -9202,6 +10445,7 @@ export type PostLikeCountOrderByAggregateInput = {
 export type PostLikeCreateInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostLikeInput>;
   post: PostCreateNestedOneWithoutPostLikesInput;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   user: UserCreateNestedOneWithoutPostLikesInput;
@@ -9257,6 +10501,17 @@ export type PostLikeCreateNestedManyWithoutUserInput = {
   createMany?: InputMaybe<PostLikeCreateManyUserInputEnvelope>;
 };
 
+export type PostLikeCreateNestedOneWithoutNotificationsInput = {
+  connect?: InputMaybe<PostLikeWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<PostLikeCreateOrConnectWithoutNotificationsInput>;
+  create?: InputMaybe<PostLikeCreateWithoutNotificationsInput>;
+};
+
+export type PostLikeCreateOrConnectWithoutNotificationsInput = {
+  create: PostLikeCreateWithoutNotificationsInput;
+  where: PostLikeWhereUniqueInput;
+};
+
 export type PostLikeCreateOrConnectWithoutPostInput = {
   create: PostLikeCreateWithoutPostInput;
   where: PostLikeWhereUniqueInput;
@@ -9267,9 +10522,19 @@ export type PostLikeCreateOrConnectWithoutUserInput = {
   where: PostLikeWhereUniqueInput;
 };
 
+export type PostLikeCreateWithoutNotificationsInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  post: PostCreateNestedOneWithoutPostLikesInput;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  user: UserCreateNestedOneWithoutPostLikesInput;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type PostLikeCreateWithoutPostInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostLikeInput>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   user: UserCreateNestedOneWithoutPostLikesInput;
   uuid?: InputMaybe<Scalars['String']['input']>;
@@ -9278,6 +10543,7 @@ export type PostLikeCreateWithoutPostInput = {
 export type PostLikeCreateWithoutUserInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
+  notifications?: InputMaybe<NotificationCreateNestedManyWithoutPostLikeInput>;
   post: PostCreateNestedOneWithoutPostLikesInput;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   uuid?: InputMaybe<Scalars['String']['input']>;
@@ -9363,12 +10629,18 @@ export type PostLikeOrderByWithAggregationInput = {
 export type PostLikeOrderByWithRelationInput = {
   createdAt?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
+  notifications?: InputMaybe<NotificationOrderByRelationAggregateInput>;
   post?: InputMaybe<PostOrderByWithRelationInput>;
   postId?: InputMaybe<SortOrder>;
   updatedAt?: InputMaybe<SortOrder>;
   user?: InputMaybe<UserOrderByWithRelationInput>;
   userId?: InputMaybe<SortOrder>;
   uuid?: InputMaybe<SortOrder>;
+};
+
+export type PostLikeRelationFilter = {
+  is?: InputMaybe<PostLikeWhereInput>;
+  isNot?: InputMaybe<PostLikeWhereInput>;
 };
 
 export enum PostLikeScalarFieldEnum {
@@ -9420,6 +10692,7 @@ export type PostLikeSumOrderByAggregateInput = {
 export type PostLikeUpdateInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostLikeNestedInput>;
   post?: InputMaybe<PostUpdateOneRequiredWithoutPostLikesNestedInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutPostLikesNestedInput>;
@@ -9471,6 +10744,16 @@ export type PostLikeUpdateManyWithoutUserNestedInput = {
   upsert?: InputMaybe<Array<PostLikeUpsertWithWhereUniqueWithoutUserInput>>;
 };
 
+export type PostLikeUpdateOneWithoutNotificationsNestedInput = {
+  connect?: InputMaybe<PostLikeWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<PostLikeCreateOrConnectWithoutNotificationsInput>;
+  create?: InputMaybe<PostLikeCreateWithoutNotificationsInput>;
+  delete?: InputMaybe<Scalars['Boolean']['input']>;
+  disconnect?: InputMaybe<Scalars['Boolean']['input']>;
+  update?: InputMaybe<PostLikeUpdateWithoutNotificationsInput>;
+  upsert?: InputMaybe<PostLikeUpsertWithoutNotificationsInput>;
+};
+
 export type PostLikeUpdateWithWhereUniqueWithoutPostInput = {
   data: PostLikeUpdateWithoutPostInput;
   where: PostLikeWhereUniqueInput;
@@ -9481,9 +10764,19 @@ export type PostLikeUpdateWithWhereUniqueWithoutUserInput = {
   where: PostLikeWhereUniqueInput;
 };
 
+export type PostLikeUpdateWithoutNotificationsInput = {
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  post?: InputMaybe<PostUpdateOneRequiredWithoutPostLikesNestedInput>;
+  updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutPostLikesNestedInput>;
+  uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+};
+
 export type PostLikeUpdateWithoutPostInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostLikeNestedInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutPostLikesNestedInput>;
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -9492,6 +10785,7 @@ export type PostLikeUpdateWithoutPostInput = {
 export type PostLikeUpdateWithoutUserInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostLikeNestedInput>;
   post?: InputMaybe<PostUpdateOneRequiredWithoutPostLikesNestedInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -9509,12 +10803,18 @@ export type PostLikeUpsertWithWhereUniqueWithoutUserInput = {
   where: PostLikeWhereUniqueInput;
 };
 
+export type PostLikeUpsertWithoutNotificationsInput = {
+  create: PostLikeCreateWithoutNotificationsInput;
+  update: PostLikeUpdateWithoutNotificationsInput;
+};
+
 export type PostLikeWhereInput = {
   AND?: InputMaybe<Array<PostLikeWhereInput>>;
   NOT?: InputMaybe<Array<PostLikeWhereInput>>;
   OR?: InputMaybe<Array<PostLikeWhereInput>>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<BigIntFilter>;
+  notifications?: InputMaybe<NotificationListRelationFilter>;
   post?: InputMaybe<PostRelationFilter>;
   postId?: InputMaybe<BigIntFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
@@ -9609,9 +10909,11 @@ export type PostOrderByWithRelationInput = {
   createdAt?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
   images?: InputMaybe<SortOrder>;
+  notifications?: InputMaybe<NotificationOrderByRelationAggregateInput>;
   postFlag?: InputMaybe<PostFlagOrderByRelationAggregateInput>;
   postLikes?: InputMaybe<PostLikeOrderByRelationAggregateInput>;
   postReports?: InputMaybe<PostReportOrderByRelationAggregateInput>;
+  reposts?: InputMaybe<RepostOrderByRelationAggregateInput>;
   school?: InputMaybe<SchoolOrderByWithRelationInput>;
   schoolId?: InputMaybe<SortOrder>;
   updatedAt?: InputMaybe<SortOrder>;
@@ -9915,9 +11217,11 @@ export type PostUpdateInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
   images?: InputMaybe<PostUpdateimagesInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostNestedInput>;
   postFlag?: InputMaybe<PostFlagUpdateManyWithoutPostNestedInput>;
   postLikes?: InputMaybe<PostLikeUpdateManyWithoutPostNestedInput>;
   postReports?: InputMaybe<PostReportUpdateManyWithoutPostNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutPostNestedInput>;
   school?: InputMaybe<SchoolUpdateOneWithoutPostsNestedInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutPostsNestedInput>;
@@ -10009,6 +11313,24 @@ export type PostUpdateOneRequiredWithoutPostReportsNestedInput = {
   upsert?: InputMaybe<PostUpsertWithoutPostReportsInput>;
 };
 
+export type PostUpdateOneRequiredWithoutRepostsNestedInput = {
+  connect?: InputMaybe<PostWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<PostCreateOrConnectWithoutRepostsInput>;
+  create?: InputMaybe<PostCreateWithoutRepostsInput>;
+  update?: InputMaybe<PostUpdateWithoutRepostsInput>;
+  upsert?: InputMaybe<PostUpsertWithoutRepostsInput>;
+};
+
+export type PostUpdateOneWithoutNotificationsNestedInput = {
+  connect?: InputMaybe<PostWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<PostCreateOrConnectWithoutNotificationsInput>;
+  create?: InputMaybe<PostCreateWithoutNotificationsInput>;
+  delete?: InputMaybe<Scalars['Boolean']['input']>;
+  disconnect?: InputMaybe<Scalars['Boolean']['input']>;
+  update?: InputMaybe<PostUpdateWithoutNotificationsInput>;
+  upsert?: InputMaybe<PostUpsertWithoutNotificationsInput>;
+};
+
 export type PostUpdateWithWhereUniqueWithoutSchoolInput = {
   data: PostUpdateWithoutSchoolInput;
   where: PostWhereUniqueInput;
@@ -10024,9 +11346,30 @@ export type PostUpdateWithoutCommentsInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
   images?: InputMaybe<PostUpdateimagesInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostNestedInput>;
   postFlag?: InputMaybe<PostFlagUpdateManyWithoutPostNestedInput>;
   postLikes?: InputMaybe<PostLikeUpdateManyWithoutPostNestedInput>;
   postReports?: InputMaybe<PostReportUpdateManyWithoutPostNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutPostNestedInput>;
+  school?: InputMaybe<SchoolUpdateOneWithoutPostsNestedInput>;
+  updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutPostsNestedInput>;
+  uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+  videos?: InputMaybe<PostUpdatevideosInput>;
+  videosAspectRatio?: InputMaybe<PostUpdatevideosAspectRatioInput>;
+  visibility?: InputMaybe<EnumVisibilityFieldUpdateOperationsInput>;
+};
+
+export type PostUpdateWithoutNotificationsInput = {
+  caption?: InputMaybe<StringFieldUpdateOperationsInput>;
+  comments?: InputMaybe<CommentUpdateManyWithoutPostNestedInput>;
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  images?: InputMaybe<PostUpdateimagesInput>;
+  postFlag?: InputMaybe<PostFlagUpdateManyWithoutPostNestedInput>;
+  postLikes?: InputMaybe<PostLikeUpdateManyWithoutPostNestedInput>;
+  postReports?: InputMaybe<PostReportUpdateManyWithoutPostNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutPostNestedInput>;
   school?: InputMaybe<SchoolUpdateOneWithoutPostsNestedInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutPostsNestedInput>;
@@ -10042,8 +11385,10 @@ export type PostUpdateWithoutPostFlagInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
   images?: InputMaybe<PostUpdateimagesInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostNestedInput>;
   postLikes?: InputMaybe<PostLikeUpdateManyWithoutPostNestedInput>;
   postReports?: InputMaybe<PostReportUpdateManyWithoutPostNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutPostNestedInput>;
   school?: InputMaybe<SchoolUpdateOneWithoutPostsNestedInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutPostsNestedInput>;
@@ -10059,8 +11404,10 @@ export type PostUpdateWithoutPostLikesInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
   images?: InputMaybe<PostUpdateimagesInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostNestedInput>;
   postFlag?: InputMaybe<PostFlagUpdateManyWithoutPostNestedInput>;
   postReports?: InputMaybe<PostReportUpdateManyWithoutPostNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutPostNestedInput>;
   school?: InputMaybe<SchoolUpdateOneWithoutPostsNestedInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutPostsNestedInput>;
@@ -10076,8 +11423,29 @@ export type PostUpdateWithoutPostReportsInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
   images?: InputMaybe<PostUpdateimagesInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostNestedInput>;
   postFlag?: InputMaybe<PostFlagUpdateManyWithoutPostNestedInput>;
   postLikes?: InputMaybe<PostLikeUpdateManyWithoutPostNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutPostNestedInput>;
+  school?: InputMaybe<SchoolUpdateOneWithoutPostsNestedInput>;
+  updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutPostsNestedInput>;
+  uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+  videos?: InputMaybe<PostUpdatevideosInput>;
+  videosAspectRatio?: InputMaybe<PostUpdatevideosAspectRatioInput>;
+  visibility?: InputMaybe<EnumVisibilityFieldUpdateOperationsInput>;
+};
+
+export type PostUpdateWithoutRepostsInput = {
+  caption?: InputMaybe<StringFieldUpdateOperationsInput>;
+  comments?: InputMaybe<CommentUpdateManyWithoutPostNestedInput>;
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  images?: InputMaybe<PostUpdateimagesInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostNestedInput>;
+  postFlag?: InputMaybe<PostFlagUpdateManyWithoutPostNestedInput>;
+  postLikes?: InputMaybe<PostLikeUpdateManyWithoutPostNestedInput>;
+  postReports?: InputMaybe<PostReportUpdateManyWithoutPostNestedInput>;
   school?: InputMaybe<SchoolUpdateOneWithoutPostsNestedInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutPostsNestedInput>;
@@ -10093,9 +11461,11 @@ export type PostUpdateWithoutSchoolInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
   images?: InputMaybe<PostUpdateimagesInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostNestedInput>;
   postFlag?: InputMaybe<PostFlagUpdateManyWithoutPostNestedInput>;
   postLikes?: InputMaybe<PostLikeUpdateManyWithoutPostNestedInput>;
   postReports?: InputMaybe<PostReportUpdateManyWithoutPostNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutPostNestedInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   user?: InputMaybe<UserUpdateOneRequiredWithoutPostsNestedInput>;
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -10110,9 +11480,11 @@ export type PostUpdateWithoutUserInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
   images?: InputMaybe<PostUpdateimagesInput>;
+  notifications?: InputMaybe<NotificationUpdateManyWithoutPostNestedInput>;
   postFlag?: InputMaybe<PostFlagUpdateManyWithoutPostNestedInput>;
   postLikes?: InputMaybe<PostLikeUpdateManyWithoutPostNestedInput>;
   postReports?: InputMaybe<PostReportUpdateManyWithoutPostNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutPostNestedInput>;
   school?: InputMaybe<SchoolUpdateOneWithoutPostsNestedInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -10153,6 +11525,11 @@ export type PostUpsertWithoutCommentsInput = {
   update: PostUpdateWithoutCommentsInput;
 };
 
+export type PostUpsertWithoutNotificationsInput = {
+  create: PostCreateWithoutNotificationsInput;
+  update: PostUpdateWithoutNotificationsInput;
+};
+
 export type PostUpsertWithoutPostFlagInput = {
   create: PostCreateWithoutPostFlagInput;
   update: PostUpdateWithoutPostFlagInput;
@@ -10168,6 +11545,11 @@ export type PostUpsertWithoutPostReportsInput = {
   update: PostUpdateWithoutPostReportsInput;
 };
 
+export type PostUpsertWithoutRepostsInput = {
+  create: PostCreateWithoutRepostsInput;
+  update: PostUpdateWithoutRepostsInput;
+};
+
 export type PostWhereInput = {
   AND?: InputMaybe<Array<PostWhereInput>>;
   NOT?: InputMaybe<Array<PostWhereInput>>;
@@ -10177,9 +11559,11 @@ export type PostWhereInput = {
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<BigIntFilter>;
   images?: InputMaybe<StringNullableListFilter>;
+  notifications?: InputMaybe<NotificationListRelationFilter>;
   postFlag?: InputMaybe<PostFlagListRelationFilter>;
   postLikes?: InputMaybe<PostLikeListRelationFilter>;
   postReports?: InputMaybe<PostReportListRelationFilter>;
+  reposts?: InputMaybe<RepostListRelationFilter>;
   school?: InputMaybe<SchoolRelationFilter>;
   schoolId?: InputMaybe<BigIntNullableFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
@@ -10638,6 +12022,7 @@ export type Query = {
   aggregateEvaluation: AggregateEvaluation;
   aggregateFollows: AggregateFollows;
   aggregateInterestedSchools: AggregateInterestedSchools;
+  aggregateNotification: AggregateNotification;
   aggregatePosition: AggregatePosition;
   aggregatePositionCategory: AggregatePositionCategory;
   aggregatePost: AggregatePost;
@@ -10645,6 +12030,7 @@ export type Query = {
   aggregatePostLike: AggregatePostLike;
   aggregateProspectedAthlete: AggregateProspectedAthlete;
   aggregateRecruitedAthlete: AggregateRecruitedAthlete;
+  aggregateRepost: AggregateRepost;
   aggregateRole: AggregateRole;
   aggregateSchool: AggregateSchool;
   aggregateSchoolType: AggregateSchoolType;
@@ -10674,6 +12060,7 @@ export type Query = {
   findFirstEvaluation?: Maybe<Evaluation>;
   findFirstFollows?: Maybe<Follows>;
   findFirstInterestedSchools?: Maybe<InterestedSchools>;
+  findFirstNotification?: Maybe<Notification>;
   findFirstPosition?: Maybe<Position>;
   findFirstPositionCategory?: Maybe<PositionCategory>;
   findFirstPost?: Maybe<Post>;
@@ -10681,6 +12068,7 @@ export type Query = {
   findFirstPostLike?: Maybe<PostLike>;
   findFirstProspectedAthlete?: Maybe<ProspectedAthlete>;
   findFirstRecruitedAthlete?: Maybe<RecruitedAthlete>;
+  findFirstRepost?: Maybe<Repost>;
   findFirstRole?: Maybe<Role>;
   findFirstSchool?: Maybe<School>;
   findFirstSchoolType?: Maybe<SchoolType>;
@@ -10708,6 +12096,7 @@ export type Query = {
   groupByEvaluation: Array<EvaluationGroupBy>;
   groupByFollows: Array<FollowsGroupBy>;
   groupByInterestedSchools: Array<InterestedSchoolsGroupBy>;
+  groupByNotification: Array<NotificationGroupBy>;
   groupByPosition: Array<PositionGroupBy>;
   groupByPositionCategory: Array<PositionCategoryGroupBy>;
   groupByPost: Array<PostGroupBy>;
@@ -10715,6 +12104,7 @@ export type Query = {
   groupByPostLike: Array<PostLikeGroupBy>;
   groupByProspectedAthlete: Array<ProspectedAthleteGroupBy>;
   groupByRecruitedAthlete: Array<RecruitedAthleteGroupBy>;
+  groupByRepost: Array<RepostGroupBy>;
   groupByRole: Array<RoleGroupBy>;
   groupBySchool: Array<SchoolGroupBy>;
   groupBySchoolType: Array<SchoolTypeGroupBy>;
@@ -10722,6 +12112,8 @@ export type Query = {
   groupBySkills: Array<SkillsGroupBy>;
   groupByTranscripts: Array<TranscriptsGroupBy>;
   groupByUser: Array<UserGroupBy>;
+  notification?: Maybe<Notification>;
+  notifications: Array<Notification>;
   position?: Maybe<Position>;
   positionCategories: Array<PositionCategory>;
   positionCategory?: Maybe<PositionCategory>;
@@ -10736,6 +12128,8 @@ export type Query = {
   prospectedAthletes: Array<ProspectedAthlete>;
   recruitedAthlete?: Maybe<RecruitedAthlete>;
   recruitedAthletes: Array<RecruitedAthlete>;
+  repost?: Maybe<Repost>;
+  reposts: Array<Repost>;
   role?: Maybe<Role>;
   roles: Array<Role>;
   school?: Maybe<School>;
@@ -10854,6 +12248,15 @@ export type QueryAggregateInterestedSchoolsArgs = {
 };
 
 
+export type QueryAggregateNotificationArgs = {
+  cursor?: InputMaybe<NotificationWhereUniqueInput>;
+  orderBy?: InputMaybe<Array<NotificationOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<NotificationWhereInput>;
+};
+
+
 export type QueryAggregatePositionArgs = {
   cursor?: InputMaybe<PositionWhereUniqueInput>;
   orderBy?: InputMaybe<Array<PositionOrderByWithRelationInput>>;
@@ -10914,6 +12317,15 @@ export type QueryAggregateRecruitedAthleteArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<RecruitedAthleteWhereInput>;
+};
+
+
+export type QueryAggregateRepostArgs = {
+  cursor?: InputMaybe<RepostWhereUniqueInput>;
+  orderBy?: InputMaybe<Array<RepostOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<RepostWhereInput>;
 };
 
 
@@ -11170,6 +12582,16 @@ export type QueryFindFirstInterestedSchoolsArgs = {
 };
 
 
+export type QueryFindFirstNotificationArgs = {
+  cursor?: InputMaybe<NotificationWhereUniqueInput>;
+  distinct?: InputMaybe<Array<NotificationScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<NotificationOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<NotificationWhereInput>;
+};
+
+
 export type QueryFindFirstPositionArgs = {
   cursor?: InputMaybe<PositionWhereUniqueInput>;
   distinct?: InputMaybe<Array<PositionScalarFieldEnum>>;
@@ -11237,6 +12659,16 @@ export type QueryFindFirstRecruitedAthleteArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<RecruitedAthleteWhereInput>;
+};
+
+
+export type QueryFindFirstRepostArgs = {
+  cursor?: InputMaybe<RepostWhereUniqueInput>;
+  distinct?: InputMaybe<Array<RepostScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<RepostOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<RepostWhereInput>;
 };
 
 
@@ -11485,6 +12917,16 @@ export type QueryGroupByInterestedSchoolsArgs = {
 };
 
 
+export type QueryGroupByNotificationArgs = {
+  by: Array<NotificationScalarFieldEnum>;
+  having?: InputMaybe<NotificationScalarWhereWithAggregatesInput>;
+  orderBy?: InputMaybe<Array<NotificationOrderByWithAggregationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<NotificationWhereInput>;
+};
+
+
 export type QueryGroupByPositionArgs = {
   by: Array<PositionScalarFieldEnum>;
   having?: InputMaybe<PositionScalarWhereWithAggregatesInput>;
@@ -11555,6 +12997,16 @@ export type QueryGroupByRecruitedAthleteArgs = {
 };
 
 
+export type QueryGroupByRepostArgs = {
+  by: Array<RepostScalarFieldEnum>;
+  having?: InputMaybe<RepostScalarWhereWithAggregatesInput>;
+  orderBy?: InputMaybe<Array<RepostOrderByWithAggregationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<RepostWhereInput>;
+};
+
+
 export type QueryGroupByRoleArgs = {
   by: Array<RoleScalarFieldEnum>;
   having?: InputMaybe<RoleScalarWhereWithAggregatesInput>;
@@ -11622,6 +13074,21 @@ export type QueryGroupByUserArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<UserWhereInput>;
+};
+
+
+export type QueryNotificationArgs = {
+  where: NotificationWhereUniqueInput;
+};
+
+
+export type QueryNotificationsArgs = {
+  cursor?: InputMaybe<NotificationWhereUniqueInput>;
+  distinct?: InputMaybe<Array<NotificationScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<NotificationOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<NotificationWhereInput>;
 };
 
 
@@ -11727,6 +13194,21 @@ export type QueryRecruitedAthletesArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<RecruitedAthleteWhereInput>;
+};
+
+
+export type QueryRepostArgs = {
+  where: RepostWhereUniqueInput;
+};
+
+
+export type QueryRepostsArgs = {
+  cursor?: InputMaybe<RepostWhereUniqueInput>;
+  distinct?: InputMaybe<Array<RepostScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<RepostOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<RepostWhereInput>;
 };
 
 
@@ -12238,6 +13720,337 @@ export type RegisterCoachReturn = {
   coach: User;
 };
 
+export type Repost = {
+  __typename?: 'Repost';
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['BigInt']['output'];
+  post: Post;
+  postId: Scalars['BigInt']['output'];
+  user: User;
+  userId: Scalars['BigInt']['output'];
+};
+
+export type RepostAvgAggregate = {
+  __typename?: 'RepostAvgAggregate';
+  id?: Maybe<Scalars['Float']['output']>;
+  postId?: Maybe<Scalars['Float']['output']>;
+  userId?: Maybe<Scalars['Float']['output']>;
+};
+
+export type RepostAvgOrderByAggregateInput = {
+  id?: InputMaybe<SortOrder>;
+  postId?: InputMaybe<SortOrder>;
+  userId?: InputMaybe<SortOrder>;
+};
+
+export type RepostCountAggregate = {
+  __typename?: 'RepostCountAggregate';
+  _all: Scalars['Int']['output'];
+  createdAt: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  postId: Scalars['Int']['output'];
+  userId: Scalars['Int']['output'];
+};
+
+export type RepostCountOrderByAggregateInput = {
+  createdAt?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  postId?: InputMaybe<SortOrder>;
+  userId?: InputMaybe<SortOrder>;
+};
+
+export type RepostCreateInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  post: PostCreateNestedOneWithoutRepostsInput;
+  user: UserCreateNestedOneWithoutRepostsInput;
+};
+
+export type RepostCreateManyInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  postId: Scalars['BigInt']['input'];
+  userId: Scalars['BigInt']['input'];
+};
+
+export type RepostCreateManyPostInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  userId: Scalars['BigInt']['input'];
+};
+
+export type RepostCreateManyPostInputEnvelope = {
+  data: Array<RepostCreateManyPostInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type RepostCreateManyUserInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  postId: Scalars['BigInt']['input'];
+};
+
+export type RepostCreateManyUserInputEnvelope = {
+  data: Array<RepostCreateManyUserInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type RepostCreateNestedManyWithoutPostInput = {
+  connect?: InputMaybe<Array<RepostWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<RepostCreateOrConnectWithoutPostInput>>;
+  create?: InputMaybe<Array<RepostCreateWithoutPostInput>>;
+  createMany?: InputMaybe<RepostCreateManyPostInputEnvelope>;
+};
+
+export type RepostCreateNestedManyWithoutUserInput = {
+  connect?: InputMaybe<Array<RepostWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<RepostCreateOrConnectWithoutUserInput>>;
+  create?: InputMaybe<Array<RepostCreateWithoutUserInput>>;
+  createMany?: InputMaybe<RepostCreateManyUserInputEnvelope>;
+};
+
+export type RepostCreateOrConnectWithoutPostInput = {
+  create: RepostCreateWithoutPostInput;
+  where: RepostWhereUniqueInput;
+};
+
+export type RepostCreateOrConnectWithoutUserInput = {
+  create: RepostCreateWithoutUserInput;
+  where: RepostWhereUniqueInput;
+};
+
+export type RepostCreateWithoutPostInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  user: UserCreateNestedOneWithoutRepostsInput;
+};
+
+export type RepostCreateWithoutUserInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  post: PostCreateNestedOneWithoutRepostsInput;
+};
+
+export type RepostGroupBy = {
+  __typename?: 'RepostGroupBy';
+  _avg?: Maybe<RepostAvgAggregate>;
+  _count?: Maybe<RepostCountAggregate>;
+  _max?: Maybe<RepostMaxAggregate>;
+  _min?: Maybe<RepostMinAggregate>;
+  _sum?: Maybe<RepostSumAggregate>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['BigInt']['output'];
+  postId: Scalars['BigInt']['output'];
+  userId: Scalars['BigInt']['output'];
+};
+
+export type RepostListRelationFilter = {
+  every?: InputMaybe<RepostWhereInput>;
+  none?: InputMaybe<RepostWhereInput>;
+  some?: InputMaybe<RepostWhereInput>;
+};
+
+export type RepostMaxAggregate = {
+  __typename?: 'RepostMaxAggregate';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['BigInt']['output']>;
+  postId?: Maybe<Scalars['BigInt']['output']>;
+  userId?: Maybe<Scalars['BigInt']['output']>;
+};
+
+export type RepostMaxOrderByAggregateInput = {
+  createdAt?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  postId?: InputMaybe<SortOrder>;
+  userId?: InputMaybe<SortOrder>;
+};
+
+export type RepostMinAggregate = {
+  __typename?: 'RepostMinAggregate';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['BigInt']['output']>;
+  postId?: Maybe<Scalars['BigInt']['output']>;
+  userId?: Maybe<Scalars['BigInt']['output']>;
+};
+
+export type RepostMinOrderByAggregateInput = {
+  createdAt?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  postId?: InputMaybe<SortOrder>;
+  userId?: InputMaybe<SortOrder>;
+};
+
+export type RepostOrderByRelationAggregateInput = {
+  _count?: InputMaybe<SortOrder>;
+};
+
+export type RepostOrderByWithAggregationInput = {
+  _avg?: InputMaybe<RepostAvgOrderByAggregateInput>;
+  _count?: InputMaybe<RepostCountOrderByAggregateInput>;
+  _max?: InputMaybe<RepostMaxOrderByAggregateInput>;
+  _min?: InputMaybe<RepostMinOrderByAggregateInput>;
+  _sum?: InputMaybe<RepostSumOrderByAggregateInput>;
+  createdAt?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  postId?: InputMaybe<SortOrder>;
+  userId?: InputMaybe<SortOrder>;
+};
+
+export type RepostOrderByWithRelationInput = {
+  createdAt?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  post?: InputMaybe<PostOrderByWithRelationInput>;
+  postId?: InputMaybe<SortOrder>;
+  user?: InputMaybe<UserOrderByWithRelationInput>;
+  userId?: InputMaybe<SortOrder>;
+};
+
+export enum RepostScalarFieldEnum {
+  CreatedAt = 'createdAt',
+  Id = 'id',
+  PostId = 'postId',
+  UserId = 'userId'
+}
+
+export type RepostScalarWhereInput = {
+  AND?: InputMaybe<Array<RepostScalarWhereInput>>;
+  NOT?: InputMaybe<Array<RepostScalarWhereInput>>;
+  OR?: InputMaybe<Array<RepostScalarWhereInput>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<BigIntFilter>;
+  postId?: InputMaybe<BigIntFilter>;
+  userId?: InputMaybe<BigIntFilter>;
+};
+
+export type RepostScalarWhereWithAggregatesInput = {
+  AND?: InputMaybe<Array<RepostScalarWhereWithAggregatesInput>>;
+  NOT?: InputMaybe<Array<RepostScalarWhereWithAggregatesInput>>;
+  OR?: InputMaybe<Array<RepostScalarWhereWithAggregatesInput>>;
+  createdAt?: InputMaybe<DateTimeWithAggregatesFilter>;
+  id?: InputMaybe<BigIntWithAggregatesFilter>;
+  postId?: InputMaybe<BigIntWithAggregatesFilter>;
+  userId?: InputMaybe<BigIntWithAggregatesFilter>;
+};
+
+export type RepostSumAggregate = {
+  __typename?: 'RepostSumAggregate';
+  id?: Maybe<Scalars['BigInt']['output']>;
+  postId?: Maybe<Scalars['BigInt']['output']>;
+  userId?: Maybe<Scalars['BigInt']['output']>;
+};
+
+export type RepostSumOrderByAggregateInput = {
+  id?: InputMaybe<SortOrder>;
+  postId?: InputMaybe<SortOrder>;
+  userId?: InputMaybe<SortOrder>;
+};
+
+export type RepostUpdateInput = {
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  post?: InputMaybe<PostUpdateOneRequiredWithoutRepostsNestedInput>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutRepostsNestedInput>;
+};
+
+export type RepostUpdateManyMutationInput = {
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+};
+
+export type RepostUpdateManyWithWhereWithoutPostInput = {
+  data: RepostUpdateManyMutationInput;
+  where: RepostScalarWhereInput;
+};
+
+export type RepostUpdateManyWithWhereWithoutUserInput = {
+  data: RepostUpdateManyMutationInput;
+  where: RepostScalarWhereInput;
+};
+
+export type RepostUpdateManyWithoutPostNestedInput = {
+  connect?: InputMaybe<Array<RepostWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<RepostCreateOrConnectWithoutPostInput>>;
+  create?: InputMaybe<Array<RepostCreateWithoutPostInput>>;
+  createMany?: InputMaybe<RepostCreateManyPostInputEnvelope>;
+  delete?: InputMaybe<Array<RepostWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<RepostScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<RepostWhereUniqueInput>>;
+  set?: InputMaybe<Array<RepostWhereUniqueInput>>;
+  update?: InputMaybe<Array<RepostUpdateWithWhereUniqueWithoutPostInput>>;
+  updateMany?: InputMaybe<Array<RepostUpdateManyWithWhereWithoutPostInput>>;
+  upsert?: InputMaybe<Array<RepostUpsertWithWhereUniqueWithoutPostInput>>;
+};
+
+export type RepostUpdateManyWithoutUserNestedInput = {
+  connect?: InputMaybe<Array<RepostWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<RepostCreateOrConnectWithoutUserInput>>;
+  create?: InputMaybe<Array<RepostCreateWithoutUserInput>>;
+  createMany?: InputMaybe<RepostCreateManyUserInputEnvelope>;
+  delete?: InputMaybe<Array<RepostWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<RepostScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<RepostWhereUniqueInput>>;
+  set?: InputMaybe<Array<RepostWhereUniqueInput>>;
+  update?: InputMaybe<Array<RepostUpdateWithWhereUniqueWithoutUserInput>>;
+  updateMany?: InputMaybe<Array<RepostUpdateManyWithWhereWithoutUserInput>>;
+  upsert?: InputMaybe<Array<RepostUpsertWithWhereUniqueWithoutUserInput>>;
+};
+
+export type RepostUpdateWithWhereUniqueWithoutPostInput = {
+  data: RepostUpdateWithoutPostInput;
+  where: RepostWhereUniqueInput;
+};
+
+export type RepostUpdateWithWhereUniqueWithoutUserInput = {
+  data: RepostUpdateWithoutUserInput;
+  where: RepostWhereUniqueInput;
+};
+
+export type RepostUpdateWithoutPostInput = {
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  user?: InputMaybe<UserUpdateOneRequiredWithoutRepostsNestedInput>;
+};
+
+export type RepostUpdateWithoutUserInput = {
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  post?: InputMaybe<PostUpdateOneRequiredWithoutRepostsNestedInput>;
+};
+
+export type RepostUpsertWithWhereUniqueWithoutPostInput = {
+  create: RepostCreateWithoutPostInput;
+  update: RepostUpdateWithoutPostInput;
+  where: RepostWhereUniqueInput;
+};
+
+export type RepostUpsertWithWhereUniqueWithoutUserInput = {
+  create: RepostCreateWithoutUserInput;
+  update: RepostUpdateWithoutUserInput;
+  where: RepostWhereUniqueInput;
+};
+
+export type RepostUserIdPostIdCompoundUniqueInput = {
+  postId: Scalars['BigInt']['input'];
+  userId: Scalars['BigInt']['input'];
+};
+
+export type RepostWhereInput = {
+  AND?: InputMaybe<Array<RepostWhereInput>>;
+  NOT?: InputMaybe<Array<RepostWhereInput>>;
+  OR?: InputMaybe<Array<RepostWhereInput>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<BigIntFilter>;
+  post?: InputMaybe<PostRelationFilter>;
+  postId?: InputMaybe<BigIntFilter>;
+  user?: InputMaybe<UserRelationFilter>;
+  userId?: InputMaybe<BigIntFilter>;
+};
+
+export type RepostWhereUniqueInput = {
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  userId_postId?: InputMaybe<RepostUserIdPostIdCompoundUniqueInput>;
+};
+
 export type Return = {
   __typename?: 'Return';
   aspectRatio: Scalars['Float']['output'];
@@ -12560,6 +14373,8 @@ export type School = {
   city?: Maybe<Scalars['String']['output']>;
   coaches: Array<CoachProfile>;
   conference?: Maybe<Scalars['String']['output']>;
+  country?: Maybe<Country>;
+  countryId?: Maybe<Scalars['BigInt']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   division?: Maybe<Scalars['String']['output']>;
@@ -12656,6 +14471,7 @@ export type SchoolPostsArgs = {
 
 export type SchoolAvgAggregate = {
   __typename?: 'SchoolAvgAggregate';
+  countryId?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
   latitude?: Maybe<Scalars['Float']['output']>;
   longitude?: Maybe<Scalars['Float']['output']>;
@@ -12665,6 +14481,7 @@ export type SchoolAvgAggregate = {
 };
 
 export type SchoolAvgOrderByAggregateInput = {
+  countryId?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
   latitude?: InputMaybe<SortOrder>;
   longitude?: InputMaybe<SortOrder>;
@@ -12691,6 +14508,7 @@ export type SchoolCountAggregate = {
   backgroundImage: Scalars['Int']['output'];
   city: Scalars['Int']['output'];
   conference: Scalars['Int']['output'];
+  countryId: Scalars['Int']['output'];
   createdAt: Scalars['Int']['output'];
   description: Scalars['Int']['output'];
   division: Scalars['Int']['output'];
@@ -12717,6 +14535,7 @@ export type SchoolCountOrderByAggregateInput = {
   backgroundImage?: InputMaybe<SortOrder>;
   city?: InputMaybe<SortOrder>;
   conference?: InputMaybe<SortOrder>;
+  countryId?: InputMaybe<SortOrder>;
   createdAt?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   division?: InputMaybe<SortOrder>;
@@ -12748,6 +14567,7 @@ export type SchoolCreateInput = {
   city?: InputMaybe<Scalars['String']['input']>;
   coaches?: InputMaybe<CoachProfileCreateNestedManyWithoutSchoolInput>;
   conference?: InputMaybe<Scalars['String']['input']>;
+  country?: InputMaybe<CountryCreateNestedOneWithoutSchoolsInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   division?: InputMaybe<Scalars['String']['input']>;
@@ -12771,11 +14591,43 @@ export type SchoolCreateInput = {
   yearlyTuition?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type SchoolCreateManyCountryInput = {
+  address?: InputMaybe<Scalars['String']['input']>;
+  backgroundImage?: InputMaybe<Scalars['String']['input']>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  conference?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  division?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  latitude?: InputMaybe<Scalars['Float']['input']>;
+  logo?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['Float']['input']>;
+  name: Scalars['String']['input'];
+  primaryColor: Scalars['String']['input'];
+  radius?: InputMaybe<Scalars['Int']['input']>;
+  schoolTypeId: Scalars['BigInt']['input'];
+  secondaryColor: Scalars['String']['input'];
+  state?: InputMaybe<Scalars['String']['input']>;
+  undergradStudents?: InputMaybe<Scalars['Int']['input']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+  yearFounded?: InputMaybe<Scalars['String']['input']>;
+  yearlyTuition?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type SchoolCreateManyCountryInputEnvelope = {
+  data: Array<SchoolCreateManyCountryInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export type SchoolCreateManyInput = {
   address?: InputMaybe<Scalars['String']['input']>;
   backgroundImage?: InputMaybe<Scalars['String']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
   conference?: InputMaybe<Scalars['String']['input']>;
+  countryId?: InputMaybe<Scalars['BigInt']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   division?: InputMaybe<Scalars['String']['input']>;
@@ -12802,6 +14654,7 @@ export type SchoolCreateManySchoolTypeInput = {
   backgroundImage?: InputMaybe<Scalars['String']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
   conference?: InputMaybe<Scalars['String']['input']>;
+  countryId?: InputMaybe<Scalars['BigInt']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   division?: InputMaybe<Scalars['String']['input']>;
@@ -12825,6 +14678,13 @@ export type SchoolCreateManySchoolTypeInput = {
 export type SchoolCreateManySchoolTypeInputEnvelope = {
   data: Array<SchoolCreateManySchoolTypeInput>;
   skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type SchoolCreateNestedManyWithoutCountryInput = {
+  connect?: InputMaybe<Array<SchoolWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<SchoolCreateOrConnectWithoutCountryInput>>;
+  create?: InputMaybe<Array<SchoolCreateWithoutCountryInput>>;
+  createMany?: InputMaybe<SchoolCreateManyCountryInputEnvelope>;
 };
 
 export type SchoolCreateNestedManyWithoutSchoolTypeInput = {
@@ -12901,6 +14761,11 @@ export type SchoolCreateOrConnectWithoutCoachesInput = {
   where: SchoolWhereUniqueInput;
 };
 
+export type SchoolCreateOrConnectWithoutCountryInput = {
+  create: SchoolCreateWithoutCountryInput;
+  where: SchoolWhereUniqueInput;
+};
+
 export type SchoolCreateOrConnectWithoutEvaluationsInput = {
   create: SchoolCreateWithoutEvaluationsInput;
   where: SchoolWhereUniqueInput;
@@ -12925,6 +14790,7 @@ export type SchoolCreateWithoutAthletesInput = {
   city?: InputMaybe<Scalars['String']['input']>;
   coaches?: InputMaybe<CoachProfileCreateNestedManyWithoutSchoolInput>;
   conference?: InputMaybe<Scalars['String']['input']>;
+  country?: InputMaybe<CountryCreateNestedOneWithoutSchoolsInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   division?: InputMaybe<Scalars['String']['input']>;
@@ -12957,6 +14823,7 @@ export type SchoolCreateWithoutAthletesInterestedInput = {
   city?: InputMaybe<Scalars['String']['input']>;
   coaches?: InputMaybe<CoachProfileCreateNestedManyWithoutSchoolInput>;
   conference?: InputMaybe<Scalars['String']['input']>;
+  country?: InputMaybe<CountryCreateNestedOneWithoutSchoolsInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   division?: InputMaybe<Scalars['String']['input']>;
@@ -12989,6 +14856,7 @@ export type SchoolCreateWithoutAthletesProspectedInput = {
   city?: InputMaybe<Scalars['String']['input']>;
   coaches?: InputMaybe<CoachProfileCreateNestedManyWithoutSchoolInput>;
   conference?: InputMaybe<Scalars['String']['input']>;
+  country?: InputMaybe<CountryCreateNestedOneWithoutSchoolsInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   division?: InputMaybe<Scalars['String']['input']>;
@@ -13021,6 +14889,7 @@ export type SchoolCreateWithoutAthletesRecruitedInput = {
   city?: InputMaybe<Scalars['String']['input']>;
   coaches?: InputMaybe<CoachProfileCreateNestedManyWithoutSchoolInput>;
   conference?: InputMaybe<Scalars['String']['input']>;
+  country?: InputMaybe<CountryCreateNestedOneWithoutSchoolsInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   division?: InputMaybe<Scalars['String']['input']>;
@@ -13052,6 +14921,40 @@ export type SchoolCreateWithoutCoachesInput = {
   athletesRecruited?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutSchoolInput>;
   backgroundImage?: InputMaybe<Scalars['String']['input']>;
   city?: InputMaybe<Scalars['String']['input']>;
+  conference?: InputMaybe<Scalars['String']['input']>;
+  country?: InputMaybe<CountryCreateNestedOneWithoutSchoolsInput>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  division?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
+  evaluations?: InputMaybe<EvaluationCreateNestedManyWithoutSchoolInput>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  latitude?: InputMaybe<Scalars['Float']['input']>;
+  logo?: InputMaybe<Scalars['String']['input']>;
+  longitude?: InputMaybe<Scalars['Float']['input']>;
+  name: Scalars['String']['input'];
+  posts?: InputMaybe<PostCreateNestedManyWithoutSchoolInput>;
+  primaryColor: Scalars['String']['input'];
+  radius?: InputMaybe<Scalars['Int']['input']>;
+  schoolType: SchoolTypeCreateNestedOneWithoutSchoolsInput;
+  secondaryColor: Scalars['String']['input'];
+  state?: InputMaybe<Scalars['String']['input']>;
+  undergradStudents?: InputMaybe<Scalars['Int']['input']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+  yearFounded?: InputMaybe<Scalars['String']['input']>;
+  yearlyTuition?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type SchoolCreateWithoutCountryInput = {
+  address?: InputMaybe<Scalars['String']['input']>;
+  athletes?: InputMaybe<AthleteProfileCreateNestedManyWithoutSchoolInput>;
+  athletesInterested?: InputMaybe<InterestedSchoolsCreateNestedManyWithoutSchoolInput>;
+  athletesProspected?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutSchoolInput>;
+  athletesRecruited?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutSchoolInput>;
+  backgroundImage?: InputMaybe<Scalars['String']['input']>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  coaches?: InputMaybe<CoachProfileCreateNestedManyWithoutSchoolInput>;
   conference?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
@@ -13086,6 +14989,7 @@ export type SchoolCreateWithoutEvaluationsInput = {
   city?: InputMaybe<Scalars['String']['input']>;
   coaches?: InputMaybe<CoachProfileCreateNestedManyWithoutSchoolInput>;
   conference?: InputMaybe<Scalars['String']['input']>;
+  country?: InputMaybe<CountryCreateNestedOneWithoutSchoolsInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   division?: InputMaybe<Scalars['String']['input']>;
@@ -13118,6 +15022,7 @@ export type SchoolCreateWithoutPostsInput = {
   city?: InputMaybe<Scalars['String']['input']>;
   coaches?: InputMaybe<CoachProfileCreateNestedManyWithoutSchoolInput>;
   conference?: InputMaybe<Scalars['String']['input']>;
+  country?: InputMaybe<CountryCreateNestedOneWithoutSchoolsInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   division?: InputMaybe<Scalars['String']['input']>;
@@ -13150,6 +15055,7 @@ export type SchoolCreateWithoutSchoolTypeInput = {
   city?: InputMaybe<Scalars['String']['input']>;
   coaches?: InputMaybe<CoachProfileCreateNestedManyWithoutSchoolInput>;
   conference?: InputMaybe<Scalars['String']['input']>;
+  country?: InputMaybe<CountryCreateNestedOneWithoutSchoolsInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   division?: InputMaybe<Scalars['String']['input']>;
@@ -13183,6 +15089,7 @@ export type SchoolGroupBy = {
   backgroundImage?: Maybe<Scalars['String']['output']>;
   city?: Maybe<Scalars['String']['output']>;
   conference?: Maybe<Scalars['String']['output']>;
+  countryId?: Maybe<Scalars['BigInt']['output']>;
   createdAt: Scalars['DateTime']['output'];
   description?: Maybe<Scalars['String']['output']>;
   division?: Maybe<Scalars['String']['output']>;
@@ -13216,6 +15123,7 @@ export type SchoolMaxAggregate = {
   backgroundImage?: Maybe<Scalars['String']['output']>;
   city?: Maybe<Scalars['String']['output']>;
   conference?: Maybe<Scalars['String']['output']>;
+  countryId?: Maybe<Scalars['BigInt']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   division?: Maybe<Scalars['String']['output']>;
@@ -13242,6 +15150,7 @@ export type SchoolMaxOrderByAggregateInput = {
   backgroundImage?: InputMaybe<SortOrder>;
   city?: InputMaybe<SortOrder>;
   conference?: InputMaybe<SortOrder>;
+  countryId?: InputMaybe<SortOrder>;
   createdAt?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   division?: InputMaybe<SortOrder>;
@@ -13269,6 +15178,7 @@ export type SchoolMinAggregate = {
   backgroundImage?: Maybe<Scalars['String']['output']>;
   city?: Maybe<Scalars['String']['output']>;
   conference?: Maybe<Scalars['String']['output']>;
+  countryId?: Maybe<Scalars['BigInt']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   division?: Maybe<Scalars['String']['output']>;
@@ -13295,6 +15205,7 @@ export type SchoolMinOrderByAggregateInput = {
   backgroundImage?: InputMaybe<SortOrder>;
   city?: InputMaybe<SortOrder>;
   conference?: InputMaybe<SortOrder>;
+  countryId?: InputMaybe<SortOrder>;
   createdAt?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   division?: InputMaybe<SortOrder>;
@@ -13330,6 +15241,7 @@ export type SchoolOrderByWithAggregationInput = {
   backgroundImage?: InputMaybe<SortOrder>;
   city?: InputMaybe<SortOrder>;
   conference?: InputMaybe<SortOrder>;
+  countryId?: InputMaybe<SortOrder>;
   createdAt?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   division?: InputMaybe<SortOrder>;
@@ -13361,6 +15273,8 @@ export type SchoolOrderByWithRelationInput = {
   city?: InputMaybe<SortOrder>;
   coaches?: InputMaybe<CoachProfileOrderByRelationAggregateInput>;
   conference?: InputMaybe<SortOrder>;
+  country?: InputMaybe<CountryOrderByWithRelationInput>;
+  countryId?: InputMaybe<SortOrder>;
   createdAt?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   division?: InputMaybe<SortOrder>;
@@ -13395,6 +15309,7 @@ export enum SchoolScalarFieldEnum {
   BackgroundImage = 'backgroundImage',
   City = 'city',
   Conference = 'conference',
+  CountryId = 'countryId',
   CreatedAt = 'createdAt',
   Description = 'description',
   Division = 'division',
@@ -13424,6 +15339,7 @@ export type SchoolScalarWhereInput = {
   backgroundImage?: InputMaybe<StringNullableFilter>;
   city?: InputMaybe<StringNullableFilter>;
   conference?: InputMaybe<StringNullableFilter>;
+  countryId?: InputMaybe<BigIntNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   description?: InputMaybe<StringNullableFilter>;
   division?: InputMaybe<StringNullableFilter>;
@@ -13453,6 +15369,7 @@ export type SchoolScalarWhereWithAggregatesInput = {
   backgroundImage?: InputMaybe<StringNullableWithAggregatesFilter>;
   city?: InputMaybe<StringNullableWithAggregatesFilter>;
   conference?: InputMaybe<StringNullableWithAggregatesFilter>;
+  countryId?: InputMaybe<BigIntNullableWithAggregatesFilter>;
   createdAt?: InputMaybe<DateTimeWithAggregatesFilter>;
   description?: InputMaybe<StringNullableWithAggregatesFilter>;
   division?: InputMaybe<StringNullableWithAggregatesFilter>;
@@ -13476,6 +15393,7 @@ export type SchoolScalarWhereWithAggregatesInput = {
 
 export type SchoolSumAggregate = {
   __typename?: 'SchoolSumAggregate';
+  countryId?: Maybe<Scalars['BigInt']['output']>;
   id?: Maybe<Scalars['BigInt']['output']>;
   latitude?: Maybe<Scalars['Float']['output']>;
   longitude?: Maybe<Scalars['Float']['output']>;
@@ -13485,6 +15403,7 @@ export type SchoolSumAggregate = {
 };
 
 export type SchoolSumOrderByAggregateInput = {
+  countryId?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
   latitude?: InputMaybe<SortOrder>;
   longitude?: InputMaybe<SortOrder>;
@@ -13750,6 +15669,7 @@ export type SchoolUpdateInput = {
   city?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   coaches?: InputMaybe<CoachProfileUpdateManyWithoutSchoolNestedInput>;
   conference?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  country?: InputMaybe<CountryUpdateOneWithoutSchoolsNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   division?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
@@ -13798,9 +15718,28 @@ export type SchoolUpdateManyMutationInput = {
   yearlyTuition?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
 };
 
+export type SchoolUpdateManyWithWhereWithoutCountryInput = {
+  data: SchoolUpdateManyMutationInput;
+  where: SchoolScalarWhereInput;
+};
+
 export type SchoolUpdateManyWithWhereWithoutSchoolTypeInput = {
   data: SchoolUpdateManyMutationInput;
   where: SchoolScalarWhereInput;
+};
+
+export type SchoolUpdateManyWithoutCountryNestedInput = {
+  connect?: InputMaybe<Array<SchoolWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<SchoolCreateOrConnectWithoutCountryInput>>;
+  create?: InputMaybe<Array<SchoolCreateWithoutCountryInput>>;
+  createMany?: InputMaybe<SchoolCreateManyCountryInputEnvelope>;
+  delete?: InputMaybe<Array<SchoolWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<SchoolScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<SchoolWhereUniqueInput>>;
+  set?: InputMaybe<Array<SchoolWhereUniqueInput>>;
+  update?: InputMaybe<Array<SchoolUpdateWithWhereUniqueWithoutCountryInput>>;
+  updateMany?: InputMaybe<Array<SchoolUpdateManyWithWhereWithoutCountryInput>>;
+  upsert?: InputMaybe<Array<SchoolUpsertWithWhereUniqueWithoutCountryInput>>;
 };
 
 export type SchoolUpdateManyWithoutSchoolTypeNestedInput = {
@@ -13875,6 +15814,11 @@ export type SchoolUpdateOneWithoutPostsNestedInput = {
   upsert?: InputMaybe<SchoolUpsertWithoutPostsInput>;
 };
 
+export type SchoolUpdateWithWhereUniqueWithoutCountryInput = {
+  data: SchoolUpdateWithoutCountryInput;
+  where: SchoolWhereUniqueInput;
+};
+
 export type SchoolUpdateWithWhereUniqueWithoutSchoolTypeInput = {
   data: SchoolUpdateWithoutSchoolTypeInput;
   where: SchoolWhereUniqueInput;
@@ -13889,6 +15833,7 @@ export type SchoolUpdateWithoutAthletesInput = {
   city?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   coaches?: InputMaybe<CoachProfileUpdateManyWithoutSchoolNestedInput>;
   conference?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  country?: InputMaybe<CountryUpdateOneWithoutSchoolsNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   division?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
@@ -13921,6 +15866,7 @@ export type SchoolUpdateWithoutAthletesInterestedInput = {
   city?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   coaches?: InputMaybe<CoachProfileUpdateManyWithoutSchoolNestedInput>;
   conference?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  country?: InputMaybe<CountryUpdateOneWithoutSchoolsNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   division?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
@@ -13953,6 +15899,7 @@ export type SchoolUpdateWithoutAthletesProspectedInput = {
   city?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   coaches?: InputMaybe<CoachProfileUpdateManyWithoutSchoolNestedInput>;
   conference?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  country?: InputMaybe<CountryUpdateOneWithoutSchoolsNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   division?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
@@ -13985,6 +15932,7 @@ export type SchoolUpdateWithoutAthletesRecruitedInput = {
   city?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   coaches?: InputMaybe<CoachProfileUpdateManyWithoutSchoolNestedInput>;
   conference?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  country?: InputMaybe<CountryUpdateOneWithoutSchoolsNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   division?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
@@ -14016,6 +15964,40 @@ export type SchoolUpdateWithoutCoachesInput = {
   athletesRecruited?: InputMaybe<RecruitedAthleteUpdateManyWithoutSchoolNestedInput>;
   backgroundImage?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   city?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  conference?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  country?: InputMaybe<CountryUpdateOneWithoutSchoolsNestedInput>;
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  division?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  email?: InputMaybe<StringFieldUpdateOperationsInput>;
+  evaluations?: InputMaybe<EvaluationUpdateManyWithoutSchoolNestedInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  latitude?: InputMaybe<NullableFloatFieldUpdateOperationsInput>;
+  logo?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  longitude?: InputMaybe<NullableFloatFieldUpdateOperationsInput>;
+  name?: InputMaybe<StringFieldUpdateOperationsInput>;
+  posts?: InputMaybe<PostUpdateManyWithoutSchoolNestedInput>;
+  primaryColor?: InputMaybe<StringFieldUpdateOperationsInput>;
+  radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
+  schoolType?: InputMaybe<SchoolTypeUpdateOneRequiredWithoutSchoolsNestedInput>;
+  secondaryColor?: InputMaybe<StringFieldUpdateOperationsInput>;
+  state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  undergradStudents?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
+  updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+  yearFounded?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  yearlyTuition?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+};
+
+export type SchoolUpdateWithoutCountryInput = {
+  address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  athletes?: InputMaybe<AthleteProfileUpdateManyWithoutSchoolNestedInput>;
+  athletesInterested?: InputMaybe<InterestedSchoolsUpdateManyWithoutSchoolNestedInput>;
+  athletesProspected?: InputMaybe<ProspectedAthleteUpdateManyWithoutSchoolNestedInput>;
+  athletesRecruited?: InputMaybe<RecruitedAthleteUpdateManyWithoutSchoolNestedInput>;
+  backgroundImage?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  city?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  coaches?: InputMaybe<CoachProfileUpdateManyWithoutSchoolNestedInput>;
   conference?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
@@ -14050,6 +16032,7 @@ export type SchoolUpdateWithoutEvaluationsInput = {
   city?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   coaches?: InputMaybe<CoachProfileUpdateManyWithoutSchoolNestedInput>;
   conference?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  country?: InputMaybe<CountryUpdateOneWithoutSchoolsNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   division?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
@@ -14082,6 +16065,7 @@ export type SchoolUpdateWithoutPostsInput = {
   city?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   coaches?: InputMaybe<CoachProfileUpdateManyWithoutSchoolNestedInput>;
   conference?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  country?: InputMaybe<CountryUpdateOneWithoutSchoolsNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   division?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
@@ -14114,6 +16098,7 @@ export type SchoolUpdateWithoutSchoolTypeInput = {
   city?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   coaches?: InputMaybe<CoachProfileUpdateManyWithoutSchoolNestedInput>;
   conference?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  country?: InputMaybe<CountryUpdateOneWithoutSchoolsNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   description?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   division?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
@@ -14134,6 +16119,12 @@ export type SchoolUpdateWithoutSchoolTypeInput = {
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
   yearFounded?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   yearlyTuition?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+};
+
+export type SchoolUpsertWithWhereUniqueWithoutCountryInput = {
+  create: SchoolCreateWithoutCountryInput;
+  update: SchoolUpdateWithoutCountryInput;
+  where: SchoolWhereUniqueInput;
 };
 
 export type SchoolUpsertWithWhereUniqueWithoutSchoolTypeInput = {
@@ -14190,6 +16181,8 @@ export type SchoolWhereInput = {
   city?: InputMaybe<StringNullableFilter>;
   coaches?: InputMaybe<CoachProfileListRelationFilter>;
   conference?: InputMaybe<StringNullableFilter>;
+  country?: InputMaybe<CountryRelationFilter>;
+  countryId?: InputMaybe<BigIntNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   description?: InputMaybe<StringNullableFilter>;
   division?: InputMaybe<StringNullableFilter>;
@@ -15609,6 +17602,7 @@ export type UpdateUserFcmTokenReturn = {
 
 export type User = {
   __typename?: 'User';
+  Notification?: Maybe<Notification>;
   _count?: Maybe<UserCount>;
   accountType: AccountType;
   accountTypeId: Scalars['BigInt']['output'];
@@ -15642,6 +17636,7 @@ export type User = {
   prospectedSchools: Array<ProspectedAthlete>;
   radius?: Maybe<Scalars['Int']['output']>;
   recruitedSchools: Array<RecruitedAthlete>;
+  reposts: Array<Repost>;
   role?: Maybe<Role>;
   roleId?: Maybe<Scalars['BigInt']['output']>;
   state?: Maybe<Scalars['String']['output']>;
@@ -15791,6 +17786,16 @@ export type UserRecruitedSchoolsArgs = {
   where?: InputMaybe<RecruitedAthleteWhereInput>;
 };
 
+
+export type UserRepostsArgs = {
+  cursor?: InputMaybe<RepostWhereUniqueInput>;
+  distinct?: InputMaybe<Array<RepostScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<RepostOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<RepostWhereInput>;
+};
+
 export type UserAvgAggregate = {
   __typename?: 'UserAvgAggregate';
   accountTypeId?: Maybe<Scalars['Float']['output']>;
@@ -15826,6 +17831,7 @@ export type UserCount = {
   posts: Scalars['Int']['output'];
   prospectedSchools: Scalars['Int']['output'];
   recruitedSchools: Scalars['Int']['output'];
+  reposts: Scalars['Int']['output'];
 };
 
 export type UserCountAggregate = {
@@ -15879,6 +17885,7 @@ export type UserCountOrderByAggregateInput = {
 };
 
 export type UserCreateInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   accountType: AccountTypeCreateNestedOneWithoutUsersInput;
   address?: InputMaybe<Scalars['String']['input']>;
   athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
@@ -15910,6 +17917,7 @@ export type UserCreateInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
   recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
@@ -16072,6 +18080,12 @@ export type UserCreateNestedOneWithoutInterestedSchoolsInput = {
   create?: InputMaybe<UserCreateWithoutInterestedSchoolsInput>;
 };
 
+export type UserCreateNestedOneWithoutNotificationInput = {
+  connect?: InputMaybe<UserWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutNotificationInput>;
+  create?: InputMaybe<UserCreateWithoutNotificationInput>;
+};
+
 export type UserCreateNestedOneWithoutPostFlagInput = {
   connect?: InputMaybe<UserWhereUniqueInput>;
   connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutPostFlagInput>;
@@ -16106,6 +18120,12 @@ export type UserCreateNestedOneWithoutRecruitedSchoolsInput = {
   connect?: InputMaybe<UserWhereUniqueInput>;
   connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutRecruitedSchoolsInput>;
   create?: InputMaybe<UserCreateWithoutRecruitedSchoolsInput>;
+};
+
+export type UserCreateNestedOneWithoutRepostsInput = {
+  connect?: InputMaybe<UserWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutRepostsInput>;
+  create?: InputMaybe<UserCreateWithoutRepostsInput>;
 };
 
 export type UserCreateOrConnectWithoutAccountTypeInput = {
@@ -16163,6 +18183,11 @@ export type UserCreateOrConnectWithoutInterestedSchoolsInput = {
   where: UserWhereUniqueInput;
 };
 
+export type UserCreateOrConnectWithoutNotificationInput = {
+  create: UserCreateWithoutNotificationInput;
+  where: UserWhereUniqueInput;
+};
+
 export type UserCreateOrConnectWithoutPostFlagInput = {
   create: UserCreateWithoutPostFlagInput;
   where: UserWhereUniqueInput;
@@ -16193,12 +18218,18 @@ export type UserCreateOrConnectWithoutRecruitedSchoolsInput = {
   where: UserWhereUniqueInput;
 };
 
+export type UserCreateOrConnectWithoutRepostsInput = {
+  create: UserCreateWithoutRepostsInput;
+  where: UserWhereUniqueInput;
+};
+
 export type UserCreateOrConnectWithoutRoleInput = {
   create: UserCreateWithoutRoleInput;
   where: UserWhereUniqueInput;
 };
 
 export type UserCreateWithoutAccountTypeInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   address?: InputMaybe<Scalars['String']['input']>;
   athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
   avatar?: InputMaybe<Scalars['String']['input']>;
@@ -16229,6 +18260,7 @@ export type UserCreateWithoutAccountTypeInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
   recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
@@ -16238,6 +18270,7 @@ export type UserCreateWithoutAccountTypeInput = {
 };
 
 export type UserCreateWithoutAthleteProfileInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   accountType: AccountTypeCreateNestedOneWithoutUsersInput;
   address?: InputMaybe<Scalars['String']['input']>;
   avatar?: InputMaybe<Scalars['String']['input']>;
@@ -16268,6 +18301,7 @@ export type UserCreateWithoutAthleteProfileInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
   recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
@@ -16277,6 +18311,7 @@ export type UserCreateWithoutAthleteProfileInput = {
 };
 
 export type UserCreateWithoutBlockedByUsersInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   accountType: AccountTypeCreateNestedOneWithoutUsersInput;
   address?: InputMaybe<Scalars['String']['input']>;
   athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
@@ -16307,6 +18342,7 @@ export type UserCreateWithoutBlockedByUsersInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
   recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
@@ -16316,6 +18352,7 @@ export type UserCreateWithoutBlockedByUsersInput = {
 };
 
 export type UserCreateWithoutBlockedUsersInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   accountType: AccountTypeCreateNestedOneWithoutUsersInput;
   address?: InputMaybe<Scalars['String']['input']>;
   athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
@@ -16346,6 +18383,7 @@ export type UserCreateWithoutBlockedUsersInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
   recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
@@ -16355,6 +18393,7 @@ export type UserCreateWithoutBlockedUsersInput = {
 };
 
 export type UserCreateWithoutCoachProfileInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   accountType: AccountTypeCreateNestedOneWithoutUsersInput;
   address?: InputMaybe<Scalars['String']['input']>;
   athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
@@ -16385,6 +18424,7 @@ export type UserCreateWithoutCoachProfileInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
   recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
@@ -16394,6 +18434,7 @@ export type UserCreateWithoutCoachProfileInput = {
 };
 
 export type UserCreateWithoutCommentLikesInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   accountType: AccountTypeCreateNestedOneWithoutUsersInput;
   address?: InputMaybe<Scalars['String']['input']>;
   athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
@@ -16424,6 +18465,7 @@ export type UserCreateWithoutCommentLikesInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
   recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
@@ -16433,6 +18475,7 @@ export type UserCreateWithoutCommentLikesInput = {
 };
 
 export type UserCreateWithoutCommentsInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   accountType: AccountTypeCreateNestedOneWithoutUsersInput;
   address?: InputMaybe<Scalars['String']['input']>;
   athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
@@ -16463,6 +18506,7 @@ export type UserCreateWithoutCommentsInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
   recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
@@ -16472,6 +18516,7 @@ export type UserCreateWithoutCommentsInput = {
 };
 
 export type UserCreateWithoutEvaluationsCreatedInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   accountType: AccountTypeCreateNestedOneWithoutUsersInput;
   address?: InputMaybe<Scalars['String']['input']>;
   athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
@@ -16502,6 +18547,7 @@ export type UserCreateWithoutEvaluationsCreatedInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
   recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
@@ -16511,6 +18557,7 @@ export type UserCreateWithoutEvaluationsCreatedInput = {
 };
 
 export type UserCreateWithoutFollowedByInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   accountType: AccountTypeCreateNestedOneWithoutUsersInput;
   address?: InputMaybe<Scalars['String']['input']>;
   athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
@@ -16541,6 +18588,7 @@ export type UserCreateWithoutFollowedByInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
   recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
@@ -16550,6 +18598,7 @@ export type UserCreateWithoutFollowedByInput = {
 };
 
 export type UserCreateWithoutFollowingInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   accountType: AccountTypeCreateNestedOneWithoutUsersInput;
   address?: InputMaybe<Scalars['String']['input']>;
   athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
@@ -16580,6 +18629,7 @@ export type UserCreateWithoutFollowingInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
   recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
@@ -16589,6 +18639,7 @@ export type UserCreateWithoutFollowingInput = {
 };
 
 export type UserCreateWithoutInterestedSchoolsInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   accountType: AccountTypeCreateNestedOneWithoutUsersInput;
   address?: InputMaybe<Scalars['String']['input']>;
   athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
@@ -16619,6 +18670,48 @@ export type UserCreateWithoutInterestedSchoolsInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
   recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
+  role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
+  state?: InputMaybe<Scalars['String']['input']>;
+  surname?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  username?: InputMaybe<Scalars['String']['input']>;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UserCreateWithoutNotificationInput = {
+  accountType: AccountTypeCreateNestedOneWithoutUsersInput;
+  address?: InputMaybe<Scalars['String']['input']>;
+  athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
+  avatar?: InputMaybe<Scalars['String']['input']>;
+  blockedByUsers?: InputMaybe<BlocksCreateNestedManyWithoutBlockedInput>;
+  blockedUsers?: InputMaybe<BlocksCreateNestedManyWithoutBlockedByInput>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  coachProfile?: InputMaybe<CoachProfileCreateNestedOneWithoutUserInput>;
+  commentLikes?: InputMaybe<CommentLikeCreateNestedManyWithoutUserInput>;
+  comments?: InputMaybe<CommentCreateNestedManyWithoutUserInput>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  dob?: InputMaybe<Scalars['DateTime']['input']>;
+  email: Scalars['String']['input'];
+  evaluationsCreated?: InputMaybe<EvaluationCreateNestedManyWithoutCreatedByInput>;
+  fcmToken?: InputMaybe<Scalars['String']['input']>;
+  firebaseUid: Scalars['String']['input'];
+  firstname?: InputMaybe<Scalars['String']['input']>;
+  followedBy?: InputMaybe<FollowsCreateNestedManyWithoutFollowingInput>;
+  following?: InputMaybe<FollowsCreateNestedManyWithoutFollowerInput>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  interestedSchools?: InputMaybe<InterestedSchoolsCreateNestedManyWithoutUserInput>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  latitude?: InputMaybe<Scalars['Float']['input']>;
+  longitude?: InputMaybe<Scalars['Float']['input']>;
+  postFlag?: InputMaybe<PostFlagCreateNestedManyWithoutUserInput>;
+  postLikes?: InputMaybe<PostLikeCreateNestedManyWithoutUserInput>;
+  postReports?: InputMaybe<PostReportCreateNestedManyWithoutUserInput>;
+  posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
+  prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
+  radius?: InputMaybe<Scalars['Int']['input']>;
+  recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
@@ -16628,6 +18721,7 @@ export type UserCreateWithoutInterestedSchoolsInput = {
 };
 
 export type UserCreateWithoutPostFlagInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   accountType: AccountTypeCreateNestedOneWithoutUsersInput;
   address?: InputMaybe<Scalars['String']['input']>;
   athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
@@ -16658,6 +18752,7 @@ export type UserCreateWithoutPostFlagInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
   recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
@@ -16667,6 +18762,7 @@ export type UserCreateWithoutPostFlagInput = {
 };
 
 export type UserCreateWithoutPostLikesInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   accountType: AccountTypeCreateNestedOneWithoutUsersInput;
   address?: InputMaybe<Scalars['String']['input']>;
   athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
@@ -16697,6 +18793,7 @@ export type UserCreateWithoutPostLikesInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
   recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
@@ -16706,6 +18803,7 @@ export type UserCreateWithoutPostLikesInput = {
 };
 
 export type UserCreateWithoutPostReportsInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   accountType: AccountTypeCreateNestedOneWithoutUsersInput;
   address?: InputMaybe<Scalars['String']['input']>;
   athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
@@ -16736,6 +18834,7 @@ export type UserCreateWithoutPostReportsInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
   recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
@@ -16745,6 +18844,7 @@ export type UserCreateWithoutPostReportsInput = {
 };
 
 export type UserCreateWithoutPostsInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   accountType: AccountTypeCreateNestedOneWithoutUsersInput;
   address?: InputMaybe<Scalars['String']['input']>;
   athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
@@ -16775,6 +18875,7 @@ export type UserCreateWithoutPostsInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
   recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
@@ -16784,6 +18885,7 @@ export type UserCreateWithoutPostsInput = {
 };
 
 export type UserCreateWithoutProspectedSchoolsInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   accountType: AccountTypeCreateNestedOneWithoutUsersInput;
   address?: InputMaybe<Scalars['String']['input']>;
   athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
@@ -16814,6 +18916,7 @@ export type UserCreateWithoutProspectedSchoolsInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
   recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
@@ -16823,6 +18926,7 @@ export type UserCreateWithoutProspectedSchoolsInput = {
 };
 
 export type UserCreateWithoutRecruitedSchoolsInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   accountType: AccountTypeCreateNestedOneWithoutUsersInput;
   address?: InputMaybe<Scalars['String']['input']>;
   athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
@@ -16853,6 +18957,7 @@ export type UserCreateWithoutRecruitedSchoolsInput = {
   posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
   prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
@@ -16861,7 +18966,8 @@ export type UserCreateWithoutRecruitedSchoolsInput = {
   uuid?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UserCreateWithoutRoleInput = {
+export type UserCreateWithoutRepostsInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
   accountType: AccountTypeCreateNestedOneWithoutUsersInput;
   address?: InputMaybe<Scalars['String']['input']>;
   athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
@@ -16893,6 +18999,48 @@ export type UserCreateWithoutRoleInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
   radius?: InputMaybe<Scalars['Int']['input']>;
   recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  role?: InputMaybe<RoleCreateNestedOneWithoutUsersInput>;
+  state?: InputMaybe<Scalars['String']['input']>;
+  surname?: InputMaybe<Scalars['String']['input']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  username?: InputMaybe<Scalars['String']['input']>;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UserCreateWithoutRoleInput = {
+  Notification?: InputMaybe<NotificationCreateNestedOneWithoutUserInput>;
+  accountType: AccountTypeCreateNestedOneWithoutUsersInput;
+  address?: InputMaybe<Scalars['String']['input']>;
+  athleteProfile?: InputMaybe<AthleteProfileCreateNestedOneWithoutUserInput>;
+  avatar?: InputMaybe<Scalars['String']['input']>;
+  blockedByUsers?: InputMaybe<BlocksCreateNestedManyWithoutBlockedInput>;
+  blockedUsers?: InputMaybe<BlocksCreateNestedManyWithoutBlockedByInput>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  coachProfile?: InputMaybe<CoachProfileCreateNestedOneWithoutUserInput>;
+  commentLikes?: InputMaybe<CommentLikeCreateNestedManyWithoutUserInput>;
+  comments?: InputMaybe<CommentCreateNestedManyWithoutUserInput>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  dob?: InputMaybe<Scalars['DateTime']['input']>;
+  email: Scalars['String']['input'];
+  evaluationsCreated?: InputMaybe<EvaluationCreateNestedManyWithoutCreatedByInput>;
+  fcmToken?: InputMaybe<Scalars['String']['input']>;
+  firebaseUid: Scalars['String']['input'];
+  firstname?: InputMaybe<Scalars['String']['input']>;
+  followedBy?: InputMaybe<FollowsCreateNestedManyWithoutFollowingInput>;
+  following?: InputMaybe<FollowsCreateNestedManyWithoutFollowerInput>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  interestedSchools?: InputMaybe<InterestedSchoolsCreateNestedManyWithoutUserInput>;
+  isActive?: InputMaybe<Scalars['Boolean']['input']>;
+  latitude?: InputMaybe<Scalars['Float']['input']>;
+  longitude?: InputMaybe<Scalars['Float']['input']>;
+  postFlag?: InputMaybe<PostFlagCreateNestedManyWithoutUserInput>;
+  postLikes?: InputMaybe<PostLikeCreateNestedManyWithoutUserInput>;
+  postReports?: InputMaybe<PostReportCreateNestedManyWithoutUserInput>;
+  posts?: InputMaybe<PostCreateNestedManyWithoutUserInput>;
+  prospectedSchools?: InputMaybe<ProspectedAthleteCreateNestedManyWithoutUserInput>;
+  radius?: InputMaybe<Scalars['Int']['input']>;
+  recruitedSchools?: InputMaybe<RecruitedAthleteCreateNestedManyWithoutUserInput>;
+  reposts?: InputMaybe<RepostCreateNestedManyWithoutUserInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   surname?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
@@ -17068,6 +19216,7 @@ export type UserOrderByWithAggregationInput = {
 };
 
 export type UserOrderByWithRelationInput = {
+  Notification?: InputMaybe<NotificationOrderByWithRelationInput>;
   accountType?: InputMaybe<AccountTypeOrderByWithRelationInput>;
   accountTypeId?: InputMaybe<SortOrder>;
   address?: InputMaybe<SortOrder>;
@@ -17100,6 +19249,7 @@ export type UserOrderByWithRelationInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteOrderByRelationAggregateInput>;
   radius?: InputMaybe<SortOrder>;
   recruitedSchools?: InputMaybe<RecruitedAthleteOrderByRelationAggregateInput>;
+  reposts?: InputMaybe<RepostOrderByRelationAggregateInput>;
   role?: InputMaybe<RoleOrderByWithRelationInput>;
   roleId?: InputMaybe<SortOrder>;
   state?: InputMaybe<SortOrder>;
@@ -17212,6 +19362,7 @@ export type UserSumOrderByAggregateInput = {
 };
 
 export type UserUpdateInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
@@ -17243,6 +19394,7 @@ export type UserUpdateInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
   recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -17383,6 +19535,14 @@ export type UserUpdateOneRequiredWithoutFollowingNestedInput = {
   upsert?: InputMaybe<UserUpsertWithoutFollowingInput>;
 };
 
+export type UserUpdateOneRequiredWithoutNotificationNestedInput = {
+  connect?: InputMaybe<UserWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutNotificationInput>;
+  create?: InputMaybe<UserCreateWithoutNotificationInput>;
+  update?: InputMaybe<UserUpdateWithoutNotificationInput>;
+  upsert?: InputMaybe<UserUpsertWithoutNotificationInput>;
+};
+
 export type UserUpdateOneRequiredWithoutPostFlagNestedInput = {
   connect?: InputMaybe<UserWhereUniqueInput>;
   connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutPostFlagInput>;
@@ -17413,6 +19573,14 @@ export type UserUpdateOneRequiredWithoutPostsNestedInput = {
   create?: InputMaybe<UserCreateWithoutPostsInput>;
   update?: InputMaybe<UserUpdateWithoutPostsInput>;
   upsert?: InputMaybe<UserUpsertWithoutPostsInput>;
+};
+
+export type UserUpdateOneRequiredWithoutRepostsNestedInput = {
+  connect?: InputMaybe<UserWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutRepostsInput>;
+  create?: InputMaybe<UserCreateWithoutRepostsInput>;
+  update?: InputMaybe<UserUpdateWithoutRepostsInput>;
+  upsert?: InputMaybe<UserUpsertWithoutRepostsInput>;
 };
 
 export type UserUpdateOneWithoutInterestedSchoolsNestedInput = {
@@ -17456,6 +19624,7 @@ export type UserUpdateWithWhereUniqueWithoutRoleInput = {
 };
 
 export type UserUpdateWithoutAccountTypeInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
   avatar?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
@@ -17486,6 +19655,7 @@ export type UserUpdateWithoutAccountTypeInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
   recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -17495,6 +19665,7 @@ export type UserUpdateWithoutAccountTypeInput = {
 };
 
 export type UserUpdateWithoutAthleteProfileInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   avatar?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
@@ -17525,6 +19696,7 @@ export type UserUpdateWithoutAthleteProfileInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
   recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -17534,6 +19706,7 @@ export type UserUpdateWithoutAthleteProfileInput = {
 };
 
 export type UserUpdateWithoutBlockedByUsersInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
@@ -17564,6 +19737,7 @@ export type UserUpdateWithoutBlockedByUsersInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
   recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -17573,6 +19747,7 @@ export type UserUpdateWithoutBlockedByUsersInput = {
 };
 
 export type UserUpdateWithoutBlockedUsersInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
@@ -17603,6 +19778,7 @@ export type UserUpdateWithoutBlockedUsersInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
   recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -17612,6 +19788,7 @@ export type UserUpdateWithoutBlockedUsersInput = {
 };
 
 export type UserUpdateWithoutCoachProfileInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
@@ -17642,6 +19819,7 @@ export type UserUpdateWithoutCoachProfileInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
   recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -17651,6 +19829,7 @@ export type UserUpdateWithoutCoachProfileInput = {
 };
 
 export type UserUpdateWithoutCommentLikesInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
@@ -17681,6 +19860,7 @@ export type UserUpdateWithoutCommentLikesInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
   recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -17690,6 +19870,7 @@ export type UserUpdateWithoutCommentLikesInput = {
 };
 
 export type UserUpdateWithoutCommentsInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
@@ -17720,6 +19901,7 @@ export type UserUpdateWithoutCommentsInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
   recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -17729,6 +19911,7 @@ export type UserUpdateWithoutCommentsInput = {
 };
 
 export type UserUpdateWithoutEvaluationsCreatedInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
@@ -17759,6 +19942,7 @@ export type UserUpdateWithoutEvaluationsCreatedInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
   recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -17768,6 +19952,7 @@ export type UserUpdateWithoutEvaluationsCreatedInput = {
 };
 
 export type UserUpdateWithoutFollowedByInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
@@ -17798,6 +19983,7 @@ export type UserUpdateWithoutFollowedByInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
   recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -17807,6 +19993,7 @@ export type UserUpdateWithoutFollowedByInput = {
 };
 
 export type UserUpdateWithoutFollowingInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
@@ -17837,6 +20024,7 @@ export type UserUpdateWithoutFollowingInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
   recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -17846,6 +20034,7 @@ export type UserUpdateWithoutFollowingInput = {
 };
 
 export type UserUpdateWithoutInterestedSchoolsInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
@@ -17876,6 +20065,48 @@ export type UserUpdateWithoutInterestedSchoolsInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
   recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
+  role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
+  state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  surname?: InputMaybe<StringFieldUpdateOperationsInput>;
+  updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  username?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+};
+
+export type UserUpdateWithoutNotificationInput = {
+  accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
+  address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
+  avatar?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  blockedByUsers?: InputMaybe<BlocksUpdateManyWithoutBlockedNestedInput>;
+  blockedUsers?: InputMaybe<BlocksUpdateManyWithoutBlockedByNestedInput>;
+  city?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  coachProfile?: InputMaybe<CoachProfileUpdateOneWithoutUserNestedInput>;
+  commentLikes?: InputMaybe<CommentLikeUpdateManyWithoutUserNestedInput>;
+  comments?: InputMaybe<CommentUpdateManyWithoutUserNestedInput>;
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  dob?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
+  email?: InputMaybe<StringFieldUpdateOperationsInput>;
+  evaluationsCreated?: InputMaybe<EvaluationUpdateManyWithoutCreatedByNestedInput>;
+  fcmToken?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  firebaseUid?: InputMaybe<StringFieldUpdateOperationsInput>;
+  firstname?: InputMaybe<StringFieldUpdateOperationsInput>;
+  followedBy?: InputMaybe<FollowsUpdateManyWithoutFollowingNestedInput>;
+  following?: InputMaybe<FollowsUpdateManyWithoutFollowerNestedInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  interestedSchools?: InputMaybe<InterestedSchoolsUpdateManyWithoutUserNestedInput>;
+  isActive?: InputMaybe<BoolFieldUpdateOperationsInput>;
+  latitude?: InputMaybe<NullableFloatFieldUpdateOperationsInput>;
+  longitude?: InputMaybe<NullableFloatFieldUpdateOperationsInput>;
+  postFlag?: InputMaybe<PostFlagUpdateManyWithoutUserNestedInput>;
+  postLikes?: InputMaybe<PostLikeUpdateManyWithoutUserNestedInput>;
+  postReports?: InputMaybe<PostReportUpdateManyWithoutUserNestedInput>;
+  posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
+  prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
+  radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
+  recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -17885,6 +20116,7 @@ export type UserUpdateWithoutInterestedSchoolsInput = {
 };
 
 export type UserUpdateWithoutPostFlagInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
@@ -17915,6 +20147,7 @@ export type UserUpdateWithoutPostFlagInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
   recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -17924,6 +20157,7 @@ export type UserUpdateWithoutPostFlagInput = {
 };
 
 export type UserUpdateWithoutPostLikesInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
@@ -17954,6 +20188,7 @@ export type UserUpdateWithoutPostLikesInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
   recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -17963,6 +20198,7 @@ export type UserUpdateWithoutPostLikesInput = {
 };
 
 export type UserUpdateWithoutPostReportsInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
@@ -17993,6 +20229,7 @@ export type UserUpdateWithoutPostReportsInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
   recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -18002,6 +20239,7 @@ export type UserUpdateWithoutPostReportsInput = {
 };
 
 export type UserUpdateWithoutPostsInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
@@ -18032,6 +20270,7 @@ export type UserUpdateWithoutPostsInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
   recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -18041,6 +20280,7 @@ export type UserUpdateWithoutPostsInput = {
 };
 
 export type UserUpdateWithoutProspectedSchoolsInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
@@ -18071,6 +20311,7 @@ export type UserUpdateWithoutProspectedSchoolsInput = {
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
   recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -18080,6 +20321,7 @@ export type UserUpdateWithoutProspectedSchoolsInput = {
 };
 
 export type UserUpdateWithoutRecruitedSchoolsInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
@@ -18110,6 +20352,7 @@ export type UserUpdateWithoutRecruitedSchoolsInput = {
   posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
   prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
@@ -18118,7 +20361,8 @@ export type UserUpdateWithoutRecruitedSchoolsInput = {
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
 };
 
-export type UserUpdateWithoutRoleInput = {
+export type UserUpdateWithoutRepostsInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
   accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
   address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
@@ -18150,6 +20394,48 @@ export type UserUpdateWithoutRoleInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
   radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
   recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  role?: InputMaybe<RoleUpdateOneWithoutUsersNestedInput>;
+  state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  surname?: InputMaybe<StringFieldUpdateOperationsInput>;
+  updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  username?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+};
+
+export type UserUpdateWithoutRoleInput = {
+  Notification?: InputMaybe<NotificationUpdateOneWithoutUserNestedInput>;
+  accountType?: InputMaybe<AccountTypeUpdateOneRequiredWithoutUsersNestedInput>;
+  address?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  athleteProfile?: InputMaybe<AthleteProfileUpdateOneWithoutUserNestedInput>;
+  avatar?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  blockedByUsers?: InputMaybe<BlocksUpdateManyWithoutBlockedNestedInput>;
+  blockedUsers?: InputMaybe<BlocksUpdateManyWithoutBlockedByNestedInput>;
+  city?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  coachProfile?: InputMaybe<CoachProfileUpdateOneWithoutUserNestedInput>;
+  commentLikes?: InputMaybe<CommentLikeUpdateManyWithoutUserNestedInput>;
+  comments?: InputMaybe<CommentUpdateManyWithoutUserNestedInput>;
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  dob?: InputMaybe<NullableDateTimeFieldUpdateOperationsInput>;
+  email?: InputMaybe<StringFieldUpdateOperationsInput>;
+  evaluationsCreated?: InputMaybe<EvaluationUpdateManyWithoutCreatedByNestedInput>;
+  fcmToken?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
+  firebaseUid?: InputMaybe<StringFieldUpdateOperationsInput>;
+  firstname?: InputMaybe<StringFieldUpdateOperationsInput>;
+  followedBy?: InputMaybe<FollowsUpdateManyWithoutFollowingNestedInput>;
+  following?: InputMaybe<FollowsUpdateManyWithoutFollowerNestedInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  interestedSchools?: InputMaybe<InterestedSchoolsUpdateManyWithoutUserNestedInput>;
+  isActive?: InputMaybe<BoolFieldUpdateOperationsInput>;
+  latitude?: InputMaybe<NullableFloatFieldUpdateOperationsInput>;
+  longitude?: InputMaybe<NullableFloatFieldUpdateOperationsInput>;
+  postFlag?: InputMaybe<PostFlagUpdateManyWithoutUserNestedInput>;
+  postLikes?: InputMaybe<PostLikeUpdateManyWithoutUserNestedInput>;
+  postReports?: InputMaybe<PostReportUpdateManyWithoutUserNestedInput>;
+  posts?: InputMaybe<PostUpdateManyWithoutUserNestedInput>;
+  prospectedSchools?: InputMaybe<ProspectedAthleteUpdateManyWithoutUserNestedInput>;
+  radius?: InputMaybe<NullableIntFieldUpdateOperationsInput>;
+  recruitedSchools?: InputMaybe<RecruitedAthleteUpdateManyWithoutUserNestedInput>;
+  reposts?: InputMaybe<RepostUpdateManyWithoutUserNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   surname?: InputMaybe<StringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
@@ -18219,6 +20505,11 @@ export type UserUpsertWithoutInterestedSchoolsInput = {
   update: UserUpdateWithoutInterestedSchoolsInput;
 };
 
+export type UserUpsertWithoutNotificationInput = {
+  create: UserCreateWithoutNotificationInput;
+  update: UserUpdateWithoutNotificationInput;
+};
+
 export type UserUpsertWithoutPostFlagInput = {
   create: UserCreateWithoutPostFlagInput;
   update: UserUpdateWithoutPostFlagInput;
@@ -18249,9 +20540,15 @@ export type UserUpsertWithoutRecruitedSchoolsInput = {
   update: UserUpdateWithoutRecruitedSchoolsInput;
 };
 
+export type UserUpsertWithoutRepostsInput = {
+  create: UserCreateWithoutRepostsInput;
+  update: UserUpdateWithoutRepostsInput;
+};
+
 export type UserWhereInput = {
   AND?: InputMaybe<Array<UserWhereInput>>;
   NOT?: InputMaybe<Array<UserWhereInput>>;
+  Notification?: InputMaybe<NotificationRelationFilter>;
   OR?: InputMaybe<Array<UserWhereInput>>;
   accountType?: InputMaybe<AccountTypeRelationFilter>;
   accountTypeId?: InputMaybe<BigIntFilter>;
@@ -18285,6 +20582,7 @@ export type UserWhereInput = {
   prospectedSchools?: InputMaybe<ProspectedAthleteListRelationFilter>;
   radius?: InputMaybe<IntNullableFilter>;
   recruitedSchools?: InputMaybe<RecruitedAthleteListRelationFilter>;
+  reposts?: InputMaybe<RepostListRelationFilter>;
   role?: InputMaybe<RoleRelationFilter>;
   roleId?: InputMaybe<BigIntNullableFilter>;
   state?: InputMaybe<StringNullableFilter>;
@@ -18389,6 +20687,61 @@ export type RegisterCoachMutationVariables = Exact<{
 
 
 export type RegisterCoachMutation = { __typename?: 'Mutation', registerCoach: { __typename?: 'RegisterCoachReturn', coach: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, coachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, school: { __typename?: 'School', id: any, name: string } } | null } } };
+
+export type GetCommentQueryVariables = Exact<{
+  where: CommentWhereUniqueInput;
+}>;
+
+
+export type GetCommentQuery = { __typename?: 'Query', comment?: { __typename?: 'Comment', id: any, uuid: string, text: string, createdAt: any, user: { __typename?: 'User', firstname: string, surname: string, id: any, avatar?: string | null }, _count?: { __typename?: 'CommentCount', commentLikes: number } | null } | null };
+
+export type GetCommentLikeQueryVariables = Exact<{
+  where: CommentLikeWhereInput;
+}>;
+
+
+export type GetCommentLikeQuery = { __typename?: 'Query', commentLikes: Array<{ __typename?: 'CommentLike', id: any }> };
+
+export type GetCommentsQueryVariables = Exact<{
+  where?: InputMaybe<CommentWhereInput>;
+  orderBy?: InputMaybe<Array<CommentOrderByWithRelationInput> | CommentOrderByWithRelationInput>;
+  cursor?: InputMaybe<CommentWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  distinct?: InputMaybe<Array<CommentScalarFieldEnum> | CommentScalarFieldEnum>;
+  userId?: InputMaybe<Scalars['BigInt']['input']>;
+}>;
+
+
+export type GetCommentsQuery = { __typename?: 'Query', comments: Array<{ __typename?: 'Comment', id: any, uuid: string, text: string, createdAt: any, user: { __typename?: 'User', firstname: string, surname: string, id: any, avatar?: string | null }, commentLikes: Array<{ __typename?: 'CommentLike', id: any }>, _count?: { __typename?: 'CommentCount', commentLikes: number } | null }> };
+
+export type CreateCommentMutationVariables = Exact<{
+  data: CommentCreateInput;
+}>;
+
+
+export type CreateCommentMutation = { __typename?: 'Mutation', createOneComment: { __typename?: 'Comment', id: any } };
+
+export type LikeCommentMutationVariables = Exact<{
+  data: CommentLikeCreateInput;
+}>;
+
+
+export type LikeCommentMutation = { __typename?: 'Mutation', createOneCommentLike: { __typename?: 'CommentLike', id: any } };
+
+export type UnLikeCommentMutationVariables = Exact<{
+  where: CommentLikeWhereUniqueInput;
+}>;
+
+
+export type UnLikeCommentMutation = { __typename?: 'Mutation', deleteOneCommentLike?: { __typename?: 'CommentLike', id: any } | null };
+
+export type UpdateUserFcmTokenInputMutationVariables = Exact<{
+  data: UpdateUserFcmTokenInput;
+}>;
+
+
+export type UpdateUserFcmTokenInputMutation = { __typename?: 'Mutation', updateUserFcmToken?: { __typename?: 'UpdateUserFcmTokenReturn', success: boolean, user: { __typename?: 'User', id: any, firstname: string } } | null };
 
 export type CreatePostMutationVariables = Exact<{
   data: PostCreateInput;
@@ -18673,7 +21026,7 @@ export type UpdateOneSkillMutationVariables = Exact<{
 
 export type UpdateOneSkillMutation = { __typename?: 'Mutation', updateOneSkills?: { __typename?: 'Skills', id: any, videos: Array<string> } | null };
 
-export type UserCommonPartsFragment = { __typename?: 'User', id: any, firstname: string, surname: string, email: string, isActive: boolean, avatar?: string | null, dob?: any | null, username?: string | null, address?: string | null, firebaseUid: string, city?: string | null, state?: string | null, createdAt: any, _count?: { __typename?: 'UserCount', following: number, followedBy: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, schoolId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } };
+export type UserCommonPartsFragment = { __typename?: 'User', id: any, firstname: string, surname: string, email: string, isActive: boolean, avatar?: string | null, dob?: any | null, username?: string | null, address?: string | null, firebaseUid: string, city?: string | null, state?: string | null, createdAt: any, accountTypeId: any, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, comments: number, postLikes: number, commentLikes: number, postReports: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluationsCreated: number, postFlag: number, blockedByUsers: number, blockedUsers: number, reposts: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, schoolId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } };
 
 export type GetFollowersQueryVariables = Exact<{
   where?: InputMaybe<FollowsWhereInput>;
@@ -18693,7 +21046,7 @@ export type GetUserQueryVariables = Exact<{
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, isActive: boolean, avatar?: string | null, dob?: any | null, username?: string | null, address?: string | null, firebaseUid: string, city?: string | null, state?: string | null, createdAt: any, followedBy: Array<{ __typename?: 'Follows', followerId: any, follower: { __typename?: 'User', id: any, firstname: string, surname: string } }>, _count?: { __typename?: 'UserCount', following: number, followedBy: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, schoolId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } } | null };
+export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, isActive: boolean, avatar?: string | null, dob?: any | null, username?: string | null, address?: string | null, firebaseUid: string, city?: string | null, state?: string | null, createdAt: any, accountTypeId: any, followedBy: Array<{ __typename?: 'Follows', followerId: any, follower: { __typename?: 'User', id: any, firstname: string, surname: string } }>, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, comments: number, postLikes: number, commentLikes: number, postReports: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluationsCreated: number, postFlag: number, blockedByUsers: number, blockedUsers: number, reposts: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, schoolId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } } | null };
 
 export type GetUsersQueryVariables = Exact<{
   where?: InputMaybe<UserWhereInput>;
@@ -18705,7 +21058,7 @@ export type GetUsersQueryVariables = Exact<{
 }>;
 
 
-export type GetUsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, username?: string | null, city?: string | null, state?: string | null, isActive: boolean, dob?: any | null, address?: string | null, firebaseUid: string, createdAt: any, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }> } | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, schoolId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } }> };
+export type GetUsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, username?: string | null, city?: string | null, state?: string | null, isActive: boolean, dob?: any | null, address?: string | null, firebaseUid: string, createdAt: any, accountTypeId: any, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }> } | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, comments: number, postLikes: number, commentLikes: number, postReports: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluationsCreated: number, postFlag: number, blockedByUsers: number, blockedUsers: number, reposts: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, schoolId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } }> };
 
 export type GetBlockedUsersQueryVariables = Exact<{
   where?: InputMaybe<BlocksWhereInput>;
@@ -18724,7 +21077,7 @@ export type CreateOneUserMutationVariables = Exact<{
 }>;
 
 
-export type CreateOneUserMutation = { __typename?: 'Mutation', createOneUser: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, isActive: boolean, avatar?: string | null, dob?: any | null, username?: string | null, address?: string | null, firebaseUid: string, city?: string | null, state?: string | null, createdAt: any, _count?: { __typename?: 'UserCount', following: number, followedBy: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, schoolId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } } };
+export type CreateOneUserMutation = { __typename?: 'Mutation', createOneUser: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, isActive: boolean, avatar?: string | null, dob?: any | null, username?: string | null, address?: string | null, firebaseUid: string, city?: string | null, state?: string | null, createdAt: any, accountTypeId: any, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, comments: number, postLikes: number, commentLikes: number, postReports: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluationsCreated: number, postFlag: number, blockedByUsers: number, blockedUsers: number, reposts: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, schoolId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } } };
 
 export type UpdateUserMutationVariables = Exact<{
   data: UserUpdateInput;
@@ -18828,9 +21181,23 @@ export const UserCommonPartsFragmentDoc = gql`
   city
   state
   createdAt
+  accountTypeId
   _count {
     following
     followedBy
+    posts
+    comments
+    postLikes
+    commentLikes
+    postReports
+    interestedSchools
+    recruitedSchools
+    prospectedSchools
+    evaluationsCreated
+    postFlag
+    blockedByUsers
+    blockedUsers
+    reposts
   }
   following {
     followingId
@@ -19438,6 +21805,302 @@ export function useRegisterCoachMutation(baseOptions?: ApolloReactHooks.Mutation
 export type RegisterCoachMutationHookResult = ReturnType<typeof useRegisterCoachMutation>;
 export type RegisterCoachMutationResult = Apollo.MutationResult<RegisterCoachMutation>;
 export type RegisterCoachMutationOptions = Apollo.BaseMutationOptions<RegisterCoachMutation, RegisterCoachMutationVariables>;
+export const GetCommentDocument = gql`
+    query getComment($where: CommentWhereUniqueInput!) {
+  comment(where: $where) {
+    id
+    uuid
+    user {
+      firstname
+      surname
+      id
+      avatar
+    }
+    text
+    createdAt
+    _count {
+      commentLikes
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCommentQuery__
+ *
+ * To run a query within a React component, call `useGetCommentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommentQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommentQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetCommentQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCommentQuery, GetCommentQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCommentQuery, GetCommentQueryVariables>(GetCommentDocument, options);
+      }
+export function useGetCommentLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCommentQuery, GetCommentQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCommentQuery, GetCommentQueryVariables>(GetCommentDocument, options);
+        }
+export function useGetCommentSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetCommentQuery, GetCommentQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCommentQuery, GetCommentQueryVariables>(GetCommentDocument, options);
+        }
+export type GetCommentQueryHookResult = ReturnType<typeof useGetCommentQuery>;
+export type GetCommentLazyQueryHookResult = ReturnType<typeof useGetCommentLazyQuery>;
+export type GetCommentSuspenseQueryHookResult = ReturnType<typeof useGetCommentSuspenseQuery>;
+export type GetCommentQueryResult = Apollo.QueryResult<GetCommentQuery, GetCommentQueryVariables>;
+export const GetCommentLikeDocument = gql`
+    query getCommentLike($where: CommentLikeWhereInput!) {
+  commentLikes(where: $where) {
+    id
+  }
+}
+    `;
+
+/**
+ * __useGetCommentLikeQuery__
+ *
+ * To run a query within a React component, call `useGetCommentLikeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommentLikeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommentLikeQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetCommentLikeQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCommentLikeQuery, GetCommentLikeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCommentLikeQuery, GetCommentLikeQueryVariables>(GetCommentLikeDocument, options);
+      }
+export function useGetCommentLikeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCommentLikeQuery, GetCommentLikeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCommentLikeQuery, GetCommentLikeQueryVariables>(GetCommentLikeDocument, options);
+        }
+export function useGetCommentLikeSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetCommentLikeQuery, GetCommentLikeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCommentLikeQuery, GetCommentLikeQueryVariables>(GetCommentLikeDocument, options);
+        }
+export type GetCommentLikeQueryHookResult = ReturnType<typeof useGetCommentLikeQuery>;
+export type GetCommentLikeLazyQueryHookResult = ReturnType<typeof useGetCommentLikeLazyQuery>;
+export type GetCommentLikeSuspenseQueryHookResult = ReturnType<typeof useGetCommentLikeSuspenseQuery>;
+export type GetCommentLikeQueryResult = Apollo.QueryResult<GetCommentLikeQuery, GetCommentLikeQueryVariables>;
+export const GetCommentsDocument = gql`
+    query getComments($where: CommentWhereInput, $orderBy: [CommentOrderByWithRelationInput!], $cursor: CommentWhereUniqueInput, $take: Int, $skip: Int, $distinct: [CommentScalarFieldEnum!], $userId: BigInt) {
+  comments(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    id
+    uuid
+    user {
+      firstname
+      surname
+      id
+      avatar
+    }
+    text
+    createdAt
+    commentLikes(where: {userId: {equals: $userId}}) {
+      id
+    }
+    _count {
+      commentLikes
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCommentsQuery__
+ *
+ * To run a query within a React component, call `useGetCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCommentsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      distinct: // value for 'distinct'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetCommentsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetCommentsQuery, GetCommentsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCommentsQuery, GetCommentsQueryVariables>(GetCommentsDocument, options);
+      }
+export function useGetCommentsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCommentsQuery, GetCommentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCommentsQuery, GetCommentsQueryVariables>(GetCommentsDocument, options);
+        }
+export function useGetCommentsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetCommentsQuery, GetCommentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCommentsQuery, GetCommentsQueryVariables>(GetCommentsDocument, options);
+        }
+export type GetCommentsQueryHookResult = ReturnType<typeof useGetCommentsQuery>;
+export type GetCommentsLazyQueryHookResult = ReturnType<typeof useGetCommentsLazyQuery>;
+export type GetCommentsSuspenseQueryHookResult = ReturnType<typeof useGetCommentsSuspenseQuery>;
+export type GetCommentsQueryResult = Apollo.QueryResult<GetCommentsQuery, GetCommentsQueryVariables>;
+export const CreateCommentDocument = gql`
+    mutation createComment($data: CommentCreateInput!) {
+  createOneComment(data: $data) {
+    id
+  }
+}
+    `;
+export type CreateCommentMutationFn = Apollo.MutationFunction<CreateCommentMutation, CreateCommentMutationVariables>;
+
+/**
+ * __useCreateCommentMutation__
+ *
+ * To run a mutation, you first call `useCreateCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCommentMutation, { data, loading, error }] = useCreateCommentMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateCommentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateCommentMutation, CreateCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateCommentMutation, CreateCommentMutationVariables>(CreateCommentDocument, options);
+      }
+export type CreateCommentMutationHookResult = ReturnType<typeof useCreateCommentMutation>;
+export type CreateCommentMutationResult = Apollo.MutationResult<CreateCommentMutation>;
+export type CreateCommentMutationOptions = Apollo.BaseMutationOptions<CreateCommentMutation, CreateCommentMutationVariables>;
+export const LikeCommentDocument = gql`
+    mutation likeComment($data: CommentLikeCreateInput!) {
+  createOneCommentLike(data: $data) {
+    id
+  }
+}
+    `;
+export type LikeCommentMutationFn = Apollo.MutationFunction<LikeCommentMutation, LikeCommentMutationVariables>;
+
+/**
+ * __useLikeCommentMutation__
+ *
+ * To run a mutation, you first call `useLikeCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLikeCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [likeCommentMutation, { data, loading, error }] = useLikeCommentMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useLikeCommentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LikeCommentMutation, LikeCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<LikeCommentMutation, LikeCommentMutationVariables>(LikeCommentDocument, options);
+      }
+export type LikeCommentMutationHookResult = ReturnType<typeof useLikeCommentMutation>;
+export type LikeCommentMutationResult = Apollo.MutationResult<LikeCommentMutation>;
+export type LikeCommentMutationOptions = Apollo.BaseMutationOptions<LikeCommentMutation, LikeCommentMutationVariables>;
+export const UnLikeCommentDocument = gql`
+    mutation unLikeComment($where: CommentLikeWhereUniqueInput!) {
+  deleteOneCommentLike(where: $where) {
+    id
+  }
+}
+    `;
+export type UnLikeCommentMutationFn = Apollo.MutationFunction<UnLikeCommentMutation, UnLikeCommentMutationVariables>;
+
+/**
+ * __useUnLikeCommentMutation__
+ *
+ * To run a mutation, you first call `useUnLikeCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnLikeCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unLikeCommentMutation, { data, loading, error }] = useUnLikeCommentMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useUnLikeCommentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UnLikeCommentMutation, UnLikeCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UnLikeCommentMutation, UnLikeCommentMutationVariables>(UnLikeCommentDocument, options);
+      }
+export type UnLikeCommentMutationHookResult = ReturnType<typeof useUnLikeCommentMutation>;
+export type UnLikeCommentMutationResult = Apollo.MutationResult<UnLikeCommentMutation>;
+export type UnLikeCommentMutationOptions = Apollo.BaseMutationOptions<UnLikeCommentMutation, UnLikeCommentMutationVariables>;
+export const UpdateUserFcmTokenInputDocument = gql`
+    mutation updateUserFcmTokenInput($data: UpdateUserFcmTokenInput!) {
+  updateUserFcmToken(data: $data) {
+    user {
+      id
+      firstname
+    }
+    success
+  }
+}
+    `;
+export type UpdateUserFcmTokenInputMutationFn = Apollo.MutationFunction<UpdateUserFcmTokenInputMutation, UpdateUserFcmTokenInputMutationVariables>;
+
+/**
+ * __useUpdateUserFcmTokenInputMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserFcmTokenInputMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserFcmTokenInputMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserFcmTokenInputMutation, { data, loading, error }] = useUpdateUserFcmTokenInputMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateUserFcmTokenInputMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateUserFcmTokenInputMutation, UpdateUserFcmTokenInputMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateUserFcmTokenInputMutation, UpdateUserFcmTokenInputMutationVariables>(UpdateUserFcmTokenInputDocument, options);
+      }
+export type UpdateUserFcmTokenInputMutationHookResult = ReturnType<typeof useUpdateUserFcmTokenInputMutation>;
+export type UpdateUserFcmTokenInputMutationResult = Apollo.MutationResult<UpdateUserFcmTokenInputMutation>;
+export type UpdateUserFcmTokenInputMutationOptions = Apollo.BaseMutationOptions<UpdateUserFcmTokenInputMutation, UpdateUserFcmTokenInputMutationVariables>;
 export const CreatePostDocument = gql`
     mutation createPost($data: PostCreateInput!) {
   createOnePost(data: $data) {

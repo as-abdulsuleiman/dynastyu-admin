@@ -23,22 +23,25 @@ const SelectCard: FC<SelectCardProps> = ({
   className,
 }) => {
   return (
-    <div className={className}>
-      <Select value={selectedItem} onValueChange={onValueChange}>
-        {items?.map((a, index) => {
-          return (
-            <SelectItem
-              key={index}
-              value={a.value}
-              icon={UserCircleIcon}
-              className="cursor-pointer"
-            >
-              {a?.name}
-            </SelectItem>
-          );
-        })}
-      </Select>
-    </div>
+    <Select
+      className={className}
+      value={selectedItem}
+      placeholder="Select..."
+      onValueChange={onValueChange}
+    >
+      {items?.map((a, index) => {
+        return (
+          <SelectItem
+            key={index}
+            value={a.value}
+            icon={UserCircleIcon}
+            className="cursor-pointer"
+          >
+            {a?.name}
+          </SelectItem>
+        );
+      })}
+    </Select>
   );
 };
 

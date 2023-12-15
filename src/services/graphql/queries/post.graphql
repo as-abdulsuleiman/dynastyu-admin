@@ -1,3 +1,5 @@
+# @format
+
 mutation createPost($data: PostCreateInput!) {
   createOnePost(data: $data) {
     id
@@ -43,17 +45,17 @@ query getPosts(
       id
       username
       email
-      followedBy{
+      followedBy {
         followerId
         followingId
-        follower{
+        follower {
           id
           username
           firstname
           surname
           email
         }
-        following{
+        following {
           id
           username
           firstname
