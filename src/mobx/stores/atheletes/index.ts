@@ -1,5 +1,5 @@
 "use client"
-import { User } from "@/services/graphql";
+import { GetUsersQuery, User } from "@/services/graphql";
 import { cast, types } from "mobx-state-tree";
 
 /**
@@ -12,7 +12,7 @@ import { cast, types } from "mobx-state-tree";
 export const AtheletesStore = types
   .model("AtheletesStore", {
     // atheletes: types.optional(types.frozen<Partial<User[]>>(), []),
-    atheletes: types.optional(types.frozen<Partial<User[]>>(),[],
+    atheletes: types.optional(types.frozen<Partial<GetUsersQuery[]>>(),[],
     ),
     // atheletes: types.optional(types.array(types.frozen<User[]>()), []),
 
@@ -20,7 +20,7 @@ export const AtheletesStore = types
   })
   .actions((store) => ({
    
-    setAtheletes(atheletes: Partial<User>) {
+    setAtheletes(atheletes: Partial<GetUsersQuery[]>) {
         store.atheletes = atheletes
       },
     // initAuth(token: string) {

@@ -31,7 +31,7 @@ const UsersCount: FC<indexProps> = ({}) => {
 
   const { data: users, loading } = useGetUsersQuery({
     onCompleted: (data) => {
-      setUsers(data?.users);
+      setUsers(data as any);
     },
   });
 

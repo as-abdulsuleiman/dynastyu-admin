@@ -34,8 +34,8 @@ const AtheletesCount: FC<indexProps> = ({}) => {
         },
       },
     },
-    onCompleted: (data) => {
-      setAtheletes(data.users);
+    onCompleted: (data: GetUsersQuery) => {
+      setAtheletes(data as any);
     },
   });
 
