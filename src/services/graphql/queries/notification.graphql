@@ -1,0 +1,9 @@
+mutation updateUserFcmTokenInput($data: UpdateUserFcmTokenInput!) {
+  updateUserFcmToken(data: $data) {
+    user {
+      id
+      firstname
+    }
+    success
+  }
+}

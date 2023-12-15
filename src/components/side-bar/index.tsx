@@ -27,22 +27,22 @@ const SideBar: FC<SideBarProps> = ({}) => {
       ),
       hasFill: false,
     },
-    {
-      name: "Users",
-      hasFill: false,
-      path: "/users",
-      icon: ({ className, color }: IconProps) => (
-        <Users className={className} color={color} />
-      ),
-    },
-    {
-      name: "Atheletes",
-      hasFill: false,
-      path: "/atheletes",
-      icon: ({ className, color }: IconProps) => (
-        <Medal className={className} color={color} />
-      ),
-    },
+    // {
+    //   name: "Users",
+    //   hasFill: false,
+    //   path: "/users",
+    //   icon: ({ className, color }: IconProps) => (
+    //     <Users className={className} color={color} />
+    //   ),
+    // },
+    // {
+    //   name: "Atheletes",
+    //   hasFill: false,
+    //   path: "/atheletes",
+    //   icon: ({ className, color }: IconProps) => (
+    //     <Medal className={className} color={color} />
+    //   ),
+    // },
     {
       name: "Coaches",
       hasFill: false,
@@ -51,22 +51,22 @@ const SideBar: FC<SideBarProps> = ({}) => {
         <Medal className={className} color={color} />
       ),
     },
-    {
-      name: "Fans",
-      hasFill: false,
-      path: "/fans",
-      icon: ({ className, color }: IconProps) => (
-        <Medal className={className} color={color} />
-      ),
-    },
-    {
-      name: "Schools",
-      hasFill: false,
-      path: "/schools",
-      icon: ({ className, color }: IconProps) => (
-        <School className={className} color={color} />
-      ),
-    },
+    // {
+    //   name: "Fans",
+    //   hasFill: false,
+    //   path: "/fans",
+    //   icon: ({ className, color }: IconProps) => (
+    //     <Medal className={className} color={color} />
+    //   ),
+    // },
+    // {
+    //   name: "Schools",
+    //   hasFill: false,
+    //   path: "/schools",
+    //   icon: ({ className, color }: IconProps) => (
+    //     <School className={className} color={color} />
+    //   ),
+    // },
   ];
   return (
     <div className="w-full px-6 py-16">

@@ -1,4 +1,5 @@
 /** @format */
+"use client";
 
 import { FC } from "react";
 import { StatusOnlineIcon } from "@heroicons/react/outline";
@@ -16,61 +17,118 @@ import {
   Title,
 } from "@tremor/react";
 import { User } from "@/services/graphql";
-import { CalculatorIcon } from "@heroicons/react/outline";
-import { Select, SelectItem } from "@tremor/react";
-import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface UsersTableProps {
   users: any;
+  loading: boolean;
+  headerItems: HeaderItems[];
+  title: string;
 }
 
-const UsersTable: FC<UsersTableProps> = ({ users }) => {
+type HeaderItems = {
+  name: string;
+};
+
+const renderEmptyItems = () => {
+  return (
+    <TableRow>
+      <TableCell colSpan={4}>
+        <div className="flex items-center justify-center h-full w-full mx-auto my-auto py-4">
+          <span>No Result Found</span>
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+};
+
+const UsersTable: FC<UsersTableProps> = ({
+  users,
+  loading,
+  headerItems,
+  title,
+}) => {
+  const router = useRouter();
+
   return (
     <Card className="mt-5 w-full">
-      <Title>Users List</Title>
-      <Table className="mt-5 ">
+      <Title>{title}</Title>
+      <Table className="mt-5 w-full">
         <TableHead>
-          <TableRow>
-            <TableHeaderCell>Name</TableHeaderCell>
-            <TableHeaderCell>Role</TableHeaderCell>
-            <TableHeaderCell>Email</TableHeaderCell>
-            <TableHeaderCell>Status</TableHeaderCell>
+          <TableRow className="">
+            {headerItems.map((a, id) => {
+              const firstElem = id !== 0 ? "text-center" : "";
+              return (
+                <TableHeaderCell className={firstElem} key={id}>
+                  {a?.name}
+                </TableHeaderCell>
+              );
+            })}
           </TableRow>
         </TableHead>
         <TableBody>
-          {users?.users?.map((item: User) => {
-            if (item.accountType)
-              return (
-                <TableRow key={item?.id}>
-                  <TableCell>
-                    <Flex alignItems="center" justifyContent="start">
-                      <Avatar>
-                        <AvatarImage src={item?.avatar || ""} alt="@shadcn" />
-                        <AvatarFallback>
-                          {item?.firstname?.charAt(0)}
-                          {item?.surname?.charAt(0)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <Text className="ml-2">
-                        {item?.firstname} {item?.surname}
-                      </Text>
-                    </Flex>
-                  </TableCell>
-                  <TableCell>
-                    <Text>{item.accountType?.role?.title}</Text>
-                  </TableCell>
-                  <TableCell>
-                    <Text>{item?.email}</Text>
-                  </TableCell>
-                  <TableCell>
-                    <Badge color="emerald" icon={StatusOnlineIcon}>
-                      {item?.isActive ? "Active" : "Inactive"}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              );
-          })}
+          {loading ? (
+            <TableRow>
+              <TableCell colSpan={4}>
+                <div className="flex items-center justify-center h-full w-full mx-auto my-auto py-4">
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <span>Loading...</span>
+                </div>
+              </TableCell>
+            </TableRow>
+          ) : users?.users?.length ? (
+            <>
+              {users?.users?.map((item: User) => {
+                return (
+                  <TableRow key={item?.id}>
+                    <TableCell>
+                      <Flex
+                        alignItems="center"
+                        justifyContent="start"
+                        onClick={() => router.push(`/user/${item?.id}`)}
+                      >
+                        <Avatar>
+                          <AvatarImage
+                            src={item?.avatar || ""}
+                            alt={`${item?.username || item?.firstname}`}
+                          />
+                          <AvatarFallback>
+                            {item?.firstname?.charAt(0)}
+                            {item?.surname?.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <Text className="ml-2">
+                          {item?.firstname} {item?.surname}
+                        </Text>
+                      </Flex>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Text>{item.accountType?.role?.title}</Text>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Text>{item?.email}</Text>
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Badge
+                        size="xs"
+                        className="cursor-pointer"
+                        color={item?.isActive ? "emerald" : "rose"}
+                        // tooltip="decrease"
+                        icon={StatusOnlineIcon}
+                        datatype="moderateDecrease"
+                      >
+                        {item?.isActive ? "Active" : "Inactive"}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </>
+          ) : (
+            <>{renderEmptyItems()}</>
+          )}
         </TableBody>
       </Table>
     </Card>

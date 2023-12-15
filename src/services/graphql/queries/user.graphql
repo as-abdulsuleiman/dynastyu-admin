@@ -1,3 +1,5 @@
+# @format
+
 fragment UserCommonParts on User {
   id
   firstname
@@ -12,13 +14,27 @@ fragment UserCommonParts on User {
   city
   state
   createdAt
+  accountTypeId
   _count {
     following
     followedBy
+    posts
+    comments
+    postLikes
+    commentLikes
+    postReports
+    interestedSchools
+    recruitedSchools
+    prospectedSchools
+    evaluationsCreated
+    postFlag
+    blockedByUsers
+    blockedUsers
+    reposts
   }
-  following { 
+  following {
     followingId
-    following{
+    following {
       id
       firstname
       surname

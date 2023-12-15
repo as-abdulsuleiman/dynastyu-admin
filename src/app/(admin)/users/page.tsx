@@ -19,13 +19,26 @@ import {
   DeltaType,
   ProgressBar,
   Icon,
+  TextInput,
 } from "@tremor/react";
+import { SearchIcon } from "@heroicons/react/solid";
+import { useDebouncedValue } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
-import { SortOrder, User, useGetUsersQuery } from "@/services/graphql";
+import {
+  GetUsersQuery,
+  QueryMode,
+  SortOrder,
+  User,
+  UserWhereInput,
+  useGetUsersQuery,
+} from "@/services/graphql";
 import { InformationCircleIcon } from "@heroicons/react/solid";
 import UsersTable from "@/components/users-table";
 import { Loader2 } from "lucide-react";
 import SelectCard from "@/components/select";
+import UsersCount from "@/components/counts/users";
+import Pagination from "@/components/pagination";
+import UsersAnalytics from "@/components/analytics/users";
 
 interface UsersProps {}
 
@@ -42,14 +55,17 @@ type Kpi = {
 
 const Users: FC<UsersProps> = ({}) => {
   const router = useRouter();
-  const [value, setValue] = useState("");
-
+  const [status, setStatus] = useState("Active");
+  const [value, setValue] = useState<string>("");
+  const [debounced] = useDebouncedValue(value, 300);
   const {
-    data: usersData,
-    loading: loadingUsers,
+    data: users,
+    loading: loading,
     refetch,
+    fetchMore,
   } = useGetUsersQuery({
     variables: {
+      take: 10,
       where: {
         isActive: {
           equals: true,
@@ -61,41 +77,96 @@ const Users: FC<UsersProps> = ({}) => {
     },
   });
 
-  useEffect(() => {
-    if (!value || value === "") {
-      setValue("Active");
-    }
-    if (value && value === "Active") {
-      refetch({
-        where: {
-          isActive: {
-            equals: true,
-          },
+  const whereClause: UserWhereInput = useMemo(() => {
+    if (status !== "Active") {
+      return {
+        isActive: {
+          equals: false,
         },
-      });
+      };
     } else {
-      refetch({
-        where: {
-          isActive: {
-            equals: false,
-          },
+      return {
+        isActive: {
+          equals: true,
         },
-      });
+      };
     }
-  }, [value]);
+  }, [status]);
 
-  const kpiData: Kpi[] = [
-    {
-      title: `${value} Users`,
-      metric: usersData?.users?.length || 0,
-      progress: 15.9,
-      target: "80,000",
-      delta: "13.2%",
-      deltaType: "moderateIncrease",
-      path: "/users",
-      loading: loadingUsers,
-    },
-  ];
+  useEffect(() => {
+    refetch({
+      where: {
+        ...whereClause,
+        OR: [
+          { firstname: { contains: debounced, mode: QueryMode.Insensitive } },
+          { surname: { contains: debounced, mode: QueryMode.Insensitive } },
+          { username: { contains: debounced, mode: QueryMode.Insensitive } },
+        ],
+      },
+    });
+  }, [status, whereClause, debounced, refetch]);
+
+  const lastUserId = useMemo(() => {
+    const lastPostInResults = users?.users[users?.users?.length - 1];
+    return lastPostInResults?.id;
+  }, [users?.users]);
+
+  const fetchNext = () => {
+    console.log("clicked");
+    fetchMore({
+      variables: {
+        take: 10,
+        skip: 1,
+        cursor: {
+          id: lastUserId,
+        },
+        orderBy: {
+          createdAt: SortOrder.Desc,
+        },
+      },
+      updateQuery: (
+        previousResult: GetUsersQuery,
+        { fetchMoreResult }
+      ): GetUsersQuery => {
+        if (!fetchMoreResult || fetchMoreResult?.users?.length === 0) {
+          return previousResult;
+        } else {
+          const previousPosts = previousResult?.users;
+          const fetchMorePosts = fetchMoreResult?.users;
+          fetchMoreResult.users = [...fetchMorePosts];
+          return { ...fetchMoreResult };
+        }
+      },
+    });
+  };
+
+  const fetchPrevious = () => {
+    fetchMore({
+      variables: {
+        take: -10,
+        skip: users?.users?.length,
+        cursor: {
+          id: lastUserId,
+        },
+        orderBy: {
+          createdAt: SortOrder.Desc,
+        },
+      },
+      updateQuery: (
+        previousResult: GetUsersQuery,
+        { fetchMoreResult }
+      ): GetUsersQuery => {
+        if (!fetchMoreResult || fetchMoreResult?.users?.length === 0) {
+          return previousResult;
+        } else {
+          const previousPosts = previousResult?.users;
+          const fetchMorePosts = fetchMoreResult?.users;
+          fetchMoreResult.users = [...fetchMorePosts];
+          return { ...fetchMoreResult };
+        }
+      },
+    });
+  };
 
   return (
     <main className="w-full h-full">
@@ -111,60 +182,76 @@ const Users: FC<UsersProps> = ({}) => {
         <TabPanels>
           <TabPanel>
             <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
-              {kpiData?.map((item) => (
-                <Card key={item.title}>
-                  {item.loading ? (
-                    <div className="flex items-center justify-center h-full w-full mx-auto my-auto">
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      <span>Loading...</span>
-                    </div>
-                  ) : (
-                    <>
-                      <Flex alignItems="start">
-                        <div className="truncate">
-                          <Text>{item.title}</Text>
-                          <Metric className="truncate mt-1">
-                            {item.metric}
-                          </Metric>
-                        </div>
-                        {/* <Icon
-                      icon={item.icon}
-                      variant="simple"
-                      tooltip="Shows sales performance per employee"
-                    /> */}
-                        <BadgeDelta deltaType={item.deltaType}>
-                          {item.delta}
-                        </BadgeDelta>
-                      </Flex>
-                      <Flex className="mt-4 space-x-2">
-                        {/* <Text className="truncate">{`${item.progress}% (${item.metric})`}</Text> */}
-                        {/* <Text className="truncate">{item.target}</Text> */}
-                      </Flex>
-                      <ProgressBar value={item.progress} className="mt-2" />
-                    </>
-                  )}
-                </Card>
-              ))}
-
+              <UsersCount />
               <SelectCard
                 className="max-w-3xl w-full ml-auto h-14 mt-4 self-center"
                 items={[
                   { name: "Active", value: "Active" },
                   { name: "Inactive", value: "Inactive" },
                 ]}
-                selectedItem={value}
+                selectedItem={status}
                 onValueChange={(e) => {
-                  console.log("e", e);
-                  setValue(e);
+                  setStatus(e);
                 }}
               />
+              <TextInput
+                icon={SearchIcon}
+                onValueChange={(e) => setValue(e)}
+                placeholder="Search..."
+              />
+
+              {/* <UsersAnalytics /> */}
             </Grid>
           </TabPanel>
         </TabPanels>
       </TabGroup>
-      <UsersTable users={usersData} />
+      <UsersTable
+        title="Users List"
+        headerItems={[
+          { name: "Name" },
+          { name: "Role" },
+          { name: "Email" },
+          { name: "Status" },
+        ]}
+        users={users}
+        loading={loading}
+      />
+      <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
     </main>
   );
 };
 
 export default Users;
+
+// <Card>
+//               {loading ? (
+//                 <div className="flex items-center justify-center h-full w-full mx-auto my-auto">
+//                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+//                   <span>Loading...</span>
+//                 </div>
+//               ) : (
+//                 <>
+//                   <Flex alignItems="start">
+//                     <div className="truncate">
+//                       <Text>${value} Users</Text>
+//                       <Metric className="truncate mt-1">
+//                         {users?.users?.length}
+//                       </Metric>
+//                     </div>
+//                     {/* <Icon
+//                     icon={item.icon}
+//                     variant="simple"
+//                     tooltip="Shows sales performance per employee"
+//                   /> */}
+//                   <BadgeDelta deltaType="moderateIncrease">
+//                   {"13.2%"}
+//                 </BadgeDelta>
+//               </Flex>
+//               <Flex className="mt-4 space-x-2">
+//                 {/* <Text className="truncate">{`${item.progress}% (${item.metric})`}</Text> */}
+//                 {/* <Text className="truncate">{item.target}</Text> */}
+//               </Flex>
+//               <ProgressBar value={15.9} className="mt-2" />
+//             </>
+//           )}
+//         </Card>
