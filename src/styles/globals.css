@@ -4,6 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  overflow-y: scroll !important;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -53,6 +57,14 @@
 .PopoverContent {
   width: var(--radix-popover-trigger-width);
   max-height: var(--radix-popover-content-available-height);
+}
+.sheet-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.sheet-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 @layer base {

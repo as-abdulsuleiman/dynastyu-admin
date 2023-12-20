@@ -157,7 +157,7 @@ const Users: FC<UsersProps> = ({}) => {
           <Flex
             alignItems="center"
             justifyContent="start"
-            onClick={() => router.push(`/user/${item?.id}`)}
+            // onClick={() => router.push(`/user/${item?.id}`)}
           >
             <Avatar>
               <AvatarImage

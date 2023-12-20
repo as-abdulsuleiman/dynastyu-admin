@@ -168,7 +168,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ isOpen, onClose, onRefetch }) => {
       <DialogTrigger asChild>
         <Button>Add New Coach</Button>
       </DialogTrigger>
-      <DialogContent className="container mx-auto max-w-2xl">
+      <DialogContent className="container mx-auto max-w-3xl max-h-full overflow-y-auto px-[16px] md:px-[2rem] py-[2rem] sheet-scroll">
         <DialogHeader>
           <DialogTitle className="text-center text-3xl">Add Coach</DialogTitle>
         </DialogHeader>
@@ -310,12 +310,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ isOpen, onClose, onRefetch }) => {
             </div>
           </div>
           <div className="w-full">
-            <Button
-              // disabled={isSubmitting || !isValid}
-              variant="default"
-              className="w-full mt-6"
-              type="submit"
-            >
+            <Button variant="default" className="w-full mt-6" type="submit">
               {submitting ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
