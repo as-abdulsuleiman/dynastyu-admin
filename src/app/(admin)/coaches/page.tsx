@@ -263,7 +263,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
 
   return (
     <main className="w-full h-full">
-      <div className="flex flex-col sm:flex-row">
+      <div className="flex flex-col sm:flex-row items-center">
         <div className="flex flex-col">
           <Title>Coaches</Title>
           <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text>
