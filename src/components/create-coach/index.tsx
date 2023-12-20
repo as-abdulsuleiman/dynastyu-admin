@@ -168,7 +168,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ isOpen, onClose, onRefetch }) => {
       <DialogTrigger asChild>
         <Button className="mt-2 md:mt-0">Add New Coach</Button>
       </DialogTrigger>
-      <DialogContent className="container mx-auto max-w-2xl max-h-full overflow-y-auto px-[16px] md:px-[2rem] py-[2rem] sheet-scroll">
+      <DialogContent className="container rounded-2xl mx-auto max-w-2xl max-h-full overflow-y-auto px-[16px] md:px-[2rem] py-[2rem] sheet-scroll">
         <DialogHeader>
           <DialogTitle className="text-center text-3xl">Add Coach</DialogTitle>
         </DialogHeader>
