@@ -37,6 +37,7 @@ query getAthletes(
       username
       city
       state
+      isActive
     }
     country {
       name

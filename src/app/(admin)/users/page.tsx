@@ -112,7 +112,6 @@ const Users: FC<UsersProps> = ({}) => {
   }, [users?.users]);
 
   const fetchNext = () => {
-    console.log("clicked");
     fetchMore({
       variables: {
         take: 10,

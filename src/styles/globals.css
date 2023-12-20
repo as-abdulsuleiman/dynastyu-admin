@@ -50,6 +50,10 @@
     --ring: 0 72.2% 50.6%;
   }
 }
+.PopoverContent {
+  width: var(--radix-popover-trigger-width);
+  max-height: var(--radix-popover-content-available-height);
+}
 
 @layer base {
   * {

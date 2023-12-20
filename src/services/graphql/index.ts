@@ -20618,6 +20618,13 @@ export type GetAccountTypesQueryVariables = Exact<{
 
 export type GetAccountTypesQuery = { __typename?: 'Query', accountTypes: Array<{ __typename?: 'AccountType', id: any, uuid: string, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null }> };
 
+export type GetAccountTypeQueryVariables = Exact<{
+  where: AccountTypeWhereUniqueInput;
+}>;
+
+
+export type GetAccountTypeQuery = { __typename?: 'Query', accountType?: { __typename?: 'AccountType', id: any, uuid: string, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } | null };
+
 export type GetAthletesQueryVariables = Exact<{
   where?: InputMaybe<AthleteProfileWhereInput>;
   orderBy?: InputMaybe<Array<AthleteProfileOrderByWithRelationInput> | AthleteProfileOrderByWithRelationInput>;
@@ -20628,7 +20635,7 @@ export type GetAthletesQueryVariables = Exact<{
 }>;
 
 
-export type GetAthletesQuery = { __typename?: 'Query', athleteProfiles: Array<{ __typename?: 'AthleteProfile', id: any, uuid: string, createdAt: any, verified: boolean, schoolId: any, userId: any, school: { __typename?: 'School', id: any, name: string, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, username?: string | null, city?: string | null, state?: string | null }, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, position?: { __typename?: 'Position', name: string, id: any, uuid: string, shortName: string } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, user: { __typename?: 'User', id: any, firstname: string, surname: string } } | null }> };
+export type GetAthletesQuery = { __typename?: 'Query', athleteProfiles: Array<{ __typename?: 'AthleteProfile', id: any, uuid: string, createdAt: any, verified: boolean, schoolId: any, userId: any, school: { __typename?: 'School', id: any, name: string, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, username?: string | null, city?: string | null, state?: string | null, isActive: boolean }, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, position?: { __typename?: 'Position', name: string, id: any, uuid: string, shortName: string } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, user: { __typename?: 'User', id: any, firstname: string, surname: string } } | null }> };
 
 export type GetPositionsQueryVariables = Exact<{
   where?: InputMaybe<PositionWhereInput>;
@@ -20679,7 +20686,7 @@ export type GetCoachesQueryVariables = Exact<{
 }>;
 
 
-export type GetCoachesQuery = { __typename?: 'Query', coachProfiles: Array<{ __typename?: 'CoachProfile', id: any, title?: string | null, schoolId: any, user: { __typename?: 'User', firstname: string, surname: string, id: any, avatar?: string | null } }> };
+export type GetCoachesQuery = { __typename?: 'Query', coachProfiles: Array<{ __typename?: 'CoachProfile', id: any, title?: string | null, schoolId: any, verified: boolean, city?: string | null, state?: string | null, canReceiveMessages?: boolean | null, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null }, user: { __typename?: 'User', firstname: string, surname: string, id: any, avatar?: string | null, isActive: boolean, roleId?: any | null, email: string, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null } } }> };
 
 export type RegisterCoachMutationVariables = Exact<{
   data: UserCreateInput;
@@ -21375,6 +21382,53 @@ export type GetAccountTypesQueryHookResult = ReturnType<typeof useGetAccountType
 export type GetAccountTypesLazyQueryHookResult = ReturnType<typeof useGetAccountTypesLazyQuery>;
 export type GetAccountTypesSuspenseQueryHookResult = ReturnType<typeof useGetAccountTypesSuspenseQuery>;
 export type GetAccountTypesQueryResult = Apollo.QueryResult<GetAccountTypesQuery, GetAccountTypesQueryVariables>;
+export const GetAccountTypeDocument = gql`
+    query getAccountType($where: AccountTypeWhereUniqueInput!) {
+  accountType(where: $where) {
+    id
+    uuid
+    title
+    createdAt
+    role {
+      id
+      title
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAccountTypeQuery__
+ *
+ * To run a query within a React component, call `useGetAccountTypeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAccountTypeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAccountTypeQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetAccountTypeQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetAccountTypeQuery, GetAccountTypeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAccountTypeQuery, GetAccountTypeQueryVariables>(GetAccountTypeDocument, options);
+      }
+export function useGetAccountTypeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAccountTypeQuery, GetAccountTypeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAccountTypeQuery, GetAccountTypeQueryVariables>(GetAccountTypeDocument, options);
+        }
+export function useGetAccountTypeSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetAccountTypeQuery, GetAccountTypeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAccountTypeQuery, GetAccountTypeQueryVariables>(GetAccountTypeDocument, options);
+        }
+export type GetAccountTypeQueryHookResult = ReturnType<typeof useGetAccountTypeQuery>;
+export type GetAccountTypeLazyQueryHookResult = ReturnType<typeof useGetAccountTypeLazyQuery>;
+export type GetAccountTypeSuspenseQueryHookResult = ReturnType<typeof useGetAccountTypeSuspenseQuery>;
+export type GetAccountTypeQueryResult = Apollo.QueryResult<GetAccountTypeQuery, GetAccountTypeQueryVariables>;
 export const GetAthletesDocument = gql`
     query getAthletes($where: AthleteProfileWhereInput, $orderBy: [AthleteProfileOrderByWithRelationInput!], $cursor: AthleteProfileWhereUniqueInput, $take: Int, $skip: Int, $distinct: [AthleteProfileScalarFieldEnum!]) {
   athleteProfiles(
@@ -21408,6 +21462,7 @@ export const GetAthletesDocument = gql`
       username
       city
       state
+      isActive
     }
     country {
       name
@@ -21712,11 +21767,37 @@ export const GetCoachesDocument = gql`
     id
     title
     schoolId
+    verified
+    country {
+      name
+      flag
+      id
+      abbreviation
+    }
+    school {
+      name
+      logo
+      address
+    }
+    city
+    state
+    canReceiveMessages
     user {
       firstname
       surname
       id
       avatar
+      isActive
+      roleId
+      email
+      accountType {
+        id
+        title
+        role {
+          title
+          id
+        }
+      }
     }
   }
 }

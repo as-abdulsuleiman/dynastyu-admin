@@ -6,9 +6,9 @@ import { Title, Text, Divider } from "@tremor/react";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 
-interface AtheletesProps {}
+interface AthletesProps {}
 
-const Atheletes: FC<AtheletesProps> = ({}) => {
+const Athletes: FC<AthletesProps> = ({}) => {
   const {
     authStore: { user },
   } = useRootStore();
@@ -16,11 +16,11 @@ const Atheletes: FC<AtheletesProps> = ({}) => {
 
   return (
     <main className="w-full h-full">
-      <Title>Atheletes</Title>
+      <Title>Athletes</Title>
       <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text>
       <Divider></Divider>
     </main>
   );
 };
 
-export default Atheletes;
+export default Athletes;

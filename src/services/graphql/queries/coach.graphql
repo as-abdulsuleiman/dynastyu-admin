@@ -17,11 +17,38 @@ query getCoaches(
     id
     title
     schoolId
+    verified
+    country{
+      name
+      flag
+      id
+      abbreviation
+    }
+    school{
+      name
+      logo
+      address
+    }
+    city
+    state
+    canReceiveMessages
     user {
       firstname
       surname
       id
       avatar
+      isActive
+      roleId
+      email
+      accountType{
+        id
+        title
+        role{
+          title
+          id
+        }
+      }
+      
     }
   }
 }

@@ -6,14 +6,18 @@ import { persist } from "mst-persist";
 import localForage from "localforage";
 import { AuthStore } from "./auth";
 import { CounterStore } from "./counter";
-import { UsersStore } from "./users";
-import { AtheletesStore } from "./atheletes";
+import { UserStore } from "./users";
+import { CoacheStore } from "./coaches";
+import { FanStore } from "./fans";
+import { AthleteStore } from "./athletes";
 
 export const RootStore = types.model("RootStore", {
   counterStore: CounterStore,
   authStore: AuthStore,
-  usersStore: UsersStore,
-  atheletesStore:AtheletesStore,
+  userStore: UserStore,
+  athleteStore:AthleteStore,
+  coacheStore: CoacheStore,
+  fanStore:FanStore
 });
 
 export interface RootStore extends Instance<typeof RootStore> {}
@@ -23,8 +27,10 @@ export const createRootStore = () => {
     {
       counterStore: CounterStore.create(),
       authStore: AuthStore.create(),
-      atheletesStore:AtheletesStore.create(),
-      usersStore:UsersStore.create()
+      athleteStore:AthleteStore.create(),
+      userStore:UserStore.create(),
+      coacheStore:CoacheStore.create(),
+      fanStore: FanStore.create()
     },
     { NODE_ENV: process.env.NODE_ENV }
   );

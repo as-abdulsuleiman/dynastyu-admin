@@ -31,8 +31,6 @@ const SchoolsCount: FC<indexProps> = ({}) => {
     },
   });
 
-  console.log("schools", schools);
-
   return (
     <Card>
       {loading ? (
@@ -61,10 +59,6 @@ const SchoolsCount: FC<indexProps> = ({}) => {
             >
               View
             </BadgeDelta>
-          </Flex>
-          <Flex className="mt-4 space-x-2">
-            {/* <Text className="truncate">{`${item.progress}% (${item.metric})`}</Text> */}
-            {/* <Text className="truncate">{item.target}</Text> */}
           </Flex>
           <ProgressBar value={15.9} className="mt-2" />
         </>

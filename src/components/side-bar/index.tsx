@@ -36,9 +36,9 @@ const SideBar: FC<SideBarProps> = ({}) => {
     //   ),
     // },
     // {
-    //   name: "Atheletes",
+    //   name: "Athletes",
     //   hasFill: false,
-    //   path: "/atheletes",
+    //   path: "/athletes",
     //   icon: ({ className, color }: IconProps) => (
     //     <Medal className={className} color={color} />
     //   ),
