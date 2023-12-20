@@ -1,5 +1,7 @@
 /** @format */
+
 "use client";
+
 import { FC, useEffect, useMemo, useState } from "react";
 import {
   Title,
@@ -10,17 +12,12 @@ import {
   TabPanel,
   Flex,
   Grid,
-  BadgeDelta,
-  TabList,
-  Tab,
-  AreaChart,
-  Card,
-  Metric,
-  DeltaType,
-  ProgressBar,
-  Icon,
   TextInput,
+  TableCell,
+  TableRow,
+  Badge,
 } from "@tremor/react";
+import { StatusOnlineIcon } from "@heroicons/react/outline";
 import { SearchIcon } from "@heroicons/react/solid";
 import { useDebouncedValue } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
@@ -28,30 +25,16 @@ import {
   GetUsersQuery,
   QueryMode,
   SortOrder,
-  User,
   UserWhereInput,
   useGetUsersQuery,
 } from "@/services/graphql";
-import { InformationCircleIcon } from "@heroicons/react/solid";
-import { Loader2 } from "lucide-react";
 import SelectCard from "@/components/select";
 import UsersCount from "@/components/counts/users";
 import Pagination from "@/components/pagination";
-import UsersAnalytics from "@/components/analytics/users";
 import UniversalTable from "@/components/universal-table";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface UsersProps {}
-
-type Kpi = {
-  title: string;
-  metric: string | number;
-  progress: number;
-  target: string;
-  delta: string;
-  deltaType: DeltaType;
-  path: string;
-  loading: boolean;
-};
 
 const Users: FC<UsersProps> = ({}) => {
   const router = useRouter();
@@ -167,6 +150,52 @@ const Users: FC<UsersProps> = ({}) => {
     });
   };
 
+  const renderItems = ({ item, id }: { item: any; id: any }) => {
+    return (
+      <TableRow key={item?.id}>
+        <TableCell>
+          <Flex
+            alignItems="center"
+            justifyContent="start"
+            onClick={() => router.push(`/user/${item?.id}`)}
+          >
+            <Avatar>
+              <AvatarImage
+                src={item?.avatar || ""}
+                alt={`${item?.username || item?.firstname}`}
+              />
+              <AvatarFallback>
+                {item?.firstname?.charAt(0)}
+                {item?.surname?.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            <Text className="ml-2">
+              {item?.firstname} {item?.surname}
+            </Text>
+          </Flex>
+        </TableCell>
+        <TableCell className="text-center">
+          <Text>{item.accountType?.role?.title}</Text>
+        </TableCell>
+        <TableCell className="text-center">
+          <Text>{item?.email}</Text>
+        </TableCell>
+        <TableCell className="text-center">
+          <Badge
+            size="xs"
+            className="cursor-pointer"
+            color={item?.isActive ? "emerald" : "rose"}
+            // tooltip="decrease"
+            icon={StatusOnlineIcon}
+            datatype="moderateDecrease"
+          >
+            {item?.isActive ? "Active" : "Inactive"}
+          </Badge>
+        </TableCell>
+      </TableRow>
+    );
+  };
+
   return (
     <main className="w-full h-full">
       <Title>Users</Title>
@@ -206,14 +235,15 @@ const Users: FC<UsersProps> = ({}) => {
       </TabGroup>
       <UniversalTable
         title="Users List"
+        loading={loading}
         headerItems={[
           { name: "Name" },
           { name: "Role" },
           { name: "Email" },
           { name: "Status" },
         ]}
-        users={users}
-        loading={loading}
+        items={users?.users as any[]}
+        renderItems={renderItems}
       />
       <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
     </main>
