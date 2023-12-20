@@ -33,12 +33,12 @@ import {
   useGetUsersQuery,
 } from "@/services/graphql";
 import { InformationCircleIcon } from "@heroicons/react/solid";
-import UsersTable from "@/components/users-table";
 import { Loader2 } from "lucide-react";
 import SelectCard from "@/components/select";
 import UsersCount from "@/components/counts/users";
 import Pagination from "@/components/pagination";
 import UsersAnalytics from "@/components/analytics/users";
+import UniversalTable from "@/components/universal-table";
 
 interface UsersProps {}
 
@@ -204,7 +204,7 @@ const Users: FC<UsersProps> = ({}) => {
           </TabPanel>
         </TabPanels>
       </TabGroup>
-      <UsersTable
+      <UniversalTable
         title="Users List"
         headerItems={[
           { name: "Name" },
