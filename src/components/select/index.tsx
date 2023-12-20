@@ -9,6 +9,7 @@ interface SelectCardProps {
   selectedItem: string;
   onValueChange: (e: any) => void;
   className: string;
+  placeholder?: string;
 }
 
 type Items = {
@@ -21,12 +22,13 @@ const SelectCard: FC<SelectCardProps> = ({
   selectedItem,
   onValueChange,
   className,
+  placeholder,
 }) => {
   return (
     <Select
       className={className}
       value={selectedItem}
-      placeholder="Select..."
+      placeholder={placeholder || "Filter by..."}
       onValueChange={onValueChange}
     >
       {items?.map((a, index) => {

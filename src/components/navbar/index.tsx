@@ -27,7 +27,7 @@ const Navbar = () => {
           {isLoggedIn ? (
             <Button
               onClick={async () => {
-                await logout();
+                logout();
                 router.push("/sign-in");
               }}
             >

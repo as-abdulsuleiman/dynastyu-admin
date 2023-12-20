@@ -1,3 +1,5 @@
+/** @format */
+
 "use client"
 import { User } from "@/services/graphql";
 import { TOKEN_KEY, destroyToken, saveToken } from "@/services/token";
@@ -17,7 +19,7 @@ export const AuthStore = types
   })
   .actions((store) => ({
     setUser(user: Partial<User>) {
-      store.user = user
+      store.user = cast(user)
     },
     initAuth(token: string) {
       saveToken(token);

@@ -24,3 +24,22 @@ query getAccountTypes(
     }
   }
 }
+
+
+query getAccountType(
+  $where: AccountTypeWhereUniqueInput!
+) {
+  accountType(
+    where: $where
+  ) {
+    id
+    uuid
+    title
+    createdAt
+    role {
+      id
+      title
+    }
+  }
+}
+

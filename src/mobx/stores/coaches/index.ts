@@ -1,8 +1,9 @@
+
 /** @format */
 
 "use client"
 
-import { GetUsersQuery, User } from "@/services/graphql";
+import {  GetCoachesQuery } from "@/services/graphql";
 import { cast, types } from "mobx-state-tree";
 
 /**
@@ -12,13 +13,12 @@ import { cast, types } from "mobx-state-tree";
  * please visit https://mobx-state-tree.js.org/intro/welcome
  */
 
-export const UserStore = types
-  .model("UserStore", {
-    users: types.optional(types.frozen<Partial<GetUsersQuery[]>>(), []),
+export const CoacheStore = types
+  .model("CoacheStore", {
+    coaches: types.optional(types.frozen<Partial<GetCoachesQuery[]>>(),[]),
   })
   .actions((store) => ({
-    setUsers(user: Partial<GetUsersQuery[]>) {
-      store.users = cast(user)
-    },
-  
+    setCoaches(coaches: Partial<GetCoachesQuery[]>) {
+        store.coaches = cast(coaches) 
+      },
   }));

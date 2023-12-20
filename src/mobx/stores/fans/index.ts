@@ -12,13 +12,12 @@ import { cast, types } from "mobx-state-tree";
  * please visit https://mobx-state-tree.js.org/intro/welcome
  */
 
-export const UserStore = types
-  .model("UserStore", {
-    users: types.optional(types.frozen<Partial<GetUsersQuery[]>>(), []),
+export const FanStore = types
+  .model("FanStore", {
+    fans: types.optional(types.frozen<Partial<GetUsersQuery[]>>(), []),
   })
   .actions((store) => ({
-    setUsers(user: Partial<GetUsersQuery[]>) {
-      store.users = cast(user)
+    setFans(fans: Partial<GetUsersQuery[]>) {
+      store.fans = cast(fans)
     },
-  
   }));

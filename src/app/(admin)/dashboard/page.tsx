@@ -13,6 +13,10 @@ import {
   Text,
   Title,
   TextInput,
+  TableRow,
+  TableCell,
+  Flex,
+  Badge,
 } from "@tremor/react";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -22,22 +26,45 @@ import {
   UserWhereInput,
   useGetUsersQuery,
 } from "@/services/graphql";
+import { StatusOnlineIcon } from "@heroicons/react/outline";
 import { SearchIcon } from "@heroicons/react/solid";
 import FanCount from "@/components/counts/fans";
 import UsersCount from "@/components/counts/users";
 import CoachesCount from "@/components/counts/coaches";
-import AtheletesCount from "@/components/counts/atheletes";
 import { useDebouncedValue } from "@mantine/hooks";
 import SelectCard from "@/components/select";
-import UsersTable from "@/components/users-table";
 import Pagination from "@/components/pagination";
+import AthletesCount from "@/components/counts/athletes";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import UniversalTable from "@/components/universal-table";
+
+const filterItems = [
+  { name: "Active", value: "Active" },
+  { name: "Inactive", value: "Inactive" },
+  { name: "Athlete", value: "Athlete" },
+  { name: "Fan", value: "Fan" },
+  { name: "Coach", value: "Coach" },
+];
+const headerItems = [
+  { name: "Name" },
+  { name: "Role" },
+  { name: "Email" },
+  { name: "Status" },
+];
+enum FilterEnum {
+  ACTIVE = "Active",
+  INACTIVE = "Inactive",
+  ATHLETE = "Athlete",
+  FAN = "Fan",
+  COACH = "Coach",
+}
 
 export default function Home() {
   const {
     authStore: { user },
   } = useRootStore();
   const router = useRouter();
-  const [status, setStatus] = useState("Active");
+  const [status, setStatus] = useState("");
   const [value, setValue] = useState<string>("");
   const [debounced] = useDebouncedValue(value, 300);
 
@@ -49,11 +76,6 @@ export default function Home() {
   } = useGetUsersQuery({
     variables: {
       take: 10,
-      where: {
-        isActive: {
-          equals: true,
-        },
-      },
       orderBy: {
         createdAt: SortOrder.Desc,
       },
@@ -61,18 +83,38 @@ export default function Home() {
   });
 
   const whereClause: UserWhereInput = useMemo(() => {
-    if (status !== "Active") {
+    if (status === FilterEnum.INACTIVE) {
       return {
         isActive: {
           equals: false,
         },
       };
-    } else {
+    } else if (status === FilterEnum.ACTIVE) {
       return {
         isActive: {
           equals: true,
         },
       };
+    } else if (status === FilterEnum.ATHLETE) {
+      return {
+        accountTypeId: {
+          equals: 1,
+        },
+      };
+    } else if (status === FilterEnum.FAN) {
+      return {
+        accountTypeId: {
+          equals: 2,
+        },
+      };
+    } else if (status === FilterEnum.COACH) {
+      return {
+        accountTypeId: {
+          equals: 3,
+        },
+      };
+    } else {
+      return {};
     }
   }, [status]);
 
@@ -95,7 +137,6 @@ export default function Home() {
   }, [users?.users]);
 
   const fetchNext = () => {
-    console.log("clicked");
     fetchMore({
       variables: {
         take: 10,
@@ -151,6 +192,52 @@ export default function Home() {
     });
   };
 
+  const renderItems = ({ item, id }: { item: any; id: any }) => {
+    return (
+      <TableRow key={item?.id}>
+        <TableCell>
+          <Flex
+            alignItems="center"
+            justifyContent="start"
+            // onClick={() => router.push(`/user/${item?.id}`)}
+          >
+            <Avatar>
+              <AvatarImage
+                src={item?.avatar || ""}
+                alt={`${item?.username || item?.firstname}`}
+              />
+              <AvatarFallback>
+                {item?.firstname?.charAt(0)}
+                {item?.surname?.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            <Text className="ml-2">
+              {item?.firstname} {item?.surname}
+            </Text>
+          </Flex>
+        </TableCell>
+        <TableCell className="text-center">
+          <Text>{item.accountType?.role?.title}</Text>
+        </TableCell>
+        <TableCell className="text-center">
+          <Text>{item?.email}</Text>
+        </TableCell>
+        <TableCell className="text-center">
+          <Badge
+            size="xs"
+            className="cursor-pointer"
+            color={item?.isActive ? "emerald" : "rose"}
+            // tooltip="decrease"
+            icon={StatusOnlineIcon}
+            datatype="moderateDecrease"
+          >
+            {item?.isActive ? "Active" : "Inactive"}
+          </Badge>
+        </TableCell>
+      </TableRow>
+    );
+  };
+
   return (
     <main className="w-full h-full">
       <Title>Dashboard Overview</Title>
@@ -161,7 +248,7 @@ export default function Home() {
           <TabPanel>
             <Grid numItemsMd={2} numItemsLg={3} className="mt-6 gap-6">
               <UsersCount />
-              <AtheletesCount />
+              <AthletesCount />
               <CoachesCount />
               <FanCount />
             </Grid>
@@ -174,28 +261,21 @@ export default function Home() {
               />
               <SelectCard
                 className=""
-                items={[
-                  { name: "Active", value: "Active" },
-                  { name: "Inactive", value: "Inactive" },
-                ]}
+                items={filterItems}
                 selectedItem={status}
                 onValueChange={(e) => {
                   setStatus(e);
                 }}
               />
             </Grid>
-            <UsersTable
+            <UniversalTable
               title="Users List"
-              headerItems={[
-                { name: "Name" },
-                { name: "Role" },
-                { name: "Email" },
-                { name: "Status" },
-              ]}
-              users={users}
+              headerItems={headerItems}
+              items={users?.users as any[]}
               loading={loading}
+              renderItems={renderItems}
             />
-            {loading ? null : (
+            {loading || !users?.users.length ? null : (
               <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
             )}
           </TabPanel>
@@ -204,44 +284,3 @@ export default function Home() {
     </main>
   );
 }
-
-// <Grid numItemsMd={2} numItemsLg={4} className="mt-6 gap-6">
-//               {kpiData?.map((item) => (
-//                 <Card key={item.title}>
-//                   {item.loading ? (
-//                     <div className="flex items-center justify-center h-full w-full mx-auto my-auto">
-//                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-//                       <span>Loading...</span>
-//                     </div>
-//                   ) : (
-//                     <>
-//                       <Flex alignItems="start">
-//                         <div className="truncate">
-//                           <Text>{item.title}</Text>
-//                           <Metric className="truncate mt-1">
-//                             {item.metric}
-//                           </Metric>
-//                         </div>
-//                         {/* <Icon
-//                       icon={item.icon}
-//                       variant="simple"
-//                       tooltip="Shows sales performance per employee"
-//                     /> */}
-//                         <BadgeDelta
-//                           className="cursor-pointer"
-//                           onClick={() => router.push(item.path)}
-//                           deltaType={item.deltaType}
-//                         >
-//                           View
-//                         </BadgeDelta>
-//                       </Flex>
-//                       <Flex className="mt-4 space-x-2">
-//                         {/* <Text className="truncate">{`${item.progress}% (${item.metric})`}</Text> */}
-//                         {/* <Text className="truncate">{item.target}</Text> */}
-//                       </Flex>
-//                       <ProgressBar value={item.progress} className="mt-2" />
-//                     </>
-//                   )}
-//                 </Card>
-//               ))}
-//             </Grid>
