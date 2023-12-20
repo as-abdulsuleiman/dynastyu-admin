@@ -310,12 +310,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ isOpen, onClose, onRefetch }) => {
             </div>
           </div>
           <div className="w-full">
-            <Button
-              // disabled={isSubmitting || !isValid}
-              variant="default"
-              className="w-full mt-6"
-              type="submit"
-            >
+            <Button variant="default" className="w-full mt-6" type="submit">
               {submitting ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
