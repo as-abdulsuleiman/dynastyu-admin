@@ -3,12 +3,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../styles/globals.css";
-import Navbar from "@/components/navbar";
 import { cn } from "@/lib/utils";
 import { AuthProvider } from "@/components/auth-provider";
 import { Toaster } from "@/components/ui/toaster";
-import SideBar from "@/components/side-bar";
 import AdminLayout from "@/components/admin-layout";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -51,6 +50,7 @@ export default function RootLayout({
           <AdminLayout>{children}</AdminLayout>
         </AuthProvider>
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );
