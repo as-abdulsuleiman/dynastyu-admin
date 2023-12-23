@@ -18,8 +18,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ScrollArea } from "../ui/scroll-area";
 
 interface ComboBoxCardProps {
+  scrollAreaClass?: string;
+  id: string;
   displayKey: string;
   IdKey?: string;
   valueKey: string;
@@ -36,6 +39,7 @@ interface ComboBoxCardProps {
 }
 
 const ComboBoxCard: FC<ComboBoxCardProps> = ({
+  id,
   error,
   items,
   isOpen,
@@ -49,13 +53,18 @@ const ComboBoxCard: FC<ComboBoxCardProps> = ({
   placeholder,
   selectedValue,
   onSelectValue,
+  scrollAreaClass,
 }) => {
   return (
     <div className="w-full relative" onBlur={onBlur}>
       {label ? (
-        <span className="font-semibold text-left text-[14px] mb-11 d-flex">
+        <label
+          htmlFor={id}
+          className="font-semibold text-left text-[14px] mb-11 d-flex"
+          id={id}
+        >
           {label}
-        </span>
+        </label>
       ) : null}
       <Popover open={isOpen} onOpenChange={onClose}>
         <PopoverTrigger asChild>
@@ -63,7 +72,7 @@ const ComboBoxCard: FC<ComboBoxCardProps> = ({
             variant="outline"
             role="combobox"
             aria-expanded={isOpen}
-            className="w-[100%] max-w-[100%] min-w-[100%] justify-between h-[40px]"
+            className="w-[100%] max-w-[100%] mt-1.5 min-w-[100%] justify-between h-[40px]"
           >
             {selectedValue[valueKey] ? (
               items?.find(
@@ -76,53 +85,60 @@ const ComboBoxCard: FC<ComboBoxCardProps> = ({
             <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="PopoverContent">
-          <Command className="w-[100%] max-w-[100%] min-w-[100%]">
-            {hasSearch ? (
-              <>
-                <CommandInput
-                  placeholder="Search framework..."
-                  className="h-9 w-[100%] max-w-[100%] min-w-[100%]"
-                />
-                <CommandEmpty>No result found.</CommandEmpty>
-              </>
-            ) : null}
-            <CommandGroup className="w-[100%] max-w-[100%] min-w-[100%]">
-              {items?.map((item: Record<string, any>, id) => {
-                return (
-                  <CommandItem
-                    className="capitalize"
-                    key={item?.id || item[IdKey] || id}
-                    value={item[valueKey]}
-                    onSelect={(currentValue) => {
-                      onSelectValue(
-                        currentValue === selectedValue[valueKey]?.toLowerCase()
-                          ? ""
-                          : item
-                      );
-                      onClose();
-                    }}
-                  >
-                    {item[displayKey]}
-                    <CheckIcon
-                      className={cn(
-                        "ml-auto h-4 w-4",
-                        selectedValue[valueKey] === item[valueKey]
-                          ? "opacity-100"
-                          : "opacity-0"
-                      )}
-                    />
-                  </CommandItem>
-                );
-              })}
-            </CommandGroup>
-          </Command>
+        <PopoverContent
+          sticky="always"
+          sideOffset={5}
+          className="PopoverContent"
+        >
+          <ScrollArea className={`h-72 rounded-md border ${scrollAreaClass}`}>
+            <Command className="w-[100%] max-w-[100%] min-w-[100%]">
+              {hasSearch ? (
+                <>
+                  <CommandInput
+                    placeholder="Search framework..."
+                    className="h-9 w-[100%] max-w-[100%] min-w-[100%]"
+                  />
+                  <CommandEmpty>No result found.</CommandEmpty>
+                </>
+              ) : null}
+              <CommandGroup className="w-[100%] max-w-[100%] min-w-[100%]">
+                {items?.map((item: Record<string, any>, id) => {
+                  return (
+                    <CommandItem
+                      className="capitalize"
+                      key={item?.id || item[IdKey] || id}
+                      value={item[valueKey]}
+                      onSelect={(currentValue) => {
+                        onSelectValue(
+                          currentValue ===
+                            selectedValue[valueKey]?.toLowerCase()
+                            ? ""
+                            : item
+                        );
+                        onClose();
+                      }}
+                    >
+                      {item[displayKey]}
+                      <CheckIcon
+                        className={cn(
+                          "ml-auto h-4 w-4",
+                          selectedValue[valueKey] === item[valueKey]
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+                  );
+                })}
+              </CommandGroup>
+            </Command>
+          </ScrollArea>
         </PopoverContent>
       </Popover>
       {error ? (
-        <p className="text-red-500 text-xs absolute bottom-[-20px] ml-[2px] font-medium">
-          {error}
-        </p>
+        <div className=" absolute bottom-[-20px] ml-[2px]  w-full flex flex-nowrap">
+          <small className="text-red-500 font-medium text-xs "> {error}</small>
+        </div>
       ) : null}
     </div>
   );

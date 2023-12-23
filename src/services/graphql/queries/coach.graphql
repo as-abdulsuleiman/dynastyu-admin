@@ -1,3 +1,5 @@
+# @format
+
 query getCoaches(
   $where: CoachProfileWhereInput
   $orderBy: [CoachProfileOrderByWithRelationInput!]
@@ -18,13 +20,13 @@ query getCoaches(
     title
     schoolId
     verified
-    country{
+    country {
       name
       flag
       id
       abbreviation
     }
-    school{
+    school {
       name
       logo
       address
@@ -36,19 +38,19 @@ query getCoaches(
       firstname
       surname
       id
+      username
       avatar
       isActive
       roleId
       email
-      accountType{
+      accountType {
         id
         title
-        role{
+        role {
           title
           id
         }
       }
-      
     }
   }
 }
@@ -59,6 +61,7 @@ mutation registerCoach($data: UserCreateInput!) {
       id
       firstname
       surname
+      username
       email
       coachProfile {
         id
@@ -69,5 +72,105 @@ mutation registerCoach($data: UserCreateInput!) {
         }
       }
     }
+  }
+}
+
+query getCoach($where: CoachProfileWhereUniqueInput!) {
+  coachProfile(where: $where) {
+    id
+    title
+    schoolId
+    verified
+    city
+    state
+    _count {
+      verifiedAthletes
+    }
+    canReceiveMessages
+    school {
+      name
+      logo
+      address
+    }
+    country {
+      name
+      flag
+      id
+      abbreviation
+    }
+    user {
+      firstname
+      surname
+      id
+      username
+      avatar
+      isActive
+      email
+      accountType {
+        id
+        title
+        role {
+          title
+          id
+        }
+      }
+      _count {
+        following
+        followedBy
+        posts
+        reposts
+        comments
+        interestedSchools
+        evaluationsCreated
+        prospectedSchools
+      }
+    }
+  }
+}
+
+mutation updateCoach(
+  $data: CoachProfileUpdateInput!
+  $where: CoachProfileWhereUniqueInput!
+) {
+  updateOneCoachProfile(where: $where, data: $data) {
+    id
+    uuid
+    schoolId
+    countryId
+    userId
+    title
+    city
+    canReceiveMessages
+    verified
+    _count {
+      verifiedAthletes
+    }
+    school {
+      name
+      logo
+      address
+    }
+    user {
+      firstname
+      surname
+      id
+      avatar
+      isActive
+      email
+    }
+    country {
+      name
+      flag
+      id
+      abbreviation
+    }
+  }
+}
+
+mutation deleteCoach($where: CoachProfileWhereUniqueInput!) {
+  deleteOneCoachProfile(where: $where) {
+    id
+    uuid
+    userId
   }
 }

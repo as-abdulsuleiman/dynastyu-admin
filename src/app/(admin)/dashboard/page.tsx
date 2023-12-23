@@ -2,7 +2,6 @@
 
 "use client";
 
-import { useRootStore } from "@/mobx";
 import { useRouter } from "next/navigation";
 import {
   Divider,
@@ -35,8 +34,8 @@ import { useDebouncedValue } from "@mantine/hooks";
 import SelectCard from "@/components/select";
 import Pagination from "@/components/pagination";
 import AthletesCount from "@/components/counts/athletes";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import UniversalTable from "@/components/universal-table";
+import UserAvatar from "@/components/user-avatar";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -60,9 +59,6 @@ enum FilterEnum {
 }
 
 export default function Home() {
-  const {
-    authStore: { user },
-  } = useRootStore();
   const router = useRouter();
   const [status, setStatus] = useState("");
   const [value, setValue] = useState<string>("");
@@ -193,24 +189,18 @@ export default function Home() {
   };
 
   const renderItems = ({ item, id }: { item: any; id: any }) => {
+    console.log("item", item);
     return (
       <TableRow key={item?.id}>
         <TableCell>
-          <Flex
-            alignItems="center"
-            justifyContent="start"
-            // onClick={() => router.push(`/user/${item?.id}`)}
-          >
-            <Avatar>
-              <AvatarImage
-                src={item?.avatar || ""}
-                alt={`${item?.username || item?.firstname}`}
-              />
-              <AvatarFallback>
-                {item?.firstname?.charAt(0)}
-                {item?.surname?.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
+          <Flex alignItems="center" justifyContent="start">
+            <UserAvatar
+              fallbackType="name"
+              avatar={item?.avatar as string}
+              fallback={`${item?.username?.charAt(0)} ${item?.firstname?.charAt(
+                0
+              )}`}
+            />
             <Text className="ml-2">
               {item?.firstname} {item?.surname}
             </Text>

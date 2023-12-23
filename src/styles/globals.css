@@ -8,6 +8,41 @@ body {
   overflow-y: scroll !important;
 }
 
+::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #717070;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #52535d;
+}
+
+.PopoverContent {
+  width: var(--radix-popover-trigger-width);
+  max-height: var(--radix-popover-content-available-height);
+}
+
+.sheet-scroll::-webkit-scrollbar {
+  display: none !important;
+}
+
+.sheet-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -53,18 +88,6 @@ body {
     --input: 0 0% 14.9%;
     --ring: 0 72.2% 50.6%;
   }
-}
-.PopoverContent {
-  width: var(--radix-popover-trigger-width);
-  max-height: var(--radix-popover-content-available-height);
-}
-.sheet-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-.sheet-scroll {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 
 @layer base {

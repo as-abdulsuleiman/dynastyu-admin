@@ -16,7 +16,7 @@ import {
   Flex,
   Badge,
 } from "@tremor/react";
-import { StatusOnlineIcon } from "@heroicons/react/outline";
+import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 import { SearchIcon } from "@heroicons/react/solid";
 import { FC, useEffect, useMemo, useState } from "react";
 import CreateCoach from "@/components/create-coach";
@@ -27,14 +27,29 @@ import {
   GetCoachesQuery,
   QueryMode,
   SortOrder,
+  useDeleteCoachMutation,
   useGetCoachesQuery,
+  useRegisterCoachMutation,
+  useUpdateCoachMutation,
 } from "@/services/graphql";
 import Pagination from "@/components/pagination";
 import UniversalTable from "@/components/universal-table";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from "next/navigation";
 import { useDebouncedValue } from "@mantine/hooks";
-
+import { sendPasswordResetEmail } from "firebase/auth";
+import { projectAuth } from "@/services/firebase/config";
+import { useToast } from "@/hooks/use-toast";
+import { CoachValidator } from "@/lib/validators/coach";
+import * as yup from "yup";
+import { MoreHorizontal } from "lucide-react";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarTrigger,
+} from "@/components/ui/menubar";
+import UserAvatar from "@/components/user-avatar";
 interface CoachesProps {}
 
 enum FilterEnum {
@@ -57,15 +72,21 @@ const headerItems = [
   { name: "Email" },
   { name: "Title" },
   { name: "Status" },
+  { name: "Action" },
 ];
 
+type FormData = yup.InferType<typeof CoachValidator>;
+
 const Coaches: FC<CoachesProps> = ({}) => {
+  const router = useRouter();
+  const { toast } = useToast();
   const [status, setStatus] = useState("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
   const [debounced] = useDebouncedValue(value, 300);
-
-  const router = useRouter();
+  const [registerCoach] = useRegisterCoachMutation();
+  const [deteteCoach] = useDeleteCoachMutation();
+  const [updateCoach] = useUpdateCoachMutation();
 
   const {
     loading,
@@ -159,6 +180,122 @@ const Coaches: FC<CoachesProps> = ({}) => {
     return lastPostInResults?.id;
   }, [coachesData?.coachProfiles]);
 
+  const handleCreateCoach = async (values: FormData) => {
+    try {
+      const response = await registerCoach({
+        variables: {
+          data: {
+            firebaseUid: "",
+            firstname: values.firstName,
+            surname: values.lastName,
+            email: values.email,
+            username: values.username,
+            avatar: values.avatar,
+            accountType: {
+              connect: {
+                id: Number(values.accountType?.accountTypeId),
+              },
+            },
+            role: {
+              connect: { id: Number(values?.accountType?.roleId) },
+            },
+            coachProfile: {
+              create: {
+                title: values.title,
+                canReceiveMessages: values.canReceiveMessages,
+                school: { connect: { id: Number(values.schoolId) } },
+              },
+            },
+          },
+        },
+      });
+      if (response.data?.registerCoach) {
+        await sendPasswordResetEmail(projectAuth, values?.email);
+        toast({
+          title: "Coach successfully created.",
+          description: `A password reset link has been sent to ${values.email} to complete the process.`,
+          variant: "default",
+        });
+        refetch();
+        setIsOpen(!isOpen);
+      }
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not successfully created a coach. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteCoach = async (coachId: number, coach: any) => {
+    try {
+      const response = await deteteCoach({
+        variables: {
+          where: {
+            id: Number(coachId),
+          },
+        },
+      });
+      if (response.data?.deleteOneCoachProfile) {
+        await refetch();
+        toast({
+          title: "Coach successfully deleted.",
+          description: `${coach?.user?.username} account has been deleted.`,
+          variant: "default",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not successfully created a coach. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleActiveCoach = async (coachId: number, coach: any) => {
+    try {
+      const isCoachActive = coach?.user?.isActive;
+      const resp = await updateCoach({
+        variables: {
+          where: {
+            id: Number(coachId),
+          },
+          data: {
+            user: {
+              update: {
+                isActive: { set: !isCoachActive },
+              },
+            },
+          },
+        },
+      });
+      if (resp.data?.updateOneCoachProfile) {
+        toast({
+          title: "Coach successfully updated.",
+          description: `${coach?.user?.username} has been ${
+            coach?.user?.isActive ? "Deactivated" : "Activated"
+          } `,
+          variant: "default",
+        });
+        refetch();
+      }
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not successfully created a coach. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    }
+  };
+
   const fetchNext = () => {
     fetchMore({
       variables: {
@@ -216,24 +353,41 @@ const Coaches: FC<CoachesProps> = ({}) => {
   };
 
   const renderItems = ({ item, id }: { item: any; id: any }) => {
+    const coacheItems = [
+      {
+        name: "View Details",
+        onclick: (coachId: number) => {
+          router.push(`/coach/${Number(coachId)}`);
+        },
+      },
+      {
+        name: `${item?.user?.isActive ? "Deactivate" : "Activate"} Coach`,
+        onclick: async (coachId: number) => {
+          await handleActiveCoach(coachId, item);
+        },
+      },
+      {
+        name: "Delete Coach",
+        onclick: async (coachId: number) => {
+          await handleDeleteCoach(coachId, item);
+        },
+      },
+      {
+        name: "Approve Coach",
+        onclick: () => {},
+      },
+    ];
     return (
       <TableRow key={item?.id}>
         <TableCell>
-          <Flex
-            alignItems="center"
-            justifyContent="start"
-            // onClick={() => router.push(`/user/${item?.id}`)}
-          >
-            <Avatar>
-              <AvatarImage
-                src={item?.user?.avatar || ""}
-                alt={`${item?.user?.username || item?.user?.firstname}`}
-              />
-              <AvatarFallback>
-                {item?.user?.firstname?.charAt(0)}
-                {item?.user?.surname?.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
+          <Flex alignItems="center" justifyContent="start">
+            <UserAvatar
+              fallbackType="name"
+              avatar={item?.user?.avatar as string}
+              fallback={`${item?.user?.username?.charAt(
+                0
+              )} ${item?.user?.firstname?.charAt(0)}`}
+            />
             <Text className="ml-2">
               {item?.user?.firstname} {item?.user?.surname}
             </Text>
@@ -250,12 +404,44 @@ const Coaches: FC<CoachesProps> = ({}) => {
             size="xs"
             className="cursor-pointer"
             color={item?.user?.isActive ? "emerald" : "rose"}
-            // tooltip="decrease"
-            icon={StatusOnlineIcon}
+            tooltip="decrease"
+            icon={item?.user?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
             datatype="moderateDecrease"
           >
-            {item?.user?.isActive ? "Active" : "Inactive"}
+            {item?.user?.isActive ? "Active" : "Deactivated"}
           </Badge>
+        </TableCell>
+        <TableCell className="text-center cursor-pointer">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            <Menubar className="bg-transparent border-0 hover:bg-transparent focus:bg-transparent">
+              <MenubarMenu>
+                <MenubarTrigger className="cursor-pointer data-[state=open]:bg-transparent hover:bg-transparent focus:bg-transparent bg-transparent focus-within:bg-transparent focus-visible:bg-transparent active:bg-transparent">
+                  <MoreHorizontal />
+                </MenubarTrigger>
+                <MenubarContent
+                  side="bottom"
+                  align="start"
+                  sideOffset={-3}
+                  alignOffset={-100}
+                  className="rounded-tremor-default cursor-pointer bg-tremor-background ring-tremor-ring shadow-tremor-card dark:bg-dark-tremor-background dark:ring-dark-tremor-ring dark:shadow-dark-tremor-card"
+                >
+                  {coacheItems?.map((val, id) => {
+                    return (
+                      <MenubarItem
+                        onClick={() => {
+                          val?.onclick(item?.id);
+                        }}
+                        key={id}
+                        className="cursor-pointer tremor-SelectItem-root flex justify-start items-center text-tremor-default  ui-selected:text-tremor-content-strong ui-selected:bg-tremor-background-muted text-tremor-content-emphasis dark:ui-active:bg-dark-tremor-background-muted dark:ui-active:text-dark-tremor-content-strong dark:ui-selected:text-dark-tremor-content-strong dark:ui-selected:bg-dark-tremor-background-muted dark:text-dark-tremor-content-emphasis px-2.5 py-2.5"
+                      >
+                        {val?.name}
+                      </MenubarItem>
+                    );
+                  })}
+                </MenubarContent>
+              </MenubarMenu>
+            </Menubar>
+          </div>
         </TableCell>
       </TableRow>
     );
@@ -263,14 +449,14 @@ const Coaches: FC<CoachesProps> = ({}) => {
 
   return (
     <main className="w-full h-full">
-      <div className="flex flex-col sm:flex-row items-center">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center">
         <div className="flex flex-col">
           <Title>Coaches</Title>
           <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text>
         </div>
         <div className="ml-auto justify-end">
           <CreateCoach
-            onRefetch={refetch}
+            onCreateCoach={(values) => handleCreateCoach(values)}
             isOpen={isOpen}
             onClose={() => setIsOpen(!isOpen)}
           />
@@ -280,7 +466,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
       <TabGroup className="mt-6">
         <TabPanels>
           <TabPanel>
-            <Grid numItemsMd={2} numItemsLg={3} className="mt-6 gap-6">
+            <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
               <CoachesCount />
             </Grid>
             <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
@@ -300,7 +486,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
               />
             </Grid>
             <UniversalTable
-              title="Users List"
+              title="Coaches List"
               headerItems={headerItems}
               items={coachesData?.coachProfiles as any[]}
               loading={loading}

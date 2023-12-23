@@ -169,6 +169,7 @@ query getFollowers(
       id
       firstname
       surname
+      username
       email
       avatar
       dob

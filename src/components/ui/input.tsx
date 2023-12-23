@@ -13,11 +13,15 @@ export interface InputProps
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, error, label, type, ...props }, ref) => {
     return (
-      <label className="relative">
+      <div className="relative w-full h-full">
         {label ? (
-          <span className="font-semibold text-left text-[14px] mb-11 d-flex">
+          <label
+            htmlFor={label}
+            className="font-semibold text-left text-[14px] mb-11 d-flex"
+            id={label}
+          >
             {label}
-          </span>
+          </label>
         ) : null}
         <input
           type={type}
@@ -31,11 +35,14 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {error ? (
-          <p className="text-red-500 text-xs absolute bottom-[-20px] ml-[2px] font-medium">
-            {error}
-          </p>
+          <div className=" absolute bottom-[-20px] ml-[2px]  w-full flex flex-nowrap">
+            <small className="text-red-500 font-medium text-xs ">
+              {" "}
+              {error}
+            </small>
+          </div>
         ) : null}
-      </label>
+      </div>
     );
   }
 );

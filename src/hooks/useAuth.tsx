@@ -1,43 +1,23 @@
 /** @format */
 
-import React, {
-  FC,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+"use client";
+
+import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   User as FirebaseUser,
   onAuthStateChanged,
   signInWithEmailAndPassword as FirebaseSignIn,
   createUserWithEmailAndPassword as FirebaseCreateUser,
   signOut,
-  sendPasswordResetEmail,
   reauthenticateWithCredential,
   EmailAuthProvider,
   updatePassword,
   getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
 } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
-import {
-  User,
-  UserCreateInput,
-  useCreateOneUserMutation,
-  useGetUserLazyQuery,
-} from "@/services/graphql";
+import { User, useGetUserLazyQuery } from "@/services/graphql";
 import { useRootStore } from "@/mobx";
 import { projectAuth } from "@/services/firebase/config";
-//   import { projectAuth } from "@services/firebase/config";
-//   import { useRootStore } from "@mobx/index";
-//   import {
-//     User,
-//     UserCreateInput,
-//     useCreateOneUserMutation,
-//     useGetUserLazyQuery,
-//   } from "@services/graphql";
 
 const AuthContext = createContext<{
   isLoggedIn: boolean;
@@ -74,6 +54,11 @@ function useAuthProvider() {
     authStore: { user, setUser, resetAuth, initAuth },
   } = useRootStore();
 
+  const siteUrl =
+    process?.env?.NODE_ENV === "production"
+      ? process?.env?.NEXT_PUBLIC_KNEXTT_URL
+      : typeof window !== "undefined" && window?.location?.origin;
+
   const [getUser] = useGetUserLazyQuery();
 
   const login = async (email: string, password: string) => {
@@ -88,8 +73,9 @@ function useAuthProvider() {
         },
       });
       if (!dbUser?.data?.user) {
-        return (window.location.href = "http://localhost:3000/sign-in");
+        window.location.href = `${siteUrl}/sign-in`;
       } else {
+        window.location.href = `${siteUrl}/dashboard`;
         return setUser(dbUser?.data?.user as User);
       }
     } catch (error: unknown) {
@@ -131,37 +117,38 @@ function useAuthProvider() {
     setUser(dbUser.data?.user as User);
   };
 
-  async function onAuthStateChangedCallback(user: FirebaseUser | null) {
-    try {
-      if (user !== null) {
-        const token = await user.getIdTokenResult();
-        await initAuth(token.token);
-        const dbUser = await getUser({
-          variables: { where: { firebaseUid: user?.uid } },
-        });
-        if (dbUser?.data?.user) {
-          setUser(dbUser.data.user as User);
-          setIsLoggedIn(true);
+  useEffect(() => {
+    async function onAuthStateChangedCallback(user: FirebaseUser | null) {
+      try {
+        if (user !== null) {
+          const token = await user.getIdTokenResult();
+          await initAuth(token.token);
+          const dbUser = await getUser({
+            variables: { where: { firebaseUid: user?.uid } },
+          });
+          if (dbUser?.data?.user) {
+            setIsLoggedIn(true);
+            setUser(dbUser.data.user as User);
+          } else {
+            setIsLoggedIn(false);
+            setUser({});
+          }
         } else {
           setIsLoggedIn(false);
+          setUser({});
         }
-      } else {
+      } catch (e) {
         setIsLoggedIn(false);
+        setUser({});
+      } finally {
+        setIsInitializing(false);
       }
-    } catch (e) {
-      setIsLoggedIn(false);
-    } finally {
-      setIsInitializing(false);
     }
-  }
-
-  useEffect(() => {
-    const subscriber = onAuthStateChanged(
-      projectAuth,
-      onAuthStateChangedCallback
-    );
-    return subscriber; // unsubscribe on unmount
-  }, []);
+    onAuthStateChanged(projectAuth, onAuthStateChangedCallback);
+    return () => {
+      onAuthStateChanged(projectAuth, onAuthStateChangedCallback);
+    };
+  }, [getUser, initAuth, setUser]);
 
   return {
     isLoggedIn,

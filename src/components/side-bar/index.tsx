@@ -2,11 +2,11 @@
 
 "use client";
 
-import { Text, Title } from "@tremor/react";
-import { Linkedin, Medal, School, Users } from "lucide-react";
 import { FC } from "react";
+import { Grid2X2, Home, Linkedin, Medal, School, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
+import ThemeToggle from "../theme-toggle";
 
 interface SideBarProps {}
 type IconProps = {
@@ -23,7 +23,7 @@ const SideBar: FC<SideBarProps> = ({}) => {
       name: "Dashboard",
       path: "/dashboard",
       icon: ({ className, color }: IconProps) => (
-        <Linkedin className={className} color={color} />
+        <Home className={className} color={color} />
       ),
       hasFill: false,
     },
@@ -48,7 +48,7 @@ const SideBar: FC<SideBarProps> = ({}) => {
       hasFill: false,
       path: "/coaches",
       icon: ({ className, color }: IconProps) => (
-        <Medal className={className} color={color} />
+        <Grid2X2 className={className} color={color} />
       ),
     },
     // {
@@ -69,37 +69,49 @@ const SideBar: FC<SideBarProps> = ({}) => {
     // },
   ];
   return (
-    <div className="w-full px-6 py-16">
-      {items?.map((val, index) => {
-        const isActive = pathname === val.path;
-        const iconClass = `h-3 w-3 sm:h-4 sm:w-4 ${
-          val?.hasFill
-            ? "group-hover:fill-[#2BD984] text-[#717070] group-hover:text-[#2BD984] fill-[#717070]"
-            : "group-hover:stroke-[#2BD984] text-[#717070] group-hover:text-[#2BD984] stroke-[#717070]"
-        } ${
-          isActive
-            ? `${val.hasFill ? "fill-[#2BD984]" : "stroke-[#2BD984]"}`
-            : `${val.hasFill ? "fill-[#D8D3CB]" : "stroke-[#D8D3CB]"}`
-        }`;
-        const Icon = () => val?.icon({ className: iconClass, color: "" });
-        return (
-          <div key={index} className="mb-4">
-            <div
-              className={`group ${
-                isActive ? "bg-[#dc2626]" : "bg-transparent"
-              }  flex cursor-pointer items-center border rounded-md py-[6px] px-[16px]`}
-              onClick={() => router.push(val.path)}
-            >
-              <Icon />
+    <div className="w-full px-6 pt-16 pb-8 h-full">
+      <div className="relative w-full h-full">
+        <div className="pt-[55px]">
+          {items?.map((val, index) => {
+            const isActive = pathname === val?.path;
+            const iconClass = `h-3 w-3 sm:h-4 sm:w-4 ${
+              val?.hasFill
+                ? "group-hover:fill-[#2BD984] text-[#717070] group-hover:text-[#2BD984] fill-[#717070]"
+                : "group-hover:stroke-[#2BD984] text-[#717070] group-hover:text-[#2BD984] stroke-[#717070]"
+            } ${
+              isActive
+                ? `${val?.hasFill ? "fill-[#2BD984]" : "stroke-[#2BD984]"}`
+                : `${val?.hasFill ? "fill-[#D8D3CB]" : "stroke-[#D8D3CB]"}`
+            }`;
+            const Icon = () => val?.icon({ className: iconClass, color: "" });
+            return (
               <div
-                className={`${isActive ? "text-[#e5e7eb]" : ""} ml-3 mt-[3px]`}
+                key={index}
+                className="mt-4"
+                onClick={() => router?.push(val.path)}
               >
-                {val.name}
+                <div
+                  className={`group ${
+                    isActive ? "bg-[#dc2626]" : "bg-transparent"
+                  }  flex cursor-pointer items-center border rounded-md py-[6px] px-[16px]`}
+                >
+                  <Icon />
+                  <div
+                    className={`${
+                      isActive ? "text-[#e5e7eb]" : ""
+                    } ml-3 mt-[0px]`}
+                  >
+                    {val?.name}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        );
-      })}
+            );
+          })}
+        </div>
+        <div className="absolute bottom-0">
+          <ThemeToggle />
+        </div>
+      </div>
     </div>
   );
 };
