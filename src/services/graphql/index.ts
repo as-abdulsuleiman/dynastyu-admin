@@ -20686,14 +20686,36 @@ export type GetCoachesQueryVariables = Exact<{
 }>;
 
 
-export type GetCoachesQuery = { __typename?: 'Query', coachProfiles: Array<{ __typename?: 'CoachProfile', id: any, title?: string | null, schoolId: any, verified: boolean, city?: string | null, state?: string | null, canReceiveMessages?: boolean | null, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null }, user: { __typename?: 'User', firstname: string, surname: string, id: any, avatar?: string | null, isActive: boolean, roleId?: any | null, email: string, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null } } }> };
+export type GetCoachesQuery = { __typename?: 'Query', coachProfiles: Array<{ __typename?: 'CoachProfile', id: any, title?: string | null, schoolId: any, verified: boolean, city?: string | null, state?: string | null, canReceiveMessages?: boolean | null, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null }, user: { __typename?: 'User', firstname: string, surname: string, id: any, username?: string | null, avatar?: string | null, isActive: boolean, roleId?: any | null, email: string, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null } } }> };
 
 export type RegisterCoachMutationVariables = Exact<{
   data: UserCreateInput;
 }>;
 
 
-export type RegisterCoachMutation = { __typename?: 'Mutation', registerCoach: { __typename?: 'RegisterCoachReturn', coach: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, coachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, school: { __typename?: 'School', id: any, name: string } } | null } } };
+export type RegisterCoachMutation = { __typename?: 'Mutation', registerCoach: { __typename?: 'RegisterCoachReturn', coach: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null, email: string, coachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, school: { __typename?: 'School', id: any, name: string } } | null } } };
+
+export type GetCoachQueryVariables = Exact<{
+  where: CoachProfileWhereUniqueInput;
+}>;
+
+
+export type GetCoachQuery = { __typename?: 'Query', coachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, schoolId: any, verified: boolean, city?: string | null, state?: string | null, canReceiveMessages?: boolean | null, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null }, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, user: { __typename?: 'User', firstname: string, surname: string, id: any, username?: string | null, avatar?: string | null, isActive: boolean, email: string, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null }, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, reposts: number, comments: number, interestedSchools: number, evaluationsCreated: number, prospectedSchools: number } | null } } | null };
+
+export type UpdateCoachMutationVariables = Exact<{
+  data: CoachProfileUpdateInput;
+  where: CoachProfileWhereUniqueInput;
+}>;
+
+
+export type UpdateCoachMutation = { __typename?: 'Mutation', updateOneCoachProfile?: { __typename?: 'CoachProfile', id: any, uuid: string, schoolId: any, countryId?: any | null, userId: any, title?: string | null, city?: string | null, canReceiveMessages?: boolean | null, verified: boolean, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null }, user: { __typename?: 'User', firstname: string, surname: string, id: any, avatar?: string | null, isActive: boolean, email: string }, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null } | null };
+
+export type DeleteCoachMutationVariables = Exact<{
+  where: CoachProfileWhereUniqueInput;
+}>;
+
+
+export type DeleteCoachMutation = { __typename?: 'Mutation', deleteOneCoachProfile?: { __typename?: 'CoachProfile', id: any, uuid: string, userId: any } | null };
 
 export type GetCommentQueryVariables = Exact<{
   where: CommentWhereUniqueInput;
@@ -21045,7 +21067,7 @@ export type GetFollowersQueryVariables = Exact<{
 }>;
 
 
-export type GetFollowersQuery = { __typename?: 'Query', findManyFollows: Array<{ __typename?: 'Follows', follower: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, dob?: any | null, username?: string | null, address?: string | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number } | null, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, gpa?: string | null, createdAt: any, hudlLink?: string | null, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, playerCardUrl?: string | null, verified: boolean, schoolId: any, userId: any, school: { __typename?: 'School', id: any, name: string, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } }, following: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, dob?: any | null, username?: string | null, address?: string | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number } | null, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, gpa?: string | null, createdAt: any, hudlLink?: string | null, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, playerCardUrl?: string | null, schoolId: any, userId: any, school: { __typename?: 'School', id: any, name: string, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } } }> };
+export type GetFollowersQuery = { __typename?: 'Query', findManyFollows: Array<{ __typename?: 'Follows', follower: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null, email: string, avatar?: string | null, dob?: any | null, address?: string | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number } | null, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, gpa?: string | null, createdAt: any, hudlLink?: string | null, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, playerCardUrl?: string | null, verified: boolean, schoolId: any, userId: any, school: { __typename?: 'School', id: any, name: string, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } }, following: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, dob?: any | null, username?: string | null, address?: string | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number } | null, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, gpa?: string | null, createdAt: any, hudlLink?: string | null, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, playerCardUrl?: string | null, schoolId: any, userId: any, school: { __typename?: 'School', id: any, name: string, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } } }> };
 
 export type GetUserQueryVariables = Exact<{
   where: UserWhereUniqueInput;
@@ -21786,6 +21808,7 @@ export const GetCoachesDocument = gql`
       firstname
       surname
       id
+      username
       avatar
       isActive
       roleId
@@ -21847,6 +21870,7 @@ export const RegisterCoachDocument = gql`
       id
       firstname
       surname
+      username
       email
       coachProfile {
         id
@@ -21886,6 +21910,192 @@ export function useRegisterCoachMutation(baseOptions?: ApolloReactHooks.Mutation
 export type RegisterCoachMutationHookResult = ReturnType<typeof useRegisterCoachMutation>;
 export type RegisterCoachMutationResult = Apollo.MutationResult<RegisterCoachMutation>;
 export type RegisterCoachMutationOptions = Apollo.BaseMutationOptions<RegisterCoachMutation, RegisterCoachMutationVariables>;
+export const GetCoachDocument = gql`
+    query getCoach($where: CoachProfileWhereUniqueInput!) {
+  coachProfile(where: $where) {
+    id
+    title
+    schoolId
+    verified
+    city
+    state
+    _count {
+      verifiedAthletes
+    }
+    canReceiveMessages
+    school {
+      name
+      logo
+      address
+    }
+    country {
+      name
+      flag
+      id
+      abbreviation
+    }
+    user {
+      firstname
+      surname
+      id
+      username
+      avatar
+      isActive
+      email
+      accountType {
+        id
+        title
+        role {
+          title
+          id
+        }
+      }
+      _count {
+        following
+        followedBy
+        posts
+        reposts
+        comments
+        interestedSchools
+        evaluationsCreated
+        prospectedSchools
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCoachQuery__
+ *
+ * To run a query within a React component, call `useGetCoachQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCoachQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCoachQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetCoachQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCoachQuery, GetCoachQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCoachQuery, GetCoachQueryVariables>(GetCoachDocument, options);
+      }
+export function useGetCoachLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCoachQuery, GetCoachQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCoachQuery, GetCoachQueryVariables>(GetCoachDocument, options);
+        }
+export function useGetCoachSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetCoachQuery, GetCoachQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCoachQuery, GetCoachQueryVariables>(GetCoachDocument, options);
+        }
+export type GetCoachQueryHookResult = ReturnType<typeof useGetCoachQuery>;
+export type GetCoachLazyQueryHookResult = ReturnType<typeof useGetCoachLazyQuery>;
+export type GetCoachSuspenseQueryHookResult = ReturnType<typeof useGetCoachSuspenseQuery>;
+export type GetCoachQueryResult = Apollo.QueryResult<GetCoachQuery, GetCoachQueryVariables>;
+export const UpdateCoachDocument = gql`
+    mutation updateCoach($data: CoachProfileUpdateInput!, $where: CoachProfileWhereUniqueInput!) {
+  updateOneCoachProfile(where: $where, data: $data) {
+    id
+    uuid
+    schoolId
+    countryId
+    userId
+    title
+    city
+    canReceiveMessages
+    verified
+    _count {
+      verifiedAthletes
+    }
+    school {
+      name
+      logo
+      address
+    }
+    user {
+      firstname
+      surname
+      id
+      avatar
+      isActive
+      email
+    }
+    country {
+      name
+      flag
+      id
+      abbreviation
+    }
+  }
+}
+    `;
+export type UpdateCoachMutationFn = Apollo.MutationFunction<UpdateCoachMutation, UpdateCoachMutationVariables>;
+
+/**
+ * __useUpdateCoachMutation__
+ *
+ * To run a mutation, you first call `useUpdateCoachMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCoachMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCoachMutation, { data, loading, error }] = useUpdateCoachMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useUpdateCoachMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateCoachMutation, UpdateCoachMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateCoachMutation, UpdateCoachMutationVariables>(UpdateCoachDocument, options);
+      }
+export type UpdateCoachMutationHookResult = ReturnType<typeof useUpdateCoachMutation>;
+export type UpdateCoachMutationResult = Apollo.MutationResult<UpdateCoachMutation>;
+export type UpdateCoachMutationOptions = Apollo.BaseMutationOptions<UpdateCoachMutation, UpdateCoachMutationVariables>;
+export const DeleteCoachDocument = gql`
+    mutation deleteCoach($where: CoachProfileWhereUniqueInput!) {
+  deleteOneCoachProfile(where: $where) {
+    id
+    uuid
+    userId
+  }
+}
+    `;
+export type DeleteCoachMutationFn = Apollo.MutationFunction<DeleteCoachMutation, DeleteCoachMutationVariables>;
+
+/**
+ * __useDeleteCoachMutation__
+ *
+ * To run a mutation, you first call `useDeleteCoachMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCoachMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCoachMutation, { data, loading, error }] = useDeleteCoachMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteCoachMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteCoachMutation, DeleteCoachMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteCoachMutation, DeleteCoachMutationVariables>(DeleteCoachDocument, options);
+      }
+export type DeleteCoachMutationHookResult = ReturnType<typeof useDeleteCoachMutation>;
+export type DeleteCoachMutationResult = Apollo.MutationResult<DeleteCoachMutation>;
+export type DeleteCoachMutationOptions = Apollo.BaseMutationOptions<DeleteCoachMutation, DeleteCoachMutationVariables>;
 export const GetCommentDocument = gql`
     query getComment($where: CommentWhereUniqueInput!) {
   comment(where: $where) {
@@ -23734,6 +23944,7 @@ export const GetFollowersDocument = gql`
       id
       firstname
       surname
+      username
       email
       avatar
       dob

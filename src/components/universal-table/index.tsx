@@ -54,11 +54,11 @@ const UniversalTable: FC<UniversalTableProps> = ({
   const router = useRouter();
 
   return (
-    <Card className="mt-5 w-full">
+    <Card className="mt-5 w-full overflow-x-scroll">
       <Title>{title}</Title>
-      <Table className="mt-5 w-full">
+      <Table className="mt-3 w-full ">
         <TableHead>
-          <TableRow className="">
+          <TableRow>
             {headerItems.map((a, id) => {
               const firstElem = id !== 0 ? "text-center" : "";
               return (
@@ -72,7 +72,7 @@ const UniversalTable: FC<UniversalTableProps> = ({
         <TableBody>
           {loading ? (
             <TableRow>
-              <TableCell colSpan={4}>
+              <TableCell colSpan={headerItems?.length || 0}>
                 <div className="flex items-center justify-center h-full w-full mx-auto my-auto py-4">
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   <span>Loading...</span>

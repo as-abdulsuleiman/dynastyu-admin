@@ -1,10 +1,11 @@
 /** @format */
 
 "use client"
+
 import { User } from "@/services/graphql";
 import { TOKEN_KEY, destroyToken, saveToken } from "@/services/token";
 import { cast, types } from "mobx-state-tree";
-import nookies from "nookies";
+import nookies, { destroyCookie } from "nookies";
 
 /**
  * This file is generated as an example of Mobx State Tree Stores
@@ -23,11 +24,12 @@ export const AuthStore = types
     },
     initAuth(token: string) {
       saveToken(token);
-      nookies.set(undefined, TOKEN_KEY, token, { path: "/" });
+      nookies.set(undefined, TOKEN_KEY, token, { path: "/dashboard" });
     },
     resetAuth() {
       store.user = {};
       destroyToken();
-      nookies.set(undefined, TOKEN_KEY, "", { path: "/" });
+      destroyCookie(null, TOKEN_KEY)
+      // nookies.set(undefined, TOKEN_KEY, "", { path: "/sign-in" });
     },
   }));

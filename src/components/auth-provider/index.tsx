@@ -14,12 +14,13 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const apolloClient = initializeApollo();
+
   return (
     <ApolloProvider client={apolloClient}>
       <RootStoreProvider>
-        <ProvideAuth>
-          <ThemeProvider>{children} </ThemeProvider>
-        </ProvideAuth>
+        <ThemeProvider>
+          <ProvideAuth>{children}</ProvideAuth>
+        </ThemeProvider>
       </RootStoreProvider>
     </ApolloProvider>
   );

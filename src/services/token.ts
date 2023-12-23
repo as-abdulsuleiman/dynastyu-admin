@@ -1,4 +1,4 @@
-export const TOKEN_KEY = "token";
+export const TOKEN_KEY = "token_dynastyu";
 
 export const getToken = (): string | null | undefined => {
   if (typeof window !== "undefined") {

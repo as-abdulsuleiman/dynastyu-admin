@@ -26,8 +26,11 @@ import {
 } from "@/components/ui/popover";
 import { useDebouncedValue } from "@mantine/hooks";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { ScrollArea } from "../ui/scroll-area";
 
 interface SchoolDropdownProps {
+  scrollAreaClass?: string;
+  id: string;
   whereClause: SchoolWhereInput;
   error?: string;
   label?: string;
@@ -44,6 +47,7 @@ interface SchoolDropdownProps {
 
 const SchoolDropdown: FC<SchoolDropdownProps> = ({
   whereClause,
+  id,
   error,
   label,
   isOpen,
@@ -55,6 +59,7 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
   onBlur,
   buttonClass,
   side = "top",
+  scrollAreaClass,
 }) => {
   const [search, setSearch] = React.useState("");
   const [debounced] = useDebouncedValue(search, 300);
@@ -69,7 +74,7 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
       where: {
         ...whereClause,
       },
-      take: 10,
+      take: 30,
     },
   });
   const schools = useMemo(
@@ -96,9 +101,13 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
   return (
     <div className="w-full relative" onBlur={onBlur}>
       {label ? (
-        <span className="font-semibold text-left text-[14px] mb-11 d-flex">
+        <label
+          htmlFor={id}
+          className="font-semibold text-left text-[14px] mb-11 d-flex"
+          id={id}
+        >
           {label}
-        </span>
+        </label>
       ) : null}
       <Popover open={isOpen} onOpenChange={onClose}>
         <PopoverTrigger asChild>
@@ -106,7 +115,7 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
             variant="outline"
             role="combobox"
             aria-expanded={isOpen}
-            className={`${buttonClass} w-[200px]w-[100%] max-w-[100%] min-w-[100%] justify-between h-[40px]`}
+            className={`${buttonClass} w-[200px]w-[100%] max-w-[100%] min-w-[100%] justify-between mt-1.5 h-[40px]`}
           >
             {selectedValue?.value ? (
               schools?.find((school) => school?.value === selectedValue?.value)
@@ -118,81 +127,86 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
           </Button>
         </PopoverTrigger>
         <PopoverContent side={side} className="PopoverContent p-0">
-          <Command shouldFilter={false}>
-            {hasSearch ? (
-              <CommandInput
-                placeholder="Search school..."
-                value={search}
-                onValueChange={(e) => {
-                  setSearch(e);
-                }}
-              />
-            ) : null}
-            {!loading && <CommandEmpty>No result found.</CommandEmpty>}
-            <CommandGroup>
-              {loading ? (
-                <div className="flex items-center justify-center py-3">
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Loading...
-                </div>
-              ) : (
-                <>
-                  {schools?.map((school, id) => {
-                    return (
-                      <CommandItem
-                        className="cusor-pointer"
-                        key={id}
-                        value={school?.value}
-                        onSelect={(currentValue) => {
-                          onSelectValue(
-                            currentValue === selectedValue?.value?.toLowerCase()
-                              ? ""
-                              : school
-                          );
-                          onClose();
-                        }}
-                      >
-                        <div className="flex flex-col w-full h-full">
-                          <div className="flex flex-row justify-start items-center">
-                            <Avatar>
-                              <AvatarImage
-                                className=""
-                                src={school.logo || noSchool}
-                                alt="@shadcn"
-                              />
-                              <AvatarFallback>
-                                <span className="sr-only">{school?.label}</span>
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="ml-3 mb-1">
-                              <div>{school.label}</div>
-                              <div>{school.city}</div>
-                            </div>
-                            <div className="ml-auto">
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  selectedValue?.value === school.value
-                                    ? "opacity-100"
-                                    : "opacity-0"
-                                )}
-                              />
+          <ScrollArea className={`h-72 rounded-md border ${scrollAreaClass}`}>
+            <Command shouldFilter={false}>
+              {hasSearch ? (
+                <CommandInput
+                  placeholder="Search school..."
+                  value={search}
+                  onValueChange={(e) => {
+                    setSearch(e);
+                  }}
+                />
+              ) : null}
+              {!loading && <CommandEmpty>No result found.</CommandEmpty>}
+              <CommandGroup>
+                {loading ? (
+                  <div className="flex items-center justify-center py-3">
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </div>
+                ) : (
+                  <>
+                    {schools?.map((school, id) => {
+                      return (
+                        <CommandItem
+                          className="cusor-pointer"
+                          key={id}
+                          value={school?.value}
+                          onSelect={(currentValue) => {
+                            onSelectValue(
+                              currentValue ===
+                                selectedValue?.value?.toLowerCase()
+                                ? ""
+                                : school
+                            );
+                            onClose();
+                          }}
+                        >
+                          <div className="flex flex-col w-full h-full">
+                            <div className="flex flex-row justify-start items-center">
+                              <Avatar>
+                                <AvatarImage
+                                  className=""
+                                  src={school.logo || noSchool}
+                                  alt="@shadcn"
+                                />
+                                <AvatarFallback>
+                                  <span className="sr-only">
+                                    {school?.label}
+                                  </span>
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="ml-3 mb-1">
+                                <div>{school.label}</div>
+                                <div>{school.city}</div>
+                              </div>
+                              <div className="ml-auto">
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    selectedValue?.value === school.value
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </CommandItem>
-                    );
-                  })}
-                </>
-              )}
-            </CommandGroup>
-          </Command>
+                        </CommandItem>
+                      );
+                    })}
+                  </>
+                )}
+              </CommandGroup>
+            </Command>
+          </ScrollArea>
         </PopoverContent>
       </Popover>
       {error ? (
-        <p className="text-red-500 text-xs absolute bottom-[-20px] ml-[2px] font-medium">
-          {error}
-        </p>
+        <div className=" absolute bottom-[-20px] ml-[2px] w-full flex flex-nowrap">
+          <small className="text-red-500 font-medium text-xs"> {error}</small>
+        </div>
       ) : null}
     </div>
   );

@@ -8,7 +8,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { SignInValidator } from "@/lib/validators/signin";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
@@ -23,7 +22,6 @@ const Page: FC<SignInProps> = ({}) => {
   const { toast } = useToast();
   const { login } = useAuth();
   const router = useRouter();
-  const inputRef = useRef<ElementRef<"input">>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const {
@@ -42,7 +40,7 @@ const Page: FC<SignInProps> = ({}) => {
     setLoading(true);
     try {
       await login(data.email, data.password);
-      router.push("/");
+      router.push("/dashboard");
       // const payload = await ContactValidator.validate(data);
       // await addDoc(collection(db, "clients"), {
       //   ...payload,
@@ -57,11 +55,11 @@ const Page: FC<SignInProps> = ({}) => {
       //   });
       // }
     } catch (error) {
-      // toast({
-      //   title: "Something went wrong.",
-      //   description: "Could not send message. Please try again.",
-      //   variant: "destructive",
-      // });
+      toast({
+        title: "Something went wrong.",
+        description: "User not found. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       // reset();
       setLoading(false);
@@ -79,6 +77,7 @@ const Page: FC<SignInProps> = ({}) => {
         <form className="pt-[10px] w-full" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 ">
             <Input
+              autoComplete="email"
               id="email"
               {...register("email", { required: true })}
               placeholder="Your email"
@@ -90,6 +89,7 @@ const Page: FC<SignInProps> = ({}) => {
           <div className="grid grid-cols-1 mt-6">
             <Input
               id="password"
+              autoComplete="password"
               {...register("password", { required: true })}
               placeholder="Your password"
               type="password"

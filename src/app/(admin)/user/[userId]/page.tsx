@@ -2,7 +2,7 @@
 
 "use client";
 
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useGetUserQuery } from "@/services/graphql";
@@ -31,7 +31,7 @@ const Page: FC<pageProps> = ({ params }) => {
   const { data, loading } = useGetUserQuery({
     variables: {
       where: {
-        id: params?.userId,
+        id: Number(params?.userId),
       },
     },
   });
@@ -116,19 +116,14 @@ const Page: FC<pageProps> = ({ params }) => {
           {data?.user?.firstname} {data?.user?.surname}
         </Title>
       )}
-
       <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text>
       <Divider></Divider>
-      {loading ? (
-        <div className="flex items-center justify-center">
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          <span>Loading...</span>
-        </div>
-      ) : (
-        <>
-          <UsersAnalytics data={dataList} />
-        </>
-      )}
+      <UsersAnalytics
+        loading={loading}
+        showStatus={data?.user?.isActive}
+        data={dataList}
+        title={`$ {data?.user?.firstname} ${data?.user?.surname} Analytics`}
+      />
     </div>
   );
 };
