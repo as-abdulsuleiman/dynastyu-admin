@@ -34,58 +34,64 @@ const Navbar = () => {
           <p className="hidde text-lg font-medium md:block">DynastyU</p>
         </Link>
         <div className="ml-auto flex items-center">
-          <div className="hidden lg:flex">
-            {isLoggedIn && !isInitializing ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <UserAvatar
-                    fallbackType="icon"
-                    avatar={user.avatar as string}
-                    fallback={`${user?.firstname?.charAt(
-                      0
-                    )} ${user?.surname?.charAt(0)}`}
-                  />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" sideOffset={10}>
-                  <div className="flex items-center justify-start gap-2 p-2">
-                    <div className="flex flex-col space-y-1 leading-none">
-                      {user?.username && (
-                        <p className="font-medium">@{user.username}</p>
-                      )}
-                      {user?.email && (
-                        <p className="truncate w-[200px] text-sm text-zin-700">
-                          {user?.email}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <DropdownMenuSeparator />
+          <div className="ml-auto">
+            {isLoggedIn ? (
+              <>
+                <div className="hidden lg:flex">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger>
+                      <UserAvatar
+                        fallbackType="icon"
+                        avatar={user.avatar as string}
+                        fallback={`${user?.firstname?.charAt(
+                          0
+                        )} ${user?.surname?.charAt(0)}`}
+                      />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" sideOffset={10}>
+                      <div className="flex items-center justify-start gap-2 p-2">
+                        <div className="flex flex-col space-y-1 leading-none">
+                          {user?.username && (
+                            <p className="font-medium">@{user.username}</p>
+                          )}
+                          {user?.email && (
+                            <p className="truncate w-[200px] text-sm text-zin-700">
+                              {user?.email}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link href="/dashboard">Dashboard</Link>
+                      </DropdownMenuItem>
 
-                  {/* 
-                  <DropdownMenuItem asChild>
-                    <Link href="/r/create">Create community</Link>
-                  </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <Link href="/coaches">Coaches</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link href="/settings">Settings</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
 
-                  <DropdownMenuItem asChild>
-                    <Link href="/settings">Settings</Link>
-                  </DropdownMenuItem> */}
-
-                  {/* <DropdownMenuSeparator /> */}
-
-                  <DropdownMenuItem
-                    onSelect={(event) => {
-                      event.preventDefault();
-                      logout();
-                      router.push("/sign-in");
-                    }}
-                    className="cursor-pointer"
-                  >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Sign out
-                    <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                      <DropdownMenuItem
+                        onSelect={(event) => {
+                          event.preventDefault();
+                          logout();
+                          router.push("/sign-in");
+                        }}
+                        className="cursor-pointer"
+                      >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Sign out
+                        <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+                <Drawer />
+              </>
             ) : (
               // <Menubar className="rounded-none border-none border-0 right-0">
               //   <MenubarMenu>
@@ -132,7 +138,6 @@ const Navbar = () => {
               </Link>
             )}
           </div>
-          <Drawer />
         </div>
       </nav>
     </header>

@@ -189,7 +189,6 @@ export default function Home() {
   };
 
   const renderItems = ({ item, id }: { item: any; id: any }) => {
-    console.log("item", item);
     return (
       <TableRow key={item?.id}>
         <TableCell>

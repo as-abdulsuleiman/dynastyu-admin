@@ -11,7 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Grid2X2, Home, LogOut, Menu } from "lucide-react";
+import { Grid2X2, Home, LogOut, Menu, Settings } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import ThemeToggle from "../theme-toggle";
 import { useAuth } from "@/hooks/useAuth";
@@ -84,6 +84,14 @@ const Drawer: FC<DrawerProps> = () => {
     //     <School className={className} color={color} />
     //   ),
     // },
+    {
+      name: "Settings",
+      hasFill: false,
+      path: "/settings",
+      icon: ({ className, color }: IconProps) => (
+        <Settings className={className} color={color} />
+      ),
+    },
   ];
   return (
     <Sheet open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>
@@ -138,17 +146,20 @@ const Drawer: FC<DrawerProps> = () => {
                 </div>
               );
             })}
-            <div className="absolute bottom-[8px]">
+            <div className="absolute bottom-[8px] w-full flex  justify-start items-start">
               <div className="flex w-full flex-col">
                 <Button
-                  className="mb-5"
+                  className="mb-6"
+                  variant="default"
                   onClick={async () => {
                     logout();
                     router.push("/sign-in");
                   }}
                 >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Logout
+                  <div className="flex items-center justify-start">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Logout
+                  </div>
                 </Button>
                 <ThemeToggle />
               </div>
