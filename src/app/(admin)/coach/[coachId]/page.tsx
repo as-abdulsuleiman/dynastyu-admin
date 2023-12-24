@@ -36,7 +36,6 @@ const Page: FC<pageProps> = ({ params }) => {
       },
     },
   });
-  console.log("data", data);
 
   const dataList = [
     {

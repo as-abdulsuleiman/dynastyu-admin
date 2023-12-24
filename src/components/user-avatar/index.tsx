@@ -27,9 +27,10 @@ const UserAvatar: FC<UserAvatarProps> = ({
           <Image
             fill
             src={avatar}
-            objectFit="cover"
             alt="profile"
+            className="object-cover"
             referrerPolicy="no-referrer"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
           />
         </div>
       ) : (
