@@ -11,7 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Grid2X2, Home, LogOut, Menu } from "lucide-react";
+import { Grid2X2, Home, LogOut, Menu, Settings } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import ThemeToggle from "../theme-toggle";
 import { useAuth } from "@/hooks/useAuth";
@@ -84,6 +84,14 @@ const Drawer: FC<DrawerProps> = () => {
     //     <School className={className} color={color} />
     //   ),
     // },
+    {
+      name: "Settings",
+      hasFill: false,
+      path: "/settings",
+      icon: ({ className, color }: IconProps) => (
+        <Settings className={className} color={color} />
+      ),
+    },
   ];
   return (
     <Sheet open={isOpen} onOpenChange={() => setIsOpen(!isOpen)}>

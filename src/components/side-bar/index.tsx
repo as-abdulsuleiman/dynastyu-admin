@@ -3,7 +3,15 @@
 "use client";
 
 import { FC } from "react";
-import { Grid2X2, Home, Linkedin, Medal, School, Users } from "lucide-react";
+import {
+  Grid2X2,
+  Home,
+  Linkedin,
+  Medal,
+  School,
+  Settings,
+  Users,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "../theme-toggle";
@@ -67,6 +75,14 @@ const SideBar: FC<SideBarProps> = ({}) => {
     //     <School className={className} color={color} />
     //   ),
     // },
+    {
+      name: "Settings",
+      hasFill: false,
+      path: "/settings",
+      icon: ({ className, color }: IconProps) => (
+        <Settings className={className} color={color} />
+      ),
+    },
   ];
   return (
     <div className="w-full px-6 pt-16 pb-8 h-full">

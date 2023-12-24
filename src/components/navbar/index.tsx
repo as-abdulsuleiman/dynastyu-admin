@@ -70,6 +70,10 @@ const Navbar = () => {
                         <Link href="/coaches">Coaches</Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link href="/settings">Settings</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
 
                       <DropdownMenuItem
                         onSelect={(event) => {
