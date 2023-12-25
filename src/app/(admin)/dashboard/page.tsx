@@ -80,7 +80,7 @@ export default function Home() {
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [debounced] = useDebouncedValue(value, 300);
   const [deteteUser] = useDeleteUserMutation();
-  const [updateuser] = useUpdateUserMutation();
+  const [updateUser] = useUpdateUserMutation();
 
   const {
     data: users,
@@ -240,7 +240,7 @@ export default function Home() {
     setIsactivating(true);
     try {
       const isActive = item?.isActive;
-      const resp = await updateuser({
+      const resp = await updateUser({
         variables: {
           where: {
             id: Number(item?.id),
@@ -331,7 +331,7 @@ export default function Home() {
         <TableCell className="text-center">
           {item?.id === selectedUser && isActivating ? (
             <div className="text-center flex flex-row justify-center items-center">
-              <Loader2 className="mr-1 h-4 w-4 animate-spin " />
+              <Loader2 className="mr-1 h-4 w-4 animate-spin" />
               {item?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (

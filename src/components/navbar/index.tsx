@@ -18,16 +18,20 @@ import {
 } from "../ui/dropdown-menu";
 import UserAvatar from "../user-avatar";
 import { LogOut } from "lucide-react";
+import { useRootStore } from "@/mobx";
 
 interface NavbarProps {
-  user: any;
+  user?: any;
   isLoggedIn: boolean;
   isInitializing: boolean;
 }
 
-const Navbar: FC<NavbarProps> = ({ user, isInitializing, isLoggedIn }) => {
+const Navbar: FC<NavbarProps> = ({ isInitializing, isLoggedIn }) => {
   const { logout } = useAuth();
   const router = useRouter();
+  const {
+    authStore: { user },
+  } = useRootStore();
 
   return (
     <header className="fixed top-0 supports-backdrop-blur:bg-background/60 inset-x-0 w-full z-50 border-b bg-background/95 backdrop-blur">
@@ -93,13 +97,9 @@ const Navbar: FC<NavbarProps> = ({ user, isInitializing, isLoggedIn }) => {
                 <Drawer />
               </>
             ) : (
-              <>
-                {isInitializing ? null : (
-                  <Link href="/sign-in" className={buttonVariants()}>
-                    Sign In
-                  </Link>
-                )}
-              </>
+              <Link href="/sign-in" className={buttonVariants()}>
+                Sign In
+              </Link>
             )}
           </div>
         </div>
