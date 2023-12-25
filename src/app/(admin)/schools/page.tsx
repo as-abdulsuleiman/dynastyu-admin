@@ -1,6 +1,7 @@
 /** @format */
 
 import { Divider, Title, Text } from "@tremor/react";
+import { observer } from "mobx-react-lite";
 import { FC } from "react";
 
 interface SchoolsProps {}
@@ -15,4 +16,4 @@ const Schools: FC<SchoolsProps> = ({}) => {
   );
 };
 
-export default Schools;
+export default observer(Schools);

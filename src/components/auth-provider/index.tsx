@@ -7,12 +7,12 @@ import { initializeApollo } from "@/services/graphql/config";
 import { ApolloProvider } from "@apollo/client";
 import { ThemeProvider } from "../theme-provider";
 import { ProvideAuth } from "@/hooks/useAuth";
+import { observer } from "mobx-react-lite";
 
 interface AuthProviderProps {
   children: React.ReactNode;
 }
-
-export function AuthProvider({ children }: AuthProviderProps) {
+const AuthProvider = ({ children }: AuthProviderProps) => {
   const apolloClient = initializeApollo();
 
   return (
@@ -28,4 +28,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       </ApolloProvider>
     </ThemeProvider>
   );
-}
+};
+
+export default observer(AuthProvider);

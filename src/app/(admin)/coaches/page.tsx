@@ -51,6 +51,7 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar";
 import UserAvatar from "@/components/user-avatar";
+import { observer } from "mobx-react-lite";
 interface CoachesProps {}
 
 enum FilterEnum {
@@ -522,4 +523,4 @@ const Coaches: FC<CoachesProps> = ({}) => {
   );
 };
 
-export default Coaches;
+export default observer(Coaches);

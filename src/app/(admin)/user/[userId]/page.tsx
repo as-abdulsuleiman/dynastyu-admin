@@ -17,6 +17,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import UsersAnalytics from "@/components/analytics/users";
+import { observer } from "mobx-react-lite";
 
 interface pageProps {
   params: {
@@ -128,4 +129,4 @@ const Page: FC<pageProps> = ({ params }) => {
   );
 };
 
-export default Page;
+export default observer(Page);

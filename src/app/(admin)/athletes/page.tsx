@@ -3,6 +3,7 @@
 
 import { useRootStore } from "@/mobx";
 import { Title, Text, Divider } from "@tremor/react";
+import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 
@@ -22,5 +23,4 @@ const Athletes: FC<AthletesProps> = ({}) => {
     </main>
   );
 };
-
-export default Athletes;
+export default observer(Athletes);

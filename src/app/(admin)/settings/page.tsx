@@ -1,5 +1,7 @@
 /** @format */
 
+"use client";
+
 import { FC } from "react";
 import {
   Divider,
@@ -10,6 +12,7 @@ import {
   Title,
   Text,
 } from "@tremor/react";
+import { observer } from "mobx-react-lite";
 
 interface PageProps {}
 
@@ -32,4 +35,4 @@ const Page: FC<PageProps> = ({}) => {
   );
 };
 
-export default Page;
+export default observer(Page);

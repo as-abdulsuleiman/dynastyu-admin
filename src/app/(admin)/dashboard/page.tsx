@@ -38,7 +38,6 @@ import Pagination from "@/components/pagination";
 import AthletesCount from "@/components/counts/athletes";
 import UniversalTable from "@/components/universal-table";
 import UserAvatar from "@/components/user-avatar";
-import { getAuth } from "firebase/auth";
 import {
   Menubar,
   MenubarContent,
@@ -49,6 +48,8 @@ import {
 import { Loader2, MoreHorizontal } from "lucide-react";
 import { AccountType } from "@/lib/enums/account-type.enum";
 import { useToast } from "@/hooks/use-toast";
+import { observer } from "mobx-react-lite";
+
 const filterItems = [
   { name: "Active", value: "Active" },
   { name: "Inactive", value: "Inactive" },
@@ -71,7 +72,7 @@ enum FilterEnum {
   COACH = "Coach",
 }
 
-export default function Home() {
+function Home() {
   const { toast } = useToast();
   const router = useRouter();
   const [status, setStatus] = useState<string>("");
@@ -428,3 +429,5 @@ export default function Home() {
     </main>
   );
 }
+
+export default observer(Home);
