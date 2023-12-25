@@ -1,6 +1,9 @@
 /** @format */
 
+"use client";
+
 import { Divider, Title, Text } from "@tremor/react";
+import { observer } from "mobx-react-lite";
 import { FC } from "react";
 
 interface FansProps {}
@@ -14,5 +17,4 @@ const Fans: FC<FansProps> = ({}) => {
     </main>
   );
 };
-
-export default Fans;
+export default observer(Fans);

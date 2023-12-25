@@ -19,6 +19,7 @@ import {
 import UserAvatar from "../user-avatar";
 import { LogOut } from "lucide-react";
 import { useRootStore } from "@/mobx";
+import { observer } from "mobx-react-lite";
 
 interface NavbarProps {
   user?: any;
@@ -41,7 +42,7 @@ const Navbar: FC<NavbarProps> = ({ isInitializing, isLoggedIn }) => {
         </Link>
         <div className="ml-auto flex items-center">
           <div className="ml-auto">
-            {isLoggedIn ? (
+            {user ? (
               <>
                 <div className="hidden lg:flex">
                   <DropdownMenu>
@@ -107,5 +108,4 @@ const Navbar: FC<NavbarProps> = ({ isInitializing, isLoggedIn }) => {
     </header>
   );
 };
-
-export default Navbar;
+export default observer(Navbar);

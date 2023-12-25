@@ -33,6 +33,7 @@ import UsersCount from "@/components/counts/users";
 import Pagination from "@/components/pagination";
 import UniversalTable from "@/components/universal-table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { observer } from "mobx-react-lite";
 
 interface UsersProps {}
 
@@ -249,8 +250,7 @@ const Users: FC<UsersProps> = ({}) => {
     </main>
   );
 };
-
-export default Users;
+export default observer(Users);
 
 // <Card>
 //               {loading ? (
