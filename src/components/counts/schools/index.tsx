@@ -17,6 +17,7 @@ import {
   Text,
 } from "@tremor/react";
 import { Loader2 } from "lucide-react";
+import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 interface indexProps {}
@@ -67,4 +68,4 @@ const SchoolsCount: FC<indexProps> = ({}) => {
   );
 };
 
-export default SchoolsCount;
+export default observer(SchoolsCount);

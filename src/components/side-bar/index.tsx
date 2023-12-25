@@ -7,6 +7,7 @@ import { Grid2X2, Home, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "../theme-toggle";
+import { observer } from "mobx-react-lite";
 
 interface SideBarProps {}
 type IconProps = {
@@ -124,4 +125,4 @@ const SideBar: FC<SideBarProps> = ({}) => {
   );
 };
 
-export default SideBar;
+export default observer(SideBar);

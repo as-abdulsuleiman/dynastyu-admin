@@ -22,6 +22,7 @@ import {
   Text,
 } from "@tremor/react";
 import { Loader2 } from "lucide-react";
+import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 interface indexProps {}
@@ -57,4 +58,4 @@ const CoachesCount: FC<indexProps> = ({}) => {
   );
 };
 
-export default CoachesCount;
+export default observer(CoachesCount);

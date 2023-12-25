@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import Image from "next/image";
 import { AvatarProps } from "@radix-ui/react-avatar";
 import { User } from "lucide-react";
+import { observer } from "mobx-react-lite";
 
 interface UserAvatarProps extends AvatarProps {
   avatar?: string;
@@ -46,4 +47,4 @@ const UserAvatar: FC<UserAvatarProps> = ({
   );
 };
 
-export default UserAvatar;
+export default observer(UserAvatar);

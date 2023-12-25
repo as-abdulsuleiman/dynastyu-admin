@@ -16,6 +16,7 @@ import { usePathname, useRouter } from "next/navigation";
 import ThemeToggle from "../theme-toggle";
 import { useAuth } from "@/hooks/useAuth";
 import { useRootStore } from "@/mobx";
+import { observer } from "mobx-react-lite";
 
 interface DrawerProps {}
 
@@ -171,4 +172,4 @@ const Drawer: FC<DrawerProps> = () => {
   );
 };
 
-export default Drawer;
+export default observer(Drawer);

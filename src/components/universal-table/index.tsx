@@ -19,6 +19,7 @@ import { User } from "@/services/graphql";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { observer } from "mobx-react-lite";
 
 interface UniversalTableProps {
   items: any[];
@@ -94,4 +95,4 @@ const UniversalTable: FC<UniversalTableProps> = ({
   );
 };
 
-export default UniversalTable;
+export default observer(UniversalTable);

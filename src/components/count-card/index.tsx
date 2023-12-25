@@ -13,6 +13,7 @@ import {
   Text,
 } from "@tremor/react";
 import { Skeleton } from "../ui/skeleton";
+import { observer } from "mobx-react-lite";
 
 interface CountCardProps {
   title: string;
@@ -66,4 +67,4 @@ const CountCard: FC<CountCardProps> = ({
   );
 };
 
-export default CountCard;
+export default observer(CountCard);

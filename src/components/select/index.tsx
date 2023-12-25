@@ -2,6 +2,7 @@
 
 import { CalculatorIcon, UserCircleIcon } from "@heroicons/react/outline";
 import { Select, SelectItem } from "@tremor/react";
+import { observer } from "mobx-react-lite";
 import { FC, useState } from "react";
 
 interface SelectCardProps {
@@ -47,4 +48,4 @@ const SelectCard: FC<SelectCardProps> = ({
   );
 };
 
-export default SelectCard;
+export default observer(SelectCard);

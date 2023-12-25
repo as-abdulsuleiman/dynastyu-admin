@@ -31,7 +31,7 @@ export default function AdminLayout({
           <SideBar />
         </aside>
         <main className="ml-0 lg:ml-64">
-          <div className=" px-[16px] md:px-6 py-32">{children}</div>
+          <div className="px-[16px] md:px-6 py-32">{children}</div>
         </main>
       </div>
     </Suspense>
