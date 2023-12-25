@@ -94,26 +94,27 @@ const SideBar: FC<SideBarProps> = ({}) => {
             }`;
             const Icon = () => val?.icon({ className: iconClass, color: "" });
             return (
-              <Link key={index} href={val?.path}>
+              <Link className="mb-4" key={index} href={val?.path}>
                 <div
+                  className={`group ${
+                    isActive ? "bg-[#dc2626]" : "bg-transparent"
+                  }  flex cursor-pointer items-center border rounded-md py-[6px] px-[16px]`}
+                >
+                  <Icon />
+                  <div
+                    className={`${
+                      isActive ? "text-[#e5e7eb]" : ""
+                    } ml-3 mt-[0px]`}
+                  >
+                    {val?.name}
+                  </div>
+                </div>
+                {/* <div
                   className="mt-4"
                   // onClick={() => router?.push(val.path, { scroll: true })}
                 >
-                  <div
-                    className={`group ${
-                      isActive ? "bg-[#dc2626]" : "bg-transparent"
-                    }  flex cursor-pointer items-center border rounded-md py-[6px] px-[16px]`}
-                  >
-                    <Icon />
-                    <div
-                      className={`${
-                        isActive ? "text-[#e5e7eb]" : ""
-                      } ml-3 mt-[0px]`}
-                    >
-                      {val?.name}
-                    </div>
-                  </div>
-                </div>
+                 
+                </div> */}
               </Link>
             );
           })}
