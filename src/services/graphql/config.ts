@@ -28,7 +28,17 @@ import { getToken } from "../token";
   const createApolloClient = new ApolloClient({
     ssrMode: typeof window === "undefined",
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies:{
+        User: {
+          fields: {
+            UserCount: {
+             merge:true
+            },
+          },
+        },
+      }
+    }),
     defaultOptions: { watchQuery: { fetchPolicy: "cache-and-network" } },
   });
   

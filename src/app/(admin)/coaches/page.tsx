@@ -41,7 +41,7 @@ import { projectAuth } from "@/services/firebase/config";
 import { useToast } from "@/hooks/use-toast";
 import { CoachValidator } from "@/lib/validators/coach";
 import * as yup from "yup";
-import { MoreHorizontal } from "lucide-react";
+import { Loader2, MoreHorizontal } from "lucide-react";
 import {
   Menubar,
   MenubarContent,
@@ -80,10 +80,12 @@ type FormData = yup.InferType<typeof CoachValidator>;
 const Coaches: FC<CoachesProps> = ({}) => {
   const router = useRouter();
   const { toast } = useToast();
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
   const [debounced] = useDebouncedValue(value, 300);
+  const [isActivating, setIsactivating] = useState<boolean>();
+  const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [registerCoach] = useRegisterCoachMutation();
   const [deteteCoach] = useDeleteCoachMutation();
   const [updateCoach] = useUpdateCoachMutation();
@@ -100,6 +102,9 @@ const Coaches: FC<CoachesProps> = ({}) => {
         createdAt: SortOrder.Desc,
       },
     },
+    returnPartialData: true,
+    fetchPolicy: "cache-first",
+    pollInterval: 30 * 1000,
   });
 
   const whereClause: CoachProfileWhereInput = useMemo(() => {
@@ -211,12 +216,12 @@ const Coaches: FC<CoachesProps> = ({}) => {
       });
       if (response.data?.registerCoach) {
         await sendPasswordResetEmail(projectAuth, values?.email);
-        toast({
-          title: "Coach successfully created.",
-          description: `A password reset link has been sent to ${values.email} to complete the process.`,
-          variant: "default",
-        });
-        refetch();
+        // toast({
+        //   title: "Coach successfully created.",
+        //   description: `A password reset link has been sent to ${values.email} to complete the process.`,
+        //   variant: "default",
+        // });
+        await refetch();
         setIsOpen(!isOpen);
       }
     } catch (error) {
@@ -230,12 +235,12 @@ const Coaches: FC<CoachesProps> = ({}) => {
     }
   };
 
-  const handleDeleteCoach = async (coachId: number, coach: any) => {
+  const handleDeleteCoach = async (item: any) => {
     try {
       const response = await deteteCoach({
         variables: {
           where: {
-            id: Number(coachId),
+            id: Number(item.id),
           },
         },
       });
@@ -243,7 +248,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
         await refetch();
         toast({
           title: "Coach successfully deleted.",
-          description: `${coach?.user?.username} account has been deleted.`,
+          description: `${item?.user?.username} account has been deleted.`,
           variant: "default",
         });
       }
@@ -258,13 +263,15 @@ const Coaches: FC<CoachesProps> = ({}) => {
     }
   };
 
-  const handleActiveCoach = async (coachId: number, coach: any) => {
+  const handleActiveCoach = async (item: any) => {
+    setSelectedUser(item?.id);
+    setIsactivating(true);
     try {
-      const isCoachActive = coach?.user?.isActive;
+      const isCoachActive = item?.user?.isActive;
       const resp = await updateCoach({
         variables: {
           where: {
-            id: Number(coachId),
+            id: Number(item?.id),
           },
           data: {
             user: {
@@ -276,14 +283,14 @@ const Coaches: FC<CoachesProps> = ({}) => {
         },
       });
       if (resp.data?.updateOneCoachProfile) {
-        toast({
-          title: "Coach successfully updated.",
-          description: `${coach?.user?.username} has been ${
-            coach?.user?.isActive ? "Deactivated" : "Activated"
-          } `,
-          variant: "default",
-        });
-        refetch();
+        // await refetch();
+        // toast({
+        //   title: "Coach successfully updated.",
+        //   description: `${coach?.user?.username} has been ${
+        //     coach?.user?.isActive ? "Deactivated" : "Activated"
+        //   } `,
+        //   variant: "default",
+        // });
       }
     } catch (error) {
       toast({
@@ -293,6 +300,9 @@ const Coaches: FC<CoachesProps> = ({}) => {
         }`,
         variant: "destructive",
       });
+    } finally {
+      setIsactivating(false);
+      setSelectedUser(null);
     }
   };
 
@@ -356,21 +366,17 @@ const Coaches: FC<CoachesProps> = ({}) => {
     const coacheItems = [
       {
         name: "View Details",
-        onclick: (coachId: number) => {
-          router.push(`/coach/${Number(coachId)}`);
+        onclick: () => {
+          router.push(`/coach/${Number(item?.id)}`);
         },
       },
       {
         name: `${item?.user?.isActive ? "Deactivate" : "Activate"} Coach`,
-        onclick: async (coachId: number) => {
-          await handleActiveCoach(coachId, item);
-        },
+        onclick: async () => await handleActiveCoach(item),
       },
       {
         name: "Delete Coach",
-        onclick: async (coachId: number) => {
-          await handleDeleteCoach(coachId, item);
-        },
+        onclick: async () => await handleDeleteCoach(item),
       },
       {
         name: "Approve Coach",
@@ -400,16 +406,23 @@ const Coaches: FC<CoachesProps> = ({}) => {
           <Text>{item?.title}</Text>
         </TableCell>
         <TableCell className="text-center">
-          <Badge
-            size="xs"
-            className="cursor-pointer"
-            color={item?.user?.isActive ? "emerald" : "rose"}
-            tooltip="decrease"
-            icon={item?.user?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
-            datatype="moderateDecrease"
-          >
-            {item?.user?.isActive ? "Active" : "Deactivated"}
-          </Badge>
+          {item?.id === selectedUser && isActivating ? (
+            <div className="text-center flex flex-row justify-center items-center">
+              <Loader2 className="mr-1 h-4 w-4 animate-spin " />
+              {item?.user?.isActive ? "Deactivating..." : "Activating..."}
+            </div>
+          ) : (
+            <Badge
+              size="xs"
+              className="cursor-pointer"
+              color={item?.user?.isActive ? "emerald" : "rose"}
+              tooltip="decrease"
+              icon={item?.user?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
+              datatype="moderateDecrease"
+            >
+              {item?.user?.isActive ? "Active" : "Deactivated"}
+            </Badge>
+          )}
         </TableCell>
         <TableCell className="text-center cursor-pointer">
           <div className="text-right w-100 flex flex-row items-center justify-center">
@@ -428,9 +441,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
                   {coacheItems?.map((val, id) => {
                     return (
                       <MenubarItem
-                        onClick={() => {
-                          val?.onclick(item?.id);
-                        }}
+                        onClick={val?.onclick}
                         key={id}
                         className="cursor-pointer tremor-SelectItem-root flex justify-start items-center text-tremor-default  ui-selected:text-tremor-content-strong ui-selected:bg-tremor-background-muted text-tremor-content-emphasis dark:ui-active:bg-dark-tremor-background-muted dark:ui-active:text-dark-tremor-content-strong dark:ui-selected:text-dark-tremor-content-strong dark:ui-selected:bg-dark-tremor-background-muted dark:text-dark-tremor-content-emphasis px-2.5 py-2.5"
                       >

@@ -125,7 +125,7 @@ const Drawer: FC<DrawerProps> = () => {
                   key={index}
                   className="mt-4"
                   onClick={() => {
-                    router.push(val?.path);
+                    router.push(val?.path, { scroll: true });
                     setIsOpen(!isOpen);
                   }}
                 >

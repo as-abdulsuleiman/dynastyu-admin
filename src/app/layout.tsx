@@ -5,9 +5,7 @@ import { Inter } from "next/font/google";
 import "../styles/globals.css";
 import { cn } from "@/lib/utils";
 import { AuthProvider } from "@/components/auth-provider";
-import { Toaster } from "@/components/ui/toaster";
 import AdminLayout from "@/components/admin-layout";
-import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -49,8 +47,6 @@ export default function RootLayout({
         <AuthProvider>
           <AdminLayout>{children}</AdminLayout>
         </AuthProvider>
-        <Toaster />
-        <Analytics />
       </body>
     </html>
   );
