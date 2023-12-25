@@ -50,7 +50,6 @@ export default function RootLayout({
             <main className="w-full">{children}</main>
           </div>
         </AuthProvider>
-
         <Toaster />
         <Analytics />
       </body>

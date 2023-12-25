@@ -5,6 +5,7 @@
 import CountCard from "@/components/count-card";
 import { useRootStore } from "@/mobx";
 import { GetUsersQuery, SortOrder, useGetUsersQuery } from "@/services/graphql";
+import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 interface indexProps {}
@@ -37,4 +38,4 @@ const UsersCount: FC<indexProps> = ({}) => {
   );
 };
 
-export default UsersCount;
+export default observer(UsersCount);

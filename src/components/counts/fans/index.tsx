@@ -5,6 +5,7 @@
 import CountCard from "@/components/count-card";
 import { useRootStore } from "@/mobx";
 import { GetUsersQuery, useGetUsersQuery } from "@/services/graphql";
+import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
 import { FC } from "react";
 
@@ -45,4 +46,4 @@ const FanCount: FC<indexProps> = ({}) => {
   );
 };
 
-export default FanCount;
+export default observer(FanCount);

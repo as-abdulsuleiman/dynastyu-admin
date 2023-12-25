@@ -17,6 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import { noImage } from "@/lib/utils";
 import Image from "next/image";
 import { ProgressCircle } from "@tremor/react";
+import { observer } from "mobx-react-lite";
 
 interface AvatarUploaderProps {
   id?: string;
@@ -148,4 +149,4 @@ const AvatarUploader: FC<AvatarUploaderProps> = ({
   );
 };
 
-export default AvatarUploader;
+export default observer(AvatarUploader);

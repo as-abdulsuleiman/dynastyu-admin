@@ -27,6 +27,7 @@ import {
 import { useDebouncedValue } from "@mantine/hooks";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ScrollArea } from "../ui/scroll-area";
+import { observer } from "mobx-react-lite";
 
 interface SchoolDropdownProps {
   scrollAreaClass?: string;
@@ -212,4 +213,4 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
   );
 };
 
-export default SchoolDropdown;
+export default observer(SchoolDropdown);

@@ -15,6 +15,7 @@ import {
 } from "@tremor/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatusOfflineIcon, StatusOnlineIcon } from "@heroicons/react/outline";
+import { observer } from "mobx-react-lite";
 
 type BarData = {
   key?: string;
@@ -107,4 +108,4 @@ const UsersAnalytics: FC<indexProps> = ({
   );
 };
 
-export default UsersAnalytics;
+export default observer(UsersAnalytics);
