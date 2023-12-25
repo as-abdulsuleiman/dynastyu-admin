@@ -7,6 +7,7 @@ import { Grid2X2, Home, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "../theme-toggle";
+import Link from "next/link";
 
 interface SideBarProps {}
 type IconProps = {
@@ -93,26 +94,27 @@ const SideBar: FC<SideBarProps> = ({}) => {
             }`;
             const Icon = () => val?.icon({ className: iconClass, color: "" });
             return (
-              <div
-                key={index}
-                className="mt-4"
-                onClick={() => router?.push(val.path, { scroll: true })}
-              >
+              <Link key={index} href={val?.path}>
                 <div
-                  className={`group ${
-                    isActive ? "bg-[#dc2626]" : "bg-transparent"
-                  }  flex cursor-pointer items-center border rounded-md py-[6px] px-[16px]`}
+                  className="mt-4"
+                  // onClick={() => router?.push(val.path, { scroll: true })}
                 >
-                  <Icon />
                   <div
-                    className={`${
-                      isActive ? "text-[#e5e7eb]" : ""
-                    } ml-3 mt-[0px]`}
+                    className={`group ${
+                      isActive ? "bg-[#dc2626]" : "bg-transparent"
+                    }  flex cursor-pointer items-center border rounded-md py-[6px] px-[16px]`}
                   >
-                    {val?.name}
+                    <Icon />
+                    <div
+                      className={`${
+                        isActive ? "text-[#e5e7eb]" : ""
+                      } ml-3 mt-[0px]`}
+                    >
+                      {val?.name}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>
