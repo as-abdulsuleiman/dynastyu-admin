@@ -23,9 +23,11 @@ import {
   QueryMode,
   SortOrder,
   UserWhereInput,
+  useDeleteUserMutation,
   useGetUsersQuery,
+  useUpdateUserMutation,
 } from "@/services/graphql";
-import { StatusOnlineIcon } from "@heroicons/react/outline";
+import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 import { SearchIcon } from "@heroicons/react/solid";
 import FanCount from "@/components/counts/fans";
 import UsersCount from "@/components/counts/users";
@@ -36,7 +38,17 @@ import Pagination from "@/components/pagination";
 import AthletesCount from "@/components/counts/athletes";
 import UniversalTable from "@/components/universal-table";
 import UserAvatar from "@/components/user-avatar";
-
+import { getAuth } from "firebase/auth";
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarTrigger,
+} from "@/components/ui/menubar";
+import { Loader2, MoreHorizontal } from "lucide-react";
+import { AccountType } from "@/lib/enums/account-type.enum";
+import { useToast } from "@/hooks/use-toast";
 const filterItems = [
   { name: "Active", value: "Active" },
   { name: "Inactive", value: "Inactive" },
@@ -49,6 +61,7 @@ const headerItems = [
   { name: "Role" },
   { name: "Email" },
   { name: "Status" },
+  { name: "Action" },
 ];
 enum FilterEnum {
   ACTIVE = "Active",
@@ -59,10 +72,15 @@ enum FilterEnum {
 }
 
 export default function Home() {
+  const { toast } = useToast();
   const router = useRouter();
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState<string>("");
   const [value, setValue] = useState<string>("");
+  const [isActivating, setIsactivating] = useState<boolean>();
+  const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [debounced] = useDebouncedValue(value, 300);
+  const [deteteUser] = useDeleteUserMutation();
+  const [updateuser] = useUpdateUserMutation();
 
   const {
     data: users,
@@ -76,6 +94,7 @@ export default function Home() {
         createdAt: SortOrder.Desc,
       },
     },
+    pollInterval: 30 * 1000,
   });
 
   const whereClause: UserWhereInput = useMemo(() => {
@@ -188,7 +207,105 @@ export default function Home() {
     });
   };
 
+  const handleDeleteUser = async (user: any) => {
+    try {
+      const response = await deteteUser({
+        variables: {
+          where: {
+            id: Number(user?.id),
+          },
+        },
+      });
+      if (response.data?.deleteOneUser) {
+        toast({
+          title: "Coach successfully deleted.",
+          description: `${user?.username} account has been deleted.`,
+          variant: "default",
+        });
+        refetch();
+      }
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not successfully created a coach. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleActiveUser = async (item: any) => {
+    setSelectedUser(item?.id);
+    setIsactivating(true);
+    try {
+      const isActive = item?.isActive;
+      const resp = await updateuser({
+        variables: {
+          where: {
+            id: Number(item?.id),
+          },
+          data: {
+            isActive: { set: !isActive },
+          },
+        },
+      });
+      if (resp.data?.updateOneUser) {
+        await refetch();
+        // toast({
+        //   title: "Coach successfully updated.",
+        //   description: `${coach?.user?.username} has been ${
+        //     coach?.user?.isActive ? "Deactivated" : "Activated"
+        //   } `,
+        //   variant: "default",
+        // });
+      }
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not successfully created a coach. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    } finally {
+      setIsactivating(false);
+      setSelectedUser(null);
+    }
+  };
+
   const renderItems = ({ item, id }: { item: any; id: any }) => {
+    let userType = "";
+    let userId = "";
+    if (item?.accountType?.role?.title?.toLowerCase() === AccountType.FAN) {
+      userType = "fan";
+      userId = item?.id;
+    } else if (
+      item?.accountType?.role?.title?.toLowerCase() === AccountType.ATHLETE
+    ) {
+      userType = "athlete";
+      userId = item?.athleteProfile?.id;
+    } else if (
+      item?.accountType?.role?.title?.toLowerCase() === AccountType.COACH
+    ) {
+      userType = "coach";
+      userId = item?.coachProfile?.id;
+    }
+
+    const userItems = [
+      {
+        name: "View Details",
+        onclick: () => router.push(`/${userType}/${Number(userId)}`),
+      },
+      {
+        name: `${item?.isActive ? "Deactivate" : "Activate"} User`,
+        onclick: async () => await handleActiveUser(item),
+      },
+      {
+        name: "Delete User",
+        onclick: async () => await handleDeleteUser(item),
+      },
+    ];
     return (
       <TableRow key={item?.id}>
         <TableCell>
@@ -212,16 +329,54 @@ export default function Home() {
           <Text>{item?.email}</Text>
         </TableCell>
         <TableCell className="text-center">
-          <Badge
-            size="xs"
-            className="cursor-pointer"
-            color={item?.isActive ? "emerald" : "rose"}
-            // tooltip="decrease"
-            icon={StatusOnlineIcon}
-            datatype="moderateDecrease"
-          >
-            {item?.isActive ? "Active" : "Inactive"}
-          </Badge>
+          {item?.id === selectedUser && isActivating ? (
+            <div className="text-center flex flex-row justify-center items-center">
+              <Loader2 className="mr-1 h-4 w-4 animate-spin " />
+              {item?.isActive ? "Deactivating..." : "Activating..."}
+            </div>
+          ) : (
+            <Badge
+              size="xs"
+              className="cursor-pointer"
+              color={item?.isActive ? "emerald" : "rose"}
+              // tooltip="decrease"
+              icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
+              datatype="moderateDecrease"
+            >
+              {item?.isActive ? "Active" : "Deactivated"}
+            </Badge>
+          )}
+        </TableCell>
+
+        <TableCell>
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            <Menubar className="bg-transparent border-0 hover:bg-transparent focus:bg-transparent">
+              <MenubarMenu>
+                <MenubarTrigger className="cursor-pointer data-[state=open]:bg-transparent hover:bg-transparent focus:bg-transparent bg-transparent focus-within:bg-transparent focus-visible:bg-transparent active:bg-transparent">
+                  <MoreHorizontal />
+                </MenubarTrigger>
+                <MenubarContent
+                  side="bottom"
+                  align="start"
+                  sideOffset={-3}
+                  alignOffset={-100}
+                  className="rounded-tremor-default cursor-pointer bg-tremor-background ring-tremor-ring shadow-tremor-card dark:bg-dark-tremor-background dark:ring-dark-tremor-ring dark:shadow-dark-tremor-card"
+                >
+                  {userItems?.map((val, id) => {
+                    return (
+                      <MenubarItem
+                        onClick={val?.onclick}
+                        key={id}
+                        className="cursor-pointer tremor-SelectItem-root flex justify-start items-center text-tremor-default  ui-selected:text-tremor-content-strong ui-selected:bg-tremor-background-muted text-tremor-content-emphasis dark:ui-active:bg-dark-tremor-background-muted dark:ui-active:text-dark-tremor-content-strong dark:ui-selected:text-dark-tremor-content-strong dark:ui-selected:bg-dark-tremor-background-muted dark:text-dark-tremor-content-emphasis px-2.5 py-2.5"
+                      >
+                        {val?.name}
+                      </MenubarItem>
+                    );
+                  })}
+                </MenubarContent>
+              </MenubarMenu>
+            </Menubar>
+          </div>
         </TableCell>
       </TableRow>
     );

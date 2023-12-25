@@ -72,11 +72,9 @@ function useAuthProvider() {
           },
         },
       });
-      if (!dbUser?.data?.user) {
-        window.location.href = `${siteUrl}/sign-in`;
-      } else {
+      if (dbUser?.data?.user) {
+        setUser(dbUser?.data?.user as User);
         window.location.href = `${siteUrl}/dashboard`;
-        return setUser(dbUser?.data?.user as User);
       }
     } catch (error: unknown) {
       if ((error as FirebaseError).code === "auth/email-already-in-use") {
@@ -131,15 +129,13 @@ function useAuthProvider() {
             setUser(dbUser.data.user as User);
           } else {
             setIsLoggedIn(false);
-            setUser({});
           }
         } else {
           setIsLoggedIn(false);
-          setUser({});
         }
       } catch (e) {
+        console.log(e, "Auth state change error");
         setIsLoggedIn(false);
-        setUser({});
       } finally {
         setIsInitializing(false);
       }

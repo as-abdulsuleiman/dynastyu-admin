@@ -2,6 +2,7 @@
 
 "use client";
 
+import { FC } from "react";
 import Link from "next/link";
 import { buttonVariants } from "../ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -15,16 +16,17 @@ import {
   DropdownMenuItem,
   DropdownMenuShortcut,
 } from "../ui/dropdown-menu";
-import { useRootStore } from "@/mobx";
 import UserAvatar from "../user-avatar";
 import { LogOut } from "lucide-react";
 
-const Navbar = () => {
-  const { logout, isLoggedIn, isInitializing } = useAuth();
+interface NavbarProps {
+  user: any;
+  isLoggedIn: boolean;
+  isInitializing: boolean;
+}
 
-  const {
-    authStore: { user },
-  } = useRootStore();
+const Navbar: FC<NavbarProps> = ({ user, isInitializing, isLoggedIn }) => {
+  const { logout } = useAuth();
   const router = useRouter();
 
   return (
@@ -65,7 +67,6 @@ const Navbar = () => {
                       <DropdownMenuItem asChild>
                         <Link href="/dashboard">Dashboard</Link>
                       </DropdownMenuItem>
-
                       <DropdownMenuItem asChild>
                         <Link href="/coaches">Coaches</Link>
                       </DropdownMenuItem>
@@ -74,7 +75,6 @@ const Navbar = () => {
                         <Link href="/settings">Settings</Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
-
                       <DropdownMenuItem
                         onSelect={(event) => {
                           event.preventDefault();
@@ -93,49 +93,13 @@ const Navbar = () => {
                 <Drawer />
               </>
             ) : (
-              // <Menubar className="rounded-none border-none border-0 right-0">
-              //   <MenubarMenu>
-              //     <MenubarTrigger className="cursor-pointer rounded-none border-none border-0 right-0 data-[state=open]:bg-transparent hover:bg-transparent focus:bg-transparent bg-transparent focus-within:bg-transparent focus-visible:bg-transparent active:bg-transparent">
-              //       <Avatar>
-              //         <AvatarImage
-              //           className="cursor-pointer"
-              //           src="https://github.com/shadcn.png"
-              //           alt="@shadcn"
-              //         />
-              //         <AvatarFallback>CN</AvatarFallback>
-              //       </Avatar>
-              //     </MenubarTrigger>
-              //     <MenubarContent
-              //       side="bottom"
-              //       align="center"
-              //       sideOffset={0}
-              //       alignOffset={-100}
-              //     >
-              //       <MenubarItem>
-              //         New Tab <MenubarShortcut>⌘T</MenubarShortcut>
-              //       </MenubarItem>
-              //       <MenubarItem>
-              //         New Window <MenubarShortcut>⌘N</MenubarShortcut>
-              //       </MenubarItem>
-              //       <MenubarItem disabled>New Incognito Window</MenubarItem>
-              //       <MenubarSeparator />
-              //       <MenubarItem>
-              //       Logout
-              //       </MenubarItem>
-              //     </MenubarContent>
-              //   </MenubarMenu>
-              // </Menubar>
-              // <Button
-              //   onClick={async () => {
-              //     logout();
-              //     router.push("/sign-in");
-              //   }}
-              // >
-              //   Logout
-              // </Button>
-              <Link href="/sign-in" className={buttonVariants()}>
-                Sign In
-              </Link>
+              <>
+                {isInitializing ? null : (
+                  <Link href="/sign-in" className={buttonVariants()}>
+                    Sign In
+                  </Link>
+                )}
+              </>
             )}
           </div>
         </div>

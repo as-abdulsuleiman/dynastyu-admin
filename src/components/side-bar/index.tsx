@@ -3,15 +3,7 @@
 "use client";
 
 import { FC } from "react";
-import {
-  Grid2X2,
-  Home,
-  Linkedin,
-  Medal,
-  School,
-  Settings,
-  Users,
-} from "lucide-react";
+import { Grid2X2, Home, Settings } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "../theme-toggle";
@@ -104,7 +96,7 @@ const SideBar: FC<SideBarProps> = ({}) => {
               <div
                 key={index}
                 className="mt-4"
-                onClick={() => router?.push(val.path)}
+                onClick={() => router?.push(val.path, { scroll: true })}
               >
                 <div
                   className={`group ${

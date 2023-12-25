@@ -41,7 +41,7 @@ export const createRootStore = () => {
       // default: localStorage
       jsonify: false, // if you use AsyncStorage, this shoud be true
       // default: true
-      // whitelist: ['authStore', ] 
+      // whitelist: ['athleteStore','userStore','coacheStore','fanStore'] 
     }).then(() => console.log("rootStore has been hydrated"));
   }
 
