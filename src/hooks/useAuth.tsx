@@ -117,6 +117,7 @@ function useAuthProvider() {
 
   useEffect(() => {
     async function onAuthStateChangedCallback(user: FirebaseUser | null) {
+      setIsInitializing(true);
       try {
         if (user !== null) {
           const token = await user.getIdTokenResult();

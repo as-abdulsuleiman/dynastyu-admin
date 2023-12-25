@@ -3,7 +3,7 @@
 "use client";
 
 import { useToast } from "@/hooks/use-toast";
-import { ElementRef, FC, useRef, useState } from "react";
+import { FC, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { SignInValidator } from "@/lib/validators/signin";
@@ -115,8 +115,11 @@ const Page: FC<SignInProps> = ({}) => {
             disabled={isSubmitting || !isValid}
             type="submit"
           >
-            {loading ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            {isSubmitting ? (
+              <div className="flex flex-row items-center justify-center">
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Loading...
+              </div>
             ) : (
               "Sign In"
             )}

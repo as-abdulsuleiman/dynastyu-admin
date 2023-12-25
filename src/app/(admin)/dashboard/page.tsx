@@ -331,7 +331,7 @@ export default function Home() {
         <TableCell className="text-center">
           {item?.id === selectedUser && isActivating ? (
             <div className="text-center flex flex-row justify-center items-center">
-              <Loader2 className="mr-1 h-4 w-4 animate-spin " />
+              <Loader2 className="mr-1 h-4 w-4 animate-spin" />
               {item?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (
