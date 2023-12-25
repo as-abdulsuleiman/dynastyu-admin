@@ -1,5 +1,7 @@
 /** @format */
 
+"use client";
+
 import { FC } from "react";
 
 interface AdminLayoutProps {
@@ -7,7 +9,11 @@ interface AdminLayoutProps {
 }
 
 const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
-  return <></>;
+  return (
+    <div className="w-full mx-auto h-screen min-h-screen">
+      <main className="w-full">{children}</main>
+    </div>
+  );
 };
 
 export default AdminLayout;

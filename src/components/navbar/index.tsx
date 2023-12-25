@@ -80,9 +80,9 @@ const Navbar: FC<NavbarProps> = ({ isInitializing, isLoggedIn }) => {
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem
-                        onSelect={async (event) => {
+                        onSelect={(event) => {
                           event.preventDefault();
-                          await logout();
+                          logout();
                           router.push("/sign-in");
                         }}
                         className="cursor-pointer"

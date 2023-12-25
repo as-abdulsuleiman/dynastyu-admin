@@ -28,6 +28,7 @@ import {
   QueryMode,
   SortOrder,
   useDeleteCoachMutation,
+  useDeleteUserMutation,
   useGetCoachesQuery,
   useRegisterCoachMutation,
   useUpdateCoachMutation,
@@ -87,8 +88,9 @@ const Coaches: FC<CoachesProps> = ({}) => {
   const [isActivating, setIsactivating] = useState<boolean>();
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [registerCoach] = useRegisterCoachMutation();
-  const [deteteCoach] = useDeleteCoachMutation();
+  const [deleteCoach] = useDeleteCoachMutation();
   const [updateCoach] = useUpdateCoachMutation();
+  const [deteteUser] = useDeleteUserMutation();
 
   const {
     loading,
@@ -237,7 +239,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
 
   const handleDeleteCoach = async (item: any) => {
     try {
-      const response = await deteteCoach({
+      const response = await deleteCoach({
         variables: {
           where: {
             id: Number(item.id),
@@ -245,6 +247,13 @@ const Coaches: FC<CoachesProps> = ({}) => {
         },
       });
       if (response.data?.deleteOneCoachProfile) {
+        await deteteUser({
+          variables: {
+            where: {
+              id: Number(item?.user?.id),
+            },
+          },
+        });
         await refetch();
         toast({
           title: "Coach successfully deleted.",

@@ -6,20 +6,27 @@ import Navbar from "@/components/navbar";
 import SideBar from "@/components/side-bar";
 import Spinner from "@/components/spinner";
 import { useAuth } from "@/hooks/useAuth";
+import { useRootStore } from "@/mobx";
+import { useRouter } from "next/navigation";
 
-export default function PortfolioLayout({
+export default function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const { isLoggedIn, isInitializing } = useAuth();
+  const router = useRouter();
+
+  const {
+    authStore: { user },
+  } = useRootStore();
 
   const siteUrl =
     process?.env?.NODE_ENV === "production"
       ? process?.env?.NEXT_PUBLIC_KNEXTT_URL
       : typeof window !== "undefined" && window?.location?.origin;
 
-  if (isInitializing && !isLoggedIn)
+  if (isInitializing) {
     return (
       <div className="h-screen min-h-screen w-full">
         <div className="flex flex-row h-full items-center justify-center">
@@ -27,9 +34,10 @@ export default function PortfolioLayout({
         </div>
       </div>
     );
+  }
 
-  if (!isLoggedIn && !isInitializing) {
-    window.location.href = `${siteUrl}/sign-in`;
+  if (Object.keys(user).length === 0 && !isLoggedIn) {
+    return router.push(`${siteUrl}/sign-in`);
   }
 
   return (

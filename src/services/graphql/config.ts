@@ -32,6 +32,9 @@ import { getToken } from "../token";
       typePolicies:{
         User: {
           fields: {
+            CoachProfile:{
+              merge:true
+            },
             UserCount: {
              merge:true
             },

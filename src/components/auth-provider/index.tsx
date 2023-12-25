@@ -14,11 +14,16 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const apolloClient = initializeApollo();
+
   return (
     <ThemeProvider>
       <ApolloProvider client={apolloClient}>
         <RootStoreProvider>
-          <ProvideAuth>{children}</ProvideAuth>
+          <ProvideAuth>
+            <div className="w-full mx-auto h-screen min-h-screen">
+              <main className="w-full">{children}</main>
+            </div>
+          </ProvideAuth>
         </RootStoreProvider>
       </ApolloProvider>
     </ThemeProvider>

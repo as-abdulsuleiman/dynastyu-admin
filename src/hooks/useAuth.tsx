@@ -117,7 +117,6 @@ function useAuthProvider() {
 
   useEffect(() => {
     async function onAuthStateChangedCallback(user: FirebaseUser | null) {
-      setIsInitializing(true);
       try {
         if (user !== null) {
           const token = await user.getIdTokenResult();
@@ -126,6 +125,7 @@ function useAuthProvider() {
             variables: { where: { firebaseUid: user?.uid } },
           });
           if (dbUser?.data?.user) {
+            setIsInitializing(false);
             setIsLoggedIn(true);
             setUser(dbUser.data.user as User);
           } else {
@@ -135,7 +135,6 @@ function useAuthProvider() {
           setIsLoggedIn(false);
         }
       } catch (e) {
-        console.log(e, "Auth state change error");
         setIsLoggedIn(false);
       } finally {
         setIsInitializing(false);

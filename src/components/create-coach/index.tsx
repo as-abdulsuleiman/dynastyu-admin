@@ -291,7 +291,10 @@ const CreateCoach: FC<CreateCoachProps> = ({
             <div className="w-full">
               <Button variant="default" className="w-full mt-6" type="submit">
                 {submitting || isSubmitting ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <div className="flex flex-row items-center justify-center">
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </div>
                 ) : (
                   "Save"
                 )}
