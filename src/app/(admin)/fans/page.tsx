@@ -1,5 +1,7 @@
 /** @format */
 
+"use client";
+
 import { Divider, Title, Text } from "@tremor/react";
 import { observer } from "mobx-react-lite";
 import { FC } from "react";
