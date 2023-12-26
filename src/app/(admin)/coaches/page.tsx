@@ -568,7 +568,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center">
         <div className="flex flex-col">
           <Title>Coaches</Title>
-          <Text>Coaches Overview.</Text>
+          {/* <Text>Coaches Overview.</Text> */}
         </div>
         <div className="ml-auto justify-end">
           <CreateCoach

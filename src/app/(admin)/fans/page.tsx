@@ -12,7 +12,7 @@ const Fans: FC<FansProps> = ({}) => {
   return (
     <main className="w-full h-full">
       <Title>Fans</Title>
-      <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text>
+      <Text>In Progress</Text>
       <Divider></Divider>
     </main>
   );

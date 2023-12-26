@@ -200,9 +200,8 @@ const Users: FC<UsersProps> = ({}) => {
   return (
     <main className="w-full h-full">
       <Title>Users</Title>
-      <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text>
+      {/* <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text> */}
       <Divider></Divider>
-
       <TabGroup className="mt-6">
         {/* <TabList>
           <Tab>Overview</Tab>
@@ -212,8 +211,16 @@ const Users: FC<UsersProps> = ({}) => {
           <TabPanel>
             <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
               <UsersCount />
+              {/* <UsersAnalytics /> */}
+            </Grid>
+            <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
+              <TextInput
+                icon={SearchIcon}
+                onValueChange={(e) => setValue(e)}
+                placeholder="Search..."
+              />
               <SelectCard
-                className="max-w-3xl w-full ml-auto h-14 mt-4 self-center"
+                className="h-[38px]"
                 items={[
                   { name: "Active", value: "Active" },
                   { name: "Inactive", value: "Inactive" },
@@ -223,13 +230,6 @@ const Users: FC<UsersProps> = ({}) => {
                   setStatus(e);
                 }}
               />
-              <TextInput
-                icon={SearchIcon}
-                onValueChange={(e) => setValue(e)}
-                placeholder="Search..."
-              />
-
-              {/* <UsersAnalytics /> */}
             </Grid>
           </TabPanel>
         </TabPanels>
