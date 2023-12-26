@@ -63,6 +63,7 @@ enum FilterEnum {
   INACTIVE = "Inactive",
   APPROVED = "Approved",
   VERIFIED = "Verified",
+  NOTVERIFIED = "Not Verified",
   NOTAPPROVED = "Not Approved",
 }
 
@@ -70,8 +71,9 @@ const filterItems = [
   { name: "Active", value: "Active" },
   { name: "Inactive", value: "Inactive" },
   { name: "Verified", value: "Verified" },
-  { name: "Approved", value: "Approved" },
-  { name: "Not Approved", value: "Not Approved" },
+  { name: "Not Verified", value: "Not Verified" },
+  // { name: "Approved", value: "Approved" },
+  // { name: "Not Approved", value: "Not Approved" },
 ];
 const headerItems = [
   { name: "Name" },
@@ -149,6 +151,12 @@ const Coaches: FC<CoachesProps> = ({}) => {
       return {
         verified: {
           equals: true,
+        },
+      };
+    } else if (status === FilterEnum.NOTVERIFIED) {
+      return {
+        verified: {
+          equals: false,
         },
       };
     } else {
