@@ -117,7 +117,7 @@ const Page: FC<pageProps> = ({ params }) => {
           {data?.user?.firstname} {data?.user?.surname}
         </Title>
       )}
-      <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text>
+      {/* <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text> */}
       <Divider></Divider>
       <UsersAnalytics
         loading={loading}
