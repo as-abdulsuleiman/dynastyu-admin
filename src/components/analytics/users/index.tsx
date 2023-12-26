@@ -84,7 +84,7 @@ const UsersAnalytics: FC<indexProps> = ({
               <Badge
                 datatype={isActive ? "increase" : "decrease"}
                 className="flex flex-row ml-auto"
-                color={isActive ? "emerald" : "rose"}
+                color={isActive ? "teal" : "rose"}
                 icon={isActive ? StatusOnlineIcon : StatusOfflineIcon}
               >
                 {isActive ? "Active" : "Deactivated"}
@@ -101,7 +101,7 @@ const UsersAnalytics: FC<indexProps> = ({
             </Text>
           </Flex>
 
-          <BarList data={data} className="mt-2" />
+          <BarList showAnimation={true} data={data} className="mt-2" />
         </>
       )}
     </Card>

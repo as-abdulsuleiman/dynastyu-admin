@@ -117,7 +117,6 @@ const AvatarUploader: FC<AvatarUploaderProps> = ({
             onLoad={() => setLoading(false)}
           />
         )}
-
         <div className="z-10 absolute h-[32px] w-[32px] bg-primary rounded-full cursor-pointer ring-1 right-[5px] bottom-[5px]">
           <div
             className="flex items-center justify-center mt-[0px] ml-[0.5px] p-1"

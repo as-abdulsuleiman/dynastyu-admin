@@ -2,17 +2,17 @@
 
 "use client";
 
+import { FC } from "react";
 import CountCard from "@/components/count-card";
 import { useRootStore } from "@/mobx";
 import { GetAthletesQuery, useGetAthletesQuery } from "@/services/graphql";
 import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
-import { FC } from "react";
+
 interface indexProps {}
 
 const AthletesCount: FC<indexProps> = ({}) => {
   const router = useRouter();
-
   const {
     athleteStore: { setAthletes, athletes: athletesCount },
   } = useRootStore();
@@ -37,6 +37,7 @@ const AthletesCount: FC<indexProps> = ({}) => {
       loading={loading}
       categoryValues={[activeAthletes, inactiveAthletes]}
       categories={["Active athletes", "Inactive athletes"]}
+      onClick={() => router.push("/athletes")}
     />
   );
 };

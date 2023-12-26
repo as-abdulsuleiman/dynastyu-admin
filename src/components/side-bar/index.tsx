@@ -80,7 +80,7 @@ const SideBar: FC<SideBarProps> = ({}) => {
   return (
     <div className="w-full px-6 pt-16 pb-8 h-full">
       <div className="relative w-full h-full">
-        <div className="pt-[55px]">
+        <div className="pt-[50px]">
           {items?.map((val, index) => {
             const isActive = pathname === val?.path;
             const iconClass = `h-3 w-3 sm:h-4 sm:w-4 ${

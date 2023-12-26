@@ -54,6 +54,7 @@ const CoachesCount: FC<indexProps> = ({}) => {
       loading={loading}
       categoryValues={[activeCoaches, inactiveCoaches]}
       categories={["Active coaches", "Inactive coaches"]}
+      onClick={() => router.push("/coaches")}
     />
   );
 };
