@@ -91,6 +91,21 @@ query getCoach($where: CoachProfileWhereUniqueInput!) {
       name
       logo
       address
+      description
+      secondaryColor
+      primaryColor
+      email
+      division
+      backgroundImage
+      yearlyTuition
+      conference
+      schoolType{
+        name
+        id
+        _count{
+          schools
+        }
+      }
     }
     country {
       name

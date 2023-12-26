@@ -2,45 +2,47 @@
 
 "use client";
 
-import { FC } from "react";
+import { FC, ReactNode, useState } from "react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import Image from "next/image";
 import { AvatarProps } from "@radix-ui/react-avatar";
-import { User } from "lucide-react";
 import { observer } from "mobx-react-lite";
 
 interface UserAvatarProps extends AvatarProps {
   avatar?: string;
-  fallback: string;
+  fallback?: string;
   fallbackType: "icon" | "name";
+  icon?: ReactNode;
 }
 
 const UserAvatar: FC<UserAvatarProps> = ({
+  icon,
   avatar,
   fallback,
   fallbackType = "name",
   ...props
 }) => {
+  const [loading, setLoading] = useState(true);
+
   return (
     <Avatar {...props}>
       {avatar ? (
         <div className="relative aspect-square h-full w-full">
           <Image
+            onLoad={() => setLoading(false)}
             fill
             src={avatar}
             alt="profile"
-            className="object-cover"
+            className={`${
+              loading ? "blur-sm " : "blur-none"
+            } object-cover drop-shadow-lg`}
             referrerPolicy="no-referrer"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
           />
         </div>
       ) : (
-        <AvatarFallback className="capitalize">
-          {fallbackType === "icon" ? (
-            <User className="h-4 w-4" />
-          ) : (
-            <>{fallback}</>
-          )}
+        <AvatarFallback className="capitalize drop-shadow-lg">
+          {fallbackType === "icon" ? <>{icon}</> : <>{fallback}</>}
         </AvatarFallback>
       )}
     </Avatar>

@@ -24,6 +24,7 @@ import {
   SortOrder,
   UserWhereInput,
   useDeleteUserMutation,
+  useGetUsersLazyQuery,
   useGetUsersQuery,
   useUpdateUserMutation,
 } from "@/services/graphql";
@@ -49,6 +50,7 @@ import { Loader2, MoreHorizontal } from "lucide-react";
 import { AccountType } from "@/lib/enums/account-type.enum";
 import { useToast } from "@/hooks/use-toast";
 import { observer } from "mobx-react-lite";
+import { useRootStore } from "@/mobx";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -74,6 +76,9 @@ enum FilterEnum {
 
 function Home() {
   const { toast } = useToast();
+  const {
+    userStore: { setUsers },
+  } = useRootStore();
   const router = useRouter();
   const [status, setStatus] = useState<string>("");
   const [value, setValue] = useState<string>("");
@@ -82,6 +87,7 @@ function Home() {
   const [debounced] = useDebouncedValue(value, 300);
   const [deteteUser] = useDeleteUserMutation();
   const [updateUser] = useUpdateUserMutation();
+  const [getUsers] = useGetUsersLazyQuery();
 
   const {
     data: users,
@@ -223,6 +229,8 @@ function Home() {
           description: `${user?.username} account has been deleted.`,
           variant: "default",
         });
+        const response = await getUsers({});
+        setUsers(response.data?.users as any);
         refetch();
       }
     } catch (error) {
@@ -296,7 +304,8 @@ function Home() {
     const userItems = [
       {
         name: "View Details",
-        onclick: () => router.push(`/${userType}/${Number(userId)}`),
+        onclick: () =>
+          router.push(`/${userType}/${Number(userId)}`, { scroll: true }),
       },
       {
         name: `${item?.isActive ? "Deactivate" : "Activate"} User`,
@@ -312,6 +321,7 @@ function Home() {
         <TableCell>
           <Flex alignItems="center" justifyContent="start">
             <UserAvatar
+              className="h-[55px] w-[55px]"
               fallbackType="name"
               avatar={item?.avatar as string}
               fallback={`${item?.username?.charAt(0)} ${item?.firstname?.charAt(
@@ -339,7 +349,7 @@ function Home() {
             <Badge
               size="xs"
               className="cursor-pointer"
-              color={item?.isActive ? "emerald" : "rose"}
+              color={item?.isActive ? "teal" : "rose"}
               // tooltip="decrease"
               icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
               datatype="moderateDecrease"
@@ -386,7 +396,7 @@ function Home() {
   return (
     <main className="w-full h-full">
       <Title>Dashboard Overview</Title>
-      <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text>
+      <Text>Welcome to DynastyU Admin</Text>
       <Divider></Divider>
       <TabGroup className="mt-6">
         <TabPanels>

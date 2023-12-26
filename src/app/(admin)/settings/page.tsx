@@ -20,7 +20,7 @@ const Page: FC<PageProps> = ({}) => {
   return (
     <main className="w-full h-full">
       <Title>Settings</Title>
-      <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text>
+      <Text>In Progress.</Text>
       <Divider></Divider>
       <TabGroup className="mt-6">
         <TabPanels>

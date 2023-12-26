@@ -14,6 +14,7 @@ import {
 } from "@tremor/react";
 import { Skeleton } from "../ui/skeleton";
 import { observer } from "mobx-react-lite";
+import { useRouter } from "next/navigation";
 
 interface CountCardProps {
   title: string;
@@ -22,6 +23,7 @@ interface CountCardProps {
   categoryValues: number[];
   categories: string[];
   activeLegend: string;
+  onClick?: () => void;
 }
 
 const CountCard: FC<CountCardProps> = ({
@@ -31,6 +33,7 @@ const CountCard: FC<CountCardProps> = ({
   categoryValues,
   categories,
   activeLegend,
+  onClick,
 }) => {
   return (
     <Card>
@@ -45,8 +48,9 @@ const CountCard: FC<CountCardProps> = ({
         </div>
         <BadgeDelta
           className="cursor-pointer"
-          // onClick={() => router.push("/athletes")}
           deltaType="moderateIncrease"
+          color="teal"
+          onClick={onClick}
         >
           View
         </BadgeDelta>
@@ -54,14 +58,14 @@ const CountCard: FC<CountCardProps> = ({
       <CategoryBar
         className="mt-4"
         values={categoryValues}
-        colors={["emerald", "rose"]}
+        colors={["teal", "rose"]}
       />
       <Legend
         activeLegend={activeLegend}
         className="mt-3"
         categories={categories}
         enableLegendSlider={true}
-        colors={["emerald", "rose"]}
+        colors={["teal", "rose"]}
       />
     </Card>
   );

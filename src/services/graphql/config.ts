@@ -38,6 +38,9 @@ import { getToken } from "../token";
             UserCount: {
              merge:true
             },
+            School:{
+              merge:true
+            }
           },
         },
       }

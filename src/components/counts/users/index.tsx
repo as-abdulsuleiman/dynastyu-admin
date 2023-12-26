@@ -34,6 +34,7 @@ const UsersCount: FC<indexProps> = ({}) => {
       loading={loading}
       categoryValues={[activeUsers, inactiveUsers]}
       categories={["Active users", "Inactive users"]}
+      onClick={() => router.push("/users")}
     />
   );
 };

@@ -42,6 +42,7 @@ const FanCount: FC<indexProps> = ({}) => {
       loading={loading}
       categoryValues={[activeFans, inactiveFans]}
       categories={["Active fans", "Inactive fans"]}
+      onClick={() => router.push("/fans")}
     />
   );
 };
