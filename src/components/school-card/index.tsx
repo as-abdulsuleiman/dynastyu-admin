@@ -6,14 +6,8 @@ import { FC } from "react";
 import { Callout, Card, Text, Divider } from "@tremor/react";
 import UserAvatar from "../user-avatar";
 import { Icons } from "../Icons";
-import {
-  LocationMarkerIcon,
-  CheckCircleIcon,
-  AcademicCapIcon,
-  ClipboardCheckIcon,
-} from "@heroicons/react/outline";
 import { Skeleton } from "../ui/skeleton";
-import { StickyNote } from "lucide-react";
+import { CheckCircle2, GraduationCap, MapPin, ScrollText } from "lucide-react";
 
 interface SchoolCardProps {
   loading?: boolean;
@@ -35,7 +29,7 @@ const SchoolCard: FC<SchoolCardProps> = ({
   loading,
 }) => {
   return (
-    <Card className="">
+    <Card>
       <div className="flex flex-col justify-center items-center">
         <UserAvatar
           className="h-[75px] w-[75px]"
@@ -54,7 +48,11 @@ const SchoolCard: FC<SchoolCardProps> = ({
       <Callout
         className="mt-4"
         title={title || ("High School" as string)}
-        icon={AcademicCapIcon}
+        icon={() => {
+          return (
+            <GraduationCap className="h-[20px] w-[20px] mr-2" color="teal" />
+          );
+        }}
         color="teal"
       >
         {schoolName}
@@ -62,7 +60,9 @@ const SchoolCard: FC<SchoolCardProps> = ({
       <Callout
         className="mt-4"
         title="Address"
-        icon={LocationMarkerIcon}
+        icon={() => {
+          return <MapPin className="h-[20px] w-[20px] mr-2" color="teal" />;
+        }}
         color="teal"
       >
         {address}
@@ -70,7 +70,11 @@ const SchoolCard: FC<SchoolCardProps> = ({
       <Callout
         className="mt-4"
         title="Division"
-        icon={CheckCircleIcon}
+        icon={() => {
+          return (
+            <CheckCircle2 className="h-[20px] w-[20px] mr-2" color="teal" />
+          );
+        }}
         color="teal"
       >
         {division}
@@ -79,7 +83,7 @@ const SchoolCard: FC<SchoolCardProps> = ({
         className="mt-4"
         title="Description"
         icon={() => {
-          return <StickyNote className="h-[20px] w-[20px]" color="teal" />;
+          return <ScrollText className="h-[20px] w-[20px] mr-2" color="teal" />;
         }}
         color="teal"
       >

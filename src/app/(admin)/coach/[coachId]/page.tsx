@@ -9,9 +9,12 @@ import { Title, Divider, Text, Grid, Card, Callout } from "@tremor/react";
 import {
   BadgeCheck,
   Camera,
+  LocateFixed,
+  Mail,
   PictureInPicture,
   School,
   SwitchCamera,
+  Tags,
   Users,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -21,7 +24,11 @@ import { observer } from "mobx-react-lite";
 import SchoolCard from "@/components/school-card";
 import { Icons } from "@/components/Icons";
 import UserAvatar from "@/components/user-avatar";
-import { CheckCircleIcon, UserIcon } from "@heroicons/react/outline";
+import {
+  CheckCircleIcon,
+  UserIcon,
+  LocationMarkerIcon,
+} from "@heroicons/react/outline";
 import TooltipCard from "@/components/tooltip-card";
 
 interface pageProps {
@@ -149,8 +156,6 @@ const Page: FC<pageProps> = ({ params }) => {
     },
   ];
 
-  console.log("data?.coachProfile", data?.coachProfile);
-
   return (
     <div className="w-full h-full relative">
       <Button
@@ -205,8 +210,8 @@ const Page: FC<pageProps> = ({ params }) => {
             ) : (
               <div className="flex flex-row items-center justify-center">
                 <Text className="text-xl relative mr-1">
-                  {data?.coachProfile?.user?.firstname}{" "}
-                  {data?.coachProfile?.user?.surname}
+                  {/* {data?.coachProfile?.user?.firstname}{" "} */}@
+                  {data?.coachProfile?.user?.username}
                 </Text>
                 {data?.coachProfile?.verified ? (
                   <TooltipCard
@@ -226,17 +231,50 @@ const Page: FC<pageProps> = ({ params }) => {
               </div>
             )}
           </div>
+          <Divider></Divider>
           <Callout className="mt-4" title="Name" icon={UserIcon} color="teal">
             {data?.coachProfile?.user?.firstname}{" "}
             {data?.coachProfile?.user?.surname}
           </Callout>
           <Callout
+            className="mt-4 "
+            title="Email"
+            icon={() => {
+              return <Mail className="h-[19px] w-[19px] mr-2" color="teal" />;
+            }}
+            color="teal"
+          >
+            {data?.coachProfile?.user.email}
+          </Callout>
+          <Callout
             className="mt-4"
             title="Coach Title"
-            icon={CheckCircleIcon}
+            icon={() => {
+              return <Tags className="h-[20px] w-[20px] mr-2" color="teal" />;
+            }}
             color="teal"
           >
             {data?.coachProfile?.title}
+          </Callout>
+          <Callout
+            className="mt-4"
+            title="State"
+            icon={LocationMarkerIcon}
+            color="teal"
+          >
+            {data?.coachProfile?.state}
+          </Callout>
+          <Callout
+            className="mt-4"
+            title="City"
+            icon={() => {
+              return (
+                <LocateFixed className="h-[20px] w-[20px] mr-2" color="teal" />
+              );
+            }}
+            color="teal"
+          >
+            {data?.coachProfile?.city}
           </Callout>
         </Card>
         <SchoolCard
