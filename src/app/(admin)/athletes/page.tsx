@@ -14,12 +14,11 @@ const Athletes: FC<AthletesProps> = ({}) => {
   const {
     authStore: { user },
   } = useRootStore();
-  const router = useRouter();
 
   return (
     <main className="w-full h-full">
       <Title>Athletes</Title>
-      <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text>
+      <Text>In Progress</Text>
       <Divider></Divider>
     </main>
   );
