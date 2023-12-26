@@ -24,11 +24,7 @@ import { observer } from "mobx-react-lite";
 import SchoolCard from "@/components/school-card";
 import { Icons } from "@/components/Icons";
 import UserAvatar from "@/components/user-avatar";
-import {
-  CheckCircleIcon,
-  UserIcon,
-  LocationMarkerIcon,
-} from "@heroicons/react/outline";
+import { UserIcon, LocationMarkerIcon } from "@heroicons/react/outline";
 import TooltipCard from "@/components/tooltip-card";
 
 interface pageProps {
