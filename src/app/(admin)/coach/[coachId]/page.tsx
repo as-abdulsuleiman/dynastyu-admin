@@ -6,17 +6,6 @@ import { FC } from "react";
 import { useRouter } from "next/navigation";
 import { useGetCoachQuery } from "@/services/graphql";
 import { Title, Divider, Text, Grid, Card, Callout } from "@tremor/react";
-import {
-  BadgeCheck,
-  Camera,
-  LocateFixed,
-  Mail,
-  PictureInPicture,
-  School,
-  SwitchCamera,
-  Tags,
-  Users,
-} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import UsersAnalytics from "@/components/analytics/users";
@@ -24,7 +13,6 @@ import { observer } from "mobx-react-lite";
 import SchoolCard from "@/components/school-card";
 import { Icons } from "@/components/Icons";
 import UserAvatar from "@/components/user-avatar";
-import { UserIcon, LocationMarkerIcon } from "@heroicons/react/outline";
 import TooltipCard from "@/components/tooltip-card";
 
 interface pageProps {
@@ -49,111 +37,71 @@ const Page: FC<pageProps> = ({ params }) => {
       name: "Following",
       value: data?.coachProfile?.user?._count?.following || 0,
       color: "teal",
-      icon: function TwitterIcon() {
-        return <Users className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />;
-      },
+      icon: () => (
+        <Icons.users2 className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
     },
 
     {
       name: "Follwers",
       value: data?.coachProfile?.user?._count?.followedBy || 0,
       color: "teal",
-      icon: function TwitterIcon() {
-        return (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-users-round mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600"
-          >
-            <path d="M18 21a8 8 0 0 0-16 0" />
-            <circle cx="10" cy="8" r="5" />
-            <path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3" />
-          </svg>
-        );
-      },
+      icon: () => (
+        <Icons.usersRound className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
     },
     {
       name: "Posts",
       color: "teal",
       value: data?.coachProfile?.user?._count?.posts || 0,
-      icon: function TwitterIcon() {
-        return <Camera className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />;
-      },
+      icon: () => (
+        <Icons.fileImage className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
     },
 
     {
       name: "Verified Athletes",
       color: "teal",
       value: data?.coachProfile?._count?.verifiedAthletes || 0,
-      icon: function TwitterIcon() {
-        return (
-          <BadgeCheck className="mr-2.5 mb-[-6px] h-5 w-5 stroke-teal-600" />
-        );
-      },
+      icon: () => (
+        <Icons.badgeCheck className="mr-2.5 mb-[-6px] h-5 w-5 stroke-teal-600" />
+      ),
     },
 
     {
       name: "Reposts",
       value: data?.coachProfile?.user?._count?.reposts || 0,
-      icon: function TwitterIcon() {
-        return (
-          <SwitchCamera className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
-        );
-      },
+      icon: () => (
+        <Icons.switchCamera className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
     },
     {
       name: "Interested Schools",
       value: data?.coachProfile?.user?._count?.interestedSchools || 0,
-      icon: function TwitterIcon() {
-        return <School className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />;
-      },
+      icon: () => (
+        <Icons.school className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
     },
     {
       name: "Evaluations Created",
       color: "teal",
       value: data?.coachProfile?.user?._count?.evaluationsCreated || 0,
-      icon: function TwitterIcon() {
-        return (
-          <PictureInPicture className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
-        );
-      },
+      icon: () => (
+        <Icons.clipboardEdit className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
     },
     {
       name: "Comments",
       color: "teal",
       value: data?.coachProfile?.user?._count?.comments || 0,
-      icon: function TwitterIcon() {
-        return (
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-message-circle-code mr-2.5 mb-[-6px] h-5 w-5 stroke-teal-600"
-          >
-            <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
-            <path d="m10 10-2 2 2 2" />
-            <path d="m14 10 2 2-2 2" />
-          </svg>
-        );
-      },
+      icon: () => (
+        <Icons.messageCircleCode className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
     },
   ];
 
   return (
-    <div className="w-full h-full relative">
+    <main className="w-full h-full relative">
       <Button
         variant="ghost"
         className="absolute top-[-53px]"
@@ -167,15 +115,18 @@ const Page: FC<pageProps> = ({ params }) => {
           <Skeleton className="w-[100px] h-[20px] mt-4" />
         </>
       ) : (
-        <>
-          <Title>
-            {data?.coachProfile?.user?.firstname}{" "}
-            {data?.coachProfile?.user?.surname}
-          </Title>
+        <div className="flex flex-col">
+          <div className="flex flex-row items-center">
+            <Title>
+              {data?.coachProfile?.user?.firstname}{" "}
+              {data?.coachProfile?.user?.surname}
+            </Title>
+            <Icons.whistle className="h-4 w-4 ml-2 fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis" />
+          </div>
           <Text>
             {data?.coachProfile?.title} at {data?.coachProfile?.school?.name}
           </Text>
-        </>
+        </div>
       )}
       <Divider></Divider>
       <UsersAnalytics
@@ -228,15 +179,24 @@ const Page: FC<pageProps> = ({ params }) => {
             )}
           </div>
           <Divider></Divider>
-          <Callout className="mt-4" title="Name" icon={UserIcon} color="teal">
+          <Callout
+            className="mt-4"
+            title="Name"
+            icon={() => {
+              return <Icons.user className="h-5 w-5" color="teal" />;
+            }}
+            color="teal"
+          >
             {data?.coachProfile?.user?.firstname}{" "}
             {data?.coachProfile?.user?.surname}
           </Callout>
           <Callout
-            className="mt-4 "
+            className="mt-4"
             title="Email"
             icon={() => {
-              return <Mail className="h-[19px] w-[19px] mr-2" color="teal" />;
+              return (
+                <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
+              );
             }}
             color="teal"
           >
@@ -246,7 +206,9 @@ const Page: FC<pageProps> = ({ params }) => {
             className="mt-4"
             title="Coach Title"
             icon={() => {
-              return <Tags className="h-[20px] w-[20px] mr-2" color="teal" />;
+              return (
+                <Icons.tags className="h-[20px] w-[20px] mr-2" color="teal" />
+              );
             }}
             color="teal"
           >
@@ -255,7 +217,11 @@ const Page: FC<pageProps> = ({ params }) => {
           <Callout
             className="mt-4"
             title="State"
-            icon={LocationMarkerIcon}
+            icon={() => {
+              return (
+                <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+              );
+            }}
             color="teal"
           >
             {data?.coachProfile?.state}
@@ -265,7 +231,10 @@ const Page: FC<pageProps> = ({ params }) => {
             title="City"
             icon={() => {
               return (
-                <LocateFixed className="h-[20px] w-[20px] mr-2" color="teal" />
+                <Icons.locateFixed
+                  className="h-[20px] w-[20px] mr-2"
+                  color="teal"
+                />
               );
             }}
             color="teal"
@@ -281,9 +250,11 @@ const Page: FC<pageProps> = ({ params }) => {
           address={data?.coachProfile?.school?.address as string}
           schoolName={data?.coachProfile?.school?.name as string}
           avatar={data?.coachProfile?.school?.logo as string}
+          conference={data?.coachProfile?.school?.conference as string}
+          yearFounded={data?.coachProfile?.school?.yearFounded as string}
         />
       </Grid>
-    </div>
+    </main>
   );
 };
 

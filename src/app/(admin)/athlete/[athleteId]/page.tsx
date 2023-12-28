@@ -3,10 +3,17 @@
 "use client";
 
 import { FC } from "react";
-import { Divider, Title, Text } from "@tremor/react";
+import { Divider, Title, Text, Card, Grid, Callout } from "@tremor/react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-
+import { useGetAthleteProfileQuery } from "@/services/graphql";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Icons } from "@/components/Icons";
+import UsersAnalytics from "@/components/analytics/users";
+import SchoolCard from "@/components/school-card";
+import TooltipCard from "@/components/tooltip-card";
+import UserAvatar from "@/components/user-avatar";
+import { formatDate } from "@/lib/utils";
 interface pageProps {
   params: {
     athleteId: string;
@@ -15,6 +22,84 @@ interface pageProps {
 
 const Page: FC<pageProps> = ({ params }) => {
   const router = useRouter();
+
+  const { data, loading } = useGetAthleteProfileQuery({
+    variables: {
+      where: {
+        id: Number(params?.athleteId),
+      },
+    },
+  });
+
+  const dataList: any = [
+    {
+      name: "Evaluations",
+      value: data?.athleteProfile?._count?.evaluations || 0,
+      color: "teal",
+      icon: () => (
+        <Icons.clipboardEdit className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
+    },
+
+    {
+      name: "Interested Schools",
+      value: data?.athleteProfile?._count?.interestedSchools || 0,
+      color: "teal",
+      icon: () => (
+        <Icons.school className="mr-2.5 mb-[-6px] h-5 w-5 lucide lucide-school  stroke-teal-600" />
+      ),
+    },
+    {
+      name: "Prospected Schools",
+      value: data?.athleteProfile?._count?.prospectedSchools || 0,
+      color: "teal",
+      icon: () => (
+        <Icons.school2 className="mr-2.5 mb-[-6px] h-5 w-5 lucide lucide-school-2 stroke-teal-600" />
+      ),
+    },
+    {
+      name: "Recruited Schools",
+      value: data?.athleteProfile?._count?.recruitedSchools || 0,
+      color: "teal",
+      icon: () => (
+        <Icons.warehouse className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
+    },
+    {
+      name: "Skills",
+      value: data?.athleteProfile?._count?.skills || 0,
+      color: "teal",
+      icon: () => (
+        <Icons.fileLineChart className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
+    },
+    {
+      name: "Transcripts",
+      value: data?.athleteProfile?._count?.transcripts || 0,
+      color: "teal",
+      icon: () => (
+        <Icons.scrollText className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
+    },
+  ];
+
+  const renderVerifiedBy = (verifiedBy: any) => {
+    return (
+      <div className="flex flex-col">
+        <Text className="text-center">Verified By</Text>
+        <div className="flex flex-row items-center">
+          <Title className="text-lg">
+            {verifiedBy?.user?.firstname} {verifiedBy?.user?.surname}
+          </Title>
+          <div>
+            <Icons.whistle className="h-4 w-4 ml-2" />
+          </div>
+        </div>
+        <Text className="text-md">{verifiedBy?.title}</Text>
+      </div>
+    );
+  };
+
   return (
     <main className="w-full h-full relative">
       <Button
@@ -24,9 +109,173 @@ const Page: FC<pageProps> = ({ params }) => {
       >
         Go Back
       </Button>
-      <Title>Athlete Overview...</Title>
-      <Text>In Progress</Text>
+      {loading ? (
+        <>
+          <Skeleton className="w-[100px] h-[20px]" />
+          <Skeleton className="w-[100px] h-[20px] mt-4" />
+        </>
+      ) : (
+        <div className="flex flex-col">
+          <div className="flex flex-row items-center">
+            <Title>
+              {data?.athleteProfile?.user?.firstname}{" "}
+              {data?.athleteProfile?.user?.surname}
+            </Title>
+            <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+          </div>
+
+          <Text>
+            {data?.athleteProfile?.position?.name} at{" "}
+            {data?.athleteProfile?.school?.name}
+          </Text>
+        </div>
+      )}
       <Divider></Divider>
+      <UsersAnalytics
+        loading={loading}
+        data={dataList}
+        showStatus={true}
+        isActive={data?.athleteProfile?.user?.isActive || false}
+        title={`${data?.athleteProfile?.user?.firstname} 
+        ${data?.athleteProfile?.user?.surname} Analytics`}
+      />
+      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
+        <Card>
+          <div className="flex flex-col items-center justify-center">
+            <UserAvatar
+              className="h-[90px] w-[90px]"
+              fallbackType="icon"
+              avatar={data?.athleteProfile?.user.avatar as string}
+              fallback={`${data?.athleteProfile?.user?.username?.charAt(
+                0
+              )} ${data?.athleteProfile?.user?.firstname?.charAt(0)}`}
+              icon={<Icons.user className="h-8 w-8" />}
+            />
+            {loading ? (
+              <div className="flex flex-row items-center">
+                <Skeleton className="w-[170px] h-[28px] mt-2 mr-1" />
+                <Skeleton className="w-[16.67px] h-[16.67px] mt-2 rounded-full" />
+              </div>
+            ) : (
+              <div className="flex flex-row items-center justify-center mt-1">
+                <Text className="text-xl relative mr-1">
+                  @{data?.athleteProfile?.user?.username}
+                </Text>
+                {data?.athleteProfile?.verified ? (
+                  <TooltipCard
+                    message={renderVerifiedBy(data?.athleteProfile?.verifiedBy)}
+                    trigger={
+                      <Icons.badgeCheck className="h-5 w-5" color="teal" />
+                    }
+                  />
+                ) : (
+                  <TooltipCard
+                    message="Not Verified"
+                    trigger={
+                      <Icons.badgeAlert className="h-5 w-5" color="teal" />
+                    }
+                  />
+                )}
+              </div>
+            )}
+          </div>
+          <Divider></Divider>
+          <Callout
+            className="mt-4"
+            title="Name"
+            icon={() => {
+              return (
+                <Icons.user className="h-[19px] w-[19px] mr-2" color="teal" />
+              );
+            }}
+            color="teal"
+          >
+            {data?.athleteProfile?.user?.firstname}{" "}
+            {data?.athleteProfile?.user?.surname}
+          </Callout>
+          <Callout
+            className="mt-4 "
+            title="Email"
+            icon={() => {
+              return (
+                <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
+              );
+            }}
+            color="teal"
+          >
+            {data?.athleteProfile?.user?.email}
+          </Callout>
+          <Callout
+            className="mt-4"
+            title="Position"
+            icon={() => {
+              return (
+                <Icons.athlete
+                  className="h-[19px] w-[19px] mr-2"
+                  color="teal"
+                />
+              );
+            }}
+            color="teal"
+          >
+            {data?.athleteProfile?.position?.name} (
+            {data?.athleteProfile?.position?.shortName})
+          </Callout>
+          <Callout
+            className="mt-4"
+            title="Draduation Year"
+            icon={() => {
+              return (
+                <Icons.graduationCap
+                  className="h-[19px] w-[19px] mr-2"
+                  color="teal"
+                />
+              );
+            }}
+            color="teal"
+          >
+            {data?.athleteProfile?.graduationYear}
+          </Callout>
+          <Callout
+            className="mt-4"
+            title="gpa"
+            icon={() => {
+              return (
+                <Icons.presentation
+                  className="h-[19px] w-[19px] mr-2"
+                  color="teal"
+                />
+              );
+            }}
+            color="teal"
+          >
+            {data?.athleteProfile?.gpa}
+          </Callout>
+          <Callout
+            className="mt-4"
+            title="Date of Birth"
+            icon={() => {
+              return (
+                <Icons.cake className="h-[19px] w-[19px] mr-2" color="teal" />
+              );
+            }}
+            color="teal"
+          >
+            {data?.athleteProfile?.user?.dob &&
+              formatDate(data?.athleteProfile?.user?.dob)}
+          </Callout>
+        </Card>
+        <SchoolCard
+          loading={loading}
+          division={data?.athleteProfile?.school?.division as string}
+          title={data?.athleteProfile?.school.schoolType.name as string}
+          description={data?.athleteProfile?.school?.description as string}
+          address={data?.athleteProfile?.school?.address as string}
+          schoolName={data?.athleteProfile?.school?.name as string}
+          avatar={data?.athleteProfile?.school?.logo as string}
+          yearFounded={data?.athleteProfile?.school?.yearFounded as string}
+        />
+      </Grid>
     </main>
   );
 };

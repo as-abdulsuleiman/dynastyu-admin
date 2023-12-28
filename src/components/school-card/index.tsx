@@ -7,16 +7,17 @@ import { Callout, Card, Text, Divider } from "@tremor/react";
 import UserAvatar from "../user-avatar";
 import { Icons } from "../Icons";
 import { Skeleton } from "../ui/skeleton";
-import { CheckCircle2, GraduationCap, MapPin, ScrollText } from "lucide-react";
 
 interface SchoolCardProps {
   loading?: boolean;
-  avatar: string | null;
-  schoolName: string | null;
-  address: string | null;
-  title: string | null;
-  description: string | null;
-  division: string | null;
+  avatar: string;
+  schoolName: string;
+  address: string;
+  title: string;
+  description: string;
+  division: string;
+  conference?: string;
+  yearFounded?: string;
 }
 
 const SchoolCard: FC<SchoolCardProps> = ({
@@ -27,6 +28,8 @@ const SchoolCard: FC<SchoolCardProps> = ({
   description,
   division,
   loading,
+  conference,
+  yearFounded,
 }) => {
   return (
     <Card>
@@ -50,7 +53,10 @@ const SchoolCard: FC<SchoolCardProps> = ({
         title={title || ("High School" as string)}
         icon={() => {
           return (
-            <GraduationCap className="h-[20px] w-[20px] mr-2" color="teal" />
+            <Icons.graduationCap
+              className="h-[20px] w-[20px] mr-2"
+              color="teal"
+            />
           );
         }}
         color="teal"
@@ -61,7 +67,9 @@ const SchoolCard: FC<SchoolCardProps> = ({
         className="mt-4"
         title="Address"
         icon={() => {
-          return <MapPin className="h-[20px] w-[20px] mr-2" color="teal" />;
+          return (
+            <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+          );
         }}
         color="teal"
       >
@@ -72,7 +80,7 @@ const SchoolCard: FC<SchoolCardProps> = ({
         title="Division"
         icon={() => {
           return (
-            <CheckCircle2 className="h-[20px] w-[20px] mr-2" color="teal" />
+            <Icons.folderDot className="h-[20px] w-[20px] mr-2" color="teal" />
           );
         }}
         color="teal"
@@ -81,13 +89,42 @@ const SchoolCard: FC<SchoolCardProps> = ({
       </Callout>
       <Callout
         className="mt-4"
+        title="Conference"
+        icon={() => {
+          return (
+            <Icons.activitySquare
+              className="h-[20px] w-[20px] mr-2"
+              color="teal"
+            />
+          );
+        }}
+        color="teal"
+      >
+        {conference}
+      </Callout>
+      <Callout
+        className="mt-4"
         title="Description"
         icon={() => {
-          return <ScrollText className="h-[20px] w-[20px] mr-2" color="teal" />;
+          return (
+            <Icons.scrollText className="h-[20px] w-[20px] mr-2" color="teal" />
+          );
         }}
         color="teal"
       >
         {description}
+      </Callout>
+      <Callout
+        className="mt-4"
+        title="Year Founded"
+        icon={() => {
+          return (
+            <Icons.scrollText className="h-[20px] w-[20px] mr-2" color="teal" />
+          );
+        }}
+        color="teal"
+      >
+        {yearFounded}
       </Callout>
     </Card>
   );

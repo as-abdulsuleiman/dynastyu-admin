@@ -19,11 +19,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     <ThemeProvider>
       <ApolloProvider client={apolloClient}>
         <RootStoreProvider>
-          <ProvideAuth>
-            <div className="w-full mx-auto h-screen min-h-screen">
-              <main className="w-full">{children}</main>
-            </div>
-          </ProvideAuth>
+          <ProvideAuth>{children}</ProvideAuth>
         </RootStoreProvider>
       </ApolloProvider>
     </ThemeProvider>

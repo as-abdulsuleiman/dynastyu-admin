@@ -1,10 +1,11 @@
 /** @format */
 
-"use client";
+import { FC } from "react";
+import Spinner from "../spinner";
 
-import Spinner from "@/components/spinner";
+interface SuspenseLoaderProps {}
 
-export default function Loading() {
+const SuspenseLoader: FC<SuspenseLoaderProps> = ({}) => {
   return (
     <div className="h-screen min-h-screen w-full">
       <div className="flex flex-row h-full items-center justify-center">
@@ -12,4 +13,6 @@ export default function Loading() {
       </div>
     </div>
   );
-}
+};
+
+export default SuspenseLoader;

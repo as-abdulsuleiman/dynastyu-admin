@@ -12,7 +12,7 @@ import {
 
 interface TooltipProps {
   trigger: React.ReactNode;
-  message: string;
+  message: JSX.Element | string;
 }
 const TooltipCard: FC<TooltipProps> = ({ trigger, message }) => {
   return (

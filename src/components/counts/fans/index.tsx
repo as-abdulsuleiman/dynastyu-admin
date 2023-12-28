@@ -2,17 +2,19 @@
 
 "use client";
 
+import { Icons } from "@/components/Icons";
 import CountCard from "@/components/count-card";
 import { useRootStore } from "@/mobx";
 import { GetUsersQuery, useGetUsersQuery } from "@/services/graphql";
 import { observer } from "mobx-react-lite";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { FC } from "react";
 
 interface indexProps {}
 
 const FanCount: FC<indexProps> = ({}) => {
   const router = useRouter();
+  const pathname = usePathname();
 
   const {
     fanStore: { setFans, fans: fansCount },
@@ -43,6 +45,8 @@ const FanCount: FC<indexProps> = ({}) => {
       categoryValues={[activeFans, inactiveFans]}
       categories={["Active fans", "Inactive fans"]}
       onClick={() => router.push("/fans")}
+      showIcon={pathname === "/fans"}
+      icon={<Icons.fans className="h-4 w-4" />}
     />
   );
 };

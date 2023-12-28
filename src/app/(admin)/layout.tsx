@@ -3,8 +3,8 @@
 "use client";
 
 import Navbar from "@/components/navbar";
-import SideBar from "@/components/side-bar";
-import Spinner from "@/components/spinner";
+import SideBar from "@/components/sidebar";
+import SuspenseLoader from "@/components/suspense-loader";
 import { useAuth } from "@/hooks/useAuth";
 import { Suspense } from "react";
 
@@ -15,18 +15,10 @@ export default function AdminLayout({
 }) {
   const { isLoggedIn, isInitializing } = useAuth();
 
-  const renderLoader = () => {
-    <div className="h-screen min-h-screen w-full">
-      <div className="flex flex-row h-full items-center justify-center">
-        <Spinner animationType="loading" />
-      </div>
-    </div>;
-  };
-
   return (
-    <Suspense fallback={<>{renderLoader()}</>}>
+    <Suspense fallback={<SuspenseLoader />}>
+      <Navbar isInitializing={isInitializing} isLoggedIn={isLoggedIn} />
       <div className="w-full h-full">
-        <Navbar isInitializing={isInitializing} isLoggedIn={isLoggedIn} />
         <aside className="h-[calc(100vh-5rem)] hidden bg-background lg:flex shadow-sm border min-h-screen fixed top-0 left-0 transition-transform duration-300 transform -translate-x-full lg:translate-x-0 w-0 lg:w-64 z-10">
           <SideBar />
         </aside>

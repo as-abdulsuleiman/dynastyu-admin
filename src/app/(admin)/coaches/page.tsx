@@ -105,7 +105,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
   const [registerCoach] = useRegisterCoachMutation();
   const [deleteCoach] = useDeleteCoachMutation();
   const [updateCoach] = useUpdateCoachMutation();
-  const [deteteUser] = useDeleteUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
   const [getUsers] = useGetUsersLazyQuery();
   const [getCoaches] = useGetCoachesLazyQuery();
 
@@ -272,7 +272,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
         },
       });
       if (response.data?.deleteOneCoachProfile) {
-        await deteteUser({
+        await deleteUser({
           variables: {
             where: {
               id: Number(item?.user?.id),
@@ -286,7 +286,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
         setCoaches(caochesResponse.data?.coachProfiles as any);
         toast({
           title: "Coach successfully deleted.",
-          description: `${item?.user?.username} account has been deleted.`,
+          description: `@${item?.user?.username} account has been deleted.`,
           variant: "default",
         });
       }
@@ -334,7 +334,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
       toast({
         title: "Something went wrong.",
         description: `${
-          error || "Could not successfully created a coach. Please try again."
+          error || "Could not successfully update Coach. Please try again."
         }`,
         variant: "destructive",
       });
@@ -567,8 +567,11 @@ const Coaches: FC<CoachesProps> = ({}) => {
     <main className="w-full h-full">
       <div className="flex flex-col sm:flex-row items-start sm:items-center">
         <div className="flex flex-col">
-          <Title>Coaches</Title>
-          {/* <Text>Coaches Overview.</Text> */}
+          <div className="flex flex-row items-center">
+            <Title>Coaches</Title>
+            <Icons.whistle className="h-4 w-4 ml-2 fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis" />
+          </div>
+          <Text>Coaches Overview</Text>
         </div>
         <div className="ml-auto justify-end">
           <CreateCoach

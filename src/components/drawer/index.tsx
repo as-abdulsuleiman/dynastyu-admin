@@ -17,6 +17,7 @@ import ThemeToggle from "../theme-toggle";
 import { useAuth } from "@/hooks/useAuth";
 import { useRootStore } from "@/mobx";
 import { observer } from "mobx-react-lite";
+import Image from "next/image";
 
 interface DrawerProps {}
 
@@ -103,8 +104,17 @@ const Drawer: FC<DrawerProps> = () => {
       </SheetTrigger>
       <SheetContent side="left" className="w-[300px] h-full">
         <SheetHeader>
-          <SheetTitle className="text-lg font-medium md:block text-left mt-[-6px] ml-[-8px]">
-            DynastyU
+          <SheetTitle className="text-lg font-medium md:block text-left mt-[-34.5px] ml-[0px]">
+            <Image
+              src="/images/dynastyu-logo.webp"
+              alt="dynastyu-logo"
+              title="dynastyu-logo"
+              width={111}
+              height={111}
+              quality={100}
+              className="object-cover h-auto w-auto"
+              priority
+            />
           </SheetTitle>
         </SheetHeader>
         <div className="w-full pb-8 h-full ml-[-8px]">

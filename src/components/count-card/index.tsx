@@ -2,8 +2,9 @@
 
 "use client";
 
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import {
+  Badge,
   BadgeDelta,
   Card,
   CategoryBar,
@@ -24,6 +25,8 @@ interface CountCardProps {
   categories: string[];
   activeLegend: string;
   onClick?: () => void;
+  icon?: ReactNode;
+  showIcon: boolean;
 }
 
 const CountCard: FC<CountCardProps> = ({
@@ -33,6 +36,8 @@ const CountCard: FC<CountCardProps> = ({
   categoryValues,
   categories,
   activeLegend,
+  showIcon,
+  icon,
   onClick,
 }) => {
   return (
@@ -46,14 +51,23 @@ const CountCard: FC<CountCardProps> = ({
             <Metric className="mt-1">{dataCount}</Metric>
           )}
         </div>
-        <BadgeDelta
-          className="cursor-pointer"
-          deltaType="moderateIncrease"
-          color="teal"
-          onClick={onClick}
-        >
-          View
-        </BadgeDelta>
+        {showIcon ? (
+          <Badge
+            color="teal"
+            icon={() => {
+              return <>{icon}</>;
+            }}
+          />
+        ) : (
+          <BadgeDelta
+            className="cursor-pointer"
+            deltaType="moderateIncrease"
+            color="teal"
+            onClick={onClick}
+          >
+            View
+          </BadgeDelta>
+        )}
       </Flex>
       <CategoryBar
         className="mt-4"

@@ -7,12 +7,14 @@ import CountCard from "@/components/count-card";
 import { useRootStore } from "@/mobx";
 import { GetAthletesQuery, useGetAthletesQuery } from "@/services/graphql";
 import { observer } from "mobx-react-lite";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
+import { Icons } from "@/components/Icons";
 
 interface indexProps {}
 
 const AthletesCount: FC<indexProps> = ({}) => {
   const router = useRouter();
+  const pathname = usePathname();
   const {
     athleteStore: { setAthletes, athletes: athletesCount },
   } = useRootStore();
@@ -38,6 +40,10 @@ const AthletesCount: FC<indexProps> = ({}) => {
       categoryValues={[activeAthletes, inactiveAthletes]}
       categories={["Active athletes", "Inactive athletes"]}
       onClick={() => router.push("/athletes")}
+      showIcon={pathname === "/athletes"}
+      icon={
+        <Icons.athlete className="h-4 w-4 stroke-tremor-content-teal dark:stroke-dark-tremor-content-teal" />
+      }
     />
   );
 };

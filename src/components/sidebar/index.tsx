@@ -3,11 +3,13 @@
 "use client";
 
 import { FC } from "react";
-import { Grid2X2, Home, Settings } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { usePathname } from "next/navigation";
+import { FolderRoot, Home, Settings } from "lucide-react";
+import { usePathname, useParams } from "next/navigation";
 import ThemeToggle from "../theme-toggle";
 import { observer } from "mobx-react-lite";
+import { Icons } from "../Icons";
+import Link from "next/link";
+import { Text } from "@tremor/react";
 
 interface SideBarProps {}
 type IconProps = {
@@ -16,7 +18,6 @@ type IconProps = {
 };
 
 const SideBar: FC<SideBarProps> = ({}) => {
-  const router = useRouter();
   const pathname = usePathname();
 
   const items = [
@@ -36,20 +37,20 @@ const SideBar: FC<SideBarProps> = ({}) => {
     //     <Users className={className} color={color} />
     //   ),
     // },
-    // {
-    //   name: "Athletes",
-    //   hasFill: false,
-    //   path: "/athletes",
-    //   icon: ({ className, color }: IconProps) => (
-    //     <Medal className={className} color={color} />
-    //   ),
-    // },
+    {
+      name: "Athletes",
+      hasFill: false,
+      path: "/athletes",
+      icon: ({ className, color }: IconProps) => (
+        <Icons.athlete className={className} color={color} />
+      ),
+    },
     {
       name: "Coaches",
-      hasFill: false,
+      hasFill: true,
       path: "/coaches",
       icon: ({ className, color }: IconProps) => (
-        <Grid2X2 className={className} color={color} />
+        <Icons.whistle className={className} color={color} />
       ),
     },
     // {
@@ -69,6 +70,14 @@ const SideBar: FC<SideBarProps> = ({}) => {
     //   ),
     // },
     {
+      name: "Skills",
+      hasFill: false,
+      path: "/skills",
+      icon: ({ className, color }: IconProps) => (
+        <FolderRoot className={className} color={color} />
+      ),
+    },
+    {
       name: "Settings",
       hasFill: false,
       path: "/settings",
@@ -78,42 +87,52 @@ const SideBar: FC<SideBarProps> = ({}) => {
     },
   ];
   return (
-    <div className="w-full px-6 pt-16 pb-8 h-full">
+    <div className="w-full px-6 pt-16 pb-8 h-full shadow-xl">
       <div className="relative w-full h-full">
-        <div className="pt-[50px]">
+        <div className="pt-[60px]">
           {items?.map((val, index) => {
             const isActive = pathname === val?.path;
-            const iconClass = `h-3 w-3 sm:h-4 sm:w-4 ${
+            const iconColor = "";
+            const iconClass = `h-[19px] w-[19px] ${
               val?.hasFill
-                ? "group-hover:fill-[#2BD984] text-[#717070] group-hover:text-[#2BD984] fill-[#717070]"
-                : "group-hover:stroke-[#2BD984] text-[#717070] group-hover:text-[#2BD984] stroke-[#717070]"
+                ? "group-hover:fill-teal-600  text-tremor-default fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis "
+                : "group-hover:stroke-teal-600 text-tremor-default stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis"
             } ${
-              isActive
-                ? `${val?.hasFill ? "fill-[#2BD984]" : "stroke-[#2BD984]"}`
-                : `${val?.hasFill ? "fill-[#D8D3CB]" : "stroke-[#D8D3CB]"}`
+              isActive &&
+              `${
+                val?.hasFill
+                  ? "fill-tremor-content-teal dark:fill-dark-tremor-content-teal"
+                  : "stroke-tremor-content-teal dark:stroke-dark-tremor-content-teal"
+              }`
             }`;
-            const Icon = () => val?.icon({ className: iconClass, color: "" });
+            const Icon = () =>
+              val?.icon({ className: iconClass, color: iconColor });
             return (
-              <div
+              <Link
+                href={val.path}
+                shallow={false}
+                scroll={true}
                 key={index}
+                prefetch={true}
                 className="mt-4"
-                onClick={() => router?.push(val.path, { scroll: true })}
               >
                 <div
                   className={`group ${
-                    isActive ? "bg-[#dc2626]" : "bg-transparent"
-                  }  flex cursor-pointer items-center border rounded-md py-[6px] px-[16px]`}
+                    isActive ? "" : undefined
+                  }  flex cursor-pointer items-center py-[6px] px-[16px]`}
                 >
                   <Icon />
-                  <div
+                  <Text
                     className={`${
-                      isActive ? "text-[#e5e7eb]" : ""
-                    } ml-3 mt-[0px]`}
+                      isActive
+                        ? "text-tremor-content-teal dark:text-dark-tremor-content-teal"
+                        : "text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis"
+                    } ml-4 mt-[0px] text-tremor-title`}
                   >
                     {val?.name}
-                  </div>
+                  </Text>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>

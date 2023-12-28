@@ -165,3 +165,111 @@ mutation updateAthlete($data: AthleteProfileUpdateInput!, $where: AthleteProfile
     }
   }
 }
+
+
+mutation deleteAthlete($where: AthleteProfileWhereUniqueInput!) {
+  deleteOneAthleteProfile(where: $where) {
+    id
+    uuid
+    userId
+  }
+}
+
+query getAthleteProfile(
+  $where: AthleteProfileWhereUniqueInput!
+) {
+  athleteProfile(
+    where: $where
+  ) {
+    id
+    uuid
+    createdAt
+    verified
+    playerCardUrl
+    hudlLink
+    graduationYear
+    gpa
+    skills{
+      id
+      skillId
+      athleteId
+      value
+      secondValue
+      videos
+      verified
+      verifiedAt
+      skillType{
+        id
+        name
+      }
+    }
+    _count{
+      transcripts
+      skills
+      interestedSchools
+      recruitedSchools
+      prospectedSchools
+      evaluations
+    }
+    school {
+       name
+      logo
+      address
+      description
+      secondaryColor
+      primaryColor
+      email
+      division
+      backgroundImage
+      yearlyTuition
+      yearFounded
+      conference
+      schoolType{
+        name
+        id
+        _count{
+          schools
+        }
+      }
+    }
+    schoolId
+    userId
+    user {
+      id
+      firstname
+      surname
+      email
+      avatar
+      username
+      city
+      state
+      isActive
+      dob
+    }
+    country {
+      name
+      id
+      flag
+      abbreviation
+    }
+    position {
+      name
+      id
+      uuid
+      shortName
+    }
+     verifiedBy{
+      id
+      title
+      city
+      state
+      user{
+        id
+        firstname
+        surname
+        username
+      
+      }
+    }
+  }
+}
