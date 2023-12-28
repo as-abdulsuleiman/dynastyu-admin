@@ -18,6 +18,7 @@ import { FirebaseError } from "firebase/app";
 import { User, useGetUserLazyQuery } from "@/services/graphql";
 import { useRootStore } from "@/mobx";
 import { projectAuth } from "@/services/firebase/config";
+import { useToast } from "./use-toast";
 
 const AuthContext = createContext<{
   isLoggedIn: boolean;
@@ -53,7 +54,7 @@ function useAuthProvider() {
   const {
     authStore: { user, setUser, resetAuth, initAuth },
   } = useRootStore();
-
+  const { toast } = useToast();
   const siteUrl =
     process?.env?.NODE_ENV === "production"
       ? process?.env?.NEXT_PUBLIC_KNEXTT_URL
@@ -68,20 +69,37 @@ function useAuthProvider() {
       const dbUser = await getUser({
         variables: {
           where: {
-            firebaseUid: firebaseUser?.user.uid,
+            firebaseUid: firebaseUser?.user?.uid,
           },
         },
       });
-      if (dbUser?.data?.user) {
+      if (dbUser?.data?.user && dbUser?.data?.user?.coachProfile) {
         setUser(dbUser?.data?.user as User);
         window.location.href = `${siteUrl}/dashboard`;
+      } else {
+        toast({
+          title: "Access Denied",
+          description:
+            "Sorry, you don't have permission access to the admin database",
+          variant: "destructive",
+        });
       }
     } catch (error: unknown) {
       if ((error as FirebaseError).code === "auth/email-already-in-use") {
-        throw new Error("That email address is already in use!");
+        toast({
+          title: "Something went wrong.",
+          description: "The email address is already in use!",
+          variant: "destructive",
+        });
+        throw new Error("The email address is already in use!");
       }
       if ((error as FirebaseError).code === "auth/invalid-email") {
-        throw new Error("That email address is invalid!");
+        toast({
+          title: "Something went wrong.",
+          description: "The email address is invalid!",
+          variant: "destructive",
+        });
+        throw new Error("The email address is invalid!");
       }
       throw new Error(error as any);
     }

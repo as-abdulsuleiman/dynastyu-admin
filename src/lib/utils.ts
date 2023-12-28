@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from "clsx"
+import { format } from "date-fns"
 import { twMerge } from "tailwind-merge"
  
 export function cn(...inputs: ClassValue[]) {
@@ -38,3 +39,9 @@ export const coachTitleOptions = [
   { label: "Strength Coach (SC)", value: "Strength Coach (SC)" },
   { label: "Support Staff (SC)", value: "Support Staff (SC)" },
 ];
+
+
+export const formatDate = (
+  date: Date | number | string,
+  dateFormat ="MMMM dd, yyyy",
+): string => format(new Date(date), dateFormat);

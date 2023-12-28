@@ -22,7 +22,6 @@ const Page: FC<SignInProps> = ({}) => {
   const { toast } = useToast();
   const { login } = useAuth();
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
 
   const {
     register,
@@ -37,34 +36,14 @@ const Page: FC<SignInProps> = ({}) => {
     },
   });
   const onSubmit = async (data: FormData) => {
-    setLoading(true);
     try {
       await login(data.email, data.password);
-      router.push("/dashboard");
-      // const payload = await ContactValidator.validate(data);
-      // await addDoc(collection(db, "clients"), {
-      //   ...payload,
-      // });
-      // const res = await handleFormSpree(payload);
-      // if (res.data.ok) {
-      //   return toast({
-      //     title: "Message sent successfully.",
-      //     description:
-      //       "Your enquiry has been recieved. I'll get back to you as soon as possible!",
-      //     variant: "default",
-      //   });
-      // }
     } catch (error) {
       toast({
         title: "Something went wrong.",
         description: "User not found. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      // reset();
-      setLoading(false);
-      // setSelectedFile(null);
-      // setFileName("");
     }
   };
 

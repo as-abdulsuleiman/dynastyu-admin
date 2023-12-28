@@ -20676,6 +20676,20 @@ export type UpdateAthleteMutationVariables = Exact<{
 
 export type UpdateAthleteMutation = { __typename?: 'Mutation', updateOneAthleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, createdAt: any, schoolId: any, userId: any, verified: boolean, school: { __typename?: 'School', id: any, name: string, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, username?: string | null, city?: string | null, state?: string | null }, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, position?: { __typename?: 'Position', name: string, id: any, uuid: string, shortName: string } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, user: { __typename?: 'User', id: any, firstname: string, surname: string } } | null } | null };
 
+export type DeleteAthleteMutationVariables = Exact<{
+  where: AthleteProfileWhereUniqueInput;
+}>;
+
+
+export type DeleteAthleteMutation = { __typename?: 'Mutation', deleteOneAthleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, userId: any } | null };
+
+export type GetAthleteProfileQueryVariables = Exact<{
+  where: AthleteProfileWhereUniqueInput;
+}>;
+
+
+export type GetAthleteProfileQuery = { __typename?: 'Query', athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, createdAt: any, verified: boolean, playerCardUrl?: string | null, hudlLink?: string | null, graduationYear?: string | null, gpa?: string | null, schoolId: any, userId: any, skills: Array<{ __typename?: 'Skills', id: any, skillId: any, athleteId?: any | null, value: string, secondValue?: string | null, videos: Array<string>, verified: boolean, verifiedAt?: any | null, skillType: { __typename?: 'SkillType', id: any, name: string } }>, _count?: { __typename?: 'AthleteProfileCount', transcripts: number, skills: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluations: number } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, username?: string | null, city?: string | null, state?: string | null, isActive: boolean, dob?: any | null }, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, position?: { __typename?: 'Position', name: string, id: any, uuid: string, shortName: string } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, title?: string | null, city?: string | null, state?: string | null, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } } | null } | null };
+
 export type GetCoachesQueryVariables = Exact<{
   where?: InputMaybe<CoachProfileWhereInput>;
   orderBy?: InputMaybe<Array<CoachProfileOrderByWithRelationInput> | CoachProfileOrderByWithRelationInput>;
@@ -20700,7 +20714,7 @@ export type GetCoachQueryVariables = Exact<{
 }>;
 
 
-export type GetCoachQuery = { __typename?: 'Query', coachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, schoolId: any, verified: boolean, city?: string | null, state?: string | null, canReceiveMessages?: boolean | null, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } }, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, user: { __typename?: 'User', firstname: string, surname: string, id: any, username?: string | null, avatar?: string | null, isActive: boolean, email: string, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null }, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, reposts: number, comments: number, interestedSchools: number, evaluationsCreated: number, prospectedSchools: number } | null } } | null };
+export type GetCoachQuery = { __typename?: 'Query', coachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, schoolId: any, verified: boolean, city?: string | null, state?: string | null, canReceiveMessages?: boolean | null, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } }, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, user: { __typename?: 'User', firstname: string, surname: string, id: any, username?: string | null, avatar?: string | null, isActive: boolean, email: string, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null }, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, reposts: number, comments: number, interestedSchools: number, evaluationsCreated: number, prospectedSchools: number } | null } } | null };
 
 export type UpdateCoachMutationVariables = Exact<{
   data: CoachProfileUpdateInput;
@@ -21776,6 +21790,169 @@ export function useUpdateAthleteMutation(baseOptions?: ApolloReactHooks.Mutation
 export type UpdateAthleteMutationHookResult = ReturnType<typeof useUpdateAthleteMutation>;
 export type UpdateAthleteMutationResult = Apollo.MutationResult<UpdateAthleteMutation>;
 export type UpdateAthleteMutationOptions = Apollo.BaseMutationOptions<UpdateAthleteMutation, UpdateAthleteMutationVariables>;
+export const DeleteAthleteDocument = gql`
+    mutation deleteAthlete($where: AthleteProfileWhereUniqueInput!) {
+  deleteOneAthleteProfile(where: $where) {
+    id
+    uuid
+    userId
+  }
+}
+    `;
+export type DeleteAthleteMutationFn = Apollo.MutationFunction<DeleteAthleteMutation, DeleteAthleteMutationVariables>;
+
+/**
+ * __useDeleteAthleteMutation__
+ *
+ * To run a mutation, you first call `useDeleteAthleteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAthleteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAthleteMutation, { data, loading, error }] = useDeleteAthleteMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteAthleteMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteAthleteMutation, DeleteAthleteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteAthleteMutation, DeleteAthleteMutationVariables>(DeleteAthleteDocument, options);
+      }
+export type DeleteAthleteMutationHookResult = ReturnType<typeof useDeleteAthleteMutation>;
+export type DeleteAthleteMutationResult = Apollo.MutationResult<DeleteAthleteMutation>;
+export type DeleteAthleteMutationOptions = Apollo.BaseMutationOptions<DeleteAthleteMutation, DeleteAthleteMutationVariables>;
+export const GetAthleteProfileDocument = gql`
+    query getAthleteProfile($where: AthleteProfileWhereUniqueInput!) {
+  athleteProfile(where: $where) {
+    id
+    uuid
+    createdAt
+    verified
+    playerCardUrl
+    hudlLink
+    graduationYear
+    gpa
+    skills {
+      id
+      skillId
+      athleteId
+      value
+      secondValue
+      videos
+      verified
+      verifiedAt
+      skillType {
+        id
+        name
+      }
+    }
+    _count {
+      transcripts
+      skills
+      interestedSchools
+      recruitedSchools
+      prospectedSchools
+      evaluations
+    }
+    school {
+      name
+      logo
+      address
+      description
+      secondaryColor
+      primaryColor
+      email
+      division
+      backgroundImage
+      yearlyTuition
+      yearFounded
+      conference
+      schoolType {
+        name
+        id
+        _count {
+          schools
+        }
+      }
+    }
+    schoolId
+    userId
+    user {
+      id
+      firstname
+      surname
+      email
+      avatar
+      username
+      city
+      state
+      isActive
+      dob
+    }
+    country {
+      name
+      id
+      flag
+      abbreviation
+    }
+    position {
+      name
+      id
+      uuid
+      shortName
+    }
+    verifiedBy {
+      id
+      title
+      city
+      state
+      user {
+        id
+        firstname
+        surname
+        username
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAthleteProfileQuery__
+ *
+ * To run a query within a React component, call `useGetAthleteProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAthleteProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAthleteProfileQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetAthleteProfileQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetAthleteProfileQuery, GetAthleteProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAthleteProfileQuery, GetAthleteProfileQueryVariables>(GetAthleteProfileDocument, options);
+      }
+export function useGetAthleteProfileLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAthleteProfileQuery, GetAthleteProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAthleteProfileQuery, GetAthleteProfileQueryVariables>(GetAthleteProfileDocument, options);
+        }
+export function useGetAthleteProfileSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetAthleteProfileQuery, GetAthleteProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAthleteProfileQuery, GetAthleteProfileQueryVariables>(GetAthleteProfileDocument, options);
+        }
+export type GetAthleteProfileQueryHookResult = ReturnType<typeof useGetAthleteProfileQuery>;
+export type GetAthleteProfileLazyQueryHookResult = ReturnType<typeof useGetAthleteProfileLazyQuery>;
+export type GetAthleteProfileSuspenseQueryHookResult = ReturnType<typeof useGetAthleteProfileSuspenseQuery>;
+export type GetAthleteProfileQueryResult = Apollo.QueryResult<GetAthleteProfileQuery, GetAthleteProfileQueryVariables>;
 export const GetCoachesDocument = gql`
     query getCoaches($where: CoachProfileWhereInput, $orderBy: [CoachProfileOrderByWithRelationInput!], $cursor: CoachProfileWhereUniqueInput, $take: Int, $skip: Int, $distinct: [CoachProfileScalarFieldEnum!]) {
   coachProfiles(
@@ -21934,6 +22111,7 @@ export const GetCoachDocument = gql`
       division
       backgroundImage
       yearlyTuition
+      yearFounded
       conference
       schoolType {
         name

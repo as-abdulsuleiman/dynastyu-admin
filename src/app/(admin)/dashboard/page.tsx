@@ -2,6 +2,7 @@
 
 "use client";
 
+import { FC, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Divider,
@@ -17,7 +18,6 @@ import {
   Flex,
   Badge,
 } from "@tremor/react";
-import { useEffect, useMemo, useState } from "react";
 import {
   GetUsersQuery,
   QueryMode,
@@ -74,7 +74,9 @@ enum FilterEnum {
   COACH = "Coach",
 }
 
-function Home() {
+interface PageProps {}
+
+const Page: FC<PageProps> = () => {
   const { toast } = useToast();
   const {
     userStore: { setUsers },
@@ -438,6 +440,6 @@ function Home() {
       </TabGroup>
     </main>
   );
-}
+};
 
-export default observer(Home);
+export default observer(Page);

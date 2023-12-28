@@ -2,6 +2,7 @@
 
 "use client";
 
+import { Icons } from "@/components/Icons";
 import CountCard from "@/components/count-card";
 import { useRootStore } from "@/mobx";
 import {
@@ -23,12 +24,13 @@ import {
 } from "@tremor/react";
 import { Loader2 } from "lucide-react";
 import { observer } from "mobx-react-lite";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { FC } from "react";
 interface indexProps {}
 
 const CoachesCount: FC<indexProps> = ({}) => {
   const router = useRouter();
+  const pathname = usePathname();
 
   const {
     coacheStore: { setCoaches, coaches: coachesCount },
@@ -55,6 +57,10 @@ const CoachesCount: FC<indexProps> = ({}) => {
       categoryValues={[activeCoaches, inactiveCoaches]}
       categories={["Active coaches", "Inactive coaches"]}
       onClick={() => router.push("/coaches")}
+      showIcon={pathname === "/coaches"}
+      icon={
+        <Icons.whistle className="h-4 w-4 fill-tremor-content-teal dark:fill-dark-tremor-content-teal" />
+      }
     />
   );
 };

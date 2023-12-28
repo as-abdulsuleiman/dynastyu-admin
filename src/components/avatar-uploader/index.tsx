@@ -88,7 +88,7 @@ const AvatarUploader: FC<AvatarUploaderProps> = ({
   return (
     <div className="relative">
       <div
-        className="w-[110px] h-[110px] rounded-full relative border drop-shadow-lg"
+        className="w-[110px] h-[110px] rounded-full relative border  shadow-xl"
         id={id}
       >
         {uploading ? (
@@ -103,9 +103,9 @@ const AvatarUploader: FC<AvatarUploaderProps> = ({
               {Math.floor(progress as number)}%
             </span>
           </ProgressCircle>
-        ) : (
+        ) : url ? (
           <Image
-            src={url || noImage}
+            src={url}
             alt="profile_url"
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
@@ -115,6 +115,16 @@ const AvatarUploader: FC<AvatarUploaderProps> = ({
               loading ? "blur-sm " : "blur-none"
             }`}
             onLoad={() => setLoading(false)}
+          />
+        ) : (
+          <Image
+            src={noImage}
+            alt="profile_url"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
+            quality={100}
+            priority
+            className={`absolute object-cover border rounded-full w-full h-full`}
           />
         )}
         <div className="z-10 absolute h-[32px] w-[32px] bg-primary rounded-full cursor-pointer ring-1 right-[5px] bottom-[5px]">

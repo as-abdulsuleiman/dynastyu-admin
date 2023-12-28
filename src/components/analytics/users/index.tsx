@@ -12,6 +12,7 @@ import {
   Flex,
   Text,
   Title,
+  ValueFormatter,
 } from "@tremor/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatusOfflineIcon, StatusOnlineIcon } from "@heroicons/react/outline";
@@ -33,6 +34,7 @@ interface indexProps {
   title?: string;
   isActive?: boolean;
   showStatus?: boolean;
+  valueFormatter?: ValueFormatter;
 }
 
 const loadingItems = [
@@ -49,6 +51,7 @@ const UsersAnalytics: FC<indexProps> = ({
   title,
   showStatus,
   isActive,
+  valueFormatter,
 }) => {
   return (
     <Card className="">
@@ -65,10 +68,10 @@ const UsersAnalytics: FC<indexProps> = ({
             </div>
             {loadingItems?.map((val, id) => {
               return (
-                <div key={id} className="mb-4 flex flex-row items-center">
+                <div key={id} className="mb-6 flex flex-row items-center">
                   <div className="flex flex-row items-center">
-                    <Skeleton className="w-[20px] h-[20px]" />
-                    <Skeleton className="w-[130px] h-[18px] ml-4" />
+                    <Skeleton className="w-[30px] h-[30px]" />
+                    <Skeleton className="w-[150px] h-[19px] ml-4" />
                   </div>
                   <Skeleton className="w-[16px] h-[15px] ml-auto" />
                 </div>
@@ -91,7 +94,6 @@ const UsersAnalytics: FC<indexProps> = ({
               </Badge>
             ) : null}
           </div>
-
           <Flex className="mt-4">
             <Text>
               <Bold>Source</Bold>
@@ -100,8 +102,12 @@ const UsersAnalytics: FC<indexProps> = ({
               <Bold>Counts</Bold>
             </Text>
           </Flex>
-
-          <BarList showAnimation={true} data={data} className="mt-2" />
+          <BarList
+            valueFormatter={valueFormatter}
+            showAnimation={true}
+            data={data}
+            className="mt-2"
+          />
         </>
       )}
     </Card>
