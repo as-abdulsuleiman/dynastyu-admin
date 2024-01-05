@@ -9,10 +9,10 @@ import { useForm } from "react-hook-form";
 import { SignInValidator } from "@/lib/validators/signin";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import * as yup from "yup";
+import { Icons } from "@/components/Icons";
 
 interface SignInProps {}
 
@@ -96,7 +96,7 @@ const Page: FC<SignInProps> = ({}) => {
           >
             {isSubmitting ? (
               <div className="flex flex-row items-center justify-center">
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Loading...
               </div>
             ) : (

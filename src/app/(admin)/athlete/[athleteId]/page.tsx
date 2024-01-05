@@ -11,9 +11,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Icons } from "@/components/Icons";
 import UsersAnalytics from "@/components/analytics/users";
 import SchoolCard from "@/components/school-card";
-import TooltipCard from "@/components/tooltip-card";
 import UserAvatar from "@/components/user-avatar";
 import { formatDate } from "@/lib/utils";
+import TranscriptCard from "@/components/transcript-card";
+import HoverCard from "@/components/hover-card";
+import InterestedSchoolCard from "@/components/interested-school-card";
+
 interface pageProps {
   params: {
     athleteId: string;
@@ -83,6 +86,8 @@ const Page: FC<pageProps> = ({ params }) => {
     },
   ];
 
+  console.log("athleteProfile", data?.athleteProfile);
+
   const renderVerifiedBy = (verifiedBy: any) => {
     return (
       <div className="flex flex-col">
@@ -140,10 +145,22 @@ const Page: FC<pageProps> = ({ params }) => {
         ${data?.athleteProfile?.user?.surname} Analytics`}
       />
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-        <Card>
+        <InterestedSchoolCard
+          loading={loading}
+          interestedSchools={
+            (data?.athleteProfile?.interestedSchools as any) || []
+          }
+        />
+        <TranscriptCard
+          loading={loading}
+          transcripts={(data?.athleteProfile?.transcripts as any) || []}
+        />
+      </Grid>
+      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
+        <Card className="bg-background dark:bg-dark-background">
           <div className="flex flex-col items-center justify-center">
             <UserAvatar
-              className="h-[90px] w-[90px]"
+              className="h-[70px] w-[70px] shadow"
               fallbackType="icon"
               avatar={data?.athleteProfile?.user.avatar as string}
               fallback={`${data?.athleteProfile?.user?.username?.charAt(
@@ -162,17 +179,21 @@ const Page: FC<pageProps> = ({ params }) => {
                   @{data?.athleteProfile?.user?.username}
                 </Text>
                 {data?.athleteProfile?.verified ? (
-                  <TooltipCard
-                    message={renderVerifiedBy(data?.athleteProfile?.verifiedBy)}
+                  <HoverCard
+                    content={renderVerifiedBy(data?.athleteProfile?.verifiedBy)}
                     trigger={
-                      <Icons.badgeCheck className="h-5 w-5" color="teal" />
+                      <div className="cursor-pointer">
+                        <Icons.badgeCheck className="h-5 w-5" color="teal" />
+                      </div>
                     }
                   />
                 ) : (
-                  <TooltipCard
-                    message="Not Verified"
+                  <HoverCard
+                    content={<Text>{"Not Verified"}</Text>}
                     trigger={
-                      <Icons.badgeAlert className="h-5 w-5" color="teal" />
+                      <div className="cursor-pointer">
+                        <Icons.badgeAlert className="h-5 w-5" color="teal" />
+                      </div>
                     }
                   />
                 )}
@@ -267,13 +288,7 @@ const Page: FC<pageProps> = ({ params }) => {
         </Card>
         <SchoolCard
           loading={loading}
-          division={data?.athleteProfile?.school?.division as string}
-          title={data?.athleteProfile?.school.schoolType.name as string}
-          description={data?.athleteProfile?.school?.description as string}
-          address={data?.athleteProfile?.school?.address as string}
-          schoolName={data?.athleteProfile?.school?.name as string}
-          avatar={data?.athleteProfile?.school?.logo as string}
-          yearFounded={data?.athleteProfile?.school?.yearFounded as string}
+          school={data?.athleteProfile?.school as any}
         />
       </Grid>
     </main>

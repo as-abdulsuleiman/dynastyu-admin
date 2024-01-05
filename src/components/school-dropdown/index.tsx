@@ -9,8 +9,7 @@ import {
 } from "@/services/graphql";
 import { FC, useMemo } from "react";
 import * as React from "react";
-import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
-import { cn, noSchool } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -25,9 +24,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useDebouncedValue } from "@mantine/hooks";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ScrollArea } from "../ui/scroll-area";
 import { observer } from "mobx-react-lite";
+import { Icons } from "../Icons";
+import UserAvatar from "../user-avatar";
 
 interface SchoolDropdownProps {
   scrollAreaClass?: string;
@@ -81,11 +81,11 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
   const schools = useMemo(
     () =>
       schooldata?.schools?.map((school) => ({
-        label: school.name,
-        value: school.name,
-        id: school.id,
-        logo: school.logo,
-        city: school.city,
+        label: school?.name,
+        value: school?.name,
+        id: school?.id,
+        logo: school?.logo,
+        city: school?.city,
       })) || [],
     [schooldata?.schools]
   );
@@ -124,7 +124,7 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
             ) : (
               <>{placeholder || "Select school..."}</>
             )}
-            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            <Icons.chevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent side={side} className="PopoverContent p-0">
@@ -143,7 +143,7 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
               <CommandGroup>
                 {loading ? (
                   <div className="flex items-center justify-center py-3">
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Loading...
                   </div>
                 ) : (
@@ -166,27 +166,22 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
                         >
                           <div className="flex flex-col w-full h-full">
                             <div className="flex flex-row justify-start items-center">
-                              <Avatar>
-                                <AvatarImage
-                                  className=""
-                                  src={school.logo || noSchool}
-                                  alt="@shadcn"
-                                />
-                                <AvatarFallback>
-                                  <span className="sr-only">
-                                    {school?.label}
-                                  </span>
-                                </AvatarFallback>
-                              </Avatar>
+                              <UserAvatar
+                                className="h-[55px] w-[55px] shadow"
+                                fallbackType="icon"
+                                avatar={school.logo as string}
+                                icon={<Icons.school className="h-5 w-5" />}
+                                fallback={`${school?.label?.charAt(0)}`}
+                              />
                               <div className="ml-3 mb-1">
-                                <div>{school.label}</div>
-                                <div>{school.city}</div>
+                                <div>{school?.label}</div>
+                                <div>{school?.city}</div>
                               </div>
                               <div className="ml-auto">
-                                <Check
+                                <Icons.check
                                   className={cn(
                                     "mr-2 h-4 w-4",
-                                    selectedValue?.value === school.value
+                                    selectedValue?.value === school?.value
                                       ? "opacity-100"
                                       : "opacity-0"
                                   )}

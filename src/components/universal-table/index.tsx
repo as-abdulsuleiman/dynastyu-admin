@@ -1,4 +1,5 @@
 /** @format */
+
 "use client";
 
 import { FC } from "react";
@@ -15,11 +16,8 @@ import {
   Text,
   Title,
 } from "@tremor/react";
-import { User } from "@/services/graphql";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { observer } from "mobx-react-lite";
+import { Icons } from "../Icons";
 
 interface UniversalTableProps {
   items: any[];
@@ -33,10 +31,10 @@ type HeaderItems = {
   name: string;
 };
 
-const renderEmptyItems = () => {
+const renderEmptyItems = (colSpan: number) => {
   return (
     <TableRow>
-      <TableCell colSpan={4}>
+      <TableCell colSpan={colSpan || 0}>
         <div className="flex items-center justify-center h-full w-full mx-auto my-auto py-4">
           <span>No Result Found</span>
         </div>
@@ -52,10 +50,8 @@ const UniversalTable: FC<UniversalTableProps> = ({
   title,
   renderItems,
 }) => {
-  const router = useRouter();
-
   return (
-    <Card className="mt-5 w-full overflow-x-scroll">
+    <Card className="mt-5 w-full overflow-x-scroll bg-background dark:bg-dark-background">
       <Title>{title}</Title>
       <Table className="mt-3 w-full ">
         <TableHead>
@@ -75,7 +71,7 @@ const UniversalTable: FC<UniversalTableProps> = ({
             <TableRow>
               <TableCell colSpan={headerItems?.length || 0}>
                 <div className="flex items-center justify-center h-full w-full mx-auto my-auto py-4">
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   <span>Loading...</span>
                 </div>
               </TableCell>
@@ -87,7 +83,7 @@ const UniversalTable: FC<UniversalTableProps> = ({
               })}
             </>
           ) : (
-            <>{renderEmptyItems()}</>
+            <>{renderEmptyItems(headerItems?.length)}</>
           )}
         </TableBody>
       </Table>

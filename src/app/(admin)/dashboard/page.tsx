@@ -18,6 +18,21 @@ import {
   Flex,
   Badge,
 } from "@tremor/react";
+import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
+import FanCount from "@/components/counts/fans";
+import UsersCount from "@/components/counts/users";
+import CoachesCount from "@/components/counts/coaches";
+import { useDebouncedValue } from "@mantine/hooks";
+import SelectCard from "@/components/select";
+import Pagination from "@/components/pagination";
+import AthletesCount from "@/components/counts/athletes";
+import UniversalTable from "@/components/universal-table";
+import UserAvatar from "@/components/user-avatar";
+import { AccountType } from "@/lib/enums/account-type.enum";
+import { useToast } from "@/hooks/use-toast";
+import { observer } from "mobx-react-lite";
+import { useRootStore } from "@/mobx";
+import { Icons } from "@/components/Icons";
 import {
   GetUsersQuery,
   QueryMode,
@@ -28,17 +43,6 @@ import {
   useGetUsersQuery,
   useUpdateUserMutation,
 } from "@/services/graphql";
-import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
-import { SearchIcon } from "@heroicons/react/solid";
-import FanCount from "@/components/counts/fans";
-import UsersCount from "@/components/counts/users";
-import CoachesCount from "@/components/counts/coaches";
-import { useDebouncedValue } from "@mantine/hooks";
-import SelectCard from "@/components/select";
-import Pagination from "@/components/pagination";
-import AthletesCount from "@/components/counts/athletes";
-import UniversalTable from "@/components/universal-table";
-import UserAvatar from "@/components/user-avatar";
 import {
   Menubar,
   MenubarContent,
@@ -46,11 +50,6 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "@/components/ui/menubar";
-import { Loader2, MoreHorizontal } from "lucide-react";
-import { AccountType } from "@/lib/enums/account-type.enum";
-import { useToast } from "@/hooks/use-toast";
-import { observer } from "mobx-react-lite";
-import { useRootStore } from "@/mobx";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -323,7 +322,7 @@ const Page: FC<PageProps> = () => {
         <TableCell>
           <Flex alignItems="center" justifyContent="start">
             <UserAvatar
-              className="h-[55px] w-[55px]"
+              className="h-[55px] w-[55px] shadow"
               fallbackType="name"
               avatar={item?.avatar as string}
               fallback={`${item?.username?.charAt(0)} ${item?.firstname?.charAt(
@@ -344,7 +343,7 @@ const Page: FC<PageProps> = () => {
         <TableCell className="text-center">
           {item?.id === selectedUser && isActivating ? (
             <div className="text-center flex flex-row justify-center items-center">
-              <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+              <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin" />
               {item?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (
@@ -366,14 +365,14 @@ const Page: FC<PageProps> = () => {
             <Menubar className="bg-transparent border-0 hover:bg-transparent focus:bg-transparent">
               <MenubarMenu>
                 <MenubarTrigger className="cursor-pointer data-[state=open]:bg-transparent hover:bg-transparent focus:bg-transparent bg-transparent focus-within:bg-transparent focus-visible:bg-transparent active:bg-transparent">
-                  <MoreHorizontal />
+                  <Icons.moreHorizontal />
                 </MenubarTrigger>
                 <MenubarContent
                   side="bottom"
                   align="start"
                   sideOffset={-3}
                   alignOffset={-100}
-                  className="rounded-tremor-default cursor-pointer bg-tremor-background ring-tremor-ring shadow-tremor-card dark:bg-dark-tremor-background dark:ring-dark-tremor-ring dark:shadow-dark-tremor-card"
+                  className="rounded-tremor-default cursor-pointer bg-background dark:bg-dark-background"
                 >
                   {userItems?.map((val, id) => {
                     return (
@@ -411,13 +410,17 @@ const Page: FC<PageProps> = () => {
             </Grid>
             <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
               <TextInput
-                className="h-[38px]"
-                icon={SearchIcon}
+                className="h-[38px] bg-background dark:bg-dark-background"
+                icon={() => {
+                  return (
+                    <Icons.search className="tremor-TextInput-icon shrink-0 text-tremor-content-subtle dark:text-dark-tremor-content-subtle h-5 w-5 ml-2.5" />
+                  );
+                }}
                 onValueChange={(e) => setValue(e)}
                 placeholder="Search..."
               />
               <SelectCard
-                className=""
+                className="bg-background dark:bg-dark-background bg-tremor-background dark:bg-dark-tremor-background"
                 items={filterItems}
                 selectedItem={status}
                 onValueChange={(e) => {
@@ -432,7 +435,7 @@ const Page: FC<PageProps> = () => {
               loading={loading}
               renderItems={renderItems}
             />
-            {loading || !users?.users.length ? null : (
+            {loading || !users?.users?.length ? null : (
               <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
             )}
           </TabPanel>

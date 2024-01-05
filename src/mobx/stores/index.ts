@@ -1,5 +1,6 @@
 /** @format */
-"use client"
+
+"use client";
 
 import { Instance, types } from "mobx-state-tree";
 import { persist } from "mst-persist";
@@ -10,14 +11,16 @@ import { UserStore } from "./users";
 import { CoacheStore } from "./coaches";
 import { FanStore } from "./fans";
 import { AthleteStore } from "./athletes";
+import { SchoolStore } from "./schools";
 
 export const RootStore = types.model("RootStore", {
   counterStore: CounterStore,
   authStore: AuthStore,
   userStore: UserStore,
-  athleteStore:AthleteStore,
+  athleteStore: AthleteStore,
   coacheStore: CoacheStore,
-  fanStore:FanStore
+  fanStore: FanStore,
+  schoolStore: SchoolStore,
 });
 
 export interface RootStore extends Instance<typeof RootStore> {}
@@ -27,10 +30,11 @@ export const createRootStore = () => {
     {
       counterStore: CounterStore.create(),
       authStore: AuthStore.create(),
-      athleteStore:AthleteStore.create(),
-      userStore:UserStore.create(),
-      coacheStore:CoacheStore.create(),
-      fanStore: FanStore.create()
+      athleteStore: AthleteStore.create(),
+      userStore: UserStore.create(),
+      coacheStore: CoacheStore.create(),
+      fanStore: FanStore.create(),
+      schoolStore: SchoolStore.create(),
     },
     { NODE_ENV: process.env.NODE_ENV }
   );
@@ -41,7 +45,7 @@ export const createRootStore = () => {
       // default: localStorage
       jsonify: false, // if you use AsyncStorage, this shoud be true
       // default: true
-      // whitelist: ['athleteStore','userStore','coacheStore','fanStore'] 
+      // whitelist: ['athleteStore','userStore','coacheStore','fanStore']
     }).then(() => console.log("rootStore has been hydrated"));
   }
 

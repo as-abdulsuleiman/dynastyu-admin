@@ -4,7 +4,7 @@
 
 import { FC } from "react";
 import { useRouter } from "next/navigation";
-import { useGetCoachQuery } from "@/services/graphql";
+import { GetSchoolQuery, useGetCoachQuery } from "@/services/graphql";
 import { Title, Divider, Text, Grid, Card, Callout } from "@tremor/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -64,7 +64,7 @@ const Page: FC<pageProps> = ({ params }) => {
       color: "teal",
       value: data?.coachProfile?._count?.verifiedAthletes || 0,
       icon: () => (
-        <Icons.badgeCheck className="mr-2.5 mb-[-6px] h-5 w-5 stroke-teal-600" />
+        <Icons.athlete className="mr-2.5 mb-[-6px] h-5 w-5 stroke-teal-600" />
       ),
     },
 
@@ -138,10 +138,10 @@ const Page: FC<pageProps> = ({ params }) => {
         ${data?.coachProfile?.user?.surname} Analytics`}
       />
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-        <Card>
+        <Card className="bg-background dark:bg-dark-background">
           <div className="flex flex-col items-center justify-center">
             <UserAvatar
-              className="h-[90px] w-[90px]"
+              className="h-[70px] w-[70px] shadow"
               fallbackType="icon"
               avatar={data?.coachProfile?.user.avatar as string}
               fallback={`${data?.coachProfile?.user?.username?.charAt(
@@ -244,14 +244,7 @@ const Page: FC<pageProps> = ({ params }) => {
         </Card>
         <SchoolCard
           loading={loading}
-          division={data?.coachProfile?.school?.division as string}
-          title={data?.coachProfile?.school.schoolType.name as string}
-          description={data?.coachProfile?.school?.description as string}
-          address={data?.coachProfile?.school?.address as string}
-          schoolName={data?.coachProfile?.school?.name as string}
-          avatar={data?.coachProfile?.school?.logo as string}
-          conference={data?.coachProfile?.school?.conference as string}
-          yearFounded={data?.coachProfile?.school?.yearFounded as string}
+          school={data?.coachProfile?.school as GetSchoolQuery}
         />
       </Grid>
     </main>

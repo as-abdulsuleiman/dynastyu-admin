@@ -54,7 +54,7 @@ const UsersAnalytics: FC<indexProps> = ({
   valueFormatter,
 }) => {
   return (
-    <Card className="">
+    <Card className="bg-background dark:bg-dark-background">
       {loading ? (
         <>
           <div className="ml-[6px]">
