@@ -1,3 +1,5 @@
+# @format
+
 fragment SchoolCommonParts on School {
   id
   uuid
@@ -47,7 +49,13 @@ query getSchools(
   $take: Int
   $skip: Int
 ) {
-  schools(where: $where, orderBy: $orderBy, cursor: $cursor, take: $take, skip: $skip) {
+  schools(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
     ...SchoolCommonParts
   }
 }
@@ -55,6 +63,87 @@ query getSchools(
 query getSchool($where: SchoolWhereUniqueInput!) {
   school(where: $where) {
     ...SchoolCommonParts
+    _count {
+      athletesInterested
+      coaches
+      athletesRecruited
+      athletesProspected
+      evaluations
+      posts
+    }
+    athletesInterested {
+      athleteId
+      AthleteCommitment
+      createdAt
+      userId
+      athlete {
+        verified
+        verifiedById
+        position{
+          id
+          name
+          shortName
+        }
+      }
+      User {
+        username
+        id
+        firstname
+        surname
+        avatar
+      }
+    }
+    coaches {
+      id
+      title
+      user {
+        username
+        id
+        firstname
+        surname
+        avatar
+      }
+    }
+    country {
+      name
+      id
+      flag
+      abbreviation
+    }
+    athletesRecruited {
+      athleteId
+      User {
+        username
+        id
+        firstname
+        surname
+        avatar
+      }
+    }
+    athletesProspected {
+      athleteId
+      User {
+        username
+        id
+        firstname
+        surname
+        avatar
+      }
+    }
+    evaluations {
+      id
+      note
+      images
+      videos
+      videosAspectRatio
+      createdBy {
+        username
+        id
+        firstname
+        surname
+        avatar
+      }
+    }
   }
 }
 
@@ -131,7 +220,10 @@ mutation updateInterests(
   }
 }
 
-mutation updateSchool($data: SchoolUpdateInput!, $where: SchoolWhereUniqueInput!) {
+mutation updateSchool(
+  $data: SchoolUpdateInput!
+  $where: SchoolWhereUniqueInput!
+) {
   updateOneSchool(data: $data, where: $where) {
     ...SchoolCommonParts
   }

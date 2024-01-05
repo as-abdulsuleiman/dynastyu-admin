@@ -5,24 +5,7 @@
 import { Icons } from "@/components/Icons";
 import CountCard from "@/components/count-card";
 import { useRootStore } from "@/mobx";
-import {
-  GetCoachesQuery,
-  SortOrder,
-  useGetCoachesQuery,
-  useGetUsersQuery,
-} from "@/services/graphql";
-import {
-  BadgeDelta,
-  Card,
-  CategoryBar,
-  Flex,
-  Grid,
-  Legend,
-  Metric,
-  ProgressBar,
-  Text,
-} from "@tremor/react";
-import { Loader2 } from "lucide-react";
+import { GetCoachesQuery, useGetCoachesQuery } from "@/services/graphql";
 import { observer } from "mobx-react-lite";
 import { usePathname, useRouter } from "next/navigation";
 import { FC } from "react";

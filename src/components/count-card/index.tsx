@@ -15,14 +15,13 @@ import {
 } from "@tremor/react";
 import { Skeleton } from "../ui/skeleton";
 import { observer } from "mobx-react-lite";
-import { useRouter } from "next/navigation";
 
 interface CountCardProps {
   title: string;
   loading: boolean;
   dataCount: number;
-  categoryValues: number[];
-  categories: string[];
+  categoryValues?: number[];
+  categories?: string[];
   activeLegend: string;
   onClick?: () => void;
   icon?: ReactNode;
@@ -33,15 +32,15 @@ const CountCard: FC<CountCardProps> = ({
   title,
   loading,
   dataCount,
-  categoryValues,
-  categories,
+  categoryValues = [],
+  categories = [],
   activeLegend,
   showIcon,
   icon,
   onClick,
 }) => {
   return (
-    <Card>
+    <Card className="bg-background dark:bg-dark-background">
       <Flex alignItems="start">
         <div className="">
           <Text>{title}</Text>
@@ -77,7 +76,7 @@ const CountCard: FC<CountCardProps> = ({
       <Legend
         activeLegend={activeLegend}
         className="mt-3"
-        categories={categories}
+        categories={categories || []}
         enableLegendSlider={true}
         colors={["teal", "rose"]}
       />

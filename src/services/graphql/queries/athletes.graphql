@@ -1,3 +1,5 @@
+# @format
+
 query getAthletes(
   $where: AthleteProfileWhereInput
   $orderBy: [AthleteProfileOrderByWithRelationInput!]
@@ -51,9 +53,9 @@ query getAthletes(
       uuid
       shortName
     }
-     verifiedBy{
+    verifiedBy {
       id
-      user{
+      user {
         id
         firstname
         surname
@@ -116,8 +118,10 @@ query getCountry($where: CountryWhereUniqueInput!) {
   }
 }
 
-
-mutation updateAthlete($data: AthleteProfileUpdateInput!, $where: AthleteProfileWhereUniqueInput!) {
+mutation updateAthlete(
+  $data: AthleteProfileUpdateInput!
+  $where: AthleteProfileWhereUniqueInput!
+) {
   updateOneAthleteProfile(where: $where, data: $data) {
     id
     uuid
@@ -155,9 +159,9 @@ mutation updateAthlete($data: AthleteProfileUpdateInput!, $where: AthleteProfile
       shortName
     }
     verified
-    verifiedBy{
+    verifiedBy {
       id
-      user{
+      user {
         id
         firstname
         surname
@@ -165,7 +169,6 @@ mutation updateAthlete($data: AthleteProfileUpdateInput!, $where: AthleteProfile
     }
   }
 }
-
 
 mutation deleteAthlete($where: AthleteProfileWhereUniqueInput!) {
   deleteOneAthleteProfile(where: $where) {
@@ -175,12 +178,8 @@ mutation deleteAthlete($where: AthleteProfileWhereUniqueInput!) {
   }
 }
 
-query getAthleteProfile(
-  $where: AthleteProfileWhereUniqueInput!
-) {
-  athleteProfile(
-    where: $where
-  ) {
+query getAthleteProfile($where: AthleteProfileWhereUniqueInput!) {
+  athleteProfile(where: $where) {
     id
     uuid
     createdAt
@@ -189,7 +188,66 @@ query getAthleteProfile(
     hudlLink
     graduationYear
     gpa
-    skills{
+    evaluations {
+      id
+      note
+      images
+      videos
+      videosAspectRatio
+      createdById
+      # evaluationType {
+      #   EVALUATION
+      #   STRENGTH
+      #   WEAKNESS
+      #   CHARACTER
+      #   SUMMARY
+      # }
+    }
+    transcripts {
+      id
+      uuid
+      name
+      url
+      athleteProfileId
+      createdAt
+      updatedAt
+    }
+    recruitedSchools {
+      athleteId
+      schoolId
+      userId
+      school {
+        name
+        logo
+        address
+        description
+      }
+    }
+    interestedSchools {
+      school {
+        name
+        id
+        logo
+        address
+        description
+        secondaryColor
+        primaryColor
+        email
+        division
+        backgroundImage
+        yearlyTuition
+        yearFounded
+        conference
+        schoolType {
+          name
+          id
+          _count {
+            schools
+          }
+        }
+      }
+    }
+    skills {
       id
       skillId
       athleteId
@@ -198,12 +256,12 @@ query getAthleteProfile(
       videos
       verified
       verifiedAt
-      skillType{
+      skillType {
         id
         name
       }
     }
-    _count{
+    _count {
       transcripts
       skills
       interestedSchools
@@ -212,7 +270,7 @@ query getAthleteProfile(
       evaluations
     }
     school {
-       name
+      name
       logo
       address
       description
@@ -224,10 +282,10 @@ query getAthleteProfile(
       yearlyTuition
       yearFounded
       conference
-      schoolType{
+      schoolType {
         name
         id
-        _count{
+        _count {
           schools
         }
       }
@@ -258,17 +316,16 @@ query getAthleteProfile(
       uuid
       shortName
     }
-     verifiedBy{
+    verifiedBy {
       id
       title
       city
       state
-      user{
+      user {
         id
         firstname
         surname
         username
-      
       }
     }
   }

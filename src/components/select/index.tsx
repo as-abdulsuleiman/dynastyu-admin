@@ -1,9 +1,9 @@
 /** @format */
 
-import { CalculatorIcon, UserCircleIcon } from "@heroicons/react/outline";
+import { UserCircleIcon } from "@heroicons/react/outline";
 import { Select, SelectItem } from "@tremor/react";
 import { observer } from "mobx-react-lite";
-import { FC, useState } from "react";
+import { FC } from "react";
 
 interface SelectCardProps {
   items: Items[];
@@ -11,6 +11,7 @@ interface SelectCardProps {
   onValueChange: (e: any) => void;
   className: string;
   placeholder?: string;
+  defaultValue?: string;
 }
 
 type Items = {
@@ -24,10 +25,12 @@ const SelectCard: FC<SelectCardProps> = ({
   onValueChange,
   className,
   placeholder,
+  defaultValue,
 }) => {
   return (
     <Select
-      className={className}
+      defaultValue={defaultValue}
+      className={"bg-tremor-background dark:bg-dark-tremor-background"}
       value={selectedItem}
       placeholder={placeholder || "Filter by..."}
       onValueChange={onValueChange}
@@ -38,7 +41,7 @@ const SelectCard: FC<SelectCardProps> = ({
             key={index}
             value={a.value}
             icon={UserCircleIcon}
-            className="cursor-pointer"
+            className="cursor-pointer bg-background dark:bg-dark-background"
           >
             {a?.name}
           </SelectItem>

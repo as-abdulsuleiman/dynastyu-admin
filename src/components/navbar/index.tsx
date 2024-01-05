@@ -2,7 +2,7 @@
 
 "use client";
 
-import { FC } from "react";
+import { FC, useState } from "react";
 import Link from "next/link";
 import { buttonVariants } from "../ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -25,13 +25,14 @@ import { Icons } from "../Icons";
 
 interface NavbarProps {
   user?: any;
-  isLoggedIn: boolean;
-  isInitializing: boolean;
+  isLoggedIn?: boolean;
+  isInitializing?: boolean;
 }
 
-const Navbar: FC<NavbarProps> = ({ isInitializing, isLoggedIn }) => {
+const Navbar: FC<NavbarProps> = ({}) => {
   const { logout } = useAuth();
   const router = useRouter();
+  const { isLoggedIn, isInitializing } = useAuth();
   const {
     authStore: { user },
   } = useRootStore();
@@ -59,9 +60,10 @@ const Navbar: FC<NavbarProps> = ({ isInitializing, isLoggedIn }) => {
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <UserAvatar
+                    className="shadow h-[49px] w-[49px]"
                     icon={<Icons.user className="h-4 w-4" />}
                     fallbackType="icon"
-                    avatar={user.avatar as string}
+                    avatar={user?.avatar as string}
                     fallback={`${user?.firstname?.charAt(
                       0
                     )} ${user?.surname?.charAt(0)}`}
@@ -71,7 +73,7 @@ const Navbar: FC<NavbarProps> = ({ isInitializing, isLoggedIn }) => {
                   <div className="flex items-center justify-start gap-2 p-2">
                     <div className="flex flex-col space-y-1 leading-none">
                       {user?.username && (
-                        <p className="font-medium">@{user.username}</p>
+                        <p className="font-medium">@{user?.username}</p>
                       )}
                       {user?.email && (
                         <p className="truncate w-[200px] text-sm text-zin-700">
@@ -81,20 +83,20 @@ const Navbar: FC<NavbarProps> = ({ isInitializing, isLoggedIn }) => {
                     </div>
                   </div>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild className="cursor-pointer">
                     <Link href="/dashboard">Dashboard</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild className="cursor-pointer">
                     <Link href="/coaches">Coaches</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
+                  <DropdownMenuItem asChild className="cursor-pointer">
                     <Link href="/settings">Settings</Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     onSelect={(event) => {
-                      event.preventDefault();
+                      // event?.preventDefault();
                       logout();
                       router.push("/sign-in");
                     }}

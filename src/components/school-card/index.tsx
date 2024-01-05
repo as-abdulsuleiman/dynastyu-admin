@@ -7,50 +7,34 @@ import { Callout, Card, Text, Divider } from "@tremor/react";
 import UserAvatar from "../user-avatar";
 import { Icons } from "../Icons";
 import { Skeleton } from "../ui/skeleton";
+import { GetSchoolQuery } from "@/services/graphql";
 
 interface SchoolCardProps {
   loading?: boolean;
-  avatar: string;
-  schoolName: string;
-  address: string;
-  title: string;
-  description: string;
-  division: string;
-  conference?: string;
-  yearFounded?: string;
+  school: any;
 }
 
-const SchoolCard: FC<SchoolCardProps> = ({
-  avatar,
-  schoolName,
-  title,
-  address,
-  description,
-  division,
-  loading,
-  conference,
-  yearFounded,
-}) => {
+const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   return (
-    <Card>
+    <Card className="bg-background dark:bg-dark-background">
       <div className="flex flex-col justify-center items-center">
         <UserAvatar
-          className="h-[75px] w-[75px]"
+          className="h-[70px] w-[70px] shadow"
           fallbackType="icon"
-          avatar={avatar as string}
-          fallback={`${schoolName?.charAt(0)} `}
+          avatar={school?.logo as string}
+          fallback={`${school?.name?.charAt(0)} `}
           icon={<Icons.school className="h-8 w-8" />}
         />
         {loading ? (
           <Skeleton className="w-[120px] h-[25px] mt-2" />
         ) : (
-          <Text className="text-xl mt-2">{title}</Text>
+          <Text className="text-xl mt-2">{school?.schoolType?.name}</Text>
         )}
       </div>
       <Divider></Divider>
       <Callout
         className="mt-4"
-        title={title || ("High School" as string)}
+        title={school?.schoolType?.name || ("High School" as string)}
         icon={() => {
           return (
             <Icons.graduationCap
@@ -61,7 +45,7 @@ const SchoolCard: FC<SchoolCardProps> = ({
         }}
         color="teal"
       >
-        {schoolName}
+        {school?.name}
       </Callout>
       <Callout
         className="mt-4"
@@ -73,7 +57,7 @@ const SchoolCard: FC<SchoolCardProps> = ({
         }}
         color="teal"
       >
-        {address}
+        {school?.address}
       </Callout>
       <Callout
         className="mt-4"
@@ -85,7 +69,7 @@ const SchoolCard: FC<SchoolCardProps> = ({
         }}
         color="teal"
       >
-        {division}
+        {school?.division}
       </Callout>
       <Callout
         className="mt-4"
@@ -100,7 +84,7 @@ const SchoolCard: FC<SchoolCardProps> = ({
         }}
         color="teal"
       >
-        {conference}
+        {school?.conference}
       </Callout>
       <Callout
         className="mt-4"
@@ -112,7 +96,7 @@ const SchoolCard: FC<SchoolCardProps> = ({
         }}
         color="teal"
       >
-        {description}
+        {school?.conference}
       </Callout>
       <Callout
         className="mt-4"
@@ -124,7 +108,7 @@ const SchoolCard: FC<SchoolCardProps> = ({
         }}
         color="teal"
       >
-        {yearFounded}
+        {school?.yearFounded}
       </Callout>
     </Card>
   );

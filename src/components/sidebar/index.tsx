@@ -61,22 +61,22 @@ const SideBar: FC<SideBarProps> = ({}) => {
     //     <Medal className={className} color={color} />
     //   ),
     // },
-    // {
-    //   name: "Schools",
-    //   hasFill: false,
-    //   path: "/schools",
-    //   icon: ({ className, color }: IconProps) => (
-    //     <School className={className} color={color} />
-    //   ),
-    // },
     {
-      name: "Skills",
+      name: "Schools",
       hasFill: false,
-      path: "/skills",
+      path: "/schools",
       icon: ({ className, color }: IconProps) => (
-        <FolderRoot className={className} color={color} />
+        <Icons.school className={className} color={color} />
       ),
     },
+    // {
+    //   name: "Skills",
+    //   hasFill: false,
+    //   path: "/skills",
+    //   icon: ({ className, color }: IconProps) => (
+    //     <FolderRoot className={className} color={color} />
+    //   ),
+    // },
     {
       name: "Settings",
       hasFill: false,
@@ -114,20 +114,21 @@ const SideBar: FC<SideBarProps> = ({}) => {
                 scroll={true}
                 key={index}
                 prefetch={true}
-                className="mt-4"
               >
                 <div
                   className={`group ${
-                    isActive ? "" : undefined
-                  }  flex cursor-pointer items-center py-[6px] px-[16px]`}
+                    isActive
+                      ? "bg-secondary"
+                      : "bg-background dark:bg-dark-background"
+                  } "bg-background dark:bg-dark-background flex cursor-pointer items-center py-[6px] px-[16px] border rounded-sm mt-4 hover:scale-105 transition-transform ease-out duration-200`}
                 >
                   <Icon />
                   <Text
                     className={`${
                       isActive
                         ? "text-tremor-content-teal dark:text-dark-tremor-content-teal"
-                        : "text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis"
-                    } ml-4 mt-[0px] text-tremor-title`}
+                        : "text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis group-hover:dark:text-dark-tremor-content-teal group-hover:text-tremor-content-teal"
+                    } ml-4 mt-[0px] text-3xl`}
                   >
                     {val?.name}
                   </Text>

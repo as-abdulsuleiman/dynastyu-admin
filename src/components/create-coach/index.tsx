@@ -23,8 +23,8 @@ import { useGetAccountTypesQuery } from "@/services/graphql";
 import ComboBoxCard from "../combobox-card";
 import SchoolDropdown from "../school-dropdown";
 import { coachTitleOptions } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Icons } from "../Icons";
 
 interface CreateCoachProps {
   isOpen: boolean;
@@ -292,7 +292,7 @@ const CreateCoach: FC<CreateCoachProps> = ({
               <Button variant="default" className="w-full mt-6" type="submit">
                 {submitting || isSubmitting ? (
                   <div className="flex flex-row items-center justify-center">
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Loading...
                   </div>
                 ) : (

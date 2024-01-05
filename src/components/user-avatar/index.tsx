@@ -27,21 +27,19 @@ const UserAvatar: FC<UserAvatarProps> = ({
   return (
     <Avatar {...props}>
       {avatar ? (
-        <div className="relative aspect-square h-full w-full shadow-xl">
+        <div className="relative aspect-square h-full w-full">
           <Image
             onLoad={() => setLoading(false)}
             fill
             src={avatar}
             alt="profile"
-            className={`${
-              loading ? "blur-sm " : "blur-none"
-            } object-cover shadow-xl`}
+            className={`${loading ? "blur-sm " : "blur-none"} object-cover`}
             referrerPolicy="no-referrer"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
           />
         </div>
       ) : (
-        <AvatarFallback className="capitalize shadow-xl">
+        <AvatarFallback className="capitalize text-xs">
           {fallbackType === "icon" ? <>{icon}</> : <>{fallback}</>}
         </AvatarFallback>
       )}

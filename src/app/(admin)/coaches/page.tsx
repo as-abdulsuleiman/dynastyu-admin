@@ -17,7 +17,6 @@ import {
   Badge,
 } from "@tremor/react";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
-import { SearchIcon } from "@heroicons/react/solid";
 import { FC, useEffect, useMemo, useState } from "react";
 import CreateCoach from "@/components/create-coach";
 import CoachesCount from "@/components/counts/coaches";
@@ -44,7 +43,6 @@ import { projectAuth } from "@/services/firebase/config";
 import { useToast } from "@/hooks/use-toast";
 import { CoachValidator } from "@/lib/validators/coach";
 import * as yup from "yup";
-import { Loader2, MoreHorizontal } from "lucide-react";
 import {
   Menubar,
   MenubarContent,
@@ -467,7 +465,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
         <TableCell>
           <Flex alignItems="center" justifyContent="start">
             <UserAvatar
-              className="h-[55px] w-[55px]"
+              className="h-[55px] w-[55px] shadow"
               fallbackType="name"
               avatar={item?.user?.avatar as string}
               fallback={`${item?.user?.username?.charAt(
@@ -488,7 +486,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
         <TableCell className="text-center">
           {item?.id === selectedUser && isActivating ? (
             <div className="text-center flex flex-row justify-center items-center">
-              <Loader2 className="mr-1 h-4 w-4 animate-spin " />
+              <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin " />
               {item?.user?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (
@@ -507,7 +505,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
         <TableCell className="text-center">
           {item?.id === selectedUser && isVerifying ? (
             <div className="text-center flex flex-row justify-center items-center">
-              <Loader2 className="mr-1 h-4 w-4 animate-spin " />
+              <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin " />
               {item?.verified ? "Unverifying..." : "Verifying..."}
             </div>
           ) : (
@@ -534,14 +532,14 @@ const Coaches: FC<CoachesProps> = ({}) => {
             <Menubar className="bg-transparent border-0 hover:bg-transparent focus:bg-transparent">
               <MenubarMenu>
                 <MenubarTrigger className="cursor-pointer data-[state=open]:bg-transparent hover:bg-transparent focus:bg-transparent bg-transparent focus-within:bg-transparent focus-visible:bg-transparent active:bg-transparent">
-                  <MoreHorizontal />
+                  <Icons.moreHorizontal />
                 </MenubarTrigger>
                 <MenubarContent
                   side="bottom"
                   align="start"
                   sideOffset={-3}
                   alignOffset={-100}
-                  className="rounded-tremor-default cursor-pointer bg-tremor-background ring-tremor-ring shadow-tremor-card dark:bg-dark-tremor-background dark:ring-dark-tremor-ring dark:shadow-dark-tremor-card"
+                  className="rounded-tremor-default cursor-pointer bg-background dark:bg-dark-background"
                 >
                   {coacheItems?.map((val, id) => {
                     return (
@@ -590,13 +588,17 @@ const Coaches: FC<CoachesProps> = ({}) => {
             </Grid>
             <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
               <TextInput
-                className="h-[38px]"
-                icon={SearchIcon}
+                className="h-[38px] bg-background dark:bg-dark-background"
+                icon={() => {
+                  return (
+                    <Icons.search className="tremor-TextInput-icon shrink-0 text-tremor-content-subtle dark:text-dark-tremor-content-subtle h-5 w-5 ml-2.5" />
+                  );
+                }}
                 onValueChange={(e) => setValue(e)}
                 placeholder="Search for coach..."
               />
               <SelectCard
-                className="ring-0"
+                className="ring-0 bg-background dark:bg-dark-background"
                 items={filterItems}
                 selectedItem={status}
                 onValueChange={(e) => {
