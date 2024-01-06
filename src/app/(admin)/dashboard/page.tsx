@@ -432,7 +432,7 @@ const Page: FC<PageProps> = () => {
               />
             </Grid>
             <UniversalTable
-              title="Users List"
+              title="User List"
               headerItems={headerItems}
               items={users?.users as any[]}
               loading={loading}
