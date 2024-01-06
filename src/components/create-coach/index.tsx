@@ -26,13 +26,13 @@ import { coachTitleOptions } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { Icons } from "../Icons";
 
+type FormData = yup.InferType<typeof CoachValidator>;
+
 interface CreateCoachProps {
   isOpen: boolean;
   onClose: () => void;
   onCreateCoach: (data: FormData) => void;
 }
-
-type FormData = yup.InferType<typeof CoachValidator>;
 
 const CreateCoach: FC<CreateCoachProps> = ({
   isOpen,

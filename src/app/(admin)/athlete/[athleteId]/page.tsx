@@ -86,8 +86,6 @@ const Page: FC<pageProps> = ({ params }) => {
     },
   ];
 
-  console.log("athleteProfile", data?.athleteProfile);
-
   const renderVerifiedBy = (verifiedBy: any) => {
     return (
       <div className="flex flex-col">
@@ -128,11 +126,11 @@ const Page: FC<pageProps> = ({ params }) => {
             </Title>
             <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
           </div>
-
           <Text>
             {data?.athleteProfile?.position?.name} at{" "}
             {data?.athleteProfile?.school?.name}
           </Text>
+          <Text>Classification: {data?.athleteProfile?.school?.division}</Text>
         </div>
       )}
       <Divider></Divider>
@@ -244,7 +242,7 @@ const Page: FC<pageProps> = ({ params }) => {
           </Callout>
           <Callout
             className="mt-4"
-            title="Draduation Year"
+            title="Graduation Year"
             icon={() => {
               return (
                 <Icons.graduationCap

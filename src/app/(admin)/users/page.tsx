@@ -319,7 +319,10 @@ const Users: FC<UsersProps> = ({}) => {
         <TableCell>
           <Flex alignItems="center" justifyContent="start">
             <UserAvatar
-              className="h-[55px] w-[55px] shadow"
+              onClick={() =>
+                router.push(`/${userType}/${Number(userId)}`, { scroll: true })
+              }
+              className="h-[55px] w-[55px] shadow cursor-pointer"
               fallbackType="name"
               avatar={item?.avatar as string}
               fallback={`${item?.username?.charAt(0)} ${item?.firstname?.charAt(
@@ -427,7 +430,7 @@ const Users: FC<UsersProps> = ({}) => {
               />
             </Grid>
             <UniversalTable
-              title="Users List"
+              title="User List"
               loading={loading}
               headerItems={headerItems}
               items={users?.users as any[]}
@@ -443,36 +446,3 @@ const Users: FC<UsersProps> = ({}) => {
   );
 };
 export default observer(Users);
-
-// <Card>
-//               {loading ? (
-//                 <div className="flex items-center justify-center h-full w-full mx-auto my-auto">
-//                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-//                   <span>Loading...</span>
-//                 </div>
-//               ) : (
-//                 <>
-//                   <Flex alignItems="start">
-//                     <div className="truncate">
-//                       <Text>${value} Users</Text>
-//                       <Metric className="truncate mt-1">
-//                         {users?.users?.length}
-//                       </Metric>
-//                     </div>
-//                     {/* <Icon
-//                     icon={item.icon}
-//                     variant="simple"
-//                     tooltip="Shows sales performance per employee"
-//                   /> */}
-//                   <BadgeDelta deltaType="moderateIncrease">
-//                   {"13.2%"}
-//                 </BadgeDelta>
-//               </Flex>
-//               <Flex className="mt-4 space-x-2">
-//                 {/* <Text className="truncate">{`${item.progress}% (${item.metric})`}</Text> */}
-//                 {/* <Text className="truncate">{item.target}</Text> */}
-//               </Flex>
-//               <ProgressBar value={15.9} className="mt-2" />
-//             </>
-//           )}
-//         </Card>

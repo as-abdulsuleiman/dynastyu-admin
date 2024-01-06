@@ -40,6 +40,7 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "@/components/ui/menubar";
+import CreateSchool from "@/components/create-school";
 
 const filterItems = [
   { name: "High School", value: "High School" },
@@ -63,6 +64,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
   const router = useRouter();
   const [status, setStatus] = useState<string>("High School");
   const [value, setValue] = useState<string>("");
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isActivating, setIsactivating] = useState<boolean>();
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [debounced] = useDebouncedValue(value, 300);
@@ -98,7 +100,6 @@ const Schools: FC<SchoolsProps> = ({}) => {
       };
     }
   }, [status]);
-  console.log("schools", schools?.schools);
 
   useEffect(() => {
     refetch({
@@ -194,7 +195,10 @@ const Schools: FC<SchoolsProps> = ({}) => {
         <TableCell>
           <Flex alignItems="center" justifyContent="start">
             <UserAvatar
-              className="h-[55px] w-[55px] shadow"
+              onClick={() =>
+                router.push(`/school/${Number(item?.id)}`, { scroll: true })
+              }
+              className="h-[55px] w-[55px] shadow cursor-pointer"
               fallbackType="name"
               avatar={item?.logo as string}
               fallback={`${item?.name?.charAt(0)}`}
@@ -252,12 +256,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
           <Text>Schools Overview</Text>
         </div>
         <div className="ml-auto justify-end">
-          <Button>Add New School</Button>
-          {/* <CreateCoach
-            onCreateCoach={(values) => handleCreateCoach(values)}
-            isOpen={isOpen}
-            onClose={() => setIsOpen(!isOpen)}
-          /> */}
+          <CreateSchool isOpen={isOpen} onClose={() => setIsOpen(!isOpen)} />
         </div>
       </div>
       <Divider></Divider>
@@ -289,7 +288,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
               />
             </Grid>
             <UniversalTable
-              title="Users List"
+              title="School List"
               headerItems={headerItems}
               items={schools?.schools as any[]}
               loading={loading}

@@ -43,6 +43,13 @@ import { getToken } from "../token";
             }
           },
         },
+        CoachProfile:{
+          fields:{
+            school:{
+              merge:true
+            },
+          }
+        }
       }
     }),
     defaultOptions: { watchQuery: { fetchPolicy: "cache-and-network" } },

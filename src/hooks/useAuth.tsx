@@ -80,7 +80,7 @@ function useAuthProvider() {
         toast({
           title: "Access Denied",
           description:
-            "Sorry, you don't have permission access to the admin database",
+            "Sorry, you don't have permission to access the admin database",
           variant: "destructive",
         });
       }
