@@ -24,7 +24,7 @@ const HoverOnCard: FC<HoverOnCardProps> = ({
     <HoverCard>
       <HoverCardTrigger asChild>{trigger}</HoverCardTrigger>
       <HoverCardContent
-        className={`w-auto rounded-tremor-default cursor-pointer bg-tremor-background ring-tremor-ring shadow-tremor-card dark:bg-dark-tremor-background dark:ring-dark-tremor-ring dark:shadow-dark-tremor-card ${contentClass}`}
+        className={`w-auto rounded-tremor-default cursor-pointer ${contentClass}`}
       >
         <div className="flex flex-row w-full">{content}</div>
       </HoverCardContent>
