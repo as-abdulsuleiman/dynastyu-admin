@@ -322,7 +322,10 @@ const Page: FC<PageProps> = () => {
         <TableCell>
           <Flex alignItems="center" justifyContent="start">
             <UserAvatar
-              className="h-[55px] w-[55px] shadow"
+              onClick={() =>
+                router.push(`/${userType}/${Number(userId)}`, { scroll: true })
+              }
+              className="h-[55px] w-[55px] shadow cursor-pointer"
               fallbackType="name"
               avatar={item?.avatar as string}
               fallback={`${item?.username?.charAt(0)} ${item?.firstname?.charAt(

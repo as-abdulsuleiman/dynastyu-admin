@@ -465,7 +465,10 @@ const Coaches: FC<CoachesProps> = ({}) => {
         <TableCell>
           <Flex alignItems="center" justifyContent="start">
             <UserAvatar
-              className="h-[55px] w-[55px] shadow"
+              onClick={() =>
+                router.push(`/coach/${Number(item?.id)}`, { scroll: true })
+              }
+              className="h-[55px] w-[55px] shadow cursor-pointer"
               fallbackType="name"
               avatar={item?.user?.avatar as string}
               fallback={`${item?.user?.username?.charAt(
@@ -607,7 +610,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
               />
             </Grid>
             <UniversalTable
-              title="Coaches List"
+              title="Coach List"
               headerItems={headerItems}
               items={coachesData?.coachProfiles as any[]}
               loading={loading}
