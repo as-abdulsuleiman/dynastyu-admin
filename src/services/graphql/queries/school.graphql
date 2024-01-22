@@ -405,3 +405,66 @@ mutation createEvaluation($data: EvaluationCreateInput!) {
     schoolId
   }
 }
+
+mutation registerSchool($data: SchoolCreateInput!) {
+  createOneSchool(data: $data) {
+    id
+    name
+    email
+    logo
+    conference
+    division
+    primaryColor
+    secondaryColor
+    state
+    city
+    address
+    backgroundImage
+    yearFounded
+    yearlyTuition
+    country{
+      name
+      abbreviation
+      flag
+    }
+    schoolType{
+      name
+      id
+    }
+  }
+}
+
+query getSchoolTypes(
+  $where: SchoolTypeWhereInput
+  $orderBy: [SchoolTypeOrderByWithRelationInput!]
+  $cursor: SchoolTypeWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [SchoolTypeScalarFieldEnum!]
+) {
+  schoolTypes(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    id
+    uuid
+    name
+    updatedAt
+    createdAt
+    _count{
+      schools
+    }
+  }
+}
+
+mutation deleteSchool($where: SchoolWhereUniqueInput!) {
+  deleteOneSchool(where: $where) {
+    id
+    uuid
+    email
+  }
+}

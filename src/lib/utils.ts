@@ -40,6 +40,16 @@ export const coachTitleOptions = [
   { label: "Support Staff (SC)", value: "Support Staff (SC)" },
 ];
 
+export const classificationOptions = [
+  { label: "1A", value: "1A" },
+  { label: "2A", value: "2A" },
+  { label: "3A", value: "3A" },
+  { label: "4A", value: "4A" },
+  { label: "5A", value: "5A" },
+  { label: "6A", value: "6A" },
+  { label: "7A", value: "7A" },
+]
+
 
 export const formatDate = (
   date: Date | number | string,

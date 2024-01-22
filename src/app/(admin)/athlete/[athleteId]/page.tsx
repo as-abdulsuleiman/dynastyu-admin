@@ -105,11 +105,7 @@ const Page: FC<pageProps> = ({ params }) => {
 
   return (
     <main className="w-full h-full relative">
-      <Button
-        variant="ghost"
-        className="absolute top-[-53px]"
-        onClick={() => router.back()}
-      >
+      <Button variant="ghost" className="mb-6" onClick={() => router.back()}>
         Go Back
       </Button>
       {loading ? (
@@ -126,11 +122,17 @@ const Page: FC<pageProps> = ({ params }) => {
             </Title>
             <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
           </div>
+          <Text>@{data?.athleteProfile?.user?.username}</Text>
           <Text>
             {data?.athleteProfile?.position?.name} at{" "}
             {data?.athleteProfile?.school?.name}
           </Text>
-          <Text>Classification: {data?.athleteProfile?.school?.division}</Text>
+          <Text>
+            Classification:{" "}
+            {data?.athleteProfile?.school?.division
+              ? data?.athleteProfile?.school?.division
+              : "N/A"}
+          </Text>
         </div>
       )}
       <Divider></Divider>

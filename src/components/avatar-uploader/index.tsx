@@ -11,19 +11,20 @@ import {
   useState,
 } from "react";
 import { Input } from "../ui/input";
-import { Camera } from "lucide-react";
 import { useStorage } from "@/hooks/use-storage";
 import { useToast } from "@/hooks/use-toast";
 import { noImage } from "@/lib/utils";
 import Image from "next/image";
 import { ProgressCircle } from "@tremor/react";
 import { observer } from "mobx-react-lite";
+import { Icons } from "../Icons";
 
 interface AvatarUploaderProps {
   id?: string;
   storageLocation: string;
   error?: string;
   onUploadSuccess?: (downloadUrl: string | null) => void;
+  imgUrl?: string;
 }
 
 const AvatarUploader: FC<AvatarUploaderProps> = ({
@@ -31,6 +32,7 @@ const AvatarUploader: FC<AvatarUploaderProps> = ({
   onUploadSuccess = () => ({}),
   id = "avatar",
   error,
+  imgUrl,
 }) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
@@ -118,7 +120,7 @@ const AvatarUploader: FC<AvatarUploaderProps> = ({
           />
         ) : (
           <Image
-            src={noImage}
+            src={imgUrl || noImage}
             alt="profile_url"
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
@@ -136,7 +138,7 @@ const AvatarUploader: FC<AvatarUploaderProps> = ({
               }
             }}
           >
-            <Camera />
+            <Icons.camera className="stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
           </div>
         </div>
         <div>

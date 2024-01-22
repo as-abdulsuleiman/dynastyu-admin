@@ -303,6 +303,10 @@ query getAthleteProfile($where: AthleteProfileWhereUniqueInput!) {
       state
       isActive
       dob
+      _count{
+        posts
+        postFlag
+      }
     }
     country {
       name

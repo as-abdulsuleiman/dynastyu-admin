@@ -47,6 +47,7 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "@/components/ui/menubar";
+import { SearchInput } from "@/components/search-input";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -57,6 +58,7 @@ const filterItems = [
 ];
 const headerItems = [
   { name: "Name" },
+  { name: "Username" },
   { name: "Role" },
   { name: "Email" },
   { name: "Status" },
@@ -325,7 +327,7 @@ const Users: FC<UsersProps> = ({}) => {
               className="h-[55px] w-[55px] shadow cursor-pointer"
               fallbackType="name"
               avatar={item?.avatar as string}
-              fallback={`${item?.username?.charAt(0)} ${item?.firstname?.charAt(
+              fallback={`${item?.firstname?.charAt(0)} ${item?.surname?.charAt(
                 0
               )}`}
             />
@@ -333,6 +335,9 @@ const Users: FC<UsersProps> = ({}) => {
               {item?.firstname} {item?.surname}
             </Text>
           </Flex>
+        </TableCell>
+        <TableCell className="text-center">
+          <Text>@{item?.username}</Text>
         </TableCell>
         <TableCell className="text-center">
           <Text>{item.accountType?.role?.title}</Text>
@@ -410,7 +415,11 @@ const Users: FC<UsersProps> = ({}) => {
               {/* <UsersAnalytics /> */}
             </Grid>
             <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-              <TextInput
+              <SearchInput
+                onChange={(e) => setValue(e.target.value)}
+                placeholder="Search..."
+              />
+              {/* <TextInput
                 className="bg-background dark:bg-dark-background"
                 icon={() => {
                   return (
@@ -419,7 +428,7 @@ const Users: FC<UsersProps> = ({}) => {
                 }}
                 onValueChange={(e) => setValue(e)}
                 placeholder="Search..."
-              />
+              /> */}
               <SelectCard
                 className="h-[38px] bg-background dark:bg-dark-background"
                 items={filterItems}

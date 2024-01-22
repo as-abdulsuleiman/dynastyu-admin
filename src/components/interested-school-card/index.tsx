@@ -66,7 +66,7 @@ const renderContent = (val: InterestedSchool, router: AppRouterInstance) => {
         variant="outline"
         className="ml-auto"
         onClick={() =>
-          router.push(`/school/${(Number(val?.school?.id), { scroll: true })}`)
+          router.push(`/school/${Number(val?.school?.id)}`, { scroll: true })
         }
       >
         View

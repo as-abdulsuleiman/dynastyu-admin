@@ -50,6 +50,7 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "@/components/ui/menubar";
+import { SearchInput } from "@/components/search-input";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -60,6 +61,7 @@ const filterItems = [
 ];
 const headerItems = [
   { name: "Name" },
+  { name: "Username" },
   { name: "Role" },
   { name: "Email" },
   { name: "Status" },
@@ -146,9 +148,9 @@ const Page: FC<PageProps> = () => {
       where: {
         ...whereClause,
         OR: [
+          { username: { contains: debounced, mode: QueryMode.Insensitive } },
           { firstname: { contains: debounced, mode: QueryMode.Insensitive } },
           { surname: { contains: debounced, mode: QueryMode.Insensitive } },
-          { username: { contains: debounced, mode: QueryMode.Insensitive } },
         ],
       },
     });
@@ -328,7 +330,7 @@ const Page: FC<PageProps> = () => {
               className="h-[55px] w-[55px] shadow cursor-pointer"
               fallbackType="name"
               avatar={item?.avatar as string}
-              fallback={`${item?.username?.charAt(0)} ${item?.firstname?.charAt(
+              fallback={`${item?.firstname?.charAt(0)} ${item?.surname?.charAt(
                 0
               )}`}
             />
@@ -338,7 +340,10 @@ const Page: FC<PageProps> = () => {
           </Flex>
         </TableCell>
         <TableCell className="text-center">
-          <Text>{item.accountType?.role?.title}</Text>
+          <Text>@{item?.username}</Text>
+        </TableCell>
+        <TableCell className="text-center">
+          <Text>{item?.accountType?.role?.title}</Text>
         </TableCell>
         <TableCell className="text-center">
           <Text>{item?.email}</Text>
@@ -412,8 +417,12 @@ const Page: FC<PageProps> = () => {
               <FanCount />
             </Grid>
             <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-              <TextInput
-                className="h-[38px] bg-background dark:bg-dark-background"
+              <SearchInput
+                onChange={(e) => setValue(e.target.value)}
+                placeholder="Search..."
+              />
+              {/* <TextInput
+                className="h-[38px] bg-background dark:bg-dark-background hover:bg-transparent dark:hover:bg-dark-bg-transparent"
                 icon={() => {
                   return (
                     <Icons.search className="tremor-TextInput-icon shrink-0 text-tremor-content-subtle dark:text-dark-tremor-content-subtle h-5 w-5 ml-2.5" />
@@ -421,7 +430,7 @@ const Page: FC<PageProps> = () => {
                 }}
                 onValueChange={(e) => setValue(e)}
                 placeholder="Search..."
-              />
+              /> */}
               <SelectCard
                 className="bg-background dark:bg-dark-background bg-tremor-background dark:bg-dark-tremor-background"
                 items={filterItems}

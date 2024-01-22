@@ -102,11 +102,7 @@ const Page: FC<pageProps> = ({ params }) => {
 
   return (
     <main className="w-full h-full relative">
-      <Button
-        variant="ghost"
-        className="absolute top-[-53px]"
-        onClick={() => router.back()}
-      >
+      <Button variant="ghost" className="mb-6" onClick={() => router.back()}>
         Go Back
       </Button>
 

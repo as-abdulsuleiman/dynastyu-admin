@@ -87,7 +87,7 @@ const SideBar: FC<SideBarProps> = ({}) => {
     },
   ];
   return (
-    <div className="w-full px-6 pt-16 pb-8 h-full shadow-xl">
+    <div className="w-full px-6 pt-6 pb-8 h-full shadow-xl">
       <div className="relative w-full h-full">
         <div className="pt-[60px]">
           {items?.map((val, index) => {
