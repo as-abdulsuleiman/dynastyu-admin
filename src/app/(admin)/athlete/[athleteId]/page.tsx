@@ -16,6 +16,7 @@ import { formatDate } from "@/lib/utils";
 import TranscriptCard from "@/components/transcript-card";
 import HoverCard from "@/components/hover-card";
 import InterestedSchoolCard from "@/components/interested-school-card";
+import Image from "next/image";
 
 interface pageProps {
   params: {
@@ -105,11 +106,7 @@ const Page: FC<pageProps> = ({ params }) => {
 
   return (
     <main className="w-full h-full relative">
-      <Button
-        variant="ghost"
-        className="absolute top-[-53px]"
-        onClick={() => router.back()}
-      >
+      <Button variant="ghost" className="mb-6" onClick={() => router.back()}>
         Go Back
       </Button>
       {loading ? (
@@ -126,11 +123,17 @@ const Page: FC<pageProps> = ({ params }) => {
             </Title>
             <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
           </div>
+          <Text>@{data?.athleteProfile?.user?.username}</Text>
           <Text>
             {data?.athleteProfile?.position?.name} at{" "}
             {data?.athleteProfile?.school?.name}
           </Text>
-          <Text>Classification: {data?.athleteProfile?.school?.division}</Text>
+          <Text>
+            Classification:{" "}
+            {data?.athleteProfile?.graduationYear
+              ? data?.athleteProfile?.graduationYear
+              : "N/A"}
+          </Text>
         </div>
       )}
       <Divider></Divider>
@@ -158,7 +161,9 @@ const Page: FC<pageProps> = ({ params }) => {
         <Card className="bg-background dark:bg-dark-background">
           <div className="flex flex-col items-center justify-center">
             <UserAvatar
-              className="h-[70px] w-[70px] shadow"
+              className="h-[120px] w-[120px] shadow"
+              height={120}
+              width={120}
               fallbackType="icon"
               avatar={data?.athleteProfile?.user.avatar as string}
               fallback={`${data?.athleteProfile?.user?.username?.charAt(
@@ -257,6 +262,31 @@ const Page: FC<pageProps> = ({ params }) => {
           </Callout>
           <Callout
             className="mt-4"
+            title="Huddle"
+            icon={() => {
+              return (
+                <Icons.link className="h-[19px] w-[19px] mr-2" color="teal" />
+              );
+            }}
+            color="teal"
+          >
+            <input
+              onClick={() => {
+                if (data?.athleteProfile?.hudlLink as string) {
+                  window.open(
+                    data?.athleteProfile?.hudlLink as string,
+                    "_blank"
+                  );
+                }
+              }}
+              className="border-none right-0 rounded-none bg-transparent w-full focus-visible:outline-none cursor-pointer focus-visible:ring-0"
+              readOnly
+              type="url"
+              defaultValue={data?.athleteProfile?.hudlLink as string}
+            />
+          </Callout>
+          <Callout
+            className="mt-4"
             title="gpa"
             icon={() => {
               return (
@@ -282,6 +312,32 @@ const Page: FC<pageProps> = ({ params }) => {
           >
             {data?.athleteProfile?.user?.dob &&
               formatDate(data?.athleteProfile?.user?.dob)}
+          </Callout>
+          <Callout
+            className="mt-4"
+            title="Country"
+            icon={() => {
+              return (
+                <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+              );
+            }}
+            color="teal"
+          >
+            <span className="flex flex-row items-center">
+              <>{data?.athleteProfile?.country?.name}</>
+              {data?.athleteProfile?.country?.flag ? (
+                <Image
+                  alt="country_flag"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
+                  quality={100}
+                  priority
+                  width={30}
+                  height={30}
+                  src={data?.athleteProfile?.country?.flag}
+                  className="h-[30px] w-[30px] rounded-full ml-auto object-cover"
+                />
+              ) : null}
+            </span>
           </Callout>
         </Card>
         <SchoolCard

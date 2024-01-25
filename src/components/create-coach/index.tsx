@@ -4,14 +4,8 @@
 
 import { FC, useCallback, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogOverlay,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { observer } from "mobx-react-lite";
+
 import { Input } from "@/components/ui/input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -19,42 +13,76 @@ import { useForm } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import AvatarUploader from "@/components/avatar-uploader";
 import { CoachValidator } from "@/lib/validators/coach";
-import { useGetAccountTypesQuery } from "@/services/graphql";
+import {
+  useGetAccountTypesQuery,
+  useGetCoachQuery,
+  useRegisterCoachMutation,
+  useUpdateCoachMutation,
+} from "@/services/graphql";
 import ComboBoxCard from "../combobox-card";
 import SchoolDropdown from "../school-dropdown";
 import { coachTitleOptions } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { Icons } from "../Icons";
-
+import { projectAuth } from "@/services/firebase/config";
+import { useRootStore } from "@/mobx";
+import { sendPasswordResetEmail } from "firebase/auth";
+import { Title, Text, Divider } from "@tremor/react";
+import { SelectCountry } from "../select-country";
+import SelectCity from "../select-city";
+import SelectState from "../select-state";
+import { useRouter } from "next/navigation";
 type FormData = yup.InferType<typeof CoachValidator>;
 
 interface CreateCoachProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onCreateCoach: (data: FormData) => void;
+  params: {
+    action: string;
+  };
+  searchParams: {
+    coach: number;
+  };
 }
 
-const CreateCoach: FC<CreateCoachProps> = ({
-  isOpen,
-  onClose,
-  onCreateCoach,
-}) => {
+const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
   const { toast } = useToast();
-  const { data: accountTypes } = useGetAccountTypesQuery({
+  const router = useRouter();
+
+  const [openTitle, setOpenTitle] = useState<boolean>(false);
+  const [openAccountType, setOpenAccountType] = useState<boolean>(false);
+  const [openSchool, setOpenSchool] = useState<boolean>(false);
+  const [selectedCountryId, setSelectedCountryId] = useState<number | null>(0);
+  const [selectedStateId, setSelectedStateId] = useState<number | null>(0);
+  const [registerCoach] = useRegisterCoachMutation();
+  const [updateCoach] = useUpdateCoachMutation();
+  const { action } = params;
+  const editType = action === "edit" ?? false;
+  const fetchCoach = editType && searchParams?.coach;
+
+  const { data: coachData } = useGetCoachQuery({
     variables: {
       where: {
-        id: {
-          equals: 3,
-        },
+        id: searchParams?.coach,
       },
     },
+    skip: !fetchCoach,
   });
+
+  const { data: accountTypes, loading: accaccountTypeLoading } =
+    useGetAccountTypesQuery({
+      variables: {
+        where: {
+          id: {
+            equals: 3,
+          },
+        },
+      },
+    });
 
   const {
     register,
     handleSubmit,
     setValue,
-    reset,
+    watch,
     getValues,
     setFocus,
     formState: { errors, isSubmitting, isValid },
@@ -70,17 +98,52 @@ const CreateCoach: FC<CreateCoachProps> = ({
       canReceiveMessages: false,
       accountType: {},
       username: "",
-      schoolId: "",
+      school: {},
+      state: "",
+      city: "",
+      country: "",
+    },
+    values: {
+      avatar: coachData?.coachProfile?.user?.avatar || "",
+      firstName: coachData?.coachProfile?.user?.firstname || "",
+      email: coachData?.coachProfile?.user?.email || "",
+      lastName: coachData?.coachProfile?.user?.surname || "",
+      username: coachData?.coachProfile?.user?.username || "",
+      title: coachData?.coachProfile?.title || "",
+      canReceiveMessages: coachData?.coachProfile?.canReceiveMessages || false,
+      country: coachData?.coachProfile?.country?.abbreviation || "",
+      state: coachData?.coachProfile?.state || "",
+      city: coachData?.coachProfile?.city || "",
+      school:
+        {
+          id: coachData?.coachProfile?.schoolId,
+          name: coachData?.coachProfile?.school.name,
+        } || {},
+      accountType:
+        {
+          accountTypeId: coachData?.coachProfile?.user?.accountType?.id,
+          roleId: coachData?.coachProfile?.user?.accountType?.role?.id,
+        } || {},
+    },
+    resetOptions: {
+      keepDirtyValues: true, // user-interacted input will be retained
+      keepErrors: true, // input errors will be retained with value update
     },
   });
-  const [submitting, setSubmitting] = useState<boolean>(false);
-  const [openTitle, setOpenTitle] = useState<boolean>(false);
-  const [openAccountType, setOpenAccountType] = useState<boolean>(false);
-  const [openSchool, setOpenSchool] = useState<boolean>(false);
-  const [selectedAccountTypes, setSelectedAccountTypes] = useState<any>({});
-  const [selectedTitle, setSelectedTitle] = useState<any>({});
-  const [selectedSchool, setSelectedSchool] = useState<any>({});
-  const { canReceiveMessages } = getValues();
+
+  const watchAllFields = watch();
+  const {
+    canReceiveMessages,
+    title,
+    accountType,
+    school,
+    avatar,
+    country,
+    state,
+    city,
+  } = getValues();
+
+  const countryInput = register("country", { required: true });
 
   const accountTypeOptions = useMemo(() => {
     return accountTypes?.accountTypes?.map((a: any) => {
@@ -102,209 +165,353 @@ const CreateCoach: FC<CreateCoachProps> = ({
     [setValue]
   );
 
+  const updateCoachFn = (values: FormData) => {
+    return updateCoach({
+      variables: {
+        where: {
+          id: searchParams?.coach,
+        },
+        data: {
+          title: { set: values?.title },
+          canReceiveMessages: { set: values?.canReceiveMessages },
+          city: { set: values?.city },
+          state: { set: values?.state },
+          user: {
+            update: {
+              firstname: { set: values?.firstName },
+              surname: { set: values?.lastName },
+              email: { set: values?.email },
+              username: { set: values?.username },
+              avatar: { set: values?.avatar },
+              accountType: {
+                connect: {
+                  id: Number(values?.accountType?.accountTypeId),
+                },
+              },
+              role: {
+                connect: { id: Number(values?.accountType?.roleId) },
+              },
+            },
+          },
+          country: {
+            connect: {
+              abbreviation: values?.country?.toLowerCase(),
+            },
+          },
+          school: {
+            connect: {
+              id: values?.school?.id,
+            },
+          },
+        },
+      },
+    });
+  };
+
+  const createCoach = (values: FormData) => {
+    return registerCoach({
+      variables: {
+        data: {
+          firebaseUid: "",
+          firstname: values.firstName,
+          surname: values.lastName,
+          email: values.email,
+          username: values.username,
+          avatar: values.avatar,
+          accountType: {
+            connect: {
+              id: Number(values.accountType?.accountTypeId),
+            },
+          },
+          role: {
+            connect: { id: Number(values?.accountType?.roleId) },
+          },
+          coachProfile: {
+            create: {
+              title: values.title,
+              canReceiveMessages: values.canReceiveMessages,
+              city: values?.city,
+              state: values?.state,
+              school: { connect: { id: Number(values?.school?.id) } },
+              country: {
+                connect: {
+                  abbreviation: values?.country?.toLowerCase(),
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  };
+
   const onSubmit = async (values: FormData) => {
-    setSubmitting(true);
     try {
-      await onCreateCoach(values);
+      const payload = await CoachValidator.validate(values);
+      const updateType = editType && searchParams?.coach;
+      if (updateType) {
+        await updateCoachFn(payload);
+        toast({
+          title: "Caoch updated",
+          description: "You have successfully updated a coach",
+          variant: "default",
+        });
+      } else {
+        await createCoach(payload);
+        await sendPasswordResetEmail(projectAuth, values?.email);
+        toast({
+          title: "Coach successfully created.",
+          description: `A password reset link has been sent to ${values?.email} to complete the process.`,
+          variant: "default",
+        });
+      }
+      router.push(`/coaches`);
     } catch (error: any) {
       toast({
         title: "Something went wrong.",
-        description: `${
-          error.message ||
-          "Could not successfully created a coach. Please try again."
-        }`,
+        description: `${error.message}`,
         variant: "destructive",
       });
     } finally {
-      setSubmitting(false);
     }
   };
 
   return (
-    <Dialog
-      defaultOpen={false}
-      open={isOpen}
-      onOpenChange={() => {
-        reset();
-        setSelectedAccountTypes({});
-        setSelectedSchool({});
-        setSelectedTitle({});
-        onClose();
-      }}
-    >
-      <DialogTrigger asChild>
-        <Button className="mt-2 md:mt-0">Add New Coach</Button>
-      </DialogTrigger>
-      <DialogOverlay>
-        <DialogContent
-          onOpenAutoFocus={(e) => e.preventDefault()}
-          onPointerDownOutside={(e) => e.preventDefault()}
-          className="container rounded-xl sm:rounded-xl mx-auto max-w-2xl px-[16px] md:px-[2rem] z-[999] static translate-x-0 translate-y-0 sm:fixed sm:translate-x-[-50%] sm:translate-y-[-50%] py-[30px]"
-        >
-          <DialogHeader>
-            <DialogTitle className="text-center text-xl">Add Coach</DialogTitle>
-          </DialogHeader>
-          <form
-            id="create_coach"
-            name="create_coach"
-            onSubmit={handleSubmit(onSubmit)}
+    <main className="w-full h-full">
+      <Button variant="ghost" className="mb-6" onClick={() => router.back()}>
+        Go Back
+      </Button>
+      <div className="flex flex-col">
+        <div className="flex flex-row items-center">
+          <Title>{fetchCoach ? `Edit Coach Profile` : " Add New Coach"}</Title>
+          <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+        </div>
+        <Text>Coach Overview</Text>
+      </div>
+      <Divider></Divider>
+      <form
+        id="create_coach"
+        name="create_coach"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className="grid grid-cols-12 gap-6 py-2">
+          <div className="col-span-12 place-self-center">
+            <AvatarUploader
+              height={120}
+              width={120}
+              imgUrl={avatar}
+              id="coaches_profile"
+              onUploadSuccess={handleAvatarUploadSuccess}
+              storageLocation="coaches"
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-12 gap-6 py-2">
+          <div className="col-span-12 sm:col-span-6">
+            <Input
+              id="lastname"
+              label="Last Name"
+              className="bg-transparent"
+              placeholder="Your Last Name"
+              error={errors.lastName?.message}
+              {...register("lastName", { required: true })}
+            />
+          </div>
+          <div className="col-span-12 sm:col-span-6">
+            <Input
+              id="firstname"
+              placeholder="Your First Name"
+              label="First Name"
+              className="bg-transparent"
+              error={errors?.firstName?.message}
+              {...register("firstName", { required: true })}
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-12 gap-6 py-2">
+          <div className="col-span-12 sm:col-span-6">
+            <Input
+              id="username"
+              placeholder="Your Username"
+              label="Username"
+              type="text"
+              className="bg-transparent"
+              error={errors?.username?.message}
+              {...register("username", { required: true })}
+            />
+          </div>
+          <div className="col-span-12 sm:col-span-6">
+            <Input
+              id="email"
+              label="Email"
+              className="bg-transparent"
+              placeholder="Your Email"
+              error={errors.email?.message}
+              {...register("email", { required: true })}
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-12 gap-6 py-2">
+          <div className="col-span-12 sm:col-span-6">
+            <ComboBoxCard
+              loading={accaccountTypeLoading}
+              scrollAreaClass="h-[100px]"
+              id="account_type"
+              onBlur={() => setFocus("accountType", { shouldSelect: true })}
+              valueKey="id"
+              displayKey="label"
+              IdKey="label"
+              label="Account Type"
+              isOpen={openAccountType}
+              error={
+                errors?.accountType?.accountTypeId?.message ||
+                errors?.accountType?.roleId?.message
+              }
+              onClose={() => setOpenAccountType(!openAccountType)}
+              items={accountTypeOptions as any}
+              selectedValue={{ id: accountType?.accountTypeId }}
+              onSelectValue={(item) => {
+                setValue("accountType", {
+                  accountTypeId: item?.id,
+                  roleId: item?.roleId,
+                });
+              }}
+            />
+          </div>
+          <div className="col-span-12 sm:col-span-6">
+            <ComboBoxCard
+              valueKey="value"
+              displayKey="label"
+              IdKey="label"
+              label="Title"
+              id="coach_title"
+              isOpen={openTitle}
+              scrollAreaClass="h-72"
+              hasSearch
+              error={errors?.title?.message}
+              onClose={() => setOpenTitle(!openTitle)}
+              items={coachTitleOptions}
+              selectedValue={{ value: title }}
+              onSelectValue={(item) => {
+                setValue("title", item?.label);
+              }}
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-12 gap-6 py-2">
+          <div className="col-span-12 sm:col-span-6">
+            <SchoolDropdown
+              scrollAreaClass="h-72"
+              hasSearch={true}
+              id="schoolId"
+              // onBlur={() => setFocus("school", { shouldSelect: true })}
+              onClose={() => setOpenSchool(!openSchool)}
+              isOpen={openSchool}
+              selectedValue={{ value: school?.name }}
+              onSelectValue={(school) => {
+                setValue("school", {
+                  id: school?.id,
+                  name: school?.name,
+                });
+              }}
+              label="School"
+              error={errors.school?.id?.message}
+              whereClause={{
+                id: { equals: coachData?.coachProfile?.schoolId },
+                schoolTypeId: {
+                  equals: 1,
+                },
+              }}
+            />
+          </div>
+          <div className="col-span-12 sm:col-span-6">
+            <SelectCountry
+              searchPlaceholder="Search country..."
+              onSelectCountryId={(item) => {
+                setSelectedCountryId(item);
+              }}
+              selectedCountry={country?.toUpperCase()}
+              id="country"
+              label="Country"
+              onBlur={countryInput.onBlur}
+              ref={countryInput.ref}
+              name={countryInput.name}
+              onSelectCountry={(country) => setValue("country", country?.value)}
+              // {...register("country", { required: true })}
+              error={errors?.country?.message}
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-12 gap-6 py-2">
+          <div className="col-span-12 sm:col-span-6">
+            <SelectState
+              id="state"
+              label="State"
+              name="state"
+              searchPlaceholder="Search state..."
+              selectedState={state as string}
+              error={errors?.state?.message}
+              countryId={selectedCountryId || 0}
+              onSelectState={(state) => setValue("state", state?.label)}
+              selectStateId={(item) => setSelectedStateId(item)}
+            />
+          </div>
+          <div className="col-span-12 sm:col-span-6">
+            <SelectCity
+              id="city"
+              label="City"
+              searchPlaceholder="Search city..."
+              name="city"
+              selectedCity={city as string}
+              countryId={selectedCountryId || 0}
+              stateId={selectedStateId || 0}
+              error={errors?.city?.message}
+              onSelectCity={(city) => setValue("city", city?.label)}
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-12 gap-6 py-2 pt-6">
+          <div className="col-span-12 sm:col-span-6" id="can_receive_messages">
+            <div className="items-top flex space-x-2">
+              <Checkbox
+                checked={canReceiveMessages}
+                onCheckedChange={(e: boolean) =>
+                  setValue("canReceiveMessages", e)
+                }
+                id="can_receive_messages"
+                name="can_receive_messages"
+              />
+              <div className="grid gap-1.5 leading-none">
+                <label
+                  htmlFor="can_receive_messages"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Can recieve and message
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="w-full">
+          <Button
+            variant="default"
+            disabled={isSubmitting}
+            className="w-full mt-6"
+            type="submit"
           >
-            <div className="grid grid-cols-12 gap-6 py-2">
-              <div className="col-span-12 place-self-center	">
-                <AvatarUploader
-                  id="coaches_profile"
-                  onUploadSuccess={handleAvatarUploadSuccess}
-                  storageLocation="coaches"
-                />
+            {isSubmitting ? (
+              <div className="flex flex-row items-center justify-center">
+                <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Loading...
               </div>
-              <div className="col-span-12" id="username">
-                <Input
-                  id="username"
-                  placeholder="Your Username"
-                  label="Username"
-                  type="text"
-                  className="bg-transparent"
-                  error={errors.username?.message}
-                  {...register("username", { required: true })}
-                />
-              </div>
-              <div className="col-span-12" id="firstname">
-                <Input
-                  id="firstname"
-                  placeholder="Your First Name"
-                  label="First Name"
-                  className="bg-transparent"
-                  error={errors.firstName?.message}
-                  {...register("firstName", { required: true })}
-                />
-              </div>
-              <div className="col-span-12">
-                <Input
-                  id="lastname"
-                  label="Last Name"
-                  className="bg-transparent"
-                  placeholder="Your Last Name"
-                  error={errors.lastName?.message}
-                  {...register("lastName", { required: true })}
-                />
-              </div>
-              <div className="col-span-12" id="email">
-                <Input
-                  id="email"
-                  label="Email"
-                  className="bg-transparent"
-                  placeholder="Your Email"
-                  error={errors.email?.message}
-                  {...register("email", { required: true })}
-                />
-              </div>
-              <div className="col-span-12" id="account_type">
-                <ComboBoxCard
-                  scrollAreaClass="h-[100px]"
-                  id="account_type"
-                  onBlur={() => setFocus("accountType", { shouldSelect: true })}
-                  valueKey="value"
-                  displayKey="label"
-                  IdKey="label"
-                  label="Account Type"
-                  isOpen={openAccountType}
-                  error={
-                    errors?.accountType?.accountTypeId?.message ||
-                    errors?.accountType?.roleId?.message
-                  }
-                  onClose={() => setOpenAccountType(!openAccountType)}
-                  items={accountTypeOptions as any}
-                  selectedValue={selectedAccountTypes}
-                  onSelectValue={(item) => {
-                    setSelectedAccountTypes(item);
-                    setValue("accountType", {
-                      accountTypeId: item?.id,
-                      roleId: item?.roleId,
-                    });
-                  }}
-                />
-              </div>
-              <div className="col-span-12" id="coach_title">
-                <ComboBoxCard
-                  valueKey="value"
-                  displayKey="label"
-                  IdKey="label"
-                  label="Title"
-                  id="coach_title"
-                  isOpen={openTitle}
-                  scrollAreaClass="h-72"
-                  hasSearch
-                  error={errors?.title?.message}
-                  onClose={() => setOpenTitle(!openTitle)}
-                  onBlur={() => setFocus("title", { shouldSelect: true })}
-                  items={coachTitleOptions}
-                  selectedValue={selectedTitle}
-                  onSelectValue={(item) => {
-                    setSelectedTitle(item);
-                    setValue("title", item?.value);
-                  }}
-                />
-              </div>
-              <div className="col-span-12" id="schoolId">
-                <SchoolDropdown
-                  scrollAreaClass="h-72"
-                  hasSearch={true}
-                  id="schoolId"
-                  onBlur={() => setFocus("schoolId", { shouldSelect: true })}
-                  onClose={() => setOpenSchool(!openSchool)}
-                  isOpen={openSchool}
-                  selectedValue={selectedSchool}
-                  onSelectValue={(school) => {
-                    setSelectedSchool(school);
-                    setValue("schoolId", school?.id);
-                  }}
-                  label="School"
-                  error={errors?.schoolId?.message}
-                  whereClause={{
-                    schoolTypeId: {
-                      equals: 1,
-                    },
-                  }}
-                />
-              </div>
-              <div className="col-span-12" id="can_receive_messages">
-                <div className="items-top flex space-x-2">
-                  <Checkbox
-                    defaultChecked={canReceiveMessages}
-                    onCheckedChange={(e: boolean) =>
-                      setValue("canReceiveMessages", e)
-                    }
-                    id="can_receive_messages"
-                    name="can_receive_messages"
-                  />
-                  <div className="grid gap-1.5 leading-none">
-                    <label
-                      htmlFor="can_receive_messages"
-                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      Can recieve and message
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="w-full">
-              <Button variant="default" className="w-full mt-6" type="submit">
-                {submitting || isSubmitting ? (
-                  <div className="flex flex-row items-center justify-center">
-                    <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Loading...
-                  </div>
-                ) : (
-                  "Save"
-                )}
-              </Button>
-            </div>
-          </form>
-        </DialogContent>
-      </DialogOverlay>
-    </Dialog>
+            ) : (
+              <>{fetchCoach ? "Save" : "Submit"}</>
+            )}
+          </Button>
+        </div>
+      </form>
+    </main>
   );
 };
 
-export default CreateCoach;
+export default observer(CreateCoach);

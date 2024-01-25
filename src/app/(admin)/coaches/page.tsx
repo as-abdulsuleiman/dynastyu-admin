@@ -54,6 +54,8 @@ import UserAvatar from "@/components/user-avatar";
 import { observer } from "mobx-react-lite";
 import { Icons } from "@/components/Icons";
 import { useRootStore } from "@/mobx";
+import { SearchInput } from "@/components/search-input";
+import { Button } from "@/components/ui/button";
 interface CoachesProps {}
 
 enum FilterEnum {
@@ -75,6 +77,7 @@ const filterItems = [
 ];
 const headerItems = [
   { name: "Name" },
+  { name: "Username" },
   { name: "Email" },
   { name: "Coach Title" },
   { name: "Status" },
@@ -170,6 +173,16 @@ const Coaches: FC<CoachesProps> = ({}) => {
           {
             user: {
               is: {
+                username: {
+                  contains: debounced,
+                  mode: QueryMode.Insensitive,
+                },
+              },
+            },
+          },
+          {
+            user: {
+              is: {
                 firstname: {
                   contains: debounced,
                   mode: QueryMode.Insensitive,
@@ -208,57 +221,57 @@ const Coaches: FC<CoachesProps> = ({}) => {
     return lastPostInResults?.id;
   }, [coachesData?.coachProfiles]);
 
-  const handleCreateCoach = async (values: FormData) => {
-    try {
-      const response = await registerCoach({
-        variables: {
-          data: {
-            firebaseUid: "",
-            firstname: values.firstName,
-            surname: values.lastName,
-            email: values.email,
-            username: values.username,
-            avatar: values.avatar,
-            accountType: {
-              connect: {
-                id: Number(values.accountType?.accountTypeId),
-              },
-            },
-            role: {
-              connect: { id: Number(values?.accountType?.roleId) },
-            },
-            coachProfile: {
-              create: {
-                title: values.title,
-                canReceiveMessages: values.canReceiveMessages,
-                school: { connect: { id: Number(values.schoolId) } },
-              },
-            },
-          },
-        },
-      });
-      if (response.data?.registerCoach) {
-        await sendPasswordResetEmail(projectAuth, values?.email);
-        // toast({
-        //   title: "Coach successfully created.",
-        //   description: `A password reset link has been sent to ${values.email} to complete the process.`,
-        //   variant: "default",
-        // });
-        const response = await getCoaches({});
-        await refetch();
-        setCoaches(response.data?.coachProfiles as any);
-        setIsOpen(!isOpen);
-      }
-    } catch (error) {
-      toast({
-        title: "Something went wrong.",
-        description: `${
-          error || "Could not successfully created a coach. Please try again."
-        }`,
-        variant: "destructive",
-      });
-    }
-  };
+  // const handleCreateCoach = async (values: FormData) => {
+  //   try {
+  //     const response = await registerCoach({
+  //       variables: {
+  //         data: {
+  //           firebaseUid: "",
+  //           firstname: values.firstName,
+  //           surname: values.lastName,
+  //           email: values.email,
+  //           username: values.username,
+  //           avatar: values.avatar,
+  //           accountType: {
+  //             connect: {
+  //               id: Number(values.accountType?.accountTypeId),
+  //             },
+  //           },
+  //           role: {
+  //             connect: { id: Number(values?.accountType?.roleId) },
+  //           },
+  //           coachProfile: {
+  //             create: {
+  //               title: values.title,
+  //               canReceiveMessages: values.canReceiveMessages,
+  //               school: { connect: { id: Number(values.schoolId) } },
+  //             },
+  //           },
+  //         },
+  //       },
+  //     });
+  //     if (response.data?.registerCoach) {
+  //       await sendPasswordResetEmail(projectAuth, values?.email);
+  //       // toast({
+  //       //   title: "Coach successfully created.",
+  //       //   description: `A password reset link has been sent to ${values.email} to complete the process.`,
+  //       //   variant: "default",
+  //       // });
+  //       const response = await getCoaches({});
+  //       await refetch();
+  //       setCoaches(response.data?.coachProfiles as any);
+  //       setIsOpen(!isOpen);
+  //     }
+  //   } catch (error) {
+  //     toast({
+  //       title: "Something went wrong.",
+  //       description: `${
+  //         error || "Could not successfully created a coach. Please try again."
+  //       }`,
+  //       variant: "destructive",
+  //     });
+  //   }
+  // };
 
   const handleDeleteCoach = async (item: any) => {
     try {
@@ -383,6 +396,10 @@ const Coaches: FC<CoachesProps> = ({}) => {
     }
   };
 
+  const handleEditCoach = (item: any) => {
+    router.push(`/coaches/edit?coach=${item?.id}`);
+  };
+
   const fetchNext = () => {
     fetchMore({
       variables: {
@@ -448,6 +465,10 @@ const Coaches: FC<CoachesProps> = ({}) => {
         },
       },
       {
+        name: "Edit Coach",
+        onclick: () => handleEditCoach(item),
+      },
+      {
         name: `${item?.user?.isActive ? "Deactivate" : "Activate"} Coach`,
         onclick: async () => await handleActiveCoach(item),
       },
@@ -479,6 +500,9 @@ const Coaches: FC<CoachesProps> = ({}) => {
               {item?.user?.firstname} {item?.user?.surname}
             </Text>
           </Flex>
+        </TableCell>
+        <TableCell className="text-center">
+          <Text>@{item?.user?.username}</Text>
         </TableCell>
         <TableCell className="text-center">
           <Text>{item?.user?.email}</Text>
@@ -575,11 +599,14 @@ const Coaches: FC<CoachesProps> = ({}) => {
           <Text>Coaches Overview</Text>
         </div>
         <div className="ml-auto justify-end">
-          <CreateCoach
+          <Button onClick={() => router.push("/coaches/new")}>
+            Add New Coach
+          </Button>
+          {/* <CreateCoach
             onCreateCoach={(values) => handleCreateCoach(values)}
             isOpen={isOpen}
             onClose={() => setIsOpen(!isOpen)}
-          />
+          /> */}
         </div>
       </div>
       <Divider></Divider>
@@ -590,7 +617,11 @@ const Coaches: FC<CoachesProps> = ({}) => {
               <CoachesCount />
             </Grid>
             <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-              <TextInput
+              <SearchInput
+                onChange={(e) => setValue(e.target.value)}
+                placeholder="Search..."
+              />
+              {/* <TextInput
                 className="h-[38px] bg-background dark:bg-dark-background"
                 icon={() => {
                   return (
@@ -599,7 +630,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
                 }}
                 onValueChange={(e) => setValue(e)}
                 placeholder="Search for coach..."
-              />
+              /> */}
               <SelectCard
                 className="ring-0 bg-background dark:bg-dark-background"
                 items={filterItems}

@@ -9,6 +9,7 @@ import {
   QueryMode,
   SchoolWhereInput,
   SortOrder,
+  useDeleteSchoolMutation,
   useGetSchoolsQuery,
 } from "@/services/graphql";
 import { useDebouncedValue } from "@mantine/hooks";
@@ -41,10 +42,13 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar";
 import CreateSchool from "@/components/create-school";
+import { SearchInput } from "@/components/search-input";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 
 const filterItems = [
-  { name: "High School", value: "High School" },
   { name: "College", value: "College" },
+  { name: "High School", value: "High School" },
 ];
 const headerItems = [
   { name: "Name" },
@@ -61,14 +65,15 @@ enum FilterEnum {
 interface SchoolsProps {}
 
 const Schools: FC<SchoolsProps> = ({}) => {
+  const { toast } = useToast();
   const router = useRouter();
-  const [status, setStatus] = useState<string>("High School");
+  const [status, setStatus] = useState<string>("College");
   const [value, setValue] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isActivating, setIsactivating] = useState<boolean>();
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [debounced] = useDebouncedValue(value, 300);
-
+  const [deleteSchool] = useDeleteSchoolMutation();
   const {
     data: schools,
     loading,
@@ -76,7 +81,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
     refetch,
   } = useGetSchoolsQuery({
     variables: {
-      where: { schoolTypeId: { equals: 1 } },
+      where: { schoolTypeId: { equals: 2 } },
       orderBy: {
         createdAt: SortOrder.Desc,
       },
@@ -96,7 +101,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
       };
     } else {
       return {
-        schoolTypeId: { equals: 1 },
+        schoolTypeId: { equals: 2 },
       };
     }
   }, [status]);
@@ -174,6 +179,40 @@ const Schools: FC<SchoolsProps> = ({}) => {
     });
   };
 
+  const handleDeleteSchool = async (school: any) => {
+    try {
+      const response = await deleteSchool({
+        variables: {
+          where: {
+            id: Number(school?.id),
+          },
+        },
+      });
+      if (response.data?.deleteOneSchool) {
+        // await refetch();
+        toast({
+          title: "School successfully deleted.",
+          description: `${school?.name} has been deleted.`,
+          variant: "default",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not successfully created a coach. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleEditSchool = (item: any) => {
+    if (item?.schoolType?.name === "College") {
+      router.push(`/schools/edit?school=${item?.id}`);
+    }
+  };
+
   const renderItems = ({ item, id }: { item: any; id: any }) => {
     const userItems = [
       {
@@ -183,11 +222,11 @@ const Schools: FC<SchoolsProps> = ({}) => {
       },
       {
         name: `Edit School`,
-        // onclick: async () => await handleActiveUser(item),
+        onclick: () => handleEditSchool(item),
       },
       {
         name: "Delete School",
-        // onclick: async () => await handleDeleteUser(item),
+        onclick: async () => await handleDeleteSchool(item),
       },
     ];
     return (
@@ -256,7 +295,10 @@ const Schools: FC<SchoolsProps> = ({}) => {
           <Text>Schools Overview</Text>
         </div>
         <div className="ml-auto justify-end">
-          <CreateSchool isOpen={isOpen} onClose={() => setIsOpen(!isOpen)} />
+          <Button onClick={() => router.push("/schools/new")}>
+            Add New School
+          </Button>
+          {/* <CreateSchool isOpen={isOpen} onClose={() => setIsOpen(!isOpen)} /> */}
         </div>
       </div>
       <Divider></Divider>
@@ -267,7 +309,11 @@ const Schools: FC<SchoolsProps> = ({}) => {
               <SchoolsCount whereClause={whereClause} title={status} />
             </Grid>
             <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-              <TextInput
+              <SearchInput
+                onChange={(e) => setValue(e.target.value)}
+                placeholder="Search..."
+              />
+              {/* <TextInput
                 className="h-[38px] bg-background dark:bg-dark-background"
                 icon={() => {
                   return (
@@ -276,10 +322,10 @@ const Schools: FC<SchoolsProps> = ({}) => {
                 }}
                 onValueChange={(e) => setValue(e)}
                 placeholder="Search..."
-              />
+              /> */}
               <SelectCard
                 className="bg-background dark:bg-dark-background"
-                defaultValue={"High Schools"}
+                defaultValue="College"
                 items={filterItems}
                 selectedItem={status}
                 onValueChange={(e) => {

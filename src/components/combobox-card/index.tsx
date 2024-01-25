@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "../ui/scroll-area";
 import { observer } from "mobx-react-lite";
+import { Icons } from "../Icons";
 
 interface ComboBoxCardProps {
   scrollAreaClass?: string;
@@ -28,15 +29,19 @@ interface ComboBoxCardProps {
   IdKey?: string;
   valueKey: string;
   items: any[];
+  iconKey?: string;
   error?: string;
   label?: string;
   isOpen: boolean;
   placeholder?: string;
+  searchPlaceholder?: string;
   hasSearch?: boolean;
   onClose: () => void;
   selectedValue: any;
   onSelectValue: (item: any | null) => void;
   onBlur?: React.FocusEventHandler<HTMLInputElement> | undefined;
+  loading?: boolean;
+  disabled?: boolean;
 }
 
 const ComboBoxCard: FC<ComboBoxCardProps> = ({
@@ -53,9 +58,16 @@ const ComboBoxCard: FC<ComboBoxCardProps> = ({
   valueKey = "value",
   placeholder,
   selectedValue,
+  disabled,
   onSelectValue,
+  loading,
+  iconKey = "emoji",
   scrollAreaClass,
+  searchPlaceholder,
 }) => {
+  const displaySelectedItem = items?.find(
+    (item: Record<string, any>) => item[valueKey] === selectedValue[valueKey]
+  );
   return (
     <div className="w-full relative" onBlur={onBlur}>
       {label ? (
@@ -68,7 +80,7 @@ const ComboBoxCard: FC<ComboBoxCardProps> = ({
         </label>
       ) : null}
       <Popover open={isOpen} onOpenChange={onClose}>
-        <PopoverTrigger asChild>
+        <PopoverTrigger asChild disabled={disabled}>
           <Button
             variant="outline"
             role="combobox"
@@ -76,10 +88,12 @@ const ComboBoxCard: FC<ComboBoxCardProps> = ({
             className="w-[100%] max-w-[100%] mt-1.5 min-w-[100%] justify-between h-[40px]"
           >
             {selectedValue[valueKey] ? (
-              items?.find(
-                (item: Record<string, any>) =>
-                  item[valueKey] === selectedValue[valueKey]
-              )?.[displayKey]
+              <>
+                {displaySelectedItem?.[iconKey] ? (
+                  <>{displaySelectedItem?.[iconKey]} </>
+                ) : null}{" "}
+                {displaySelectedItem?.[displayKey]}
+              </>
             ) : (
               <>{placeholder || "Select one..."}</>
             )}
@@ -96,41 +110,57 @@ const ComboBoxCard: FC<ComboBoxCardProps> = ({
               {hasSearch ? (
                 <>
                   <CommandInput
-                    placeholder="Search framework..."
+                    placeholder={searchPlaceholder}
                     className="h-9 w-[100%] max-w-[100%] min-w-[100%]"
                   />
-                  <CommandEmpty>No result found.</CommandEmpty>
+                  {!loading && <CommandEmpty>No result found.</CommandEmpty>}
                 </>
               ) : null}
               <CommandGroup className="w-[100%] max-w-[100%] min-w-[100%]">
-                {items?.map((item: Record<string, any>, id) => {
-                  return (
-                    <CommandItem
-                      className="capitalize"
-                      key={item?.id || item[IdKey] || id}
-                      value={item[valueKey]}
-                      onSelect={(currentValue) => {
-                        onSelectValue(
-                          currentValue ===
-                            selectedValue[valueKey]?.toLowerCase()
-                            ? ""
-                            : item
-                        );
-                        onClose();
-                      }}
-                    >
-                      {item[displayKey]}
-                      <CheckIcon
-                        className={cn(
-                          "ml-auto h-4 w-4",
-                          selectedValue[valueKey] === item[valueKey]
-                            ? "opacity-100"
-                            : "opacity-0"
-                        )}
-                      />
-                    </CommandItem>
-                  );
-                })}
+                {loading ? (
+                  <div className="flex items-center justify-center py-3">
+                    <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </div>
+                ) : (
+                  <>
+                    {items?.map((item: Record<string, any>, id) => {
+                      let valueType: string | number;
+                      if (typeof selectedValue[valueKey] == "string") {
+                        valueType = selectedValue[valueKey]?.toLowerCase();
+                      } else {
+                        valueType = selectedValue[valueKey];
+                      }
+                      return (
+                        <CommandItem
+                          className="capitalize"
+                          key={item?.id || item[IdKey] || id}
+                          value={item[valueKey]}
+                          onSelect={(currentValue) => {
+                            onSelectValue(
+                              currentValue === valueType ? "" : item
+                            );
+                            onClose();
+                          }}
+                        >
+                          <>
+                            <>{item[iconKey] ? <>{item[iconKey]} </> : null}</>
+                            {""}
+                            {item[displayKey]}
+                          </>
+                          <CheckIcon
+                            className={cn(
+                              "ml-auto h-4 w-4",
+                              selectedValue[valueKey] === item[valueKey]
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                        </CommandItem>
+                      );
+                    })}
+                  </>
+                )}
               </CommandGroup>
             </Command>
           </ScrollArea>

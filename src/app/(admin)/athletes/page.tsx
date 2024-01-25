@@ -47,6 +47,7 @@ import {
 import UserAvatar from "@/components/user-avatar";
 import { useToast } from "@/hooks/use-toast";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
+import { SearchInput } from "@/components/search-input";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -59,6 +60,7 @@ const filterItems = [
 
 const headerItems = [
   { name: "Name" },
+  { name: "Username" },
   { name: "Email" },
   { name: "Position" },
   { name: "Status" },
@@ -157,6 +159,16 @@ const Athletes: FC<AthletesProps> = ({}) => {
       where: {
         ...whereClause,
         OR: [
+          {
+            user: {
+              is: {
+                username: {
+                  contains: debounced,
+                  mode: QueryMode.Insensitive,
+                },
+              },
+            },
+          },
           {
             user: {
               is: {
@@ -422,6 +434,9 @@ const Athletes: FC<AthletesProps> = ({}) => {
           </Flex>
         </TableCell>
         <TableCell className="text-center">
+          <Text>@{item?.user?.username}</Text>
+        </TableCell>
+        <TableCell className="text-center">
           <Text>{item?.user?.email}</Text>
         </TableCell>
         <TableCell className="text-center">
@@ -523,7 +538,11 @@ const Athletes: FC<AthletesProps> = ({}) => {
               <AthletesCount />
             </Grid>
             <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-              <TextInput
+              <SearchInput
+                onChange={(e) => setValue(e.target.value)}
+                placeholder="Search..."
+              />
+              {/* <TextInput
                 className="h-[38px] bg-background dark:bg-dark-background"
                 icon={() => {
                   return (
@@ -532,7 +551,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
                 }}
                 onValueChange={(e) => setValue(e)}
                 placeholder="Search for athlete..."
-              />
+              /> */}
               <SelectCard
                 className="ring-0 bg-background dark:bg-dark-background"
                 items={filterItems}

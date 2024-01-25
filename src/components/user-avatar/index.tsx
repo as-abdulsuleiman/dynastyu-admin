@@ -13,6 +13,8 @@ interface UserAvatarProps extends AvatarProps {
   fallback?: string;
   fallbackType: "icon" | "name";
   icon?: ReactNode;
+  width?: number;
+  height?: number;
 }
 
 const UserAvatar: FC<UserAvatarProps> = ({
@@ -20,6 +22,8 @@ const UserAvatar: FC<UserAvatarProps> = ({
   avatar,
   fallback,
   fallbackType = "name",
+  height,
+  width,
   ...props
 }) => {
   const [loading, setLoading] = useState(true);
@@ -30,7 +34,8 @@ const UserAvatar: FC<UserAvatarProps> = ({
         <div className="relative aspect-square h-full w-full">
           <Image
             onLoad={() => setLoading(false)}
-            fill
+            width={width || 110}
+            height={height || 110}
             src={avatar}
             alt="profile"
             className={`${loading ? "blur-sm " : "blur-none"} object-cover`}

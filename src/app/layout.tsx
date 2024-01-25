@@ -3,6 +3,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../styles/globals.css";
+import "react-color-palette/css";
+import "react-country-state-city/dist/react-country-state-city.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
 import { Analytics } from "@vercel/analytics/react";
@@ -46,8 +48,8 @@ export default function RootLayout({
         )}
       >
         <AuthProvider>
-          <div className="w-full mx-auto h-screen min-h-screen">
-            <main className="w-full">{children}</main>
+          <div className="w-full mx-auto h-screen min-h-screen relative flex flex-col bg-background">
+            {children}
           </div>
         </AuthProvider>
         <Toaster />

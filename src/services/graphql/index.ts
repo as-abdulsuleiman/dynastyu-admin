@@ -20688,7 +20688,7 @@ export type GetAthleteProfileQueryVariables = Exact<{
 }>;
 
 
-export type GetAthleteProfileQuery = { __typename?: 'Query', athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, createdAt: any, verified: boolean, playerCardUrl?: string | null, hudlLink?: string | null, graduationYear?: string | null, gpa?: string | null, schoolId: any, userId: any, evaluations: Array<{ __typename?: 'Evaluation', id: any, note: string, images: Array<string>, videos: Array<string>, videosAspectRatio: Array<string>, createdById: any }>, transcripts: Array<{ __typename?: 'Transcripts', id: any, uuid: string, name: string, url: string, athleteProfileId?: any | null, createdAt: any, updatedAt: any }>, recruitedSchools: Array<{ __typename?: 'RecruitedAthlete', athleteId: any, schoolId: any, userId?: any | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null } }>, interestedSchools: Array<{ __typename?: 'InterestedSchools', school: { __typename?: 'School', name: string, id: any, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } } }>, skills: Array<{ __typename?: 'Skills', id: any, skillId: any, athleteId?: any | null, value: string, secondValue?: string | null, videos: Array<string>, verified: boolean, verifiedAt?: any | null, skillType: { __typename?: 'SkillType', id: any, name: string } }>, _count?: { __typename?: 'AthleteProfileCount', transcripts: number, skills: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluations: number } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, username?: string | null, city?: string | null, state?: string | null, isActive: boolean, dob?: any | null }, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, position?: { __typename?: 'Position', name: string, id: any, uuid: string, shortName: string } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, title?: string | null, city?: string | null, state?: string | null, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } } | null } | null };
+export type GetAthleteProfileQuery = { __typename?: 'Query', athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, createdAt: any, verified: boolean, playerCardUrl?: string | null, hudlLink?: string | null, graduationYear?: string | null, gpa?: string | null, schoolId: any, userId: any, evaluations: Array<{ __typename?: 'Evaluation', id: any, note: string, images: Array<string>, videos: Array<string>, videosAspectRatio: Array<string>, createdById: any }>, transcripts: Array<{ __typename?: 'Transcripts', id: any, uuid: string, name: string, url: string, athleteProfileId?: any | null, createdAt: any, updatedAt: any }>, recruitedSchools: Array<{ __typename?: 'RecruitedAthlete', athleteId: any, schoolId: any, userId?: any | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null } }>, interestedSchools: Array<{ __typename?: 'InterestedSchools', school: { __typename?: 'School', name: string, id: any, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } } }>, skills: Array<{ __typename?: 'Skills', id: any, skillId: any, athleteId?: any | null, value: string, secondValue?: string | null, videos: Array<string>, verified: boolean, verifiedAt?: any | null, skillType: { __typename?: 'SkillType', id: any, name: string } }>, _count?: { __typename?: 'AthleteProfileCount', transcripts: number, skills: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluations: number } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, username?: string | null, city?: string | null, state?: string | null, isActive: boolean, dob?: any | null, _count?: { __typename?: 'UserCount', posts: number, postFlag: number } | null }, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, position?: { __typename?: 'Position', name: string, id: any, uuid: string, shortName: string } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, title?: string | null, city?: string | null, state?: string | null, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } } | null } | null };
 
 export type GetCoachesQueryVariables = Exact<{
   where?: InputMaybe<CoachProfileWhereInput>;
@@ -21012,6 +21012,32 @@ export type CreateEvaluationMutationVariables = Exact<{
 
 
 export type CreateEvaluationMutation = { __typename?: 'Mutation', createOneEvaluation: { __typename?: 'Evaluation', evaluationType: EvaluationType, note: string, images: Array<string>, videos: Array<string>, athleteId: any, schoolId: any } };
+
+export type RegisterSchoolMutationVariables = Exact<{
+  data: SchoolCreateInput;
+}>;
+
+
+export type RegisterSchoolMutation = { __typename?: 'Mutation', createOneSchool: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, conference?: string | null, division?: string | null, primaryColor: string, secondaryColor: string, state?: string | null, city?: string | null, address?: string | null, backgroundImage?: string | null, yearFounded?: string | null, yearlyTuition?: string | null, country?: { __typename?: 'Country', name: string, abbreviation: string, flag: string } | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } };
+
+export type GetSchoolTypesQueryVariables = Exact<{
+  where?: InputMaybe<SchoolTypeWhereInput>;
+  orderBy?: InputMaybe<Array<SchoolTypeOrderByWithRelationInput> | SchoolTypeOrderByWithRelationInput>;
+  cursor?: InputMaybe<SchoolTypeWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  distinct?: InputMaybe<Array<SchoolTypeScalarFieldEnum> | SchoolTypeScalarFieldEnum>;
+}>;
+
+
+export type GetSchoolTypesQuery = { __typename?: 'Query', schoolTypes: Array<{ __typename?: 'SchoolType', id: any, uuid: string, name: string, updatedAt: any, createdAt: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null }> };
+
+export type DeleteSchoolMutationVariables = Exact<{
+  where: SchoolWhereUniqueInput;
+}>;
+
+
+export type DeleteSchoolMutation = { __typename?: 'Mutation', deleteOneSchool?: { __typename?: 'School', id: any, uuid: string, email: string } | null };
 
 export type GetSkillTypesQueryVariables = Exact<{
   where?: InputMaybe<SkillTypeWhereInput>;
@@ -21944,6 +21970,10 @@ export const GetAthleteProfileDocument = gql`
       state
       isActive
       dob
+      _count {
+        posts
+        postFlag
+      }
     }
     country {
       name
@@ -23956,6 +23986,155 @@ export function useCreateEvaluationMutation(baseOptions?: ApolloReactHooks.Mutat
 export type CreateEvaluationMutationHookResult = ReturnType<typeof useCreateEvaluationMutation>;
 export type CreateEvaluationMutationResult = Apollo.MutationResult<CreateEvaluationMutation>;
 export type CreateEvaluationMutationOptions = Apollo.BaseMutationOptions<CreateEvaluationMutation, CreateEvaluationMutationVariables>;
+export const RegisterSchoolDocument = gql`
+    mutation registerSchool($data: SchoolCreateInput!) {
+  createOneSchool(data: $data) {
+    id
+    name
+    email
+    logo
+    conference
+    division
+    primaryColor
+    secondaryColor
+    state
+    city
+    address
+    backgroundImage
+    yearFounded
+    yearlyTuition
+    country {
+      name
+      abbreviation
+      flag
+    }
+    schoolType {
+      name
+      id
+    }
+  }
+}
+    `;
+export type RegisterSchoolMutationFn = Apollo.MutationFunction<RegisterSchoolMutation, RegisterSchoolMutationVariables>;
+
+/**
+ * __useRegisterSchoolMutation__
+ *
+ * To run a mutation, you first call `useRegisterSchoolMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterSchoolMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registerSchoolMutation, { data, loading, error }] = useRegisterSchoolMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useRegisterSchoolMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RegisterSchoolMutation, RegisterSchoolMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<RegisterSchoolMutation, RegisterSchoolMutationVariables>(RegisterSchoolDocument, options);
+      }
+export type RegisterSchoolMutationHookResult = ReturnType<typeof useRegisterSchoolMutation>;
+export type RegisterSchoolMutationResult = Apollo.MutationResult<RegisterSchoolMutation>;
+export type RegisterSchoolMutationOptions = Apollo.BaseMutationOptions<RegisterSchoolMutation, RegisterSchoolMutationVariables>;
+export const GetSchoolTypesDocument = gql`
+    query getSchoolTypes($where: SchoolTypeWhereInput, $orderBy: [SchoolTypeOrderByWithRelationInput!], $cursor: SchoolTypeWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SchoolTypeScalarFieldEnum!]) {
+  schoolTypes(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    id
+    uuid
+    name
+    updatedAt
+    createdAt
+    _count {
+      schools
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetSchoolTypesQuery__
+ *
+ * To run a query within a React component, call `useGetSchoolTypesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSchoolTypesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSchoolTypesQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      distinct: // value for 'distinct'
+ *   },
+ * });
+ */
+export function useGetSchoolTypesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>(GetSchoolTypesDocument, options);
+      }
+export function useGetSchoolTypesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>(GetSchoolTypesDocument, options);
+        }
+export function useGetSchoolTypesSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>(GetSchoolTypesDocument, options);
+        }
+export type GetSchoolTypesQueryHookResult = ReturnType<typeof useGetSchoolTypesQuery>;
+export type GetSchoolTypesLazyQueryHookResult = ReturnType<typeof useGetSchoolTypesLazyQuery>;
+export type GetSchoolTypesSuspenseQueryHookResult = ReturnType<typeof useGetSchoolTypesSuspenseQuery>;
+export type GetSchoolTypesQueryResult = Apollo.QueryResult<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>;
+export const DeleteSchoolDocument = gql`
+    mutation deleteSchool($where: SchoolWhereUniqueInput!) {
+  deleteOneSchool(where: $where) {
+    id
+    uuid
+    email
+  }
+}
+    `;
+export type DeleteSchoolMutationFn = Apollo.MutationFunction<DeleteSchoolMutation, DeleteSchoolMutationVariables>;
+
+/**
+ * __useDeleteSchoolMutation__
+ *
+ * To run a mutation, you first call `useDeleteSchoolMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteSchoolMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteSchoolMutation, { data, loading, error }] = useDeleteSchoolMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteSchoolMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteSchoolMutation, DeleteSchoolMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteSchoolMutation, DeleteSchoolMutationVariables>(DeleteSchoolDocument, options);
+      }
+export type DeleteSchoolMutationHookResult = ReturnType<typeof useDeleteSchoolMutation>;
+export type DeleteSchoolMutationResult = Apollo.MutationResult<DeleteSchoolMutation>;
+export type DeleteSchoolMutationOptions = Apollo.BaseMutationOptions<DeleteSchoolMutation, DeleteSchoolMutationVariables>;
 export const GetSkillTypesDocument = gql`
     query getSkillTypes($where: SkillTypeWhereInput, $orderBy: [SkillTypeOrderByWithRelationInput!], $cursor: SkillTypeWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SkillTypeScalarFieldEnum!]) {
   skillTypes(

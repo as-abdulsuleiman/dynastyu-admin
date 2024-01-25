@@ -30,7 +30,9 @@ const SelectCard: FC<SelectCardProps> = ({
   return (
     <Select
       defaultValue={defaultValue}
-      className={"bg-tremor-background dark:bg-dark-tremor-background"}
+      className={
+        "bg-tremor-background dark:bg-dark-tremor-background bg-background dark:bg-dark-background hover:bg-transparent dark:hover:bg-dark-bg-transparent"
+      }
       value={selectedItem}
       placeholder={placeholder || "Filter by..."}
       onValueChange={onValueChange}

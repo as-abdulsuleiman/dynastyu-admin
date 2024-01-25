@@ -9,6 +9,11 @@ import { getToken } from "../token";
   
   const httpLink = createHttpLink({
     uri: "https://dynastyu-9de03.appspot.com/",
+    fetchOptions: {
+      mode: 'cors',
+    },  
+
+    // credentials:'include'
   });
   
   const authLink = setContext(async (_, { headers }) => {
@@ -19,8 +24,13 @@ import { getToken } from "../token";
       headers: {
         ...headers,
         authorization: token ? `${token}` : "",
+        'Access-Control-Allow-Origin':'*',
+        'Content-Type': 'application/json',
+        "Access-Control-Allow-Headers" : "Content-Type, Authorization",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PATCH"
       },
     };
+    
   });
   
   let apolloClient: ApolloClient<NormalizedCacheObject> | null = null;
@@ -53,6 +63,7 @@ import { getToken } from "../token";
       }
     }),
     defaultOptions: { watchQuery: { fetchPolicy: "cache-and-network" } },
+    
   });
   
   export const initializeApollo = () => {

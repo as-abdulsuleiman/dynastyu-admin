@@ -23,7 +23,6 @@ interface pageProps {
 
 const Page: FC<pageProps> = ({ params }) => {
   const router = useRouter();
-
   const { data, loading } = useGetSchoolQuery({
     variables: {
       where: {
@@ -102,14 +101,9 @@ const Page: FC<pageProps> = ({ params }) => {
 
   return (
     <main className="w-full h-full relative">
-      <Button
-        variant="ghost"
-        className="absolute top-[-53px]"
-        onClick={() => router.back()}
-      >
+      <Button variant="ghost" className="mb-6" onClick={() => router.back()}>
         Go Back
       </Button>
-
       {loading ? (
         <>
           <Skeleton className="w-[100px] h-[20px]" />
@@ -118,14 +112,28 @@ const Page: FC<pageProps> = ({ params }) => {
       ) : (
         <div className="flex flex-col">
           <div className="flex flex-row items-center">
-            <Title>
-              {data?.school?.name} {/* {data?.s?.user?.surname} */}
-            </Title>
-            <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            <div className="ml-0">
+              <div className="flex flex-row items-center">
+                <Title>
+                  {data?.school?.name} {/* {data?.s?.user?.surname} */}
+                </Title>
+                <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+              </div>
+              <Text>
+                {data?.school?.schoolType?.name} at {data?.school?.address}
+              </Text>
+            </div>
+            <div className="ml-auto">
+              <Button
+                variant="ghost"
+                onClick={() =>
+                  router.push(`/schools/edit?school=${params?.schoolId}`)
+                }
+              >
+                Edit School
+              </Button>
+            </div>
           </div>
-          <Text>
-            {data?.school?.schoolType?.name} at {data?.school?.address}
-          </Text>
         </div>
       )}
       <Divider></Divider>
