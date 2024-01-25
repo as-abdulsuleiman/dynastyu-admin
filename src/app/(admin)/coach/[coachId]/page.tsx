@@ -14,6 +14,7 @@ import SchoolCard from "@/components/school-card";
 import { Icons } from "@/components/Icons";
 import UserAvatar from "@/components/user-avatar";
 import TooltipCard from "@/components/tooltip-card";
+import Image from "next/image";
 
 interface pageProps {
   params: {
@@ -113,15 +114,30 @@ const Page: FC<pageProps> = ({ params }) => {
       ) : (
         <div className="flex flex-col">
           <div className="flex flex-row items-center">
-            <Title>
-              {data?.coachProfile?.user?.firstname}{" "}
-              {data?.coachProfile?.user?.surname}
-            </Title>
-            <Icons.whistle className="h-4 w-4 ml-2 fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis" />
+            <div className="ml-0">
+              <div className="flex flex-row items-center">
+                <Title>
+                  {data?.coachProfile?.user?.firstname}{" "}
+                  {data?.coachProfile?.user?.surname}
+                </Title>
+                <Icons.whistle className="h-4 w-4 ml-2 fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis" />
+              </div>
+              <Text>
+                {data?.coachProfile?.title} at{" "}
+                {data?.coachProfile?.school?.name}
+              </Text>
+            </div>
+            <div className="ml-auto">
+              <Button
+                variant="ghost"
+                onClick={() =>
+                  router.push(`/coaches/edit?coach=${params?.coachId}`)
+                }
+              >
+                Edit Coach
+              </Button>
+            </div>
           </div>
-          <Text>
-            {data?.coachProfile?.title} at {data?.coachProfile?.school?.name}
-          </Text>
         </div>
       )}
       <Divider></Divider>
@@ -137,7 +153,9 @@ const Page: FC<pageProps> = ({ params }) => {
         <Card className="bg-background dark:bg-dark-background">
           <div className="flex flex-col items-center justify-center">
             <UserAvatar
-              className="h-[70px] w-[70px] shadow"
+              className="h-[120px] w-[120px] shadow"
+              height={120}
+              width={120}
               fallbackType="icon"
               avatar={data?.coachProfile?.user.avatar as string}
               fallback={`${data?.coachProfile?.user?.username?.charAt(
@@ -209,6 +227,38 @@ const Page: FC<pageProps> = ({ params }) => {
             color="teal"
           >
             {data?.coachProfile?.title}
+          </Callout>
+          <Callout
+            className="mt-4"
+            title="Country"
+            icon={() => {
+              return (
+                <Icons.pin className="h-[20px] w-[20px] mr-2" color="teal" />
+              );
+            }}
+            color="teal"
+          >
+            <span className="flex flex-row items-center">
+              <>{data?.coachProfile?.country?.name}</>
+              {data?.coachProfile?.country?.flag ? (
+                <Image
+                  alt="country_flag"
+                  width={30}
+                  height={30}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
+                  quality={100}
+                  priority
+                  src={data?.coachProfile?.country?.flag}
+                  className="h-[30px] w-[30px] rounded-full ml-auto object-cover"
+                />
+              ) : null}
+
+              {/*             
+              <img
+                
+                className="h-[30px] w-[30px] rounded-full ml-auto"
+              /> */}
+            </span>
           </Callout>
           <Callout
             className="mt-4"

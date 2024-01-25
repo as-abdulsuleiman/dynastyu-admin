@@ -31,7 +31,8 @@ import { SelectCountry } from "@/components/select-country";
 import SelectState from "@/components/select-state";
 import SelectCity from "@/components/select-city";
 import { useRouter } from "next/navigation";
-
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/services/firebase/config";
 type FormData = yup.InferType<typeof SchoolValidator>;
 
 interface CreateSchoolProps {
@@ -43,6 +44,13 @@ interface CreateSchoolProps {
   };
 }
 
+type DivisionProps = {
+  displayName: string;
+  id: string;
+  order: number;
+  conferences: string[];
+};
+
 const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
   const { toast } = useToast();
   const router = useRouter();
@@ -50,11 +58,22 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
   const editType = action === "edit" ?? false;
   const fetchSchool = editType && searchParams?.school;
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [loadingDivision, setLoadingDivision] = useState<boolean>(false);
   const [openDivision, setOpenDivision] = useState<boolean>(false);
+  const [openConference, setOpenConference] = useState<boolean>(false);
   const [selectedCountryId, setSelectedCountryId] = useState<number | null>(0);
   const [selectedStateId, setSelectedStateId] = useState<number | null>(0);
+  const [divisions, setDivisions] = useState<DivisionProps[]>();
+  const [conferences, setConferences] = useState<string[]>();
   const [registerSchool] = useRegisterSchoolMutation();
   const [updateSchool] = useUpdateSchoolMutation();
+
+  useEffect(() => {
+    getDivisions();
+    return () => {
+      getDivisions();
+    };
+  }, []);
 
   const { data: schoolData } = useGetSchoolQuery({
     variables: {
@@ -75,6 +94,34 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
       },
     },
   });
+
+  const getDivisions = async () => {
+    setLoadingDivision(true);
+    try {
+      let divisions: DivisionProps[] = [];
+      const querySnapshot = await getDocs(collection(db, "divisions"));
+      querySnapshot?.forEach((doc) => {
+        if (doc?.exists()) {
+          divisions.push({
+            ...doc?.data(),
+            id: doc?.id,
+            displayName: doc?.data()?.displayName,
+            order: doc?.data()?.order,
+            conferences: doc?.data()?.conferences,
+          });
+        }
+      });
+      setDivisions(divisions);
+    } catch (error: any) {
+      toast({
+        title: "Something went wrong.",
+        description: error?.message,
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingDivision(false);
+    }
+  };
 
   const {
     register,
@@ -158,6 +205,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
           conference: { set: payload?.conference },
           city: { set: payload?.city },
           state: { set: payload?.state },
+          address: { set: payload?.address },
         },
       },
     });
@@ -190,6 +238,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
           conference: payload?.conference,
           city: payload?.city,
           state: payload?.state,
+          address: payload?.address,
         },
       },
     });
@@ -234,6 +283,28 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
     [schoolTypeData?.schoolTypes]
   );
 
+  const divisionData = useMemo(
+    () =>
+      divisions?.map((division) => ({
+        label: division?.displayName,
+        value: division?.displayName,
+        id: division?.id,
+        order: division?.order,
+        conferences: division.conferences,
+      })) || [],
+    [divisions]
+  );
+
+  const conferenceData = useMemo(
+    () =>
+      conferences?.map((conference) => ({
+        id: conference,
+        value: conference,
+        label: conference,
+      })) || [],
+    [conferences]
+  );
+
   const handleAvatarUploadSuccess = useCallback(
     (url: string | null) => {
       setValue("logo", url as string);
@@ -256,6 +327,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
     state,
     city,
     logo,
+    conference,
   } = getValues();
 
   let errorMessage;
@@ -267,11 +339,27 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
     errorMessage = "";
   }
 
+  useEffect(() => {
+    if (division && editType) {
+      const filteredConference = divisionData?.find(
+        (val) => val?.value === division
+      );
+      if (filteredConference?.conferences) {
+        setConferences(filteredConference?.conferences);
+      }
+    }
+  }, [editType, division, divisionData]);
+
   return (
     <main className="w-full h-full">
+      <Button variant="ghost" className="mb-6" onClick={() => router.back()}>
+        Go Back
+      </Button>
       <div className="flex flex-col">
         <div className="flex flex-row items-center">
-          <Title>Create New School</Title>
+          <Title>
+            {fetchSchool ? "Edit School Profile" : "Create New School"}{" "}
+          </Title>
           <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
         </div>
         <Text>School Overview</Text>
@@ -285,6 +373,8 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
         <div className="grid grid-cols-12 gap-6 py-2">
           <div className="col-span-12 place-self-center	">
             <AvatarUploader
+              height={120}
+              width={120}
               id="school_log"
               imgUrl={logo}
               onUploadSuccess={handleAvatarUploadSuccess}
@@ -296,7 +386,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
           <div className="col-span-12 sm:col-span-6">
             <Input
               id="name"
-              placeholder="School name"
+              placeholder="School Name"
               label="Name"
               type="text"
               className="bg-transparent"
@@ -324,7 +414,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
               label="Year Founded"
               value={yearFounded}
               className="bg-transparent inputdate"
-              placeholder="School Email"
+              placeholder="Enter Year Founded"
               error={errors?.yearFounded?.message}
               {...register("yearFounded", { required: true })}
             />
@@ -342,36 +432,13 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
         </div>
         <div className="grid grid-cols-12 gap-6 py-2">
           <div className="col-span-12 sm:col-span-6">
-            <Input
-              id="conference"
-              type="text"
-              label="Conference"
-              className="bg-transparent"
-              placeholder="Enter conference"
-              error={errors?.conference?.message}
-              {...register("conference", { required: true })}
-            />
-          </div>
-          <div className="col-span-12 sm:col-span-6">
-            <Input
-              id="undergradStudents"
-              type="number"
-              label="Undergrad Students"
-              className="bg-transparent"
-              placeholder="Enter undergrad students...."
-              error={errors?.undergradStudents?.message}
-              {...register("undergradStudents", { required: true })}
-            />
-          </div>
-        </div>
-        <div className="grid grid-cols-12 gap-6 py-2">
-          <div className="col-span-12 sm:col-span-6">
             <ComboBoxCard
               loading={loading}
               error={errorMessage}
               scrollAreaClass="h-[100px]"
               id="schoolTypes"
               valueKey="id"
+              placeholder="Select School Type"
               displayKey="label"
               IdKey="label"
               isOpen={isOpen}
@@ -385,7 +452,21 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
             />
           </div>
           <div className="col-span-12 sm:col-span-6">
+            <Input
+              id="undergradStudents"
+              type="number"
+              label="Undergrad Students"
+              className="bg-transparent"
+              placeholder="Enter Undergrad Students"
+              error={errors?.undergradStudents?.message}
+              {...register("undergradStudents", { required: true })}
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-12 gap-6 py-2">
+          <div className="col-span-12 sm:col-span-6">
             <ComboBoxCard
+              loading={loadingDivision}
               error={errors?.division?.message}
               scrollAreaClass="h-[100px]"
               id="division"
@@ -393,14 +474,46 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
               displayKey="label"
               IdKey="label"
               isOpen={openDivision}
+              placeholder="Select Division"
               selectedValue={{ value: division }}
               onClose={() => setOpenDivision(!openDivision)}
               onSelectValue={(item) => {
+                setConferences(item?.conferences);
                 setValue("division", item?.value);
               }}
-              label={"Classification"}
-              items={classificationOptions as any}
+              label={"Division"}
+              items={divisionData as any}
             />
+          </div>
+          <div className="col-span-12 sm:col-span-6">
+            <ComboBoxCard
+              loading={loadingDivision}
+              disabled={!division}
+              error={errors?.conference?.message}
+              scrollAreaClass="h-[100px]"
+              id="conference"
+              valueKey="value"
+              displayKey="label"
+              IdKey="label"
+              placeholder="Select Conference"
+              isOpen={openConference}
+              selectedValue={{ value: conference }}
+              onClose={() => setOpenConference(!openConference)}
+              onSelectValue={(item) => {
+                setValue("conference", item?.value);
+              }}
+              label="Conference"
+              items={conferenceData as any}
+            />
+            {/* <Input
+              id="conference"
+              type="text"
+              label="Conference"
+              className="bg-transparent"
+              placeholder="Enter conference"
+              error={errors?.conference?.message}
+              {...register("conference", { required: true })}
+            /> */}
           </div>
         </div>
         <div className="grid grid-cols-12 gap-6 py-2">
@@ -454,6 +567,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
         <div className="grid grid-cols-12 gap-6 py-2">
           <div className="col-span-12 sm:col-span-6">
             <SelectCountry
+              placeholder="Select Country"
               searchPlaceholder="Search country..."
               onSelectCountryId={(item) => {
                 setSelectedCountryId(item);
@@ -474,6 +588,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
               id="state"
               label="State"
               name="state"
+              placeholder="Select State"
               searchPlaceholder="Search state..."
               selectedState={state as string}
               error={errors?.state?.message}
@@ -488,6 +603,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
             <SelectCity
               id="city"
               label="City"
+              placeholder="Select City"
               searchPlaceholder="Search city..."
               name="city"
               selectedCity={city as string}
@@ -495,6 +611,17 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
               stateId={selectedStateId || 0}
               error={errors?.city?.message}
               onSelectCity={(city) => setValue("city", city?.label)}
+            />
+          </div>
+          <div className="col-span-12 sm:col-span-6">
+            <Input
+              id="address"
+              type="text"
+              label="Address"
+              className="bg-transparent"
+              placeholder="Enter Address"
+              error={errors?.address?.message}
+              {...register("address", { required: true })}
             />
           </div>
         </div>

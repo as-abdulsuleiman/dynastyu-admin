@@ -8,6 +8,7 @@ import UserAvatar from "../user-avatar";
 import { Icons } from "../Icons";
 import { Skeleton } from "../ui/skeleton";
 import { GetSchoolQuery } from "@/services/graphql";
+import Image from "next/image";
 
 interface SchoolCardProps {
   loading?: boolean;
@@ -19,7 +20,9 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
     <Card className="bg-background dark:bg-dark-background">
       <div className="flex flex-col justify-center items-center">
         <UserAvatar
-          className="h-[70px] w-[70px] shadow"
+          className="h-[120px] w-[120px] shadow"
+          height={120}
+          width={120}
           fallbackType="icon"
           avatar={school?.logo as string}
           fallback={`${school?.name?.charAt(0)} `}
@@ -96,7 +99,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         }}
         color="teal"
       >
-        {school?.conference}
+        {school?.description}
       </Callout>
       <Callout
         className="mt-4"
@@ -109,6 +112,57 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         color="teal"
       >
         {school?.yearFounded}
+      </Callout>
+      <Callout
+        className="mt-4"
+        title="Country"
+        icon={() => {
+          return (
+            <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+          );
+        }}
+        color="teal"
+      >
+        <span className="flex flex-row items-center">
+          <>{school?.country?.name}</>
+          {school?.country?.flag ? (
+            <Image
+              alt="country_flag"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
+              quality={100}
+              priority
+              width={30}
+              height={30}
+              src={school?.country?.flag}
+              className="h-[30px] w-[30px] rounded-full ml-auto object-cover"
+            />
+          ) : null}
+        </span>
+      </Callout>
+      <Callout
+        className="mt-4"
+        title="State"
+        icon={() => {
+          return <Icons.pin className="h-[20px] w-[20px] mr-2" color="teal" />;
+        }}
+        color="teal"
+      >
+        {school?.state}
+      </Callout>
+      <Callout
+        className="mt-4"
+        title="City"
+        icon={() => {
+          return (
+            <Icons.locateFixed
+              className="h-[20px] w-[20px] mr-2"
+              color="teal"
+            />
+          );
+        }}
+        color="teal"
+      >
+        {school?.city}
       </Callout>
     </Card>
   );

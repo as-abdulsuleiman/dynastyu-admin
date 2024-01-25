@@ -14,6 +14,7 @@ interface SelectStateProps {
   selectedState: string;
   onBlur?: ChangeHandler;
   searchPlaceholder?: string;
+  placeholder?: string;
   selectStateId: (countryId: number) => void;
   onSelectState: (item: any | null) => void;
 }
@@ -21,6 +22,7 @@ interface SelectStateProps {
 const SelectState: FC<SelectStateProps> = ({
   countryId,
   selectedState,
+  placeholder,
   id,
   label,
   error,
@@ -78,7 +80,7 @@ const SelectState: FC<SelectStateProps> = ({
         error={error}
         searchPlaceholder={searchPlaceholder}
         hasSearch
-        placeholder="Select State..."
+        placeholder={placeholder || "Select State..."}
         scrollAreaClass="h-[250px]"
         id="state"
         valueKey="value"

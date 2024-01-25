@@ -178,6 +178,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
           state: { set: values?.state },
           user: {
             update: {
+              firstname: { set: values?.firstName },
               surname: { set: values?.lastName },
               email: { set: values?.email },
               username: { set: values?.username },
@@ -277,6 +278,9 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
 
   return (
     <main className="w-full h-full">
+      <Button variant="ghost" className="mb-6" onClick={() => router.back()}>
+        Go Back
+      </Button>
       <div className="flex flex-col">
         <div className="flex flex-row items-center">
           <Title>{fetchCoach ? `Edit Coach Profile` : " Add New Coach"}</Title>
@@ -293,6 +297,8 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
         <div className="grid grid-cols-12 gap-6 py-2">
           <div className="col-span-12 place-self-center">
             <AvatarUploader
+              height={120}
+              width={120}
               imgUrl={avatar}
               id="coaches_profile"
               onUploadSuccess={handleAvatarUploadSuccess}

@@ -55,8 +55,6 @@ const SchoolTypeDropdown: FC<SchoolTypeProps> = ({ error }) => {
         onClose={() => setIsOpen(!isOpen)}
         onSelectValue={(item) => {
           setSelectedSchoolType(item);
-          // console.log("item", item);
-          // setValue("title", item?.value);
         }}
         label="School Type"
         items={schoolTypes as any}

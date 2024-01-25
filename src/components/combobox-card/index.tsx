@@ -41,6 +41,7 @@ interface ComboBoxCardProps {
   onSelectValue: (item: any | null) => void;
   onBlur?: React.FocusEventHandler<HTMLInputElement> | undefined;
   loading?: boolean;
+  disabled?: boolean;
 }
 
 const ComboBoxCard: FC<ComboBoxCardProps> = ({
@@ -57,6 +58,7 @@ const ComboBoxCard: FC<ComboBoxCardProps> = ({
   valueKey = "value",
   placeholder,
   selectedValue,
+  disabled,
   onSelectValue,
   loading,
   iconKey = "emoji",
@@ -78,7 +80,7 @@ const ComboBoxCard: FC<ComboBoxCardProps> = ({
         </label>
       ) : null}
       <Popover open={isOpen} onOpenChange={onClose}>
-        <PopoverTrigger asChild>
+        <PopoverTrigger asChild disabled={disabled}>
           <Button
             variant="outline"
             role="combobox"

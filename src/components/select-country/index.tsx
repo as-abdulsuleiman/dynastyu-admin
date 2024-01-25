@@ -27,6 +27,7 @@ interface SelectCountryProps {
   name?: string;
   selectedCountry: string;
   searchPlaceholder?: string;
+  placeholder?: string;
   onBlur?: ChangeHandler;
   onSelectCountryId: (countryId: number) => void;
   onSelectCountry: (item: any | null) => void;
@@ -35,6 +36,7 @@ interface SelectCountryProps {
 const SelectCountry = forwardRef<HTMLDivElement, SelectCountryProps>(
   (
     {
+      placeholder,
       searchPlaceholder,
       selectedCountry,
       id,
@@ -104,7 +106,7 @@ const SelectCountry = forwardRef<HTMLDivElement, SelectCountryProps>(
             loading={loading}
             error={error}
             hasSearch
-            placeholder="Select Country..."
+            placeholder={placeholder || "Select Country..."}
             iconKey="emoji"
             scrollAreaClass="h-[250px]"
             id="country"

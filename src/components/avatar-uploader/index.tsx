@@ -25,6 +25,8 @@ interface AvatarUploaderProps {
   error?: string;
   onUploadSuccess?: (downloadUrl: string | null) => void;
   imgUrl?: string;
+  width?: number;
+  height?: number;
 }
 
 const AvatarUploader: FC<AvatarUploaderProps> = ({
@@ -33,6 +35,8 @@ const AvatarUploader: FC<AvatarUploaderProps> = ({
   id = "avatar",
   error,
   imgUrl,
+  height,
+  width,
 }) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
@@ -90,7 +94,7 @@ const AvatarUploader: FC<AvatarUploaderProps> = ({
   return (
     <div className="relative">
       <div
-        className="w-[110px] h-[110px] rounded-full relative border  shadow-xl"
+        className="w-[120px] h-[120px] rounded-full relative border-[0.9px] shadow-xl"
         id={id}
       >
         {uploading ? (
@@ -109,11 +113,12 @@ const AvatarUploader: FC<AvatarUploaderProps> = ({
           <Image
             src={url}
             alt="profile_url"
-            fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
             quality={100}
             priority
-            className={`absolute object-cover border rounded-full w-full h-full ${
+            width={width || 120}
+            height={height || 120}
+            className={`absolute object-cover rounded-full w-full h-full ${
               loading ? "blur-sm " : "blur-none"
             }`}
             onLoad={() => setLoading(false)}
@@ -122,11 +127,12 @@ const AvatarUploader: FC<AvatarUploaderProps> = ({
           <Image
             src={imgUrl || noImage}
             alt="profile_url"
-            fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
             quality={100}
             priority
-            className={`absolute object-cover border rounded-full w-full h-full`}
+            width={width || 120}
+            height={height || 120}
+            className={`absolute object-cover  rounded-full w-full h-full`}
           />
         )}
         <div className="z-10 absolute h-[32px] w-[32px] bg-primary rounded-full cursor-pointer ring-1 right-[5px] bottom-[5px]">

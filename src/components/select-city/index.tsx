@@ -15,6 +15,7 @@ interface SelectCityProps {
   selectedCity: string;
   onBlur?: ChangeHandler;
   searchPlaceholder?: string;
+  placeholder?: string;
   onSelectCity: (item: any | null) => void;
 }
 
@@ -29,6 +30,7 @@ const SelectCity: FC<SelectCityProps> = ({
   selectedCity,
   onSelectCity,
   searchPlaceholder,
+  placeholder,
 }) => {
   const [cityList, setCityList] = useState([]);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -75,7 +77,7 @@ const SelectCity: FC<SelectCityProps> = ({
         error={error}
         hasSearch
         searchPlaceholder={searchPlaceholder}
-        placeholder="Select State..."
+        placeholder={placeholder || "Select City..."}
         scrollAreaClass="h-[250px]"
         id="state"
         valueKey="value"
