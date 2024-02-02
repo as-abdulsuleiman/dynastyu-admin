@@ -312,7 +312,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
     }
   };
 
-  const handleActiveCoach = async (item: any) => {
+  const handleActivateCoach = async (item: any) => {
     setSelectedUser(item?.id);
     setIsactivating(true);
     try {
@@ -465,19 +465,19 @@ const Coaches: FC<CoachesProps> = ({}) => {
         },
       },
       {
-        name: "Edit Coach",
+        name: "Edit Profile",
         onclick: () => handleEditCoach(item),
       },
       {
-        name: `${item?.user?.isActive ? "Deactivate" : "Activate"} Coach`,
-        onclick: async () => await handleActiveCoach(item),
+        name: `${item?.user?.isActive ? "Deactivate" : "Activate"} Profile`,
+        onclick: async () => await handleActivateCoach(item),
       },
       {
         name: "Delete Coach",
         onclick: async () => await handleDeleteCoach(item),
       },
       {
-        name: `${item.verified ? "Unverify Coach" : "Verify Coach"}`,
+        name: `${item.verified ? "Unverify Profile" : "Verify Profile"}`,
         onclick: async () => await handleVerifyCoach(item),
       },
     ];

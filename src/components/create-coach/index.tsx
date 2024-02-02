@@ -5,7 +5,6 @@
 import { FC, useCallback, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { observer } from "mobx-react-lite";
-
 import { Input } from "@/components/ui/input";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -356,6 +355,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
             <ComboBoxCard
               loading={accaccountTypeLoading}
               scrollAreaClass="h-[100px]"
+              placeholder={"Select your account type"}
               id="account_type"
               onBlur={() => setFocus("accountType", { shouldSelect: true })}
               valueKey="id"
@@ -385,6 +385,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               IdKey="label"
               label="Title"
               id="coach_title"
+              placeholder={"Select Title"}
               isOpen={openTitle}
               scrollAreaClass="h-72"
               hasSearch
@@ -411,10 +412,11 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               onSelectValue={(school) => {
                 setValue("school", {
                   id: school?.id,
-                  name: school?.name,
+                  name: school?.label,
                 });
               }}
-              label="School"
+              placeholder={"Select high school"}
+              label="High School"
               error={errors.school?.id?.message}
               whereClause={{
                 id: { equals: coachData?.coachProfile?.schoolId },
@@ -433,6 +435,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               selectedCountry={country?.toUpperCase()}
               id="country"
               label="Country"
+              placeholder="Select Country"
               onBlur={countryInput.onBlur}
               ref={countryInput.ref}
               name={countryInput.name}
@@ -448,6 +451,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               id="state"
               label="State"
               name="state"
+              placeholder="Select State"
               searchPlaceholder="Search state..."
               selectedState={state as string}
               error={errors?.state?.message}
@@ -460,6 +464,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
             <SelectCity
               id="city"
               label="City"
+              placeholder="Select City"
               searchPlaceholder="Search city..."
               name="city"
               selectedCity={city as string}

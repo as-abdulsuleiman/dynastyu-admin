@@ -55,3 +55,11 @@ export const formatDate = (
   date: Date | number | string,
   dateFormat ="MMMM dd, yyyy",
 ): string => format(new Date(date), dateFormat);
+
+
+export const getYears = (back:number, type: "sub" | "add" = "sub") => {
+  const year = new Date().getFullYear()
+  return Array.from({ length: back }, (v, i) =>
+    type === "sub" ? year - back + i + 1 : year + back - i,
+  )
+}

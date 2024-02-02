@@ -1,3 +1,5 @@
+# @format
+
 query getSkillTypes(
   $where: SkillTypeWhereInput
   $orderBy: [SkillTypeOrderByWithRelationInput!]
@@ -63,7 +65,10 @@ query getSkills(
   }
 }
 
-query skillsTypes($where: SkillsWhereInput, $orderBy: [SkillTypeOrderByWithRelationInput!]) {
+query skillsTypes(
+  $where: SkillsWhereInput
+  $orderBy: [SkillTypeOrderByWithRelationInput!]
+) {
   skillTypes(orderBy: $orderBy) {
     id
     name
@@ -123,9 +128,154 @@ mutation upsertOneSkill(
   }
 }
 
-mutation updateOneSkill($data: SkillsUpdateInput!, $where: SkillsWhereUniqueInput!) {
+mutation updateOneSkill(
+  $data: SkillsUpdateInput!
+  $where: SkillsWhereUniqueInput!
+) {
   updateOneSkills(data: $data, where: $where) {
     id
     videos
+  }
+}
+
+mutation createOneSkillVerification(
+  $data: SkillVerificationRequestCreateInput!
+) {
+  createOneSkillVerificationRequest(data: $data) {
+    id
+    uuid
+    skillId
+    userId
+    campId
+  }
+}
+
+mutation updateSkillVerification(
+  $data: SkillVerificationRequestUpdateInput!
+  $where: SkillVerificationRequestWhereUniqueInput!
+) {
+  updateOneSkillVerificationRequest(data: $data, where: $where) {
+    id
+    uuid
+    skillId
+    userId
+    campId
+  }
+}
+
+query getVerificationRequest(
+  $where: SkillVerificationRequestWhereInput
+  $orderBy: [SkillVerificationRequestOrderByWithRelationInput!]
+  $cursor: SkillVerificationRequestWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [SkillVerificationRequestScalarFieldEnum!]
+) {
+  skillVerificationRequests(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    id
+    uuid
+    dateOfVerfication
+    verified
+    createdAt
+    skillId
+    userId
+    skill {
+      id
+      athleteId
+      videos
+      secondValue
+      value
+      skillType {
+        id
+        name
+        description
+        secondFieldName
+        skills {
+          value
+        }
+      }
+    }
+    user {
+      id
+      firstname
+      surname
+      username
+      avatar
+      email
+      avatar
+      email
+    }
+    camp {
+      name
+      id
+      uuid
+      address
+      description
+    }
+  }
+}
+
+query getSkillVerificationRequest($where: SkillVerificationRequestWhereUniqueInput!) {
+  skillVerificationRequest(where: $where) {
+    id
+    uuid
+    dateOfVerfication
+    verified
+    createdAt
+    skillId
+    userId
+    skill {
+      id
+      athleteId
+      videos
+      secondValue
+      value
+      skillType {
+        id
+        name
+        description
+        secondFieldName
+        skills {
+          value
+        }
+      }
+    }
+    user {
+      id
+      firstname
+      surname
+      username
+      avatar
+      email
+      avatar
+      email
+      athleteProfile{
+        id
+        verified
+        userId
+        verifiedBy{
+          title
+          user{
+            username
+            firstname
+            surname
+          }
+        }
+      }
+    }
+    camp {
+      name
+      id
+      uuid
+      address
+      description
+    }
   }
 }

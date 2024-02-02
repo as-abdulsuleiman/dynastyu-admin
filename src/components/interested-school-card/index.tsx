@@ -44,9 +44,9 @@ type InterestedSchool = {
 const renderContent = (val: InterestedSchool, router: AppRouterInstance) => {
   return (
     <div className="flex flex-col">
-      <div className="flex flex-row items-center mb-1">
+      <div className="flex flex-row items-start md:items-center mb-1">
         <div>School Type:</div> {""}
-        <Text className="truncate text-tremor-default ml-2">
+        <Text className="truncate text-left text-tremor-default ml-2">
           {val?.school?.schoolType?.name}
         </Text>
       </div>
