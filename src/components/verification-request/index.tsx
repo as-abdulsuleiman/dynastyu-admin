@@ -213,7 +213,7 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
                       </MenubarContent>
                     </MenubarMenu>
                   </Menubar>
-                  <div className="flex flex-col">
+                  <div className="flex-col hidden md:flex ">
                     <Button
                       className="ml-auto "
                       onClick={() => handleVerifySkill()}
@@ -302,6 +302,18 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
                     </Text>
                   </div>
                 </div>
+              </div>
+              <div className="flex md:hidden mt-4">
+                <Button
+                  className="ml-auto "
+                  onClick={() => handleVerifySkill()}
+                >
+                  {updating
+                    ? "Verifying..."
+                    : data?.skillVerificationRequest?.verified
+                    ? "Unverify Skill"
+                    : "Verify Skill"}
+                </Button>
               </div>
             </Card>
             {data?.skillVerificationRequest?.skill?.videos ? (
