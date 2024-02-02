@@ -96,7 +96,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
   const [status, setStatus] = useState<string>("");
   const [value, setValue] = useState<string>("");
   const [isActivating, setIsactivating] = useState<boolean>(false);
-  const [isVerifying, setIsVerifying] = useState<boolean>();
+  const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [debounced] = useDebouncedValue(value, 300);
   const [updateAthlete] = useUpdateAthleteMutation();
@@ -116,6 +116,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
     fetchPolicy: "cache-first",
     pollInterval: 30 * 1000,
   });
+
   const whereClause: AthleteProfileWhereInput = useMemo(() => {
     if (status === FilterEnum.INACTIVE) {
       return {
@@ -249,7 +250,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
     }
   };
 
-  const handleActiveAthlete = async (item: any) => {
+  const handleActivateAthlete = async (item: any) => {
     setSelectedUser(item?.id);
     setIsactivating(true);
     try {
@@ -393,7 +394,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
   };
 
   const renderItems = ({ item, id }: { item: any; id: any }) => {
-    const coacheItems = [
+    const athleteItems = [
       {
         name: "View Details",
         onclick: () => {
@@ -401,16 +402,25 @@ const Athletes: FC<AthletesProps> = ({}) => {
         },
       },
       {
-        name: `${item?.user?.isActive ? "Deactivate" : "Activate"} Athlete`,
-        onclick: async () => await handleActiveAthlete(item),
+        name: "Edit Profile",
+        onclick: () => {
+          router.push(`/athletes/edit?athlete=${Number(item?.id)}`, {
+            scroll: true,
+          });
+        },
       },
       {
-        name: "Delete Athlete",
-        onclick: async () => await handleDeleteAthlete(item),
-      },
-      {
-        name: `${item.verified ? "Unverify Athlete" : "Verify Athlete"}`,
+        name: `${item.verified ? "Unverify Profile" : "Verify Profile"}`,
         onclick: async () => await handleVerifyAthlete(item),
+      },
+      {
+        name: `${item?.user?.isActive ? "Deactivate" : "Activate"} Profile`,
+        onclick: async () => await handleActivateAthlete(item),
+      },
+
+      {
+        name: "Delete Profile",
+        onclick: async () => await handleDeleteAthlete(item),
       },
     ];
     return (
@@ -503,7 +513,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
                   alignOffset={-100}
                   className="rounded-tremor-default cursor-pointer bg-background dark:bg-dark-background"
                 >
-                  {coacheItems?.map((val, id) => {
+                  {athleteItems?.map((val, id) => {
                     return (
                       <MenubarItem
                         onClick={val?.onclick}

@@ -7,14 +7,14 @@ import { useRouter } from "next/navigation";
 import {
   Divider,
   Grid,
-  TabGroup,
-  TabPanel,
-  TabPanels,
   Text,
   Title,
   TextInput,
   TableRow,
   TableCell,
+  TabGroup,
+  TabPanel,
+  TabPanels,
   Flex,
   Badge,
 } from "@tremor/react";
@@ -85,7 +85,7 @@ const Page: FC<PageProps> = () => {
   const router = useRouter();
   const [status, setStatus] = useState<string>("");
   const [value, setValue] = useState<string>("");
-  const [isActivating, setIsactivating] = useState<boolean>();
+  const [isActivating, setIsactivating] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [debounced] = useDebouncedValue(value, 300);
   const [deteteUser] = useDeleteUserMutation();
@@ -311,11 +311,11 @@ const Page: FC<PageProps> = () => {
           router.push(`/${userType}/${Number(userId)}`, { scroll: true }),
       },
       {
-        name: `${item?.isActive ? "Deactivate" : "Activate"} User`,
+        name: `${item?.isActive ? "Deactivate" : "Activate"} Profile`,
         onclick: async () => await handleActiveUser(item),
       },
       {
-        name: "Delete User",
+        name: "Delete Profile",
         onclick: async () => await handleDeleteUser(item),
       },
     ];

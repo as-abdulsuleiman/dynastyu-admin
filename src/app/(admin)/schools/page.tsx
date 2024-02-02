@@ -234,10 +234,12 @@ const Schools: FC<SchoolsProps> = ({}) => {
         <TableCell>
           <Flex alignItems="center" justifyContent="start">
             <UserAvatar
+              height={120}
+              width={120}
               onClick={() =>
-                router.push(`/school/${Number(item?.id)}`, { scroll: true })
+                router.push(`/school/${item?.id}`, { scroll: true })
               }
-              className="h-[55px] w-[55px] shadow cursor-pointer"
+              className="h-[55px] w-[55px] shadow cursor-pointer object-cover"
               fallbackType="name"
               avatar={item?.logo as string}
               fallback={`${item?.name?.charAt(0)}`}

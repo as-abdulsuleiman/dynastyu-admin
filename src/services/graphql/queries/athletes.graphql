@@ -302,8 +302,13 @@ query getAthleteProfile($where: AthleteProfileWhereUniqueInput!) {
       city
       state
       isActive
+      accountType {
+        id
+        title
+        roleId
+      }
       dob
-      _count{
+      _count {
         posts
         postFlag
       }
@@ -332,5 +337,13 @@ query getAthleteProfile($where: AthleteProfileWhereUniqueInput!) {
         username
       }
     }
+  }
+}
+
+mutation createAthleteProfile($data: AthleteProfileCreateInput!) {
+  createOneAthleteProfile(data: $data) {
+    id
+    uuid
+    userId
   }
 }

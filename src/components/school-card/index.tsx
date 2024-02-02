@@ -7,7 +7,6 @@ import { Callout, Card, Text, Divider } from "@tremor/react";
 import UserAvatar from "../user-avatar";
 import { Icons } from "../Icons";
 import { Skeleton } from "../ui/skeleton";
-import { GetSchoolQuery } from "@/services/graphql";
 import Image from "next/image";
 
 interface SchoolCardProps {
@@ -36,7 +35,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       </div>
       <Divider></Divider>
       <Callout
-        className="mt-4"
+        className="mt-4 min-h-[75px]"
         title={school?.schoolType?.name || ("High School" as string)}
         icon={() => {
           return (
@@ -51,7 +50,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         {school?.name}
       </Callout>
       <Callout
-        className="mt-4"
+        className="mt-4 min-h-[75px]"
         title="Address"
         icon={() => {
           return (
@@ -63,7 +62,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         {school?.address}
       </Callout>
       <Callout
-        className="mt-4"
+        className="mt-4 min-h-[75px]"
         title="Division"
         icon={() => {
           return (
@@ -75,7 +74,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         {school?.division}
       </Callout>
       <Callout
-        className="mt-4"
+        className="mt-4 min-h-[75px]"
         title="Conference"
         icon={() => {
           return (
@@ -90,7 +89,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         {school?.conference}
       </Callout>
       <Callout
-        className="mt-4"
+        className="mt-4 min-h-[75px]"
         title="Description"
         icon={() => {
           return (
@@ -102,7 +101,19 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         {school?.description}
       </Callout>
       <Callout
-        className="mt-4"
+        className="mt-4 min-h-[75px]"
+        title="Yearly Tuition"
+        icon={() => {
+          return (
+            <Icons.scrollText className="h-[20px] w-[20px] mr-2" color="teal" />
+          );
+        }}
+        color="teal"
+      >
+        {school?.yearlyTuition ? `$ ${school?.yearlyTuition}` : ""}
+      </Callout>
+      <Callout
+        className="mt-4 min-h-[75px]"
         title="Year Founded"
         icon={() => {
           return (
@@ -113,8 +124,9 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       >
         {school?.yearFounded}
       </Callout>
+
       <Callout
-        className="mt-4"
+        className="mt-4 min-h-[75px]"
         title="Country"
         icon={() => {
           return (
@@ -123,7 +135,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         }}
         color="teal"
       >
-        <span className="flex flex-row items-center">
+        <span className="flex flex-row items-center h-full">
           <>{school?.country?.name}</>
           {school?.country?.flag ? (
             <Image
@@ -140,7 +152,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         </span>
       </Callout>
       <Callout
-        className="mt-4"
+        className="mt-4 min-h-[75px]"
         title="State"
         icon={() => {
           return <Icons.pin className="h-[20px] w-[20px] mr-2" color="teal" />;
@@ -150,7 +162,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         {school?.state}
       </Callout>
       <Callout
-        className="mt-4"
+        className="mt-4 min-h-[75px]"
         title="City"
         icon={() => {
           return (

@@ -78,6 +78,7 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
       take: 30,
     },
   });
+
   const schools = useMemo(
     () =>
       schooldata?.schools?.map((school) => ({
