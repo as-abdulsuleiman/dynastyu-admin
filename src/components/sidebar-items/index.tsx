@@ -124,52 +124,49 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
         const iconColor = "";
         const iconClass = `h-[19px] w-[19px] ${
           val?.hasFill
-            ? "group-hover:fill-teal-600  text-tremor-default fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis "
-            : "group-hover:stroke-teal-600 text-tremor-default stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis"
+            ? "text-tremor-default fill-gray-700 dark:fill-white "
+            : "text-tremor-default stroke-gray-700 dark:stroke-white"
         } ${
           isActive &&
           `${
             val?.hasFill
-              ? "fill-tremor-content-teal dark:fill-dark-tremor-content-teal"
-              : "stroke-tremor-content-teal dark:stroke-dark-tremor-content-teal"
+              ? " fill-gray-700 dark:fill-white"
+              : "stroke-white stroke-gray-700 dark:stroke-white"
           }`
         }`;
         const Icon = () =>
           val?.icon({ className: iconClass, color: iconColor });
         return (
           <div key={index}>
-            <>
-              <div
-                onClick={() => handleNavigation(val.path)}
-                className={`group ${
-                  isActive
-                    ? "bg-secondary"
-                    : "bg-background dark:bg-dark-background"
-                } "bg-background dark:bg-dark-background flex cursor-pointer items-center py-[6px] px-[16px] border rounded-sm mt-4 hover:scale-105 transition-transform ease-out duration-200`}
+            <div
+              onClick={() => handleNavigation(val?.path)}
+              className={`group ${
+                isActive
+                  ? "bg-primary"
+                  : "bg-background dark:bg-dark-background"
+              }  flex cursor-pointer items-center py-[8px] px-[16px] border rounded-lg mt-4 hover:scale-105 transition-transform ease-out duration-200`}
+            >
+              <Icon />
+              <Text
+                className={`text-[16px] dark:text-gray-200 text-gray-700 ${
+                  isActive ? "text-gray-200 dark:text-dark-gray-700" : ""
+                } ml-4 mt-[0px] text-tremor-default`}
               >
-                <Icon />
-                <Text
-                  className={`${
-                    isActive
-                      ? "text-tremor-content-teal dark:text-dark-tremor-content-teal"
-                      : "text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis group-hover:dark:text-dark-tremor-content-teal group-hover:text-tremor-content-teal"
-                  } ml-4 mt-[0px] text-3xl`}
-                >
-                  {val?.name}
-                </Text>
-              </div>
-            </>
+                {val?.name}
+              </Text>
+            </div>
             {isActive && val?.items?.length ? (
-              <div className="px-2 pb-3">
-                {val?.items.map((val, index) => {
+              <div className="pr-2 pl-5 pb-3 mt-2">
+                {val?.items?.map((val, index) => {
                   return (
-                    <div key={index}>
-                      <div
-                        className="cursor-pointer text-[14px] mt-2"
-                        onClick={() => handleNavigation(val?.path)}
-                      >
-                        {val?.name}
-                      </div>
+                    <div
+                      key={index}
+                      className={`${
+                        isActive && pathname === val.path ? "text-teal-700" : ""
+                      } cursor-pointer text-[16px] text-tremor-default`}
+                      onClick={() => handleNavigation(val?.path)}
+                    >
+                      {val?.name}
                     </div>
                   );
                 })}

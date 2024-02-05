@@ -11,6 +11,7 @@ import {
   TabGroup,
   TabPanels,
   TabPanel,
+  Badge,
 } from "@tremor/react";
 import {
   Menubar,
@@ -138,6 +139,7 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
                   height={120}
                   width={120}
                   fallbackType="icon"
+                  fallbackClassName={"h-[120px] w-[120px]"}
                   avatar={data?.skillVerificationRequest?.user.avatar as string}
                   fallback={`${data?.skillVerificationRequest?.user?.username?.charAt(
                     0
@@ -227,7 +229,7 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-12 gap-6">
+              <div className="grid grid-cols-12 gap-6 mt-2 md:mt-0">
                 <div className="col-span-12 sm:col-span-6">
                   <Title>Skill</Title>
                   <div className="flex flex-row items-center mt-4 text-tremor-default ">
@@ -249,36 +251,36 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
                     </Text>
                   </div>
                   <div className="mt-1">
-                    <div className="flex flex-row items-center text-tremor-default">
-                      {data?.skillVerificationRequest?.verified ? (
-                        <Icons.shield
-                          className="h-5 w-5 stroke-[1.5px]"
-                          color="teal"
-                        />
-                      ) : null}
-                      <div
-                        className={`text-[15px]  ${
-                          data?.skillVerificationRequest?.verified
-                            ? "text-teal-700 ml-1"
-                            : "text-gray-600 ml-0"
-                        } `}
-                      >
-                        {data?.skillVerificationRequest?.verified
-                          ? "DU Verified"
-                          : "Verification Pending"}
-                      </div>
-                    </div>
                     {data?.skillVerificationRequest?.verified ? (
-                      <div className="flex flex-row items-center text-tremor-default mt-1">
-                        Verification Date:{" "}
-                        <Text className="ml-2">
-                          {formatDate(
-                            data?.skillVerificationRequest.dateOfVerfication,
-                            "dd MMMM, yyyy"
-                          )}
-                        </Text>
+                      <div className="flex flex-col">
+                        <Badge className="px-1.5 pr-2" color="teal">
+                          <span className="flex flex-row items-center text-tremor-default">
+                            {data?.skillVerificationRequest?.verified ? (
+                              <Icons.shield
+                                className="h-4 w-4 stroke-[1.5px]"
+                                color="teal"
+                              />
+                            ) : null}
+                            <span className="text-[15px] text-teal-700 ml-1 text-tremor-default">
+                              DU Verified
+                            </span>
+                          </span>
+                        </Badge>
+                        <div className="flex flex-row items-center text-tremor-default mt-1">
+                          Verification Date:{" "}
+                          <Text className="ml-2">
+                            {formatDate(
+                              data?.skillVerificationRequest.dateOfVerfication,
+                              "dd MMMM, yyyy"
+                            )}
+                          </Text>
+                        </div>
                       </div>
-                    ) : null}
+                    ) : (
+                      <div className="text-[15px] text-teal-700 ml-0">
+                        Verification Pending
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="col-span-12 sm:col-span-6  md:place-self-end">

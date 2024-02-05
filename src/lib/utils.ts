@@ -63,3 +63,15 @@ export const getYears = (back:number, type: "sub" | "add" = "sub") => {
     type === "sub" ? year - back + i + 1 : year + back - i,
   )
 }
+
+export function getRandomString(length = 20) {
+  var randomChars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var result = "";
+  for (var i = 0; i < length; i++) {
+    result += randomChars.charAt(
+      Math.floor(Math.random() * randomChars.length)
+    );
+  }
+  return result;
+}

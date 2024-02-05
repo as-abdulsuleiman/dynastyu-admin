@@ -254,11 +254,14 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
         }
       >
         <TableCell>
-          <Flex alignItems="center" justifyContent="start">
+          <Flex
+            alignItems="center"
+            justifyContent="start"
+            onClick={() =>
+              router.push(`/skills/verification-request/${item?.id}`)
+            }
+          >
             <UserAvatar
-              // onClick={() =>
-              //   router.push(`/${userType}/${Number(userId)}`, { scroll: true })
-              // }
               className="h-[55px] w-[55px] shadow cursor-pointer"
               fallbackType="name"
               avatar={item?.user?.avatar as string}
@@ -266,7 +269,7 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
                 0
               )} ${item?.user?.surname?.charAt(0)}`}
             />
-            <Text className="ml-2">
+            <Text className="ml-2 cursor-pointer">
               {item?.user?.firstname} {item?.user?.firstname}
             </Text>
           </Flex>

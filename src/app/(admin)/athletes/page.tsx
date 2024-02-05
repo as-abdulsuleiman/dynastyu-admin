@@ -417,28 +417,30 @@ const Athletes: FC<AthletesProps> = ({}) => {
         name: `${item?.user?.isActive ? "Deactivate" : "Activate"} Profile`,
         onclick: async () => await handleActivateAthlete(item),
       },
-
-      {
-        name: "Delete Profile",
-        onclick: async () => await handleDeleteAthlete(item),
-      },
+      // {
+      //   name: "Delete Profile",
+      //   onclick: async () => await handleDeleteAthlete(item),
+      // },
     ];
     return (
       <TableRow key={item?.id}>
         <TableCell>
-          <Flex alignItems="center" justifyContent="start">
+          <Flex
+            alignItems="center"
+            justifyContent="start"
+            onClick={() =>
+              router.push(`/athlete/${item?.id}`, { scroll: true })
+            }
+          >
             <UserAvatar
-              onClick={() =>
-                router.push(`/athlete/${Number(item?.id)}`, { scroll: true })
-              }
-              className="h-[55px] w-[55px] shadow cursor-pointer"
+              className="h-[59px] w-[59px] shadow cursor-pointer"
               fallbackType="name"
               avatar={item?.user?.avatar as string}
               fallback={`${item?.user?.username?.charAt(
                 0
               )} ${item?.user?.firstname?.charAt(0)}`}
             />
-            <Text className="ml-2">
+            <Text className="ml-2 cursor-pointer">
               {item?.user?.firstname} {item?.user?.surname}
             </Text>
           </Flex>

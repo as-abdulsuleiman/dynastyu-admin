@@ -38,7 +38,7 @@ const Navbar: FC<NavbarProps> = ({}) => {
   } = useRootStore();
 
   return (
-    <header className="sticky top-0 supports-backdrop-blur:bg-background/60 inset-x-0 py-1 w-full z-50 border-b bg-background/95 backdrop-blur">
+    <header className="fixed top-0 supports-backdrop-blur:bg-background/60 inset-x-0 py-1 w-full z-50 border-b bg-background/95 backdrop-blur">
       <nav className="w-full h-16 mx-auto flex items-center px-[16px] md:px-6 ">
         <Link href="/dashboard" className="flex gap-2 items-center">
           <p className="hidde text-lg font-medium md:block">

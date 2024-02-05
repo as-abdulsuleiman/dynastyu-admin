@@ -224,27 +224,28 @@ const Schools: FC<SchoolsProps> = ({}) => {
         name: `Edit School`,
         onclick: () => handleEditSchool(item),
       },
-      {
-        name: "Delete School",
-        onclick: async () => await handleDeleteSchool(item),
-      },
+      // {
+      //   name: "Delete School",
+      //   onclick: async () => await handleDeleteSchool(item),
+      // },
     ];
     return (
       <TableRow key={item?.id}>
         <TableCell>
-          <Flex alignItems="center" justifyContent="start">
+          <Flex
+            alignItems="center"
+            justifyContent="start"
+            onClick={() => router.push(`/school/${item?.id}`, { scroll: true })}
+          >
             <UserAvatar
-              height={120}
-              width={120}
-              onClick={() =>
-                router.push(`/school/${item?.id}`, { scroll: true })
-              }
-              className="h-[55px] w-[55px] shadow cursor-pointer object-cover"
+              height={150}
+              width={150}
+              className="h-[59px] w-[59px] shadow cursor-pointer "
               fallbackType="name"
               avatar={item?.logo as string}
               fallback={`${item?.name?.charAt(0)}`}
             />
-            <Text className="ml-2">{item?.name}</Text>
+            <Text className="ml-2 cursor-pointer">{item?.name}</Text>
           </Flex>
         </TableCell>
         <TableCell className="text-center">

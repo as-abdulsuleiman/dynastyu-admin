@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
 import { Analytics } from "@vercel/analytics/react";
 import AuthProvider from "@/components/auth-provider";
+// import NextTopLoader from "nextjs-toploader";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -47,6 +48,7 @@ export default function RootLayout({
           inter.className
         )}
       >
+        {/* <NextTopLoader color="#dc2626" /> */}
         <AuthProvider>
           <div className="w-full mx-auto h-screen min-h-screen relative flex flex-col bg-background">
             {children}

@@ -39,7 +39,7 @@ const Drawer: FC<DrawerProps> = () => {
           <Menu />
         </div>
       </SheetTrigger>
-      <SheetContent side="left" className="w-[300px] h-full">
+      <SheetContent side="left" className="w-[100%] h-full">
         <SheetHeader>
           <SheetTitle className="text-lg font-medium md:block text-left mt-[-34.5px] ml-[0px]">
             <Image
@@ -63,7 +63,7 @@ const Drawer: FC<DrawerProps> = () => {
               }}
             />
             <div className="absolute bottom-[8px] w-full flex  justify-start items-start">
-              <div className="flex w-full flex-col">
+              <div className="flex w-full flex-row">
                 <Button
                   className="mb-6"
                   variant="default"
@@ -77,7 +77,9 @@ const Drawer: FC<DrawerProps> = () => {
                     Logout
                   </div>
                 </Button>
-                <ThemeToggle />
+                <div className="ml-auto">
+                  <ThemeToggle />
+                </div>
               </div>
             </div>
           </div>

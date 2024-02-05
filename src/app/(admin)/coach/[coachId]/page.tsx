@@ -178,6 +178,13 @@ const Page: FC<pageProps> = ({ params }) => {
       onclick: async () => await handleVerifyCoach(data?.coachProfile),
     },
     {
+      name: `View School`,
+      onclick: () =>
+        router.push(`/school/${data?.coachProfile?.schoolId}`, {
+          scroll: true,
+        }),
+    },
+    {
       name: `${
         data?.coachProfile?.user?.isActive ? "Deactivate" : "Activate"
       } Profile`,
@@ -303,7 +310,7 @@ const Page: FC<pageProps> = ({ params }) => {
         title={`${data?.coachProfile?.user?.firstname} 
         ${data?.coachProfile?.user?.surname} Analytics`}
       />
-      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
+      <Grid numItemsMd={1} numItemsLg={1} className="mt-6 gap-6">
         <Card className="bg-background dark:bg-dark-background">
           <div className="flex flex-col items-center justify-center relative">
             <UserAvatar
@@ -311,6 +318,7 @@ const Page: FC<pageProps> = ({ params }) => {
               height={120}
               width={120}
               fallbackType="icon"
+              fallbackClassName={"h-[120px] w-[120px]"}
               avatar={data?.coachProfile?.user.avatar as string}
               fallback={`${data?.coachProfile?.user?.username?.charAt(
                 0
@@ -412,6 +420,18 @@ const Page: FC<pageProps> = ({ params }) => {
           </Callout>
           <Callout
             className="mt-4"
+            title="High Scool"
+            icon={() => {
+              return (
+                <Icons.school className="h-[19px] w-[19px] mr-2" color="teal" />
+              );
+            }}
+            color="teal"
+          >
+            {data?.coachProfile?.school?.name}
+          </Callout>
+          <Callout
+            className="mt-4"
             title="Country"
             icon={() => {
               return (
@@ -470,10 +490,10 @@ const Page: FC<pageProps> = ({ params }) => {
             {data?.coachProfile?.city}
           </Callout>
         </Card>
-        <SchoolCard
+        {/* <SchoolCard
           loading={loading}
           school={data?.coachProfile?.school as GetSchoolQuery}
-        />
+        /> */}
       </Grid>
     </main>
   );
