@@ -253,6 +253,13 @@ const Page: FC<pageProps> = ({ params }) => {
       onclick: async () => await handleActivateAthlete(data?.athleteProfile),
     },
     {
+      name: "View School",
+      onclick: () =>
+        router.push(`/school/${data?.athleteProfile?.schoolId}`, {
+          scroll: true,
+        }),
+    },
+    {
       name: "Delete Profile",
       onclick: async () => await handleDeleteAthlete(data?.athleteProfile),
     },
@@ -318,13 +325,13 @@ const Page: FC<pageProps> = ({ params }) => {
           loading={loading}
           transcripts={(data?.athleteProfile?.transcripts as any) || []}
         />
-      </Grid>
-      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
         <AthleteSkillCard
           athleteId={params?.athleteId}
           loading={loading}
           athleteSkills={(data?.athleteProfile?.skills as any) || []}
         />
+      </Grid>
+      <Grid numItemsMd={1} numItemsLg={1} className="mt-6 gap-6">
         <Card className="bg-background dark:bg-dark-background">
           <div className="flex flex-col items-center justify-center relative">
             <UserAvatar
@@ -332,6 +339,7 @@ const Page: FC<pageProps> = ({ params }) => {
               height={120}
               width={120}
               fallbackType="icon"
+              fallbackClassName={"h-[120px] w-[120px]"}
               avatar={data?.athleteProfile?.user.avatar as string}
               fallback={`${data?.athleteProfile?.user?.username?.charAt(
                 0

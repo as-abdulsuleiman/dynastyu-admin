@@ -26,7 +26,6 @@ export const useStorage = ({
   const [uploading, setUploading] = useState<boolean>(false);
   const [url, setUrl] = useState("");
   const [progress, setProgress] = useState<number | null>(0);
-
   let uploadTask: UploadTask | null;
 
   if (file) {

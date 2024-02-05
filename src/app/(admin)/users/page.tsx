@@ -311,27 +311,30 @@ const Users: FC<UsersProps> = ({}) => {
         name: `${item?.isActive ? "Deactivate" : "Activate"} User`,
         onclick: async () => await handleActiveUser(item),
       },
-      {
-        name: "Delete User",
-        onclick: async () => await handleDeleteUser(item),
-      },
+      // {
+      //   name: "Delete User",
+      //   onclick: async () => await handleDeleteUser(item),
+      // },
     ];
     return (
       <TableRow key={item?.id}>
         <TableCell>
-          <Flex alignItems="center" justifyContent="start">
+          <Flex
+            alignItems="center"
+            justifyContent="start"
+            onClick={() =>
+              router.push(`/${userType}/${Number(userId)}`, { scroll: true })
+            }
+          >
             <UserAvatar
-              onClick={() =>
-                router.push(`/${userType}/${Number(userId)}`, { scroll: true })
-              }
-              className="h-[55px] w-[55px] shadow cursor-pointer"
+              className="h-[59px] w-[59px] shadow cursor-pointer"
               fallbackType="name"
               avatar={item?.avatar as string}
               fallback={`${item?.firstname?.charAt(0)} ${item?.surname?.charAt(
                 0
               )}`}
             />
-            <Text className="ml-2">
+            <Text className="ml-2 cursor-pointer">
               {item?.firstname} {item?.surname}
             </Text>
           </Flex>

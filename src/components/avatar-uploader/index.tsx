@@ -13,11 +13,12 @@ import {
 import { Input } from "../ui/input";
 import { useStorage } from "@/hooks/use-storage";
 import { useToast } from "@/hooks/use-toast";
-import { noImage } from "@/lib/utils";
+import { formatDate, getRandomString, noImage } from "@/lib/utils";
 import Image from "next/image";
 import { ProgressCircle } from "@tremor/react";
 import { observer } from "mobx-react-lite";
 import { Icons } from "../Icons";
+import Resizer from "react-image-file-resizer";
 
 interface AvatarUploaderProps {
   id?: string;
@@ -72,12 +73,28 @@ const AvatarUploader: FC<AvatarUploaderProps> = ({
   ];
 
   const handleOnchangeFile = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.length) {
+    if (e?.target?.files?.length) {
       const selectedFile = e?.target?.files[0];
       if (selectedFile) {
-        if (types.includes(selectedFile.type)) {
-          setFile(selectedFile);
-          setFileName(selectedFile.name);
+        if (types?.includes(selectedFile?.type)) {
+          Resizer?.imageFileResizer(
+            selectedFile,
+            150,
+            150,
+            "JPEG",
+            100,
+            0,
+            (uri) => {
+              const fileName = `${selectedFile?.name}_${getRandomString(
+                40
+              )}_${formatDate(new Date(), "dddd_MMMM_yyyy_h:mm_a")}.jpg`;
+              setFile(uri as File);
+              setFileName(fileName);
+            },
+            "file",
+            150,
+            150
+          );
         } else {
           setFile(null);
           toast({

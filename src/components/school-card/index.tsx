@@ -24,6 +24,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           width={120}
           fallbackType="icon"
           avatar={school?.logo as string}
+          fallbackClassName={"h-[120px] w-[120px]"}
           fallback={`${school?.name?.charAt(0)} `}
           icon={<Icons.school className="h-8 w-8" />}
         />

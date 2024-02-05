@@ -15,6 +15,7 @@ interface UserAvatarProps extends AvatarProps {
   icon?: ReactNode;
   width?: number;
   height?: number;
+  fallbackClassName?: string;
 }
 
 const UserAvatar: FC<UserAvatarProps> = ({
@@ -24,6 +25,7 @@ const UserAvatar: FC<UserAvatarProps> = ({
   fallbackType = "name",
   height,
   width,
+  fallbackClassName,
   ...props
 }) => {
   const [loading, setLoading] = useState(true);
@@ -31,20 +33,20 @@ const UserAvatar: FC<UserAvatarProps> = ({
   return (
     <Avatar {...props}>
       {avatar ? (
-        <div className="relative aspect-square h-full w-full">
-          <Image
-            onLoad={() => setLoading(false)}
-            width={width || 110}
-            height={height || 110}
-            src={avatar}
-            alt="profile"
-            className={`${loading ? "blur-sm " : "blur-none"} object-cover`}
-            referrerPolicy="no-referrer"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
-          />
-        </div>
+        <Image
+          onLoad={() => setLoading(false)}
+          width={width || 110}
+          height={height || 110}
+          src={avatar}
+          alt="profile"
+          className={`${loading ? "blur-sm " : "blur-none"} object-cover `}
+          referrerPolicy="no-referrer"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
+        />
       ) : (
-        <AvatarFallback className="capitalize text-xs">
+        <AvatarFallback
+          className={`capitalize text-xs h-[59px] w-[59px] ${fallbackClassName}`}
+        >
           {fallbackType === "icon" ? <>{icon}</> : <>{fallback}</>}
         </AvatarFallback>
       )}

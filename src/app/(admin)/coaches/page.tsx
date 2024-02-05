@@ -472,10 +472,10 @@ const Coaches: FC<CoachesProps> = ({}) => {
         name: `${item?.user?.isActive ? "Deactivate" : "Activate"} Profile`,
         onclick: async () => await handleActivateCoach(item),
       },
-      {
-        name: "Delete Coach",
-        onclick: async () => await handleDeleteCoach(item),
-      },
+      // {
+      //   name: "Delete Coach",
+      //   onclick: async () => await handleDeleteCoach(item),
+      // },
       {
         name: `${item.verified ? "Unverify Profile" : "Verify Profile"}`,
         onclick: async () => await handleVerifyCoach(item),
@@ -484,19 +484,22 @@ const Coaches: FC<CoachesProps> = ({}) => {
     return (
       <TableRow key={item?.id}>
         <TableCell>
-          <Flex alignItems="center" justifyContent="start">
+          <Flex
+            alignItems="center"
+            justifyContent="start"
+            onClick={() =>
+              router.push(`/coach/${Number(item?.id)}`, { scroll: true })
+            }
+          >
             <UserAvatar
-              onClick={() =>
-                router.push(`/coach/${Number(item?.id)}`, { scroll: true })
-              }
-              className="h-[55px] w-[55px] shadow cursor-pointer"
+              className="h-[59px] w-[59px] shadow cursor-pointer"
               fallbackType="name"
               avatar={item?.user?.avatar as string}
               fallback={`${item?.user?.username?.charAt(
                 0
               )} ${item?.user?.firstname?.charAt(0)}`}
             />
-            <Text className="ml-2">
+            <Text className="ml-2 cursor-pointer">
               {item?.user?.firstname} {item?.user?.surname}
             </Text>
           </Flex>
