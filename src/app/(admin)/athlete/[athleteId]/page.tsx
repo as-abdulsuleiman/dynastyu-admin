@@ -57,6 +57,7 @@ const Page: FC<pageProps> = ({ params }) => {
       },
     },
   });
+
   const dataList: any = [
     {
       name: "Evaluations",
@@ -341,9 +342,9 @@ const Page: FC<pageProps> = ({ params }) => {
               fallbackType="icon"
               fallbackClassName={"h-[120px] w-[120px]"}
               avatar={data?.athleteProfile?.user.avatar as string}
-              fallback={`${data?.athleteProfile?.user?.username?.charAt(
+              fallback={`${data?.athleteProfile?.user?.firstname?.charAt(
                 0
-              )} ${data?.athleteProfile?.user?.firstname?.charAt(0)}`}
+              )} ${data?.athleteProfile?.user?.surname?.charAt(0)}`}
               icon={<Icons.user className="h-8 w-8" />}
             />
             {loading ? (
@@ -395,7 +396,7 @@ const Page: FC<pageProps> = ({ params }) => {
                         <MenubarItem
                           onClick={val?.onclick}
                           key={id}
-                          className="cursor-pointer tremor-SelectItem-root flex justify-start items-center text-tremor-default  ui-selected:text-tremor-content-strong ui-selected:bg-tremor-background-muted text-tremor-content-emphasis dark:ui-active:bg-dark-tremor-background-muted dark:ui-active:text-dark-tremor-content-strong dark:ui-selected:text-dark-tremor-content-strong dark:ui-selected:bg-dark-tremor-background-muted dark:text-dark-tremor-content-emphasis px-2.5 py-2.5"
+                          className="cursor-pointer tremor-SelectItem-root flex justify-start items-center text-tremor-default ui-selected:text-tremor-content-strong ui-selected:bg-tremor-background-muted text-tremor-content-emphasis dark:ui-active:bg-dark-tremor-background-muted dark:ui-active:text-dark-tremor-content-strong dark:ui-selected:text-dark-tremor-content-strong dark:ui-selected:bg-dark-tremor-background-muted dark:text-dark-tremor-content-emphasis px-2.5 py-2.5"
                         >
                           {val?.name}
                         </MenubarItem>

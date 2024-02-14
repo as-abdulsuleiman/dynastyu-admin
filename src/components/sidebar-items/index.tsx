@@ -1,7 +1,7 @@
 /** @format */
 
 import { FC } from "react";
-import { FolderRoot, Home, Settings } from "lucide-react";
+import { FolderRoot, Home, Medal, Settings } from "lucide-react";
 import { usePathname, useParams, useRouter } from "next/navigation";
 import { Icons } from "../Icons";
 import { Text } from "@tremor/react";
@@ -58,14 +58,20 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
         <Icons.whistle className={className} color={color} />
       ),
     },
-    // {
-    //   name: "Fans",
-    //   hasFill: false,
-    //   path: "/fans",
-    //   icon: ({ className, color }: IconProps) => (
-    //     <Medal className={className} color={color} />
-    //   ),
-    // },
+    {
+      name: "Fans",
+      hasFill: true,
+      path: "/fans",
+      // items: [
+      //   {
+      //     name: "Create Fan",
+      //     path: "/fans/new",
+      //   },
+      // ],
+      icon: ({ className, color }: IconProps) => (
+        <Icons.fans className={className} color={color} />
+      ),
+    },
     {
       name: "Schools",
       hasFill: false,
@@ -111,8 +117,6 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
   return (
     <>
       {items?.map((val, index) => {
-        // const isActive = pathname.includes(val?.path);
-
         const parentPath = val?.path;
         let pathToCheck: any = parentPath?.split("?");
         pathToCheck = pathToCheck?.length ? pathToCheck[0] : null;
@@ -120,7 +124,6 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
           pathname.includes(data?.path)
         );
         const isActive = pathname.includes(pathToCheck) || childPath;
-
         const iconColor = "";
         const iconClass = `h-[19px] w-[19px] ${
           val?.hasFill

@@ -141,9 +141,9 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
                   fallbackType="icon"
                   fallbackClassName={"h-[120px] w-[120px]"}
                   avatar={data?.skillVerificationRequest?.user.avatar as string}
-                  fallback={`${data?.skillVerificationRequest?.user?.username?.charAt(
+                  fallback={`${data?.skillVerificationRequest?.user?.firstname?.charAt(
                     0
-                  )} ${data?.skillVerificationRequest?.user?.firstname?.charAt(
+                  )} ${data?.skillVerificationRequest?.user?.surname?.charAt(
                     0
                   )}`}
                   icon={<Icons.user className="h-8 w-8" />}
@@ -189,7 +189,7 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
                   </div>
                 )}
                 <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
-                  <Menubar className="bg-transparent border-0 hover:bg-transparent focus:bg-transparent px-0 mr-6">
+                  <Menubar className="bg-transparent border-0 hover:bg-transparent focus:bg-transparent px-0 mr-0 md:mr-6">
                     <MenubarMenu>
                       <MenubarTrigger className="cursor-pointer px-0 data-[state=open]:bg-transparent hover:bg-transparent focus:bg-transparent bg-transparent focus-within:bg-transparent focus-visible:bg-transparent active:bg-transparent">
                         <Icons.moreHorizontal className="cursor-pointer" />

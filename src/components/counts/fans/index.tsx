@@ -46,7 +46,9 @@ const FanCount: FC<indexProps> = ({}) => {
       categories={["Active fans", "Inactive fans"]}
       onClick={() => router.push("/fans")}
       showIcon={pathname === "/fans"}
-      icon={<Icons.fans className="h-4 w-4" />}
+      icon={
+        <Icons.fans className="h-4 w-4 fill-tremor-content-teal dark:fill-dark-tremor-content-teal" />
+      }
     />
   );
 };

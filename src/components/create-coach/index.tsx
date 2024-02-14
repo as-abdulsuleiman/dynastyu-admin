@@ -45,7 +45,6 @@ interface CreateCoachProps {
 const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
   const { toast } = useToast();
   const router = useRouter();
-
   const [openTitle, setOpenTitle] = useState<boolean>(false);
   const [openAccountType, setOpenAccountType] = useState<boolean>(false);
   const [openSchool, setOpenSchool] = useState<boolean>(false);
@@ -308,22 +307,22 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
         <div className="grid grid-cols-12 gap-6 py-2">
           <div className="col-span-12 sm:col-span-6">
             <Input
-              id="lastname"
-              label="Last Name"
-              className="bg-transparent"
-              placeholder="Your Last Name"
-              error={errors.lastName?.message}
-              {...register("lastName", { required: true })}
-            />
-          </div>
-          <div className="col-span-12 sm:col-span-6">
-            <Input
               id="firstname"
               placeholder="Your First Name"
               label="First Name"
               className="bg-transparent"
               error={errors?.firstName?.message}
               {...register("firstName", { required: true })}
+            />
+          </div>
+          <div className="col-span-12 sm:col-span-6">
+            <Input
+              id="lastname"
+              label="Last Name"
+              className="bg-transparent"
+              placeholder="Your Last Name"
+              error={errors.lastName?.message}
+              {...register("lastName", { required: true })}
             />
           </div>
         </div>

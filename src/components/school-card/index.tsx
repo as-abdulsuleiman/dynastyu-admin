@@ -8,16 +8,39 @@ import UserAvatar from "../user-avatar";
 import { Icons } from "../Icons";
 import { Skeleton } from "../ui/skeleton";
 import Image from "next/image";
-
+import {
+  Menubar,
+  MenubarContent,
+  MenubarItem,
+  MenubarMenu,
+  MenubarTrigger,
+} from "@/components/ui/menubar";
 interface SchoolCardProps {
   loading?: boolean;
   school: any;
 }
 
 const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
+  const dropdownItems = [
+    {
+      name: `Edit School`,
+      onclick: () => {},
+      // router.push(`/fans/edit?fan=${Number(params?.fan)}`, {
+      //   scroll: true,
+      // }),
+    },
+    // {
+    //   name: `${fanData?.user?.isActive ? "Deactivate" : "Activate"} Profile`,
+    //   onclick: async () => await handleActivateProfile(fanData?.user),
+    // },
+    // {
+    //   name: "Delete Profile",
+    //   onclick: async () => await handleDeleteProfile(fanData?.user),
+    // },
+  ];
   return (
     <Card className="bg-background dark:bg-dark-background">
-      <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-col justify-center items-center relative">
         <UserAvatar
           className="h-[120px] w-[120px] shadow"
           height={120}
@@ -33,6 +56,35 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         ) : (
           <Text className="text-xl mt-2">{school?.schoolType?.name}</Text>
         )}
+
+        <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
+          <Menubar className="bg-transparent border-0 hover:bg-transparent focus:bg-transparent px-0">
+            <MenubarMenu>
+              <MenubarTrigger className="cursor-pointer px-0 data-[state=open]:bg-transparent hover:bg-transparent focus:bg-transparent bg-transparent focus-within:bg-transparent focus-visible:bg-transparent active:bg-transparent">
+                <Icons.moreHorizontal className="cursor-pointer" />
+              </MenubarTrigger>
+              <MenubarContent
+                side="bottom"
+                align="start"
+                sideOffset={-2}
+                alignOffset={-150}
+                className="rounded-tremor-default cursor-pointer bg-background dark:bg-dark-background"
+              >
+                {dropdownItems?.map((val, id) => {
+                  return (
+                    <MenubarItem
+                      onClick={val?.onclick}
+                      key={id}
+                      className="cursor-pointer tremor-SelectItem-root flex justify-start items-center text-tremor-default  ui-selected:text-tremor-content-strong ui-selected:bg-tremor-background-muted text-tremor-content-emphasis dark:ui-active:bg-dark-tremor-background-muted dark:ui-active:text-dark-tremor-content-strong dark:ui-selected:text-dark-tremor-content-strong dark:ui-selected:bg-dark-tremor-background-muted dark:text-dark-tremor-content-emphasis px-2.5 py-2.5"
+                    >
+                      {val?.name}
+                    </MenubarItem>
+                  );
+                })}
+              </MenubarContent>
+            </MenubarMenu>
+          </Menubar>
+        </div>
       </div>
       <Divider></Divider>
       <Callout

@@ -11,7 +11,7 @@ import { Analytics } from "@vercel/analytics/react";
 import AuthProvider from "@/components/auth-provider";
 // import NextTopLoader from "nextjs-toploader";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], weight: ["400"], display: "swap" });
 
 export const metadata: Metadata = {
   title: "DynastyU",
