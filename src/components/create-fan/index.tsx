@@ -100,7 +100,8 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
       dob: fanData?.user?.dob || "",
       state: fanData?.user?.state || "",
       city: fanData?.user?.city || "",
-      country: "",
+      country: fanData?.user?.country?.abbreviation || "",
+
       accountType:
         {
           accountTypeId: fanData?.user?.accountType?.id,
@@ -108,8 +109,8 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
         } || {},
     },
     resetOptions: {
-      keepDirtyValues: true, // user-interacted input will be retained
-      keepErrors: true, // input errors will be retained with value update
+      keepDirtyValues: true,
+      keepErrors: true,
     },
   });
 
@@ -132,6 +133,11 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
             firstname: { set: values?.firstName },
             surname: { set: values?.lastName },
             username: { set: values?.username },
+            country: {
+              connect: {
+                abbreviation: values?.country?.toLowerCase(),
+              },
+            },
             dob: { set: values?.dob },
             state: { set: values?.state },
             city: { set: values?.city },

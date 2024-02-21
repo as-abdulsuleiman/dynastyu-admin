@@ -86,9 +86,6 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
 
   const { data: schoolTypeData, loading } = useGetSchoolTypesQuery({
     variables: {
-      where: {
-        id: { equals: 2 },
-      },
       orderBy: {
         createdAt: SortOrder.Desc,
       },
@@ -445,6 +442,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
               selectedValue={schoolType}
               onClose={() => setIsOpen(!isOpen)}
               onSelectValue={(item) => {
+                console.log("item", item);
                 setValue("schoolType", { id: item?.id, name: item?.label });
               }}
               label="School Type"
@@ -463,6 +461,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
             />
           </div>
         </div>
+        {/* {schoolType?.name ? "High School" ? } */}
         <div className="grid grid-cols-12 gap-6 py-2">
           <div className="col-span-12 sm:col-span-6">
             <ComboBoxCard

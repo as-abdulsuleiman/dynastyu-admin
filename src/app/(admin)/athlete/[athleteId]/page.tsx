@@ -2,7 +2,7 @@
 
 "use client";
 
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { Divider, Title, Text, Card, Grid, Callout } from "@tremor/react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -233,6 +233,40 @@ const Page: FC<pageProps> = ({ params }) => {
     }
   };
 
+  const handleFeaturedAthlete = async (item: any) => {
+    try {
+      const isAthleteFeatured = item?.featured;
+      const resp = await updateAthlete({
+        variables: {
+          where: {
+            id: Number(params?.athleteId),
+          },
+          data: {
+            featured: { set: !isAthleteFeatured },
+          },
+        },
+      });
+      if (resp.data?.updateOneAthleteProfile) {
+        // await refetch();
+        toast({
+          title: "Profile successfully updated.",
+          description: `@${item?.user?.username} has been ${
+            !isAthleteFeatured ? "added to featured" : "removed from featured"
+          } `,
+          variant: "default",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not successfully update Athlete. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    }
+  };
+
   const dropdownItems = [
     {
       name: `Edit Profile`,
@@ -245,13 +279,21 @@ const Page: FC<pageProps> = ({ params }) => {
       name: `${
         data?.athleteProfile?.verified ? "Unverify Profile" : "Verify Profile"
       }`,
-      onclick: async () => await handleVerifyAthlete(data?.athleteProfile),
+      onclick: () => handleVerifyAthlete(data?.athleteProfile),
     },
     {
       name: `${
         data?.athleteProfile?.user?.isActive ? "Deactivate" : "Activate"
       } Profile`,
-      onclick: async () => await handleActivateAthlete(data?.athleteProfile),
+      onclick: () => handleActivateAthlete(data?.athleteProfile),
+    },
+    {
+      name: `${
+        data?.athleteProfile?.featured
+          ? "Remove from featured"
+          : "Add to featured"
+      }`,
+      onclick: () => handleFeaturedAthlete(data?.athleteProfile),
     },
     {
       name: "View School",
@@ -303,6 +345,8 @@ const Page: FC<pageProps> = ({ params }) => {
         loading={loading}
         data={dataList}
         showStatus={true}
+        showFeatured={true}
+        featured={data?.athleteProfile?.featured || false}
         isActive={data?.athleteProfile?.user?.isActive || false}
         title={`${data?.athleteProfile?.user?.firstname} 
         ${data?.athleteProfile?.user?.surname} Analytics`}
@@ -491,31 +535,33 @@ const Page: FC<pageProps> = ({ params }) => {
           >
             {data?.athleteProfile?.gpa}
           </Callout>
-          <Callout
-            className="mt-4 min-h-[75px]"
-            title="Huddle"
-            icon={() => {
-              return (
-                <Icons.link className="h-[19px] w-[19px] mr-2" color="teal" />
-              );
-            }}
-            color="teal"
-          >
-            <input
-              onClick={() => {
-                if (data?.athleteProfile?.hudlLink as string) {
-                  window.open(
-                    data?.athleteProfile?.hudlLink as string,
-                    "_blank"
-                  );
-                }
+          {data?.athleteProfile?.hudlLink ? (
+            <Callout
+              className="mt-4 min-h-[75px]"
+              title="Huddle"
+              icon={() => {
+                return (
+                  <Icons.link className="h-[19px] w-[19px] mr-2" color="teal" />
+                );
               }}
-              className="border-none right-0 rounded-none bg-transparent w-full focus-visible:outline-none cursor-pointer focus-visible:ring-0"
-              readOnly
-              type="url"
-              defaultValue={data?.athleteProfile?.hudlLink as string}
-            />
-          </Callout>
+              color="teal"
+            >
+              <input
+                onClick={() => {
+                  if (data?.athleteProfile?.hudlLink as string) {
+                    window.open(
+                      data?.athleteProfile?.hudlLink as string,
+                      "_blank"
+                    );
+                  }
+                }}
+                className="border-none right-0 rounded-none bg-transparent w-full focus-visible:outline-none cursor-pointer focus-visible:ring-0"
+                readOnly
+                type="url"
+                defaultValue={data?.athleteProfile?.hudlLink as string}
+              />
+            </Callout>
+          ) : null}
           <Callout
             className="mt-4 min-h-[75px]"
             title="Date of Birth"

@@ -14,6 +14,12 @@ fragment UserCommonParts on User {
   city
   state
   createdAt
+  country {
+    name
+    id
+    flag
+    abbreviation
+  }
   accountTypeId
   _count {
     following

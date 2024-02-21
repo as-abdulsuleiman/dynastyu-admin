@@ -15,28 +15,19 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "@/components/ui/menubar";
+import { useRouter } from "next/navigation";
 interface SchoolCardProps {
   loading?: boolean;
   school: any;
 }
 
 const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
+  const router = useRouter();
   const dropdownItems = [
     {
       name: `Edit School`,
-      onclick: () => {},
-      // router.push(`/fans/edit?fan=${Number(params?.fan)}`, {
-      //   scroll: true,
-      // }),
+      onclick: () => router.push(`/schools/edit?school=${school?.id}`),
     },
-    // {
-    //   name: `${fanData?.user?.isActive ? "Deactivate" : "Activate"} Profile`,
-    //   onclick: async () => await handleActivateProfile(fanData?.user),
-    // },
-    // {
-    //   name: "Delete Profile",
-    //   onclick: async () => await handleDeleteProfile(fanData?.user),
-    // },
   ];
   return (
     <Card className="bg-background dark:bg-dark-background">

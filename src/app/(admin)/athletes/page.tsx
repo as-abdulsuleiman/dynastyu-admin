@@ -95,7 +95,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
 
   const [status, setStatus] = useState<string>("");
   const [value, setValue] = useState<string>("");
-  const [isActivating, setIsactivating] = useState<boolean>(false);
+  const [isActivating, setIsActivating] = useState<boolean>(false);
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [debounced] = useDebouncedValue(value, 300);
@@ -251,14 +251,14 @@ const Athletes: FC<AthletesProps> = ({}) => {
   };
 
   const handleActivateAthlete = async (item: any) => {
+    setIsActivating(true);
     setSelectedUser(item?.id);
-    setIsactivating(true);
     try {
       const isAthleteActive = item?.user?.isActive;
-      const resp = await updateAthlete({
+      await updateAthlete({
         variables: {
           where: {
-            id: Number(item?.id),
+            id: item?.id,
           },
           data: {
             user: {
@@ -269,16 +269,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
           },
         },
       });
-      if (resp.data?.updateOneAthleteProfile) {
-        await refetch();
-        // toast({
-        //   title: "Coach successfully updated.",
-        //   description: `${item?.user?.username} has been ${
-        //     coach?.user?.isActive ? "Deactivated" : "Activated"
-        //   } `,
-        //   variant: "default",
-        // });
-      }
+      await refetch({});
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -288,17 +279,17 @@ const Athletes: FC<AthletesProps> = ({}) => {
         variant: "destructive",
       });
     } finally {
-      setIsactivating(false);
+      setIsActivating(false);
       setSelectedUser(null);
     }
   };
 
   const handleVerifyAthlete = async (item: any) => {
-    setSelectedUser(item?.id);
     setIsVerifying(true);
+    setSelectedUser(item?.id);
     try {
       const isVerified = item?.verified;
-      const resp = await updateAthlete({
+      await updateAthlete({
         variables: {
           where: { id: item?.id },
           data: {
@@ -307,16 +298,17 @@ const Athletes: FC<AthletesProps> = ({}) => {
           },
         },
       });
-      if (resp.data?.updateOneAthleteProfile) {
-        await refetch();
-        // toast({
-        //   title: "Coach successfully updated.",
-        //   description: `${coach?.user?.username} has been ${
-        //     coach?.user?.isActive ? "Deactivated" : "Activated"
-        //   } `,
-        //   variant: "default",
-        // });
-      }
+      // await refetch();
+      // if (resp.data?.updateOneAthleteProfile) {
+      //   //
+      //   // toast({
+      //   //   title: "Coach successfully updated.",
+      //   //   description: `${coach?.user?.username} has been ${
+      //   //     coach?.user?.isActive ? "Deactivated" : "Activated"
+      //   //   } `,
+      //   //   variant: "default",
+      //   // });
+      // }
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -326,7 +318,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
         variant: "destructive",
       });
     } finally {
-      setIsactivating(false);
+      setIsVerifying(false);
       setSelectedUser(null);
     }
   };
@@ -410,12 +402,12 @@ const Athletes: FC<AthletesProps> = ({}) => {
         },
       },
       {
-        name: `${item.verified ? "Unverify Profile" : "Verify Profile"}`,
-        onclick: async () => await handleVerifyAthlete(item),
+        name: `${item.verified ? "Unverify" : "Verify"} Profile`,
+        onclick: () => handleVerifyAthlete(item),
       },
       {
         name: `${item?.user?.isActive ? "Deactivate" : "Activate"} Profile`,
-        onclick: async () => await handleActivateAthlete(item),
+        onclick: () => handleActivateAthlete(item),
       },
       // {
       //   name: "Delete Profile",

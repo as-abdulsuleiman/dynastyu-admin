@@ -17,6 +17,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { StatusOfflineIcon, StatusOnlineIcon } from "@heroicons/react/outline";
 import { observer } from "mobx-react-lite";
+import StarIcon from "@/components/Icons/starIcon";
 
 type BarData = {
   key?: string;
@@ -34,6 +35,8 @@ interface indexProps {
   title?: string;
   isActive?: boolean;
   showStatus?: boolean;
+  showFeatured?: boolean;
+  featured?: boolean;
   valueFormatter?: ValueFormatter;
 }
 
@@ -51,6 +54,8 @@ const UsersAnalytics: FC<indexProps> = ({
   title,
   showStatus,
   isActive,
+  showFeatured,
+  featured,
   valueFormatter,
 }) => {
   return (
@@ -83,16 +88,28 @@ const UsersAnalytics: FC<indexProps> = ({
         <>
           <div className="flex flex-row items-center">
             <Title>{title}</Title>
-            {showStatus ? (
-              <Badge
-                datatype={isActive ? "increase" : "decrease"}
-                className="flex flex-row ml-auto"
-                color={isActive ? "teal" : "rose"}
-                icon={isActive ? StatusOnlineIcon : StatusOfflineIcon}
-              >
-                {isActive ? "Active" : "Deactivated"}
-              </Badge>
-            ) : null}
+            <div className="ml-auto flex flex-row items-center">
+              {showStatus ? (
+                <Badge
+                  datatype={isActive ? "increase" : "decrease"}
+                  className="flex flex-row "
+                  color={isActive ? "teal" : "rose"}
+                  icon={isActive ? StatusOnlineIcon : StatusOfflineIcon}
+                >
+                  {isActive ? "Active" : "Deactivated"}
+                </Badge>
+              ) : null}
+              {showFeatured ? (
+                <Badge
+                  datatype={featured ? "increase" : "decrease"}
+                  className="flex flex-row ml-3"
+                  color={featured ? "yellow" : "rose"}
+                  icon={() => <StarIcon className="h-4 w-4 mr-1" />}
+                >
+                  {featured ? "Featured" : "Not Featured"}
+                </Badge>
+              ) : null}
+            </div>
           </div>
           <Flex className="mt-4">
             <Text>

@@ -20,6 +20,14 @@ query getAthletes(
     uuid
     createdAt
     verified
+    featured
+    socialAccounts{
+      id
+      uuid
+      name
+      link
+      athleteProfileId
+    }
     school {
       id
       name
@@ -135,6 +143,7 @@ mutation updateAthlete(
       }
     }
     schoolId
+    featured
     userId
     user {
       id
@@ -188,6 +197,14 @@ query getAthleteProfile($where: AthleteProfileWhereUniqueInput!) {
     hudlLink
     graduationYear
     gpa
+    featured
+    socialAccounts{
+      id
+      uuid
+      name
+      link
+      athleteProfileId
+    }
     evaluations {
       id
       note
