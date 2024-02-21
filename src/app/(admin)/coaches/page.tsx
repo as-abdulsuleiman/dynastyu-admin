@@ -391,7 +391,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
         variant: "destructive",
       });
     } finally {
-      setIsactivating(false);
+      setIsVerifying(false);
       setSelectedUser(null);
     }
   };
@@ -469,6 +469,10 @@ const Coaches: FC<CoachesProps> = ({}) => {
         onclick: () => handleEditCoach(item),
       },
       {
+        name: `${item.verified ? "Unverify" : "Verify"} Profile`,
+        onclick: async () => await handleVerifyCoach(item),
+      },
+      {
         name: `${item?.user?.isActive ? "Deactivate" : "Activate"} Profile`,
         onclick: async () => await handleActivateCoach(item),
       },
@@ -476,10 +480,6 @@ const Coaches: FC<CoachesProps> = ({}) => {
       //   name: "Delete Coach",
       //   onclick: async () => await handleDeleteCoach(item),
       // },
-      {
-        name: `${item.verified ? "Unverify Profile" : "Verify Profile"}`,
-        onclick: async () => await handleVerifyCoach(item),
-      },
     ];
     return (
       <TableRow key={item?.id}>

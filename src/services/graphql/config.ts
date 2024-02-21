@@ -9,6 +9,7 @@ import { getToken } from "../token";
   
   const httpLink = createHttpLink({
     uri: "https://dynastyu-9de03.appspot.com/",
+    credentials: 'same-origin',
     fetchOptions: {
       mode: 'cors',
     },  

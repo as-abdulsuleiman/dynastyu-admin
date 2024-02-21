@@ -143,6 +143,27 @@ export const Icons = {
       </svg>
     );
   },
+  circleUserRound: (props: LucideProps) => {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="lucide lucide-circle-user-round"
+        {...props}
+      >
+        <path d="M18 20a6 6 0 0 0-12 0" />
+        <circle cx="12" cy="10" r="4" />
+        <circle cx="12" cy="12" r="10" />
+      </svg>
+    );
+  },
   athlete: (props: LucideProps) => {
     return (
       <svg width={24} height={24} fill="none" viewBox="0 0 16 16" {...props}>
@@ -1008,6 +1029,72 @@ export const Icons = {
         <path d="M8 7h8" />
         <circle cx="12" cy="17" r="5" />
         <path d="M12 18v-2h-.5" />
+      </svg>
+    );
+  },
+  userRoundX: (props: LucideProps) => {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="lucide lucide-user-round-x"
+        {...props}
+      >
+        <path d="M2 21a8 8 0 0 1 11.873-7" />
+        <circle cx="10" cy="8" r="5" />
+        <path d="m17 17 5 5" />
+        <path d="m22 17-5 5" />
+      </svg>
+    );
+  },
+  flagOff: (props: LucideProps) => {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="lucide lucide-flag-off"
+        {...props}
+      >
+        <path d="M8 2c3 0 5 2 8 2s4-1 4-1v11" />
+        <path d="M4 22V4" />
+        <path d="M4 15s1-1 4-1 5 2 8 2" />
+        <line x1="2" x2="22" y1="2" y2="22" />
+      </svg>
+    );
+  },
+  messageSquareMore: (props: LucideProps) => {
+    return (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="lucide lucide-message-square-more"
+        {...props}
+      >
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        <path d="M8 10h.01" />
+        <path d="M12 10h.01" />
+        <path d="M16 10h.01" />
       </svg>
     );
   },

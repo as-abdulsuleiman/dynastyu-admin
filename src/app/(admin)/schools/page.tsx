@@ -208,9 +208,10 @@ const Schools: FC<SchoolsProps> = ({}) => {
   };
 
   const handleEditSchool = (item: any) => {
-    if (item?.schoolType?.name === "College") {
-      router.push(`/schools/edit?school=${item?.id}`);
-    }
+    // if (item?.schoolType?.name === "College") {
+    //   router.push(`/schools/edit?school=${item?.id}`);
+    // }
+    router.push(`/schools/edit?school=${item?.id}`);
   };
 
   const renderItems = ({ item, id }: { item: any; id: any }) => {
