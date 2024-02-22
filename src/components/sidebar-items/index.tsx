@@ -87,9 +87,9 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
       ),
     },
     {
-      name: "Skills",
+      name: "Skill Types",
       hasFill: false,
-      path: "/skills",
+      path: "/skill-types",
       items: [
         // {
         //   name: "Create Skill",
@@ -97,7 +97,7 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
         // },
         {
           name: "Verification Request",
-          path: "/skills/verification-request",
+          path: "/skill-types/verification-request",
         },
       ],
       icon: ({ className, color }: IconProps) => (

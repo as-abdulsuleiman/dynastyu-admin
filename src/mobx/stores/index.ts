@@ -12,6 +12,7 @@ import { CoacheStore } from "./coaches";
 import { FanStore } from "./fans";
 import { AthleteStore } from "./athletes";
 import { SchoolStore } from "./schools";
+import { SkillTypeStore } from "./skill-types";
 
 export const RootStore = types.model("RootStore", {
   counterStore: CounterStore,
@@ -21,6 +22,7 @@ export const RootStore = types.model("RootStore", {
   coacheStore: CoacheStore,
   fanStore: FanStore,
   schoolStore: SchoolStore,
+  SkillTypeStore :SkillTypeStore,
 });
 
 export interface RootStore extends Instance<typeof RootStore> {}
@@ -35,6 +37,8 @@ export const createRootStore = () => {
       coacheStore: CoacheStore.create(),
       fanStore: FanStore.create(),
       schoolStore: SchoolStore.create(),
+      SkillTypeStore :SkillTypeStore.create(),
+
     },
     { NODE_ENV: process.env.NODE_ENV }
   );
