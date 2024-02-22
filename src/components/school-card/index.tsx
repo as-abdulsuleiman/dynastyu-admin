@@ -16,6 +16,12 @@ import {
   MenubarTrigger,
 } from "@/components/ui/menubar";
 import { useRouter } from "next/navigation";
+import {
+  SchoolUpdateInput,
+  useDeleteSchoolMutation,
+  useUpdateSchoolMutation,
+} from "@/services/graphql";
+import { useToast } from "@/hooks/use-toast";
 interface SchoolCardProps {
   loading?: boolean;
   school: any;
@@ -23,10 +29,84 @@ interface SchoolCardProps {
 
 const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   const router = useRouter();
+  const { toast } = useToast();
+  const [deleteSchool] = useDeleteSchoolMutation();
+  const [updateSchool] = useUpdateSchoolMutation();
+
+  const handleDeleteSchool = async (school: any) => {
+    const athletesInterestedId = school?.athletesInterested?.map(
+      (val: any) => val?.athleteId
+    );
+    const athletesRecruitedId = school?.athletesInterested?.map(
+      (val: any) => val?.athleteId
+    );
+    const athletesProspectedId = school?.athletesProspected?.map(
+      (val: any) => val?.athleteId
+    );
+    try {
+      await updateSchool({
+        variables: {
+          where: {
+            id: school.id,
+          },
+          data: {
+            athletesProspected: {
+              deleteMany: [
+                {
+                  athleteId: {
+                    in: athletesProspectedId,
+                  },
+                },
+              ],
+            },
+            athletesRecruited: {
+              deleteMany: [
+                {
+                  athleteId: {
+                    in: athletesRecruitedId,
+                  },
+                },
+              ],
+            },
+            athletesInterested: {
+              deleteMany: [
+                {
+                  athleteId: {
+                    in: athletesInterestedId,
+                  },
+                },
+              ],
+            },
+          },
+        },
+      });
+      await deleteSchool({
+        variables: {
+          where: {
+            id: school?.id,
+          },
+        },
+      });
+      router.push(`/schools`);
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not delete athlete profile. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    }
+  };
+
   const dropdownItems = [
     {
       name: `Edit School`,
       onclick: () => router.push(`/schools/edit?school=${school?.id}`),
+    },
+    {
+      name: `Delete ${school?.schoolType?.name}`,
+      onclick: () => handleDeleteSchool(school),
     },
   ];
   return (

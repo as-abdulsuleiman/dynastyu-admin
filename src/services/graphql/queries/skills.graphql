@@ -27,6 +27,11 @@ query getSkillTypes(
     description
     secondValueOptions
     videosLabels
+    position
+    icon
+    _count{
+      skills
+    }
   }
 }
 
@@ -79,6 +84,11 @@ query skillsTypes(
     videosLabels
     description
     unit
+     position
+    icon
+    _count{
+      skills
+    }
     skills(where: $where) {
       id
       videos

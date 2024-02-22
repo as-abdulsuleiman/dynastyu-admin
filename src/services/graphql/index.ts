@@ -26239,7 +26239,7 @@ export type GetSkillTypesQueryVariables = Exact<{
 }>;
 
 
-export type GetSkillTypesQuery = { __typename?: 'Query', skillTypes: Array<{ __typename?: 'SkillType', name: string, id: any, uuid: string, mask: Array<string>, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string> }> };
+export type GetSkillTypesQuery = { __typename?: 'Query', skillTypes: Array<{ __typename?: 'SkillType', name: string, id: any, uuid: string, mask: Array<string>, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, position?: number | null, icon?: string | null, _count?: { __typename?: 'SkillTypeCount', skills: number } | null }> };
 
 export type GetSkillsQueryVariables = Exact<{
   where?: InputMaybe<SkillsWhereInput>;
@@ -26259,7 +26259,7 @@ export type SkillsTypesQueryVariables = Exact<{
 }>;
 
 
-export type SkillsTypesQuery = { __typename?: 'Query', skillTypes: Array<{ __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, description?: string | null, unit: string, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, secondValue?: string | null, value: string }> }> };
+export type SkillsTypesQuery = { __typename?: 'Query', skillTypes: Array<{ __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, description?: string | null, unit: string, position?: number | null, icon?: string | null, _count?: { __typename?: 'SkillTypeCount', skills: number } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, secondValue?: string | null, value: string }> }> };
 
 export type CreateSkillMutationVariables = Exact<{
   data: SkillsCreateInput;
@@ -29443,6 +29443,11 @@ export const GetSkillTypesDocument = gql`
     description
     secondValueOptions
     videosLabels
+    position
+    icon
+    _count {
+      skills
+    }
   }
 }
     `;
@@ -29563,6 +29568,11 @@ export const SkillsTypesDocument = gql`
     videosLabels
     description
     unit
+    position
+    icon
+    _count {
+      skills
+    }
     skills(where: $where) {
       id
       videos
