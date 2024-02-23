@@ -39,7 +39,6 @@ const CarouselCard: FC<CarouselCardProps> = ({ videos }) => {
                     // width={320}
                     // height={240}
                   />
-                  {/* <span className="text-4xl font-semibold">{index + 1}</span> */}
                 </CardContent>
               </Card>
             </div>
