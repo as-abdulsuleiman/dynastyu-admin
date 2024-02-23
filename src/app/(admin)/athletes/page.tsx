@@ -48,6 +48,7 @@ import UserAvatar from "@/components/user-avatar";
 import { useToast } from "@/hooks/use-toast";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 import { SearchInput } from "@/components/search-input";
+import StarIcon from "@/components/Icons/starIcon";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -65,6 +66,7 @@ const headerItems = [
   { name: "Position" },
   { name: "Status" },
   { name: "Verified" },
+  { name: "Featured" },
   { name: "Action" },
 ];
 
@@ -75,6 +77,7 @@ enum FilterEnum {
   VERIFIED = "Verified",
   NOTVERIFIED = "Not Verified",
   NOTAPPROVED = "Not Approved",
+  FEATURED = "Featured",
 }
 
 interface AthletesProps {}
@@ -96,6 +99,8 @@ const Athletes: FC<AthletesProps> = ({}) => {
   const [status, setStatus] = useState<string>("");
   const [value, setValue] = useState<string>("");
   const [isActivating, setIsActivating] = useState<boolean>(false);
+  const [isFeaturing, setIsFeaturing] = useState<boolean>(false);
+
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [debounced] = useDebouncedValue(value, 300);
@@ -284,6 +289,46 @@ const Athletes: FC<AthletesProps> = ({}) => {
     }
   };
 
+  const handleFeaturedAthlete = async (item: any) => {
+    setIsFeaturing(true);
+    setSelectedUser(item?.id);
+
+    try {
+      const isAthleteFeatured = item?.featured;
+      const resp = await updateAthlete({
+        variables: {
+          where: {
+            id: item?.id,
+          },
+          data: {
+            featured: { set: !isAthleteFeatured },
+          },
+        },
+      });
+      if (resp.data?.updateOneAthleteProfile) {
+        // await refetch();
+        // toast({
+        //   title: "Profile successfully updated.",
+        //   description: `@${item?.user?.username} has been ${
+        //     !isAthleteFeatured ? "added to featured" : "removed from featured"
+        //   } `,
+        //   variant: "default",
+        // });
+      }
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not successfully update Athlete. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    } finally {
+      setIsFeaturing(false);
+      setSelectedUser(null);
+    }
+  };
+
   const handleVerifyAthlete = async (item: any) => {
     setIsVerifying(true);
     setSelectedUser(item?.id);
@@ -409,6 +454,10 @@ const Athletes: FC<AthletesProps> = ({}) => {
         name: `${item?.user?.isActive ? "Deactivate" : "Activate"} Profile`,
         onclick: () => handleActivateAthlete(item),
       },
+      {
+        name: `${item?.featured ? "Remove from featured" : "Add to featured"}`,
+        onclick: () => handleFeaturedAthlete(item),
+      },
       // {
       //   name: "Delete Profile",
       //   onclick: async () => await handleDeleteAthlete(item),
@@ -490,6 +539,27 @@ const Athletes: FC<AthletesProps> = ({}) => {
               datatype="moderateDecrease"
             >
               {item?.verified ? "Verified" : "Not Verified"}
+            </Badge>
+          )}
+        </TableCell>
+        <TableCell className="text-center">
+          {item?.id === selectedUser && isFeaturing ? (
+            <div className="text-center flex flex-row justify-center items-center">
+              <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin" />
+              {"Loading..."}
+            </div>
+          ) : (
+            <Badge
+              size="xs"
+              className="cursor-pointer px-[8px]"
+              color={item?.featured ? "yellow" : "rose"}
+              tooltip={item?.featured ? "Featured" : "Not Featured"}
+              icon={() => {
+                return <StarIcon className="h-4 w-4 mr-1" />;
+              }}
+              datatype="moderateDecrease"
+            >
+              {item?.featured ? "Featured" : "Not Featured"}
             </Badge>
           )}
         </TableCell>

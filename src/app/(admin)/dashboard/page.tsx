@@ -413,7 +413,12 @@ const Page: FC<PageProps> = () => {
       <TabGroup className="mt-6">
         <TabPanels>
           <TabPanel>
-            <Grid numItemsMd={2} numItemsLg={3} className="mt-6 gap-6">
+            <Grid
+              numItemsMd={2}
+              numItemsLg={2}
+              numItemsSm={2}
+              className="mt-6 gap-6"
+            >
               <UsersCount />
               <AthletesCount />
               <CoachesCount />

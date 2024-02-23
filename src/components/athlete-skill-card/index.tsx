@@ -10,6 +10,7 @@ import { observer } from "mobx-react-lite";
 import CarouselCard from "../carousel-card";
 import { useUpdateAthleteMutation } from "@/services/graphql";
 import { useToast } from "@/hooks/use-toast";
+import SkillIcon from "../Icons/skill";
 
 interface AthleteSkillsCardProps {
   athleteSkills: AthleteSkill[];
@@ -146,7 +147,10 @@ const AthleteSkillCard: FC<AthleteSkillsCardProps> = ({
     <Card className="bg-background dark:bg-dark-background">
       <div className="flex flex-row items-center mb-3">
         <Title>Skills</Title>
-        <Icons.school className="ml-auto h-6 w-6 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+        <SkillIcon
+          className="ml-auto h-6 w-6 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis"
+          color="#374151"
+        />
       </div>
       {loading ? (
         <> {renderLoader()}</>

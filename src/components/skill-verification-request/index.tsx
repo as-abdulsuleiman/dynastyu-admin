@@ -165,7 +165,7 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
   }, [status, whereClause, debounced, refetch]);
 
   const handleViewDetail = async (item: any) => {
-    router.push(`/skills/verification-request/${item?.id}`);
+    router.push(`/skill-types/verification-request/${item?.id}`);
   };
 
   const lastUserId = useMemo(() => {

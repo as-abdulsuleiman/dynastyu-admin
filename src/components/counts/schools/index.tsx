@@ -63,38 +63,6 @@ const SchoolsCount: FC<indexProps> = ({ whereClause, title }) => {
         <Icons.school className="h-4 w-4 stroke-tremor-content-teal dark:stroke-dark-tremor-content-teal" />
       }
     />
-    // <Card>
-    //   {loading ? (
-    //     <div className="flex items-center justify-center h-full w-full mx-auto my-auto">
-    //       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-    //       <span>Loading...</span>
-    //     </div>
-    //   ) : (
-    //     <>
-    //       <Flex alignItems="start">
-    //         <div className="truncate">
-    //           <Text>Total Schools</Text>
-    //           <Metric className="truncate mt-1">
-    //             {schools?.schools?.length}
-    //           </Metric>
-    //         </div>
-    //         {/* <Icon
-    //       icon={item.icon}
-    //       variant="simple"
-    //       tooltip="Shows sales performance per employee"
-    //     /> */}
-    //         <BadgeDelta
-    //           className="cursor-pointer"
-    //           onClick={() => router.push("/schools")}
-    //           deltaType="moderateIncrease"
-    //         >
-    //           View
-    //         </BadgeDelta>
-    //       </Flex>
-    //       <ProgressBar value={15.9} className="mt-2" />
-    //     </>
-    //   )}
-    // </Card>
   );
 };
 
