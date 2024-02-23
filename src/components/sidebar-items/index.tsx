@@ -5,6 +5,7 @@ import { FolderRoot, Home, Medal, Settings } from "lucide-react";
 import { usePathname, useParams, useRouter } from "next/navigation";
 import { Icons } from "../Icons";
 import { Text } from "@tremor/react";
+import SkillIcon from "../Icons/skill";
 interface SidebarItemsProps {
   handleNavigation: (val: string) => void;
 }
@@ -88,7 +89,7 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
     },
     {
       name: "Skill Types",
-      hasFill: false,
+      hasFill: true,
       path: "/skill-types",
       items: [
         // {
@@ -101,7 +102,7 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
         },
       ],
       icon: ({ className, color }: IconProps) => (
-        <FolderRoot className={className} color={color} />
+        <SkillIcon className={className} color={color || "#fff"} />
       ),
     },
     {

@@ -13,6 +13,7 @@ import {
 import { observer } from "mobx-react-lite";
 import { usePathname, useRouter } from "next/navigation";
 import { FC, useEffect } from "react";
+import SkillIcon from "../../Icons/skill";
 interface indexProps {
   title: string;
 }
@@ -63,7 +64,10 @@ const SkillTypesCount: FC<indexProps> = ({ title }) => {
       onClick={() => router.push("/skill-types")}
       showIcon={pathname === "/skill-types"}
       icon={
-        <Icons.school className="h-4 w-4 stroke-tremor-content-teal dark:stroke-dark-tremor-content-teal" />
+        <SkillIcon
+          className="h-4 w-4 stroke-tremor-content-teal dark:stroke-dark-tremor-content-teal"
+          color="14b8a6"
+        />
       }
     />
   );
