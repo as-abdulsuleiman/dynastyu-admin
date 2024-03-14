@@ -57,7 +57,7 @@ const Navbar: FC<NavbarProps> = ({}) => {
       },
     },
     fetchPolicy: "cache-first",
-    pollInterval: 200,
+    pollInterval: 30 * 1000,
     onCompleted: (data) => {
       setVerificationRequest(data?.skillVerificationRequests as any);
     },

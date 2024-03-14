@@ -82,7 +82,8 @@ module.exports = {
             emphasis: "#374151", // gray-700
             strong: "#111827", // gray-900
             inverted: "#ffffff", // white
-            teal: "#14b8a6"
+            teal: "#14b8a6",
+            iconColor: "#374151"
           },
         },
         "dark-tremor": {
@@ -113,7 +114,8 @@ module.exports = {
             emphasis: "#e5e7eb", // gray-200
             strong: "#f9fafb", // gray-50
             inverted: "#000000", // black
-            teal: "#14b8a6"
+            teal: "#14b8a6",
+            iconColor: "#E5E7EB"
           },
         },
       },

@@ -65,8 +65,8 @@ const SkillTypesCount: FC<indexProps> = ({ title }) => {
       showIcon={pathname === "/skill-types"}
       icon={
         <SkillIcon
-          className="h-4 w-4 stroke-tremor-content-teal dark:stroke-dark-tremor-content-teal"
-          color="14b8a6"
+          className="h-4 w-4 stroke-tremor-content-teal dark:stroke-dark-tremor-content-teal fill-tremor-content-teal fill:stroke-dark-tremor-content-teal"
+          // color="#14b8a6"
         />
       }
     />

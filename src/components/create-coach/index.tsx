@@ -101,10 +101,8 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
       state: "",
       city: "",
       country: "",
-      dob: "",
     },
     values: {
-      dob: coachData?.coachProfile?.user?.dob || "",
       avatar: coachData?.coachProfile?.user?.avatar || "",
       firstName: coachData?.coachProfile?.user?.firstname || "",
       email: coachData?.coachProfile?.user?.email || "",
@@ -142,7 +140,6 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
     country,
     state,
     city,
-    dob,
   } = getValues();
 
   const countryInput = register("country", { required: true });
@@ -180,7 +177,6 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
           state: { set: values?.state },
           user: {
             update: {
-              dob: { set: values?.dob },
               firstname: { set: values?.firstName },
               surname: { set: values?.lastName },
               email: { set: values?.email },
@@ -216,7 +212,6 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
       variables: {
         data: {
           firebaseUid: "",
-          dob: { set: values?.dob },
           firstname: values?.firstName,
           surname: values?.lastName,
           email: values?.email,
@@ -260,6 +255,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
           description: `@${values?.username} profile has been successfully updated`,
           variant: "successfull",
         });
+        router.push(`/coach/${searchParams?.coach}`);
       } else {
         await createCoach(payload);
         await sendPasswordResetEmail(projectAuth, values?.email);
@@ -268,8 +264,8 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
           description: `A password reset link has been sent to ${values?.email} to complete the process.`,
           variant: "successfull",
         });
+        router.push(`/coaches`);
       }
-      router.push(`/coach/${searchParams?.coach}`);
     } catch (error: any) {
       toast({
         title: "Something went wrong.",
@@ -492,7 +488,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               }
             />
           </div>
-          <div className="col-span-12 sm:col-span-6">
+          {/* <div className="col-span-12 sm:col-span-6">
             <Input
               id="dob"
               type="date"
@@ -503,7 +499,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               error={errors?.dob?.message}
               {...register("dob", { required: true })}
             />
-          </div>
+          </div> */}
         </div>
         <div className="grid grid-cols-12 gap-6 py-2 pt-6">
           <div className="col-span-12 sm:col-span-6" id="can_receive_messages">

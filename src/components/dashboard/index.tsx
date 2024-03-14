@@ -98,7 +98,7 @@ const Dashboard: FC<DashboardProps> = () => {
         createdAt: SortOrder.Desc,
       },
     },
-    pollInterval: 30 * 1000,
+    // pollInterval: 30 * 1000,
   });
 
   const whereClause: UserWhereInput = useMemo(() => {
@@ -324,14 +324,14 @@ const Dashboard: FC<DashboardProps> = () => {
             }
           >
             <UserAvatar
-              className="h-[59px] w-[59px] shadow cursor-pointer"
+              className="h-[79px] w-[79px] shadow cursor-pointer"
               fallbackType="name"
               avatar={item?.avatar as string}
               fallback={`${item?.firstname?.charAt(0)} ${item?.surname?.charAt(
                 0
               )}`}
             />
-            <Text className="ml-2 cursor-pointer">
+            <Text className="ml-4 cursor-pointer">
               {item?.firstname} {item?.surname}
             </Text>
           </Flex>
@@ -427,4 +427,4 @@ const Dashboard: FC<DashboardProps> = () => {
   );
 };
 
-export default Dashboard;
+export default observer(Dashboard);

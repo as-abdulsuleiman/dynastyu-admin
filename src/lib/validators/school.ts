@@ -16,7 +16,7 @@ export const SchoolValidator = Yup.object({
     primaryColor:Yup.string().required("Primary color is required"),
     secondaryColor:Yup.string().required("Secondary color is required"),
     address:Yup.string(),
-    city:Yup.string(),
+    city:Yup.string().required("City is required"),
     state:Yup.string().required("State is required"),
     country:Yup.string().required("Country is required"),
     schoolType: Yup.object().shape({

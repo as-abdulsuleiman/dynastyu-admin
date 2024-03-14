@@ -164,3 +164,93 @@ mutation deletePost($where: PostWhereUniqueInput!) {
     uuid
   }
 }
+
+query getPostFlags(
+  $where: PostFlagWhereInput
+  $orderBy: [PostFlagOrderByWithRelationInput!]
+  $cursor: PostFlagWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [PostFlagScalarFieldEnum!]
+) {
+  postFlags(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    id
+    uuid
+    createdAt
+    updatedAt
+    userId
+    postId
+    reason
+    userId
+    postId
+    user {
+      id
+      uuid
+      username
+      firstname
+      surname
+      avatar
+      email
+    }
+    post {
+      id
+      uuid
+      videos
+      images
+      user {
+        id
+        uuid
+        username
+        firstname
+        surname
+        avatar
+        email
+      }
+    }
+  }
+}
+
+query getPostFlag($where: PostFlagWhereUniqueInput!) {
+  postFlag(where: $where) {
+    id
+    uuid
+    createdAt
+    updatedAt
+    userId
+    postId
+    reason
+    userId
+    postId
+    user {
+      id
+      uuid
+      username
+      firstname
+      surname
+      avatar
+      email
+    }
+    post {
+      id
+      uuid
+      videos
+      images
+      user {
+        id
+        uuid
+        username
+        firstname
+        surname
+        avatar
+        email
+      }
+    }
+  }
+}

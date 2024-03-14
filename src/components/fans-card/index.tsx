@@ -31,6 +31,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { Icons } from "../Icons";
 import MenubarCard from "../menubar";
+import { observer } from "mobx-react-lite";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -79,7 +80,7 @@ const FansCard: FC<FansProps> = ({}) => {
         createdAt: SortOrder.Desc,
       },
     },
-    pollInterval: 30 * 1000,
+    // pollInterval: 30 * 1000,
   });
 
   const handleActiveUser = async (item: any) => {
@@ -210,14 +211,14 @@ const FansCard: FC<FansProps> = ({}) => {
             onClick={() => router.push(`/fan/${item?.id}`, { scroll: true })}
           >
             <UserAvatar
-              className="h-[59px] w-[59px] shadow cursor-pointer"
+              className="h-[79px] w-[79px] shadow cursor-pointer"
               fallbackType="name"
               avatar={item?.avatar as string}
               fallback={`${item?.firstname?.charAt(0)} ${item?.surname?.charAt(
                 0
               )}`}
             />
-            <Text className="ml-2 cursor-pointer">
+            <Text className="ml-4 cursor-pointer">
               {item?.firstname} {item?.surname}
             </Text>
           </Flex>
@@ -225,9 +226,6 @@ const FansCard: FC<FansProps> = ({}) => {
         <TableCell className="text-center">
           <Text>{item?.username ? `@${item?.username}` : ""}</Text>
         </TableCell>
-        {/* <TableCell className="text-center">
-          <Text>{item.accountType?.role?.title}</Text>
-        </TableCell> */}
         <TableCell className="text-center">
           <Text>{item?.email}</Text>
         </TableCell>
@@ -311,4 +309,4 @@ const FansCard: FC<FansProps> = ({}) => {
   );
 };
 
-export default FansCard;
+export default observer(FansCard);

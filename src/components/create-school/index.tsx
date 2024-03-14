@@ -33,6 +33,7 @@ import SelectCity from "@/components/select-city";
 import { useRouter } from "next/navigation";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/services/firebase/config";
+
 type FormData = yup.InferType<typeof SchoolValidator>;
 
 interface CreateSchoolProps {
@@ -576,7 +577,9 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
               onBlur={countryInput.onBlur}
               ref={countryInput.ref}
               name={countryInput.name}
-              onSelectCountry={(country) => setValue("country", country?.value)}
+              onSelectCountry={(country) =>
+                setValue("country", country?.value, { shouldDirty: true })
+              }
               // {...register("country", { required: true })}
               error={errors?.country?.message}
             />
@@ -591,7 +594,9 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
               selectedState={state as string}
               error={errors?.state?.message}
               countryId={selectedCountryId || 0}
-              onSelectState={(state) => setValue("state", state?.label)}
+              onSelectState={(state) =>
+                setValue("state", state?.label, { shouldDirty: true })
+              }
               selectStateId={(item) => setSelectedStateId(item)}
             />
           </div>
@@ -608,7 +613,9 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
               countryId={selectedCountryId || 0}
               stateId={selectedStateId || 0}
               error={errors?.city?.message}
-              onSelectCity={(city) => setValue("city", city?.label)}
+              onSelectCity={(city) =>
+                setValue("city", city?.label, { shouldDirty: true })
+              }
             />
           </div>
           <div className="col-span-12 sm:col-span-6">

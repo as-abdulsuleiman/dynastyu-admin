@@ -79,21 +79,15 @@ const Athletes: FC<AthletesProps> = ({}) => {
   const router = useRouter();
   const { toast } = useToast();
   const {
-    athleteStore: { setAthletes },
-  } = useRootStore();
-  const {
-    userStore: { setUsers },
-  } = useRootStore();
-
-  const {
     authStore: { user },
+    userStore: { setUsers },
+    athleteStore: { setAthletes },
   } = useRootStore();
 
   const [status, setStatus] = useState<string>("");
   const [value, setValue] = useState<string>("");
   const [isActivating, setIsActivating] = useState<boolean>(false);
   const [isFeaturing, setIsFeaturing] = useState<boolean>(false);
-
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [debounced] = useDebouncedValue(value, 300);
@@ -112,7 +106,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
     },
     // returnPartialData: true,
     fetchPolicy: "cache-first",
-    pollInterval: 30 * 1000,
+    // pollInterval: 30 * 1000,
   });
 
   const whereClause: AthleteProfileWhereInput = useMemo(() => {
@@ -268,7 +262,6 @@ const Athletes: FC<AthletesProps> = ({}) => {
         },
       });
       await refetch();
-
       toast({
         title: "Profile successfully updated.",
         description: `@${item?.user?.username} profile has been ${
@@ -489,14 +482,14 @@ const Athletes: FC<AthletesProps> = ({}) => {
             }
           >
             <UserAvatar
-              className="h-[59px] w-[59px] shadow cursor-pointer"
+              className="h-[79px] w-[79px] shadow cursor-pointer"
               fallbackType="name"
               avatar={item?.user?.avatar as string}
               fallback={`${item?.user?.username?.charAt(
                 0
               )} ${item?.user?.firstname?.charAt(0)}`}
             />
-            <Text className="ml-2 cursor-pointer">
+            <Text className="ml-4 cursor-pointer">
               {item?.user?.firstname} {item?.user?.surname}
             </Text>
           </Flex>

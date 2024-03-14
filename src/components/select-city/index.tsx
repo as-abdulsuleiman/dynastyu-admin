@@ -75,6 +75,7 @@ const SelectCity: FC<SelectCityProps> = ({
       <ComboboxCard
         loading={loading}
         error={error}
+        disabled={!countryId && !stateId}
         hasSearch
         searchPlaceholder={searchPlaceholder}
         placeholder={placeholder || "Select City..."}

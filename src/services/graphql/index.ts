@@ -26060,6 +26060,25 @@ export type DeletePostMutationVariables = Exact<{
 
 export type DeletePostMutation = { __typename?: 'Mutation', deleteOnePost?: { __typename?: 'Post', id: any, uuid: string } | null };
 
+export type GetPostFlagsQueryVariables = Exact<{
+  where?: InputMaybe<PostFlagWhereInput>;
+  orderBy?: InputMaybe<Array<PostFlagOrderByWithRelationInput> | PostFlagOrderByWithRelationInput>;
+  cursor?: InputMaybe<PostFlagWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  distinct?: InputMaybe<Array<PostFlagScalarFieldEnum> | PostFlagScalarFieldEnum>;
+}>;
+
+
+export type GetPostFlagsQuery = { __typename?: 'Query', postFlags: Array<{ __typename?: 'PostFlag', id: any, uuid: string, createdAt: any, updatedAt: any, userId: any, postId: any, reason: string, user: { __typename?: 'User', id: any, uuid: string, username?: string | null, firstname: string, surname: string, avatar?: string | null, email: string }, post: { __typename?: 'Post', id: any, uuid: string, videos: Array<string>, images: Array<string>, user: { __typename?: 'User', id: any, uuid: string, username?: string | null, firstname: string, surname: string, avatar?: string | null, email: string } } }> };
+
+export type GetPostFlagQueryVariables = Exact<{
+  where: PostFlagWhereUniqueInput;
+}>;
+
+
+export type GetPostFlagQuery = { __typename?: 'Query', postFlag?: { __typename?: 'PostFlag', id: any, uuid: string, createdAt: any, updatedAt: any, userId: any, postId: any, reason: string, user: { __typename?: 'User', id: any, uuid: string, username?: string | null, firstname: string, surname: string, avatar?: string | null, email: string }, post: { __typename?: 'Post', id: any, uuid: string, videos: Array<string>, images: Array<string>, user: { __typename?: 'User', id: any, uuid: string, username?: string | null, firstname: string, surname: string, avatar?: string | null, email: string } } } | null };
+
 export type SchoolCommonPartsFragment = { __typename?: 'School', id: any, uuid: string, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, state?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', id: any, name: string } };
 
 export type SkillCommonPartsFragment = { __typename?: 'Skills', id: any, value: string, verified: boolean, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, unit: string, isPrimaryForRecruitment: boolean, icon?: string | null } };
@@ -28466,6 +28485,162 @@ export function useDeletePostMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type DeletePostMutationHookResult = ReturnType<typeof useDeletePostMutation>;
 export type DeletePostMutationResult = Apollo.MutationResult<DeletePostMutation>;
 export type DeletePostMutationOptions = Apollo.BaseMutationOptions<DeletePostMutation, DeletePostMutationVariables>;
+export const GetPostFlagsDocument = gql`
+    query getPostFlags($where: PostFlagWhereInput, $orderBy: [PostFlagOrderByWithRelationInput!], $cursor: PostFlagWhereUniqueInput, $take: Int, $skip: Int, $distinct: [PostFlagScalarFieldEnum!]) {
+  postFlags(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    id
+    uuid
+    createdAt
+    updatedAt
+    userId
+    postId
+    reason
+    userId
+    postId
+    user {
+      id
+      uuid
+      username
+      firstname
+      surname
+      avatar
+      email
+    }
+    post {
+      id
+      uuid
+      videos
+      images
+      user {
+        id
+        uuid
+        username
+        firstname
+        surname
+        avatar
+        email
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPostFlagsQuery__
+ *
+ * To run a query within a React component, call `useGetPostFlagsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPostFlagsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPostFlagsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      distinct: // value for 'distinct'
+ *   },
+ * });
+ */
+export function useGetPostFlagsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetPostFlagsQuery, GetPostFlagsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetPostFlagsQuery, GetPostFlagsQueryVariables>(GetPostFlagsDocument, options);
+      }
+export function useGetPostFlagsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetPostFlagsQuery, GetPostFlagsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetPostFlagsQuery, GetPostFlagsQueryVariables>(GetPostFlagsDocument, options);
+        }
+export function useGetPostFlagsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetPostFlagsQuery, GetPostFlagsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetPostFlagsQuery, GetPostFlagsQueryVariables>(GetPostFlagsDocument, options);
+        }
+export type GetPostFlagsQueryHookResult = ReturnType<typeof useGetPostFlagsQuery>;
+export type GetPostFlagsLazyQueryHookResult = ReturnType<typeof useGetPostFlagsLazyQuery>;
+export type GetPostFlagsSuspenseQueryHookResult = ReturnType<typeof useGetPostFlagsSuspenseQuery>;
+export type GetPostFlagsQueryResult = Apollo.QueryResult<GetPostFlagsQuery, GetPostFlagsQueryVariables>;
+export const GetPostFlagDocument = gql`
+    query getPostFlag($where: PostFlagWhereUniqueInput!) {
+  postFlag(where: $where) {
+    id
+    uuid
+    createdAt
+    updatedAt
+    userId
+    postId
+    reason
+    userId
+    postId
+    user {
+      id
+      uuid
+      username
+      firstname
+      surname
+      avatar
+      email
+    }
+    post {
+      id
+      uuid
+      videos
+      images
+      user {
+        id
+        uuid
+        username
+        firstname
+        surname
+        avatar
+        email
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPostFlagQuery__
+ *
+ * To run a query within a React component, call `useGetPostFlagQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPostFlagQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPostFlagQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetPostFlagQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetPostFlagQuery, GetPostFlagQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetPostFlagQuery, GetPostFlagQueryVariables>(GetPostFlagDocument, options);
+      }
+export function useGetPostFlagLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetPostFlagQuery, GetPostFlagQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetPostFlagQuery, GetPostFlagQueryVariables>(GetPostFlagDocument, options);
+        }
+export function useGetPostFlagSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetPostFlagQuery, GetPostFlagQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetPostFlagQuery, GetPostFlagQueryVariables>(GetPostFlagDocument, options);
+        }
+export type GetPostFlagQueryHookResult = ReturnType<typeof useGetPostFlagQuery>;
+export type GetPostFlagLazyQueryHookResult = ReturnType<typeof useGetPostFlagLazyQuery>;
+export type GetPostFlagSuspenseQueryHookResult = ReturnType<typeof useGetPostFlagSuspenseQuery>;
+export type GetPostFlagQueryResult = Apollo.QueryResult<GetPostFlagQuery, GetPostFlagQueryVariables>;
 export const GetSchoolsDocument = gql`
     query getSchools($where: SchoolWhereInput, $orderBy: [SchoolOrderByWithRelationInput!], $cursor: SchoolWhereUniqueInput, $take: Int, $skip: Int) {
   schools(
