@@ -7,7 +7,6 @@ import { initializeApollo } from "@/services/graphql/config";
 import { ApolloProvider } from "@apollo/client";
 import { ThemeProvider } from "../theme-provider";
 import { ProvideAuth } from "@/hooks/useAuth";
-import { observer } from "mobx-react-lite";
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -26,4 +25,4 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   );
 };
 
-export default observer(AuthProvider);
+export default AuthProvider;
