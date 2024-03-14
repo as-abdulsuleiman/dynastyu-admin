@@ -67,14 +67,14 @@ module.exports = {
           background: {
             muted: "#f9fafb", // gray-50
             subtle: "#f3f4f6", // gray-100
-            DEFAULT: "#ffffff", // white
+            DEFAULT: 'hsl(var(--background))', // white
             emphasis: "#374151", // gray-700
           },
           border: {
-            DEFAULT: "#e5e7eb", // gray-200
+            DEFAULT: "hsl(var(--border))", // gray-200
           },
           ring: {
-            DEFAULT: "#e5e7eb", // gray-200
+            DEFAULT: "hsl(var(--border))", // gray-200
           },
           content: {
             subtle: "#9ca3af", // gray-400
@@ -97,14 +97,15 @@ module.exports = {
           background: {
             muted: "#131A2B", // custom
             subtle: "#1f2937", // gray-800
-            DEFAULT: "#111827", // gray-900
+            DEFAULT: 'hsl(var(--background))', // gray-900
             emphasis: "#d1d5db", // gray-300
           },
           border: {
-            DEFAULT: "#374151", // gray-700
+            DEFAULT: "hsl(var(--border))", // gray-700
           },
           ring: {
-            DEFAULT: "#1f2937", // gray-800
+            DEFAULT:"hsl(var(--border))", // gray-800
+            // DEFAULT: "#1f2937", // gray-800
           },
           content: {
             subtle: "#4b5563", // gray-600

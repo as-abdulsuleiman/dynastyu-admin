@@ -26,7 +26,7 @@ import { Label } from "@/components/ui/label";
 import NumberInput from "@/components/number-input";
 import ComboBoxCard from "@/components/combobox-card";
 import { Textarea } from "@/components/ui/textarea";
-import { classificationOptions } from "@/lib/utils";
+import { classificationOptions, formatDate } from "@/lib/utils";
 import { SelectCountry } from "@/components/select-country";
 import SelectState from "@/components/select-state";
 import SelectCity from "@/components/select-city";
@@ -257,7 +257,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
       toast({
         title: toastTitle,
         description: toastMsg,
-        variant: "default",
+        variant: "successfull",
       });
       router.push(`/schools`);
     } catch (error: any) {
@@ -409,7 +409,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
               id="yearFounded"
               type="date"
               label="Year Founded"
-              value={yearFounded}
+              value={yearFounded && formatDate(yearFounded, "yyyy-MM-dd")}
               className="bg-transparent inputdate"
               placeholder="Enter Year Founded"
               error={errors?.yearFounded?.message}
@@ -442,7 +442,6 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
               selectedValue={schoolType}
               onClose={() => setIsOpen(!isOpen)}
               onSelectValue={(item) => {
-                console.log("item", item);
                 setValue("schoolType", { id: item?.id, name: item?.label });
               }}
               label="School Type"

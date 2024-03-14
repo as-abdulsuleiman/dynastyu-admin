@@ -2,7 +2,7 @@
 
 "use client";
 
-import { FC, useState } from "react";
+import { FC } from "react";
 import Link from "next/link";
 import { buttonVariants } from "../ui/button";
 import { useAuth } from "@/hooks/useAuth";
@@ -22,7 +22,13 @@ import { useRootStore } from "@/mobx";
 import { observer } from "mobx-react-lite";
 import Image from "next/image";
 import { Icons } from "../Icons";
-
+import Notification from "../Icons/notification";
+import BellDotIcon from "../Icons/bell-dot";
+import {
+  SortOrder,
+  useGetSkillVerificationRequestsQuery,
+} from "@/services/graphql";
+import UseThemeColor from "@/hooks/useThemeColor";
 interface NavbarProps {
   user?: any;
   isLoggedIn?: boolean;
@@ -32,10 +38,51 @@ interface NavbarProps {
 const Navbar: FC<NavbarProps> = ({}) => {
   const { logout } = useAuth();
   const router = useRouter();
-  const { isLoggedIn, isInitializing } = useAuth();
   const {
     authStore: { user },
+    verificationRequestStore: { verificationRequest, setVerificationRequest },
   } = useRootStore();
+  const themeColor = UseThemeColor();
+
+  const { data, loading } = useGetSkillVerificationRequestsQuery({
+    variables: {
+      where: {
+        verified: {
+          equals: false,
+        },
+      },
+      take: 10,
+      orderBy: {
+        createdAt: SortOrder.Desc,
+      },
+    },
+    fetchPolicy: "cache-first",
+    pollInterval: 200,
+    onCompleted: (data) => {
+      setVerificationRequest(data?.skillVerificationRequests as any);
+    },
+  });
+
+  const showNotificationBadge = verificationRequest?.length;
+
+  const renderNotificationSection = (className: string) => {
+    return (
+      <div className={className}>
+        {showNotificationBadge ? (
+          <BellDotIcon
+            onClick={() => router.push(`/skill-types/verification-request`)}
+            className="h-[22px] w-[22px] cursor-pointer"
+            color={themeColor === "dark" ? "#fff" : "#374151"}
+          />
+        ) : (
+          <Notification
+            className="h-[22px] w-[22px] cursor-pointer"
+            color={themeColor === "dark" ? "#fff" : "#374151"}
+          />
+        )}
+      </div>
+    );
+  };
 
   return (
     <header className="fixed top-0 supports-backdrop-blur:bg-background/60 inset-x-0 py-1 w-full z-50 border-b bg-background/95 backdrop-blur">
@@ -55,8 +102,10 @@ const Navbar: FC<NavbarProps> = ({}) => {
           </p>
         </Link>
         <div className="ml-auto flex items-center">
+          {renderNotificationSection("lg:hidden flex flex-row mr-4")}
           <div className="ml-auto">
-            <div className="hidden lg:flex">
+            <div className="hidden lg:flex items-center">
+              {renderNotificationSection("flex flex-row mr-4")}
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <UserAvatar

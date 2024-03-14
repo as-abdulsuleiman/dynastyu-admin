@@ -25871,7 +25871,7 @@ export type GetAthleteProfileQueryVariables = Exact<{
 }>;
 
 
-export type GetAthleteProfileQuery = { __typename?: 'Query', athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, createdAt: any, verified: boolean, playerCardUrl?: string | null, hudlLink?: string | null, graduationYear?: string | null, gpa?: string | null, featured: boolean, schoolId: any, userId: any, socialAccounts: Array<{ __typename?: 'SocialAccount', id: any, uuid: string, name: string, link: string, athleteProfileId?: any | null }>, evaluations: Array<{ __typename?: 'Evaluation', id: any, note: string, images: Array<string>, videos: Array<string>, videosAspectRatio: Array<string>, createdById: any }>, transcripts: Array<{ __typename?: 'Transcripts', id: any, uuid: string, name: string, url: string, athleteProfileId?: any | null, createdAt: any, updatedAt: any }>, recruitedSchools: Array<{ __typename?: 'RecruitedAthlete', athleteId: any, schoolId: any, userId?: any | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null } }>, interestedSchools: Array<{ __typename?: 'InterestedSchools', school: { __typename?: 'School', name: string, id: any, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } } }>, skills: Array<{ __typename?: 'Skills', id: any, skillId: any, athleteId?: any | null, value: string, secondValue?: string | null, videos: Array<string>, verified: boolean, verifiedAt?: any | null, skillType: { __typename?: 'SkillType', id: any, name: string } }>, _count?: { __typename?: 'AthleteProfileCount', transcripts: number, skills: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluations: number } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, username?: string | null, city?: string | null, state?: string | null, isActive: boolean, dob?: any | null, accountType: { __typename?: 'AccountType', id: any, title: string, roleId?: any | null }, _count?: { __typename?: 'UserCount', posts: number, postFlag: number } | null }, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, position?: { __typename?: 'Position', name: string, id: any, uuid: string, shortName: string } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, title?: string | null, city?: string | null, state?: string | null, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } } | null } | null };
+export type GetAthleteProfileQuery = { __typename?: 'Query', athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, createdAt: any, verified: boolean, playerCardUrl?: string | null, hudlLink?: string | null, graduationYear?: string | null, gpa?: string | null, featured: boolean, schoolId: any, userId: any, socialAccounts: Array<{ __typename?: 'SocialAccount', id: any, uuid: string, name: string, link: string, type: SocialAccountType, athleteProfileId?: any | null }>, evaluations: Array<{ __typename?: 'Evaluation', id: any, note: string, images: Array<string>, videos: Array<string>, videosAspectRatio: Array<string>, createdById: any }>, transcripts: Array<{ __typename?: 'Transcripts', id: any, uuid: string, name: string, url: string, athleteProfileId?: any | null, createdAt: any, updatedAt: any }>, recruitedSchools: Array<{ __typename?: 'RecruitedAthlete', athleteId: any, schoolId: any, userId?: any | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null } }>, interestedSchools: Array<{ __typename?: 'InterestedSchools', school: { __typename?: 'School', name: string, id: any, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } } }>, skills: Array<{ __typename?: 'Skills', id: any, skillId: any, athleteId?: any | null, value: string, secondValue?: string | null, videos: Array<string>, verified: boolean, verifiedAt?: any | null, skillType: { __typename?: 'SkillType', id: any, name: string } }>, _count?: { __typename?: 'AthleteProfileCount', transcripts: number, skills: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluations: number } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, username?: string | null, city?: string | null, state?: string | null, isActive: boolean, dob?: any | null, comments: Array<{ __typename?: 'Comment', id: any, userId: any, postId: any }>, followedBy: Array<{ __typename?: 'Follows', followerId: any, followingId: any }>, following: Array<{ __typename?: 'Follows', followerId: any, followingId: any }>, accountType: { __typename?: 'AccountType', id: any, title: string, roleId?: any | null }, _count?: { __typename?: 'UserCount', posts: number, postFlag: number } | null }, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, position?: { __typename?: 'Position', name: string, id: any, uuid: string, shortName: string } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, title?: string | null, city?: string | null, state?: string | null, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } } | null } | null };
 
 export type CreateAthleteProfileMutationVariables = Exact<{
   data: AthleteProfileCreateInput;
@@ -25904,7 +25904,7 @@ export type GetCoachQueryVariables = Exact<{
 }>;
 
 
-export type GetCoachQuery = { __typename?: 'Query', coachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, schoolId: any, verified: boolean, city?: string | null, state?: string | null, canReceiveMessages?: boolean | null, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } }, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, user: { __typename?: 'User', firstname: string, surname: string, id: any, username?: string | null, avatar?: string | null, isActive: boolean, email: string, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null }, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, reposts: number, comments: number, interestedSchools: number, evaluationsCreated: number, prospectedSchools: number } | null } } | null };
+export type GetCoachQuery = { __typename?: 'Query', coachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, schoolId: any, verified: boolean, city?: string | null, state?: string | null, canReceiveMessages?: boolean | null, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } }, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, user: { __typename?: 'User', firstname: string, surname: string, id: any, username?: string | null, avatar?: string | null, isActive: boolean, email: string, dob?: any | null, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null }, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, reposts: number, comments: number, interestedSchools: number, evaluationsCreated: number, prospectedSchools: number } | null } } | null };
 
 export type UpdateCoachMutationVariables = Exact<{
   data: CoachProfileUpdateInput;
@@ -26300,7 +26300,7 @@ export type UpdateSkillVerificationMutationVariables = Exact<{
 
 export type UpdateSkillVerificationMutation = { __typename?: 'Mutation', updateOneSkillVerificationRequest?: { __typename?: 'SkillVerificationRequest', id: any, uuid: string, skillId: any, userId: any, campId?: any | null } | null };
 
-export type GetVerificationRequestQueryVariables = Exact<{
+export type GetSkillVerificationRequestsQueryVariables = Exact<{
   where?: InputMaybe<SkillVerificationRequestWhereInput>;
   orderBy?: InputMaybe<Array<SkillVerificationRequestOrderByWithRelationInput> | SkillVerificationRequestOrderByWithRelationInput>;
   cursor?: InputMaybe<SkillVerificationRequestWhereUniqueInput>;
@@ -26310,7 +26310,7 @@ export type GetVerificationRequestQueryVariables = Exact<{
 }>;
 
 
-export type GetVerificationRequestQuery = { __typename?: 'Query', skillVerificationRequests: Array<{ __typename?: 'SkillVerificationRequest', id: any, uuid: string, dateOfVerfication?: any | null, verified: boolean, createdAt: any, skillId: any, userId: any, skill: { __typename?: 'Skills', id: any, athleteId?: any | null, videos: Array<string>, secondValue?: string | null, value: string, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, skills: Array<{ __typename?: 'Skills', value: string }> } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null, avatar?: string | null, email: string }, camp?: { __typename?: 'Camp', name: string, id: any, uuid: string, address: string, description?: string | null } | null }> };
+export type GetSkillVerificationRequestsQuery = { __typename?: 'Query', skillVerificationRequests: Array<{ __typename?: 'SkillVerificationRequest', id: any, uuid: string, dateOfVerfication?: any | null, verified: boolean, createdAt: any, skillId: any, userId: any, skill: { __typename?: 'Skills', id: any, athleteId?: any | null, videos: Array<string>, secondValue?: string | null, value: string, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, skills: Array<{ __typename?: 'Skills', value: string }> } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null, avatar?: string | null, email: string }, camp?: { __typename?: 'Camp', name: string, id: any, uuid: string, address: string, description?: string | null } | null }> };
 
 export type GetSkillVerificationRequestQueryVariables = Exact<{
   where: SkillVerificationRequestWhereUniqueInput;
@@ -27107,6 +27107,7 @@ export const GetAthleteProfileDocument = gql`
       uuid
       name
       link
+      type
       athleteProfileId
     }
     evaluations {
@@ -27216,6 +27217,19 @@ export const GetAthleteProfileDocument = gql`
       city
       state
       isActive
+      comments {
+        id
+        userId
+        postId
+      }
+      followedBy {
+        followerId
+        followingId
+      }
+      following {
+        followerId
+        followingId
+      }
       accountType {
         id
         title
@@ -27504,6 +27518,7 @@ export const GetCoachDocument = gql`
       avatar
       isActive
       email
+      dob
       accountType {
         id
         title
@@ -29807,8 +29822,8 @@ export function useUpdateSkillVerificationMutation(baseOptions?: ApolloReactHook
 export type UpdateSkillVerificationMutationHookResult = ReturnType<typeof useUpdateSkillVerificationMutation>;
 export type UpdateSkillVerificationMutationResult = Apollo.MutationResult<UpdateSkillVerificationMutation>;
 export type UpdateSkillVerificationMutationOptions = Apollo.BaseMutationOptions<UpdateSkillVerificationMutation, UpdateSkillVerificationMutationVariables>;
-export const GetVerificationRequestDocument = gql`
-    query getVerificationRequest($where: SkillVerificationRequestWhereInput, $orderBy: [SkillVerificationRequestOrderByWithRelationInput!], $cursor: SkillVerificationRequestWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SkillVerificationRequestScalarFieldEnum!]) {
+export const GetSkillVerificationRequestsDocument = gql`
+    query getSkillVerificationRequests($where: SkillVerificationRequestWhereInput, $orderBy: [SkillVerificationRequestOrderByWithRelationInput!], $cursor: SkillVerificationRequestWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SkillVerificationRequestScalarFieldEnum!]) {
   skillVerificationRequests(
     where: $where
     orderBy: $orderBy
@@ -29862,16 +29877,16 @@ export const GetVerificationRequestDocument = gql`
     `;
 
 /**
- * __useGetVerificationRequestQuery__
+ * __useGetSkillVerificationRequestsQuery__
  *
- * To run a query within a React component, call `useGetVerificationRequestQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetVerificationRequestQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetSkillVerificationRequestsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSkillVerificationRequestsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetVerificationRequestQuery({
+ * const { data, loading, error } = useGetSkillVerificationRequestsQuery({
  *   variables: {
  *      where: // value for 'where'
  *      orderBy: // value for 'orderBy'
@@ -29882,22 +29897,22 @@ export const GetVerificationRequestDocument = gql`
  *   },
  * });
  */
-export function useGetVerificationRequestQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetVerificationRequestQuery, GetVerificationRequestQueryVariables>) {
+export function useGetSkillVerificationRequestsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetSkillVerificationRequestsQuery, GetSkillVerificationRequestsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<GetVerificationRequestQuery, GetVerificationRequestQueryVariables>(GetVerificationRequestDocument, options);
+        return ApolloReactHooks.useQuery<GetSkillVerificationRequestsQuery, GetSkillVerificationRequestsQueryVariables>(GetSkillVerificationRequestsDocument, options);
       }
-export function useGetVerificationRequestLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetVerificationRequestQuery, GetVerificationRequestQueryVariables>) {
+export function useGetSkillVerificationRequestsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetSkillVerificationRequestsQuery, GetSkillVerificationRequestsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<GetVerificationRequestQuery, GetVerificationRequestQueryVariables>(GetVerificationRequestDocument, options);
+          return ApolloReactHooks.useLazyQuery<GetSkillVerificationRequestsQuery, GetSkillVerificationRequestsQueryVariables>(GetSkillVerificationRequestsDocument, options);
         }
-export function useGetVerificationRequestSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetVerificationRequestQuery, GetVerificationRequestQueryVariables>) {
+export function useGetSkillVerificationRequestsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetSkillVerificationRequestsQuery, GetSkillVerificationRequestsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useSuspenseQuery<GetVerificationRequestQuery, GetVerificationRequestQueryVariables>(GetVerificationRequestDocument, options);
+          return ApolloReactHooks.useSuspenseQuery<GetSkillVerificationRequestsQuery, GetSkillVerificationRequestsQueryVariables>(GetSkillVerificationRequestsDocument, options);
         }
-export type GetVerificationRequestQueryHookResult = ReturnType<typeof useGetVerificationRequestQuery>;
-export type GetVerificationRequestLazyQueryHookResult = ReturnType<typeof useGetVerificationRequestLazyQuery>;
-export type GetVerificationRequestSuspenseQueryHookResult = ReturnType<typeof useGetVerificationRequestSuspenseQuery>;
-export type GetVerificationRequestQueryResult = Apollo.QueryResult<GetVerificationRequestQuery, GetVerificationRequestQueryVariables>;
+export type GetSkillVerificationRequestsQueryHookResult = ReturnType<typeof useGetSkillVerificationRequestsQuery>;
+export type GetSkillVerificationRequestsLazyQueryHookResult = ReturnType<typeof useGetSkillVerificationRequestsLazyQuery>;
+export type GetSkillVerificationRequestsSuspenseQueryHookResult = ReturnType<typeof useGetSkillVerificationRequestsSuspenseQuery>;
+export type GetSkillVerificationRequestsQueryResult = Apollo.QueryResult<GetSkillVerificationRequestsQuery, GetSkillVerificationRequestsQueryVariables>;
 export const GetSkillVerificationRequestDocument = gql`
     query getSkillVerificationRequest($where: SkillVerificationRequestWhereUniqueInput!) {
   skillVerificationRequest(where: $where) {

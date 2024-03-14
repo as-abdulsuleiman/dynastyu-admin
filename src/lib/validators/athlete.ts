@@ -2,6 +2,7 @@
 
 import * as Yup from "yup";
 const hudlPattern = /^https:\/\/app\.dynastyu\.com\/user\/\d+$/;
+// const hudlPattern = /^https:\/\/www\.hudl\.com\/video\/\w+/;
 
 export const AthleteValidator = Yup.object({
   email: Yup.string()
@@ -10,6 +11,7 @@ export const AthleteValidator = Yup.object({
   username: Yup.string().required("Username is required").min(2, "Minimum 2 symbols"),
   firstName: Yup.string().required("First Name is required").min(2, "Minimum 2 symbols"),
   lastName: Yup.string().required("Last Name is required").min(2, "Minimum 2 symbols"),
+  dob: Yup.string().required("Date is required"),
   accountType: Yup.object().shape({
     accountTypeId: Yup.string().required("Account type is required"),
     roleId: Yup.string().required("Role is required"),

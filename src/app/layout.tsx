@@ -54,8 +54,8 @@ export default function RootLayout({
             {children}
           </div>
         </AuthProvider>
-        <Toaster />
         <Analytics />
+        <Toaster />
       </body>
     </html>
   );

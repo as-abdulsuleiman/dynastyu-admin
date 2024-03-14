@@ -8,13 +8,6 @@ import UserAvatar from "../user-avatar";
 import { Icons } from "../Icons";
 import { Skeleton } from "../ui/skeleton";
 import Image from "next/image";
-import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
 import { useRouter } from "next/navigation";
 import {
   SchoolUpdateInput,
@@ -22,6 +15,7 @@ import {
   useUpdateSchoolMutation,
 } from "@/services/graphql";
 import { useToast } from "@/hooks/use-toast";
+import MenubarCard from "../menubar";
 interface SchoolCardProps {
   loading?: boolean;
   school: any;
@@ -102,11 +96,11 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   const dropdownItems = [
     {
       name: `Edit School`,
-      onclick: () => router.push(`/schools/edit?school=${school?.id}`),
+      onClick: () => router.push(`/schools/edit?school=${school?.id}`),
     },
     {
       name: `Delete ${school?.schoolType?.name}`,
-      onclick: () => handleDeleteSchool(school),
+      onClick: () => handleDeleteSchool(school),
     },
   ];
   return (
@@ -129,32 +123,14 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         )}
 
         <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
-          <Menubar className="bg-transparent border-0 hover:bg-transparent focus:bg-transparent px-0">
-            <MenubarMenu>
-              <MenubarTrigger className="cursor-pointer px-0 data-[state=open]:bg-transparent hover:bg-transparent focus:bg-transparent bg-transparent focus-within:bg-transparent focus-visible:bg-transparent active:bg-transparent">
-                <Icons.moreHorizontal className="cursor-pointer" />
-              </MenubarTrigger>
-              <MenubarContent
-                side="bottom"
-                align="start"
-                sideOffset={-2}
-                alignOffset={-150}
-                className="rounded-tremor-default cursor-pointer bg-background dark:bg-dark-background"
-              >
-                {dropdownItems?.map((val, id) => {
-                  return (
-                    <MenubarItem
-                      onClick={val?.onclick}
-                      key={id}
-                      className="cursor-pointer tremor-SelectItem-root flex justify-start items-center text-tremor-default  ui-selected:text-tremor-content-strong ui-selected:bg-tremor-background-muted text-tremor-content-emphasis dark:ui-active:bg-dark-tremor-background-muted dark:ui-active:text-dark-tremor-content-strong dark:ui-selected:text-dark-tremor-content-strong dark:ui-selected:bg-dark-tremor-background-muted dark:text-dark-tremor-content-emphasis px-2.5 py-2.5"
-                    >
-                      {val?.name}
-                    </MenubarItem>
-                  );
-                })}
-              </MenubarContent>
-            </MenubarMenu>
-          </Menubar>
+          {loading ? (
+            <Skeleton className="w-[40px] h-[20px]" />
+          ) : (
+            <MenubarCard
+              trigger={<Icons.moreHorizontal className="cursor-pointer" />}
+              items={dropdownItems}
+            />
+          )}
         </div>
       </div>
       <Divider></Divider>
