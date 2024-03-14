@@ -2,7 +2,7 @@
 
 "use client";
 
-import { FC } from "react";
+import { FC, useState } from "react";
 import {
   useDeleteUserMutation,
   useGetUserQuery,
@@ -27,6 +27,9 @@ import UsersAnalytics from "@/components/analytics/users";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/utils";
 import MenubarCard from "../menubar";
+import ModalCard from "../modal";
+import { AspectRatio } from "../ui/aspect-ratio";
+import Image from "next/image";
 
 interface FanDetailProps {
   params: {
@@ -37,6 +40,8 @@ interface FanDetailProps {
 const FanDetail: FC<FanDetailProps> = ({ params }) => {
   const router = useRouter();
   const { toast } = useToast();
+  const [showimage, setShowImage] = useState(true);
+  const [viewPlayerCardUrl, setViewPlayerCardUrl] = useState(false);
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
 
@@ -51,7 +56,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
         id: params?.fan,
       },
     },
-    pollInterval: 30 * 1000,
+    // pollInterval: 30 * 1000,
   });
 
   const handleDeleteProfile = async (item: any) => {
@@ -122,6 +127,10 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
     {
       name: `${fanData?.user?.isActive ? "Deactivate" : "Activate"} Profile`,
       onClick: async () => await handleActivateProfile(fanData?.user),
+    },
+    {
+      name: "View Profile Picture",
+      onClick: () => setViewPlayerCardUrl(true),
     },
     // {
     //   name: "Delete Profile",
@@ -212,18 +221,43 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
           <TabPanel>
             <Card className="bg-background dark:bg-dark-background">
               <div className="flex flex-col items-center justify-center relative">
-                <UserAvatar
-                  className="h-[120px] w-[120px] shadow"
-                  height={120}
-                  width={120}
-                  fallbackType="icon"
-                  fallbackClassName={"h-[120px] w-[120px]"}
-                  avatar={fanData?.user?.avatar as string}
-                  fallback={`${fanData?.user?.firstname?.charAt(
-                    0
-                  )} ${fanData?.user?.surname?.charAt(0)}`}
-                  icon={<Icons.user className="h-8 w-8" />}
+                <ModalCard
+                  isModal={true}
+                  isOpen={viewPlayerCardUrl}
+                  onOpenChange={() => setViewPlayerCardUrl(!viewPlayerCardUrl)}
+                  contentClass="container mx-auto max-w-2xl rounded-2xl bg-primary-black bg-gradient-to-bl from-primary-black via-primary-black/5 to-primary-black px-[16px] md:px-[2rem] py-[2rem]"
+                  trigger={
+                    <UserAvatar
+                      className="h-[120px] w-[120px] shadow cursor-pointer"
+                      height={120}
+                      width={120}
+                      fallbackType="icon"
+                      fallbackClassName={"h-[120px] w-[120px]"}
+                      avatar={fanData?.user?.avatar as string}
+                      fallback={`${fanData?.user?.firstname?.charAt(
+                        0
+                      )} ${fanData?.user?.surname?.charAt(0)}`}
+                      icon={<Icons.user className="h-8 w-8" />}
+                    />
+                  }
+                  content={
+                    <AspectRatio ratio={16 / 16} className="cursor-pointer">
+                      <Image
+                        onLoadingComplete={() => setShowImage(false)}
+                        priority
+                        fill
+                        sizes="100vw"
+                        quality={80}
+                        src={fanData?.user?.avatar as string}
+                        alt="profile_picture"
+                        className={`rounded-2xl object-cover border-[#717070] border-[0.1px] relative ${
+                          showimage ? "blur-sm " : "blur-none"
+                        }`}
+                      />
+                    </AspectRatio>
+                  }
                 />
+
                 {loading ? (
                   <div className="flex flex-row items-center">
                     <Skeleton className="w-[170px] h-[28px] mt-2 mr-1" />

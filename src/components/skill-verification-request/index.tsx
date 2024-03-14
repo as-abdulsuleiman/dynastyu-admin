@@ -34,6 +34,7 @@ import SelectCard from "@/components/select";
 import { useDebouncedValue } from "@mantine/hooks";
 import MenubarCard from "../menubar";
 import SkillIcon from "../Icons/skill";
+import { observer } from "mobx-react-lite";
 interface SkillVerificationRequestProps {}
 
 const headerItems = [
@@ -80,7 +81,7 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
         },
       },
       fetchPolicy: "cache-first",
-      pollInterval: 200,
+      pollInterval: 30 * 1000,
     });
 
   const whereClause: SkillVerificationRequestWhereInput = useMemo(() => {
@@ -253,14 +254,14 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
             }
           >
             <UserAvatar
-              className="h-[55px] w-[55px] shadow cursor-pointer"
+              className="h-[79px] w-[79px] shadow cursor-pointer"
               fallbackType="name"
               avatar={item?.user?.avatar as string}
               fallback={`${item?.user?.firstname?.charAt(
                 0
               )} ${item?.user?.surname?.charAt(0)}`}
             />
-            <Text className="ml-2 cursor-pointer">
+            <Text className="ml-4 cursor-pointer">
               {item?.user?.firstname} {item?.user?.firstname}
             </Text>
           </Flex>
@@ -314,7 +315,7 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
         <div className="flex flex-row items-center">
           <Title>Skill Verification Request</Title>
           <SkillIcon
-            className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis"
+            className="h-[22px] w-[22px] ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis"
             // color={"#fff"}
           />
         </div>
@@ -366,4 +367,4 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
   );
 };
 
-export default SkillVerificationRequest;
+export default observer(SkillVerificationRequest);

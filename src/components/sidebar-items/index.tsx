@@ -9,7 +9,10 @@ import SkillIcon from "../Icons/skill";
 import { useRootStore } from "@/mobx";
 import { Badge } from "@/components/ui/badge";
 import { observer } from "mobx-react-lite";
-
+import FlagOffIcon from "@/components/Icons/flag-off";
+import ChevronDownIcon from "@/components/Icons/chevron-down";
+import { cn } from "@/lib/utils";
+import UseThemeColor from "@/hooks/useThemeColor";
 interface SidebarItemsProps {
   handleNavigation: (val: string) => void;
 }
@@ -24,6 +27,8 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
     verificationRequestStore: { verificationRequest },
   } = useRootStore();
   const pathname = usePathname();
+
+  const themeColor = UseThemeColor();
 
   const items = [
     {
@@ -97,6 +102,15 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
       ),
     },
     {
+      name: "Flagged Posts",
+      hasFill: false,
+      path: "/flagged-posts",
+      items: [],
+      icon: ({ className, color }: IconProps) => (
+        <FlagOffIcon className={cn(className, "h-4 w-4")} color={color} />
+      ),
+    },
+    {
       name: "Skill Types",
       hasFill: true,
       path: "/skill-types",
@@ -113,7 +127,10 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
         },
       ],
       icon: ({ className, color }: IconProps) => (
-        <SkillIcon className={className} color={color || "#fff"} />
+        <SkillIcon
+          className={cn(className, "h-[21px] w-[21px]")}
+          color={color}
+        />
       ),
     },
     {
@@ -137,38 +154,47 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
         );
         const isActive = pathname?.includes(pathToCheck) || childPath;
         const iconColor = "";
-        const iconClass = `h-[19px] w-[19px] ${
+        let activeIconColor = "";
+
+        if (isActive) {
+          if (val?.hasFill) {
+            activeIconColor = "fill-gray-700 dark:fill-white fill-white";
+          } else {
+            activeIconColor = "stroke-gray-700 dark:stroke-white stroke-white";
+          }
+        }
+        const iconClass = `h-[19px] w-[19px] 
+        ${
           val?.hasFill
-            ? "text-tremor-default fill-gray-700 dark:fill-white "
-            : "text-tremor-default stroke-gray-700 dark:stroke-white"
-        } ${
-          isActive &&
-          `${
-            val?.hasFill
-              ? "fill-gray-700 dark:fill-white"
-              : "stroke-white stroke-gray-700 dark:stroke-white"
-          }`
-        }`;
+            ? "fill-gray-700 dark:fill-white"
+            : "stroke-gray-700 dark:stroke-white"
+        } ${activeIconColor}
+        `;
         const Icon = () =>
           val?.icon({ className: iconClass, color: iconColor });
         return (
           <div key={index}>
             <div
               onClick={() => handleNavigation(val?.path)}
-              className={`group ${
+              className={`group flex flex-row ${
                 isActive
                   ? "bg-primary"
                   : "bg-background dark:bg-dark-background"
               }  flex cursor-pointer items-center py-[8px] px-[16px] border rounded-lg mt-4 hover:scale-105 transition-transform ease-out duration-200`}
             >
-              <Icon />
-              <Text
-                className={`text-[16px] dark:text-gray-200 text-gray-700 ${
-                  isActive ? "text-gray-200 dark:text-dark-gray-700" : ""
-                } ml-4 mt-[0px] text-tremor-default`}
-              >
-                {val?.name}
-              </Text>
+              <>
+                <Icon />
+                <Text
+                  className={`text-[16px] dark:text-gray-200 text-gray-700 ${
+                    isActive ? "text-gray-200 dark:text-dark-gray-700" : ""
+                  } ml-4 mt-[0px] text-tremor-default`}
+                >
+                  {val?.name}
+                </Text>
+              </>
+              {isActive ? (
+                <ChevronDownIcon className="ml-auto h-5 w-5 stroke-gray-200 dark:stroke-gray-200" />
+              ) : null}
             </div>
             {isActive && val?.items?.length ? (
               <div className="pr-2 pl-4 pb-3 mt-4">

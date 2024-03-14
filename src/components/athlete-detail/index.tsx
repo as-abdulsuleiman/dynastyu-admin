@@ -366,7 +366,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     //   onClick: async () => await handleDeleteAthlete(data?.athleteProfile),
     // },
     {
-      name: "View Player Card",
+      name: "View Profile Picture",
       onClick: () => setViewPlayerCardUrl(true),
     },
   ];
@@ -471,11 +471,8 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                     fill
                     sizes="100vw"
                     quality={80}
-                    src={
-                      data?.athleteProfile?.playerCardUrl ||
-                      (data?.athleteProfile?.user?.avatar as string)
-                    }
-                    alt=""
+                    src={data?.athleteProfile?.user?.avatar as string}
+                    alt="profile_picture"
                     className={`rounded-2xl object-cover border-[#717070] border-[0.1px] relative ${
                       showimage ? "blur-sm " : "blur-none"
                     }`}
@@ -483,7 +480,6 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                 </AspectRatio>
               }
             />
-
             {loading ? (
               <div className="flex flex-row items-center">
                 <Skeleton className="w-[170px] h-[28px] mt-2 mr-1" />

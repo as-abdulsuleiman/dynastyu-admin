@@ -87,7 +87,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
       },
       take: 10,
     },
-    pollInterval: 30 * 1000,
+    // pollInterval: 30 * 1000,
   });
 
   const whereClause: SchoolWhereInput = useMemo(() => {
@@ -241,12 +241,12 @@ const Schools: FC<SchoolsProps> = ({}) => {
             <UserAvatar
               height={150}
               width={150}
-              className="h-[59px] w-[59px] shadow cursor-pointer "
+              className="h-[79px] w-[79px] shadow cursor-pointer "
               fallbackType="name"
               avatar={item?.logo as string}
               fallback={`${item?.name?.charAt(0)}`}
             />
-            <Text className="ml-2 cursor-pointer">{item?.name}</Text>
+            <Text className="ml-4 cursor-pointer">{item?.name}</Text>
           </Flex>
         </TableCell>
         <TableCell className="text-center">

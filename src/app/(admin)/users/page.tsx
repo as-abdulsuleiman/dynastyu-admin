@@ -95,7 +95,7 @@ const Users: FC<UsersProps> = ({}) => {
         createdAt: SortOrder.Desc,
       },
     },
-    pollInterval: 30 * 1000,
+    // pollInterval: 30 * 1000,
   });
 
   const whereClause: UserWhereInput = useMemo(() => {

@@ -181,6 +181,10 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       } Profile`,
       onClick: async () => await handleActivateCoach(data?.coachProfile),
     },
+    {
+      name: "View Profile Picture",
+      onClick: () => setViewPlayerCardUrl(true),
+    },
     // {
     //   name: "Delete Profile",
     //   onClick: async () => await handleDeleteCoach(data?.coachProfile),
@@ -312,7 +316,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
               contentClass="container mx-auto max-w-2xl rounded-2xl bg-primary-black bg-gradient-to-bl from-primary-black via-primary-black/5 to-primary-black px-[16px] md:px-[2rem] py-[2rem]"
               trigger={
                 <UserAvatar
-                  className="h-[120px] w-[120px] shadow"
+                  className="h-[120px] w-[120px] shadow cursor-pointer"
                   height={120}
                   width={120}
                   fallbackType="icon"

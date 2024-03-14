@@ -45,6 +45,7 @@ import { useRootStore } from "@/mobx";
 import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
 import MenubarCard from "../menubar";
+import { observer } from "mobx-react-lite";
 
 enum FilterEnum {
   ACTIVE = "Active",
@@ -114,7 +115,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
     },
     returnPartialData: true,
     fetchPolicy: "cache-first",
-    pollInterval: 30 * 1000,
+    // pollInterval: 30 * 1000,
   });
 
   const whereClause: CoachProfileWhereInput = useMemo(() => {
@@ -496,14 +497,14 @@ const Coaches: FC<CoachesProps> = ({}) => {
             }
           >
             <UserAvatar
-              className="h-[59px] w-[59px] shadow cursor-pointer"
+              className="h-[79px] w-[79px] shadow cursor-pointer"
               fallbackType="name"
               avatar={item?.user?.avatar as string}
               fallback={`${item?.user?.username?.charAt(
                 0
               )} ${item?.user?.firstname?.charAt(0)}`}
             />
-            <Text className="ml-2 cursor-pointer">
+            <Text className="ml-4 cursor-pointer">
               {item?.user?.firstname} {item?.user?.surname}
             </Text>
           </Flex>
@@ -642,4 +643,4 @@ const Coaches: FC<CoachesProps> = ({}) => {
   );
 };
 
-export default Coaches;
+export default observer(Coaches);

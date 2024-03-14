@@ -77,6 +77,7 @@ const SelectState: FC<SelectStateProps> = ({
     <div>
       <ComboboxCard
         loading={loading}
+        disabled={!countryId}
         error={error}
         searchPlaceholder={searchPlaceholder}
         hasSearch
