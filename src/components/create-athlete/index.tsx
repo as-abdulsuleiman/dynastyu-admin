@@ -22,11 +22,12 @@ import {
 } from "@/services/graphql";
 import ComboBoxCard from "../combobox-card";
 import SchoolDropdown from "../school-dropdown";
-import { getYears } from "@/lib/utils";
+import { formatDate, getYears } from "@/lib/utils";
 import { SelectCountry } from "../select-country";
 import SelectState from "../select-state";
 import SelectCity from "../select-city";
 import { useToast } from "@/hooks/use-toast";
+import SuspenseLoader from "../suspense-loader";
 
 type FormData = yup.InferType<typeof AthleteValidator>;
 
@@ -85,7 +86,7 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
     watch,
     getValues,
     setFocus,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting, isValid, isDirty, touchedFields },
   } = useForm({
     mode: "onBlur",
     resolver: yupResolver(AthleteValidator),
@@ -103,8 +104,10 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
       country: "",
       graduationYear: "",
       hudlLink: "",
+      dob: "",
     },
     values: {
+      dob: athleteData?.athleteProfile?.user?.dob || "",
       gpa: athleteData?.athleteProfile?.gpa || "",
       graduationYear: athleteData?.athleteProfile?.graduationYear || "",
       avatar: athleteData?.athleteProfile?.user?.avatar || "",
@@ -128,10 +131,6 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
           roleId: athleteData?.athleteProfile?.user?.accountType?.roleId,
         } || {},
     },
-    resetOptions: {
-      keepDirtyValues: true,
-      keepErrors: true,
-    },
   });
 
   const watchAllFields = watch();
@@ -145,9 +144,13 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
     state,
     city,
     graduationYear,
+    dob,
   } = getValues();
 
   const countryInput = register("country", { required: true });
+  const graduationYearInput = register("graduationYear", {
+    required: true,
+  });
 
   const handleAvatarUploadSuccess = useCallback(
     (url: string | null) => {
@@ -184,10 +187,10 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
   const positionOptions = useMemo(
     () =>
       postionsData?.positions?.map((position) => ({
-        label: position.name,
-        value: position.id,
-        id: position.id,
-        shortName: position.shortName,
+        label: position?.name,
+        value: position?.id,
+        id: position?.id,
+        shortName: position?.shortName,
       })) || [],
     [postionsData?.positions]
   );
@@ -198,7 +201,7 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
       await updateAthleteProile({
         variables: {
           where: {
-            id: searchParams.athlete,
+            id: searchParams?.athlete,
           },
           data: {
             hudlLink: { set: payload?.hudlLink },
@@ -221,6 +224,7 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
             },
             user: {
               update: {
+                dob: { set: payload?.dob },
                 avatar: { set: payload?.avatar },
                 email: { set: payload?.email?.toLowerCase() },
                 firstname: { set: payload?.firstName },
@@ -243,8 +247,8 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
       });
       toast({
         title: "Profile successfully updated",
-        description: ``,
-        variant: "default",
+        description: `@${values?.username} profile has been successfully updated`,
+        variant: "successfull",
       });
     } catch (error: any) {
       toast({
@@ -254,6 +258,10 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
       });
     }
   };
+
+  // if (loading) {
+  //   return <SuspenseLoader />;
+  // }
   return (
     <main className="w-full h-full">
       <Button
@@ -323,7 +331,7 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
               placeholder="Username"
               label="Username"
               type="text"
-              autoComplete="username"
+              autoComplete="null"
               className="bg-transparent"
               error={errors?.username?.message}
               {...register("username", { required: true })}
@@ -346,7 +354,7 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
             <Input
               id="password"
               placeholder="HudlLink"
-              autoComplete="hudlLink"
+              autoComplete="null"
               label="Hudl Link"
               type="url"
               className="bg-transparent"
@@ -403,16 +411,19 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
               isOpen={openHighSchool}
               selectedValue={{ value: school?.name }}
               onSelectValue={(school) => {
-                setValue("school", {
-                  id: school?.id,
-                  name: school?.label,
-                });
+                setValue(
+                  "school",
+                  {
+                    id: school?.id,
+                    name: school?.label,
+                  },
+                  { shouldDirty: true }
+                );
               }}
               placeholder={"Select high school"}
               label="High School"
               error={errors.school?.id?.message}
               whereClause={{
-                // id: { equals: coachData?.coachProfile?.schoolId },
                 schoolTypeId: {
                   equals: 1,
                 },
@@ -437,8 +448,9 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
               items={yearsOptions}
               selectedValue={{ value: graduationYear }}
               onSelectValue={(item) => {
-                setValue("graduationYear", item?.label);
+                setValue("graduationYear", item?.label, { shouldDirty: true });
               }}
+              onBlur={graduationYearInput.onBlur}
             />
           </div>
           <div className="col-span-12 sm:col-span-6">
@@ -457,7 +469,7 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
               items={positionOptions}
               selectedValue={{ value: position }}
               onSelectValue={(item) => {
-                setValue("position", item?.value);
+                setValue("position", item?.value, { shouldDirty: true });
               }}
             />
           </div>
@@ -475,9 +487,10 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
               label="Country"
               onBlur={countryInput.onBlur}
               ref={countryInput.ref}
-              name={countryInput.name}
-              onSelectCountry={(country) => setValue("country", country?.value)}
-              // {...register("country", { required: true })}
+              name={countryInput?.name}
+              onSelectCountry={(country) =>
+                setValue("country", country?.value, { shouldDirty: true })
+              }
               error={errors?.country?.message}
             />
           </div>
@@ -491,7 +504,9 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
               selectedState={state as string}
               error={errors?.state?.message}
               countryId={selectedCountryId || 0}
-              onSelectState={(state) => setValue("state", state?.label)}
+              onSelectState={(state) =>
+                setValue("state", state?.label, { shouldDirty: true })
+              }
               selectStateId={(item) => setSelectedStateId(item)}
             />
           </div>
@@ -508,14 +523,28 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
               countryId={selectedCountryId || 0}
               stateId={selectedStateId || 0}
               error={errors?.city?.message}
-              onSelectCity={(city) => setValue("city", city?.label)}
+              onSelectCity={(city) =>
+                setValue("city", city?.label, { shouldDirty: true })
+              }
+            />
+          </div>
+          <div className="col-span-12 sm:col-span-6">
+            <Input
+              id="dob"
+              type="date"
+              label="Date of Birth"
+              value={dob && formatDate(dob, "yyyy-MM-dd")}
+              className="bg-transparent inputdate"
+              placeholder="Enter Year Founded"
+              error={errors?.dob?.message}
+              {...register("dob", { required: true })}
             />
           </div>
         </div>
         <div className="w-full">
           <Button
             variant="default"
-            disabled={isSubmitting || !isValid}
+            disabled={isSubmitting || !isDirty}
             className="w-full mt-6"
             type="submit"
           >

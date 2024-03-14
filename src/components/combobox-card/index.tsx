@@ -69,7 +69,7 @@ const ComboBoxCard: FC<ComboBoxCardProps> = ({
     (item: Record<string, any>) => item[valueKey] === selectedValue[valueKey]
   );
   return (
-    <div className="w-full relative" onBlur={onBlur}>
+    <div className="w-full relative" onBlur={onBlur} tabIndex={0}>
       {label ? (
         <label
           htmlFor={id}

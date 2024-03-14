@@ -203,6 +203,7 @@ query getAthleteProfile($where: AthleteProfileWhereUniqueInput!) {
       uuid
       name
       link
+      type
       athleteProfileId
     }
     evaluations {
@@ -319,6 +320,19 @@ query getAthleteProfile($where: AthleteProfileWhereUniqueInput!) {
       city
       state
       isActive
+      comments{
+        id
+        userId
+        postId
+      }
+      followedBy{
+        followerId
+        followingId
+      }
+      following{
+        followerId
+        followingId
+      }
       accountType {
         id
         title
@@ -364,3 +378,7 @@ mutation createAthleteProfile($data: AthleteProfileCreateInput!) {
     userId
   }
 }
+
+
+
+

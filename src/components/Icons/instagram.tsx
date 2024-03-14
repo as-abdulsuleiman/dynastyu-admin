@@ -15,7 +15,7 @@ const InstagramIcon = (props: LucideProps) => {
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
-      stroke-Linejoin="round"
+      strokeLinejoin="round"
       className="lucide lucide-instagram"
       {...props}
     >

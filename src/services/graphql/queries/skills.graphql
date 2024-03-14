@@ -173,7 +173,7 @@ mutation updateSkillVerification(
   }
 }
 
-query getVerificationRequest(
+query getSkillVerificationRequests(
   $where: SkillVerificationRequestWhereInput
   $orderBy: [SkillVerificationRequestOrderByWithRelationInput!]
   $cursor: SkillVerificationRequestWhereUniqueInput

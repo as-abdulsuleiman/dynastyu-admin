@@ -3,7 +3,7 @@
 "use client";
 
 import { useToast } from "@/hooks/use-toast";
-import { FC, useState } from "react";
+import { FC } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import { SignInValidator } from "@/lib/validators/signin";

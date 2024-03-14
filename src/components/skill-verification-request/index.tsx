@@ -3,7 +3,6 @@
 "use client";
 
 import { FC, useEffect, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Divider,
   Title,
@@ -19,31 +18,22 @@ import {
 } from "@tremor/react";
 import { useRouter } from "next/navigation";
 import {
-  GetVerificationRequestQuery,
+  GetSkillVerificationRequestsQuery,
   QueryMode,
   SkillVerificationRequestWhereInput,
   SortOrder,
-  useGetVerificationRequestQuery,
+  useGetSkillVerificationRequestsQuery,
   useUpdateSkillVerificationMutation,
 } from "@/services/graphql";
-import { Skeleton } from "../ui/skeleton";
 import { Icons } from "../Icons";
 import UniversalTable from "@/components/universal-table";
 import UserAvatar from "../user-avatar";
-import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
-import CarouselCard from "../carousel-card";
-import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
 import Pagination from "../pagination";
 import { SearchInput } from "../search-input";
 import SelectCard from "@/components/select";
 import { useDebouncedValue } from "@mantine/hooks";
-
+import MenubarCard from "../menubar";
+import SkillIcon from "../Icons/skill";
 interface SkillVerificationRequestProps {}
 
 const headerItems = [
@@ -81,16 +71,17 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
 
   const [updateSkillVerification] = useUpdateSkillVerificationMutation();
 
-  const { data, loading, refetch, fetchMore } = useGetVerificationRequestQuery({
-    variables: {
-      take: 10,
-      orderBy: {
-        createdAt: SortOrder.Desc,
+  const { data, loading, refetch, fetchMore } =
+    useGetSkillVerificationRequestsQuery({
+      variables: {
+        take: 10,
+        orderBy: {
+          createdAt: SortOrder.Desc,
+        },
       },
-    },
-    fetchPolicy: "cache-first",
-    pollInterval: 30 * 1000,
-  });
+      fetchPolicy: "cache-first",
+      pollInterval: 200,
+    });
 
   const whereClause: SkillVerificationRequestWhereInput = useMemo(() => {
     if (status === FilterEnum.VERIFIED) {
@@ -189,9 +180,9 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
         },
       },
       updateQuery: (
-        previousResult: GetVerificationRequestQuery,
+        previousResult: GetSkillVerificationRequestsQuery,
         { fetchMoreResult }
-      ): GetVerificationRequestQuery => {
+      ): GetSkillVerificationRequestsQuery => {
         if (
           !fetchMoreResult ||
           fetchMoreResult?.skillVerificationRequests?.length === 0
@@ -220,9 +211,9 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
         },
       },
       updateQuery: (
-        previousResult: GetVerificationRequestQuery,
+        previousResult: GetSkillVerificationRequestsQuery,
         { fetchMoreResult }
-      ): GetVerificationRequestQuery => {
+      ): GetSkillVerificationRequestsQuery => {
         if (
           !fetchMoreResult ||
           fetchMoreResult?.skillVerificationRequests?.length === 0
@@ -242,7 +233,7 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
     const verificationItems = [
       {
         name: `View Details`,
-        onclick: () => handleViewDetail(item),
+        onClick: () => handleViewDetail(item),
       },
     ];
     return (
@@ -258,7 +249,7 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
             alignItems="center"
             justifyContent="start"
             onClick={() =>
-              router.push(`/skills/verification-request/${item?.id}`)
+              router.push(`/skill-types/verification-request/${item?.id}`)
             }
           >
             <UserAvatar
@@ -289,7 +280,7 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
             <Badge
               size="xs"
               className="cursor-pointer"
-              color={item?.verified ? "teal" : "rose"}
+              color={item?.verified ? "sky" : "rose"}
               // tooltip="decrease"
               // icon={() => {
               //   return (
@@ -307,32 +298,10 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
         </TableCell>
         <TableCell className="text-center cursor-pointer ">
           <div className="text-right w-100 flex flex-row items-center justify-center">
-            <Menubar className="bg-transparent border-0 hover:bg-transparentfocus:bg-transparent">
-              <MenubarMenu>
-                <MenubarTrigger className="cursor-pointer data-[state=open]:bg-transparent hover:bg-transparent focus:bg-transparent bg-transparent focus-within:bg-transparent focus-visible:bg-transparent active:bg-transparent">
-                  <Icons.moreHorizontal />
-                </MenubarTrigger>
-                <MenubarContent
-                  side="bottom"
-                  align="start"
-                  sideOffset={-3}
-                  alignOffset={-100}
-                  className="rounded-tremor-default cursor-pointer bg-background dark:bg-dark-background"
-                >
-                  {verificationItems?.map((val, id) => {
-                    return (
-                      <MenubarItem
-                        onClick={val?.onclick}
-                        key={id}
-                        className="cursor-pointer tremor-SelectItem-root flex justify-start items-center text-tremor-default  ui-selected:text-tremor-content-strong ui-selected:bg-tremor-background-muted text-tremor-content-emphasis dark:ui-active:bg-dark-tremor-background-muted dark:ui-active:text-dark-tremor-content-strong dark:ui-selected:text-dark-tremor-content-strong dark:ui-selected:bg-dark-tremor-background-muted dark:text-dark-tremor-content-emphasis px-2.5 py-2.5"
-                      >
-                        {val?.name}
-                      </MenubarItem>
-                    );
-                  })}
-                </MenubarContent>
-              </MenubarMenu>
-            </Menubar>
+            <MenubarCard
+              trigger={<Icons.moreHorizontal className="cursor-pointer" />}
+              items={verificationItems}
+            />
           </div>
         </TableCell>
       </TableRow>
@@ -343,10 +312,12 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
     <main className="w-full h-full relative">
       <div className="flex flex-col">
         <div className="flex flex-row items-center">
-          <Title>Skill verification request</Title>
-          <Icons.medal className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+          <Title>Skill Verification Request</Title>
+          <SkillIcon
+            className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis"
+            // color={"#fff"}
+          />
         </div>
-        {/* <Text>HHHHHHHHHH</Text> */}
       </div>
       <Divider></Divider>
       <TabGroup className="mt-6">

@@ -18,22 +18,15 @@ import {
   Card,
   Callout,
 } from "@tremor/react";
-import Image from "next/image";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "../ui/skeleton";
 import { Icons } from "../Icons";
-import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
 import UserAvatar from "../user-avatar";
 import UsersAnalytics from "@/components/analytics/users";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/utils";
+import MenubarCard from "../menubar";
 
 interface FanDetailProps {
   params: {
@@ -60,8 +53,6 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
     },
     pollInterval: 30 * 1000,
   });
-
-  console.log("fanData", fanData);
 
   const handleDeleteProfile = async (item: any) => {
     try {
@@ -104,10 +95,10 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
       });
       toast({
         title: "Profile successfully updated.",
-        description: `@${item?.username} has been ${
-          isFanActive ? "Deactivated" : "Activated"
+        description: `@${item?.username} profile has been ${
+          isFanActive ? "deactivated" : "activated"
         }`,
-        variant: "default",
+        variant: "successfull",
       });
     } catch (error) {
       toast({
@@ -123,19 +114,19 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
   const dropdownItems = [
     {
       name: `Edit Profile`,
-      onclick: () =>
+      onClick: () =>
         router.push(`/fans/edit?fan=${Number(params?.fan)}`, {
           scroll: true,
         }),
     },
     {
       name: `${fanData?.user?.isActive ? "Deactivate" : "Activate"} Profile`,
-      onclick: async () => await handleActivateProfile(fanData?.user),
+      onClick: async () => await handleActivateProfile(fanData?.user),
     },
-    {
-      name: "Delete Profile",
-      onclick: async () => await handleDeleteProfile(fanData?.user),
-    },
+    // {
+    //   name: "Delete Profile",
+    //   onClick: async () => await handleDeleteProfile(fanData?.user),
+    // },
   ];
 
   const dataList: any = [
@@ -246,32 +237,16 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
                   </div>
                 )}
                 <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
-                  <Menubar className="bg-transparent border-0 hover:bg-transparent focus:bg-transparent px-0">
-                    <MenubarMenu>
-                      <MenubarTrigger className="cursor-pointer px-0 data-[state=open]:bg-transparent hover:bg-transparent focus:bg-transparent bg-transparent focus-within:bg-transparent focus-visible:bg-transparent active:bg-transparent">
+                  {loading ? (
+                    <Skeleton className="w-[40px] h-[20px]" />
+                  ) : (
+                    <MenubarCard
+                      trigger={
                         <Icons.moreHorizontal className="cursor-pointer" />
-                      </MenubarTrigger>
-                      <MenubarContent
-                        side="bottom"
-                        align="start"
-                        sideOffset={-2}
-                        alignOffset={-150}
-                        className="rounded-tremor-default cursor-pointer bg-background dark:bg-dark-background"
-                      >
-                        {dropdownItems?.map((val, id) => {
-                          return (
-                            <MenubarItem
-                              onClick={val?.onclick}
-                              key={id}
-                              className="cursor-pointer tremor-SelectItem-root flex justify-start items-center text-tremor-default  ui-selected:text-tremor-content-strong ui-selected:bg-tremor-background-muted text-tremor-content-emphasis dark:ui-active:bg-dark-tremor-background-muted dark:ui-active:text-dark-tremor-content-strong dark:ui-selected:text-dark-tremor-content-strong dark:ui-selected:bg-dark-tremor-background-muted dark:text-dark-tremor-content-emphasis px-2.5 py-2.5"
-                            >
-                              {val?.name}
-                            </MenubarItem>
-                          );
-                        })}
-                      </MenubarContent>
-                    </MenubarMenu>
-                  </Menubar>
+                      }
+                      items={dropdownItems}
+                    />
+                  )}
                 </div>
               </div>
               <Divider></Divider>

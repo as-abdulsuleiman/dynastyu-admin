@@ -11,6 +11,7 @@ import CarouselCard from "../carousel-card";
 import { useUpdateAthleteMutation } from "@/services/graphql";
 import { useToast } from "@/hooks/use-toast";
 import SkillIcon from "../Icons/skill";
+import { useRouter } from "next/navigation";
 
 interface AthleteSkillsCardProps {
   athleteSkills: AthleteSkill[];
@@ -54,6 +55,7 @@ const AthleteSkillCard: FC<AthleteSkillsCardProps> = ({
   athleteId,
 }) => {
   const { toast } = useToast();
+  const router = useRouter();
   const [updateAthlete] = useUpdateAthleteMutation();
   const [isUpdating, setIsUpdating] = useState<number | null>(null);
   const renderContent = (val: AthleteSkill) => {

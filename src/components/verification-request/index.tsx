@@ -13,16 +13,11 @@ import {
   TabPanel,
   Badge,
 } from "@tremor/react";
-import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
 import { Icons } from "../Icons";
 import {
+  SortOrder,
   useGetSkillVerificationRequestQuery,
+  useGetSkillVerificationRequestsLazyQuery,
   useUpdateSkillVerificationMutation,
 } from "@/services/graphql";
 import UserAvatar from "../user-avatar";
@@ -33,6 +28,8 @@ import CarouselCard from "../carousel-card";
 import { Button } from "../ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/utils";
+import MenubarCard from "../menubar";
+import { useRootStore } from "@/mobx";
 
 interface VerificationRequestProps {
   params: {
@@ -49,7 +46,15 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
 }) => {
   const router = useRouter();
   const { toast } = useToast();
+  const {
+    authStore: { user },
+    verificationRequestStore: { verificationRequest, setVerificationRequest },
+  } = useRootStore();
+
   const [updating, setUpdating] = useState<boolean>(false);
+  const [isVerifying, setIsVerifying] = useState<boolean>(false);
+  const [getSkillVerificationRequest] =
+    useGetSkillVerificationRequestsLazyQuery();
   const [updateSkillVerificationRequest] = useUpdateSkillVerificationMutation();
   const { data, loading, refetch } = useGetSkillVerificationRequestQuery({
     variables: {
@@ -76,7 +81,7 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
   const dropdownItems = [
     {
       name: `View Profile`,
-      onclick: () =>
+      onClick: () =>
         router.push(
           `/athlete/${data?.skillVerificationRequest?.skill?.athleteId}`,
           {
@@ -88,26 +93,42 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
 
   const handleVerifySkill = async () => {
     setUpdating(true);
+    setIsVerifying(true);
     try {
-      const response = await updateSkillVerificationRequest({
+      const isVerified = data?.skillVerificationRequest?.verified;
+      await updateSkillVerificationRequest({
         variables: {
           where: {
             id: data?.skillVerificationRequest?.id,
           },
           data: {
-            verified: { set: !data?.skillVerificationRequest?.verified },
+            verified: { set: !isVerified },
             dateOfVerfication: { set: new Date() },
           },
         },
       });
-      if (response?.data) {
-        // toast({
-        //   title: "Skill verification successfully updated",
-        //   description: `${data?.skillVerificationRequest?.skill?.skillType?.name} has been verified`,
-        //   variant: "default",
-        // });
-        await refetch();
-      }
+      await refetch();
+      const res = await getSkillVerificationRequest({
+        variables: {
+          where: {
+            verified: {
+              equals: false,
+            },
+          },
+          take: 10,
+          orderBy: {
+            createdAt: SortOrder.Desc,
+          },
+        },
+      });
+      setVerificationRequest(res?.data?.skillVerificationRequests as any);
+      toast({
+        title: "Skill verification successfully updated",
+        description: `${
+          data?.skillVerificationRequest?.skill?.skillType?.name
+        } skill has been ${!isVerified ? "verified" : "unverified"}`,
+        variant: "successfull",
+      });
     } catch (error: any) {
       toast({
         title: "Something went wrong.",
@@ -116,11 +137,15 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
       });
     } finally {
       setUpdating(false);
+      setIsVerifying(false);
     }
   };
 
   return (
     <main className="w-full h-full relative">
+      <Button variant="ghost" className="mb-6" onClick={() => router.back()}>
+        Go Back
+      </Button>
       <div className="flex flex-col">
         <div className="flex flex-row items-center">
           <Title>Verify Skill</Title>
@@ -189,34 +214,15 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
                   </div>
                 )}
                 <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
-                  <Menubar className="bg-transparent border-0 hover:bg-transparent focus:bg-transparent px-0 mr-0 md:mr-6">
-                    <MenubarMenu>
-                      <MenubarTrigger className="cursor-pointer px-0 data-[state=open]:bg-transparent hover:bg-transparent focus:bg-transparent bg-transparent focus-within:bg-transparent focus-visible:bg-transparent active:bg-transparent">
-                        <Icons.moreHorizontal className="cursor-pointer" />
-                      </MenubarTrigger>
-                      <MenubarContent
-                        side="bottom"
-                        align="start"
-                        sideOffset={-2}
-                        alignOffset={-150}
-                        className="rounded-tremor-default cursor-pointer bg-background dark:bg-dark-background"
-                      >
-                        {dropdownItems?.map((val, id) => {
-                          return (
-                            <MenubarItem
-                              onClick={val?.onclick}
-                              key={id}
-                              className="cursor-pointer tremor-SelectItem-root flex justify-start items-center text-tremor-default  ui-selected:text-tremor-content-strong ui-selected:bg-tremor-background-muted text-tremor-content-emphasis dark:ui-active:bg-dark-tremor-background-muted dark:ui-active:text-dark-tremor-content-strong dark:ui-selected:text-dark-tremor-content-strong dark:ui-selected:bg-dark-tremor-background-muted dark:text-dark-tremor-content-emphasis px-2.5 py-2.5"
-                            >
-                              {val?.name}
-                            </MenubarItem>
-                          );
-                        })}
-                      </MenubarContent>
-                    </MenubarMenu>
-                  </Menubar>
+                  <MenubarCard
+                    trigger={
+                      <Icons.moreHorizontal className="cursor-pointer md:mr-6" />
+                    }
+                    items={dropdownItems}
+                  />
                   <div className="flex-col hidden md:flex ">
                     <Button
+                      disabled={isVerifying}
                       className="ml-auto "
                       onClick={() => handleVerifySkill()}
                     >
@@ -307,7 +313,8 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
               </div>
               <div className="flex md:hidden mt-4">
                 <Button
-                  className="ml-auto "
+                  className="ml-auto"
+                  disabled={isVerifying}
                   onClick={() => handleVerifySkill()}
                 >
                   {updating

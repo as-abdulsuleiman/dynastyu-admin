@@ -7,23 +7,12 @@ import {
   Title,
   Text,
   Divider,
-  TabGroup,
-  TabPanels,
-  TabPanel,
   Flex,
   Grid,
-  TextInput,
   TableCell,
   TableRow,
   Badge,
 } from "@tremor/react";
-import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
 import { StatusOfflineIcon, StatusOnlineIcon } from "@heroicons/react/outline";
 import {
   GetUsersQuery,
@@ -40,8 +29,8 @@ import Pagination from "../pagination";
 import UserAvatar from "../user-avatar";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import { AccountType } from "@/lib/enums/account-type.enum";
 import { Icons } from "../Icons";
+import MenubarCard from "../menubar";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -98,26 +87,23 @@ const FansCard: FC<FansProps> = ({}) => {
     setIsactivating(true);
     try {
       const isActive = item?.isActive;
-      const resp = await updateUser({
+      await updateUser({
         variables: {
           where: {
-            id: Number(item?.id),
+            id: item?.id,
           },
           data: {
             isActive: { set: !isActive },
           },
         },
       });
-      // if (resp?.data?.updateOneUser) {
-      //   await refetch();
-      //   // toast({
-      //   //   title: "Coach successfully updated.",
-      //   //   description: `${coach?.user?.username} has been ${
-      //   //     coach?.user?.isActive ? "Deactivated" : "Activated"
-      //   //   } `,
-      //   //   variant: "default",
-      //   // });
-      // }
+      toast({
+        title: "Profile successfully updated.",
+        description: `@${item?.username} profile has been ${
+          isActive ? "deactivated" : "activated"
+        } `,
+        variant: "successfull",
+      });
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -193,26 +179,26 @@ const FansCard: FC<FansProps> = ({}) => {
     });
   };
   const renderItems = ({ item, id }: { item: any; id: any }) => {
-    const userItems = [
+    const fanItems = [
       {
         name: "View Details",
-        onclick: () => router.push(`/fan/${item?.id}`, { scroll: true }),
+        onClick: () => router.push(`/fan/${item?.id}`, { scroll: true }),
       },
       {
         name: `Edit Profile`,
-        onclick: () =>
+        onClick: () =>
           router.push(`/fans/edit?fan=${Number(item?.id)}`, {
             scroll: true,
           }),
       },
       {
         name: `${item?.isActive ? "Deactivate" : "Activate"} Profile`,
-        onclick: async () => await handleActiveUser(item),
+        onClick: async () => await handleActiveUser(item),
       },
 
       // {
       //   name: "Delete User",
-      //   onclick: async () => await handleDeleteUser(item),
+      //   onClick: async () => await handleDeleteUser(item),
       // },
     ];
     return (
@@ -237,7 +223,7 @@ const FansCard: FC<FansProps> = ({}) => {
           </Flex>
         </TableCell>
         <TableCell className="text-center">
-          <Text>@{item?.username}</Text>
+          <Text>{item?.username ? `@${item?.username}` : ""}</Text>
         </TableCell>
         {/* <TableCell className="text-center">
           <Text>{item.accountType?.role?.title}</Text>
@@ -266,32 +252,10 @@ const FansCard: FC<FansProps> = ({}) => {
         </TableCell>
         <TableCell>
           <div className="text-right w-100 flex flex-row items-center justify-center">
-            <Menubar className="bg-transparent border-0 hover:bg-transparent focus:bg-transparent">
-              <MenubarMenu>
-                <MenubarTrigger className="cursor-pointer data-[state=open]:bg-transparent hover:bg-transparent focus:bg-transparent bg-transparent focus-within:bg-transparent focus-visible:bg-transparent active:bg-transparent">
-                  <Icons.moreHorizontal />
-                </MenubarTrigger>
-                <MenubarContent
-                  side="bottom"
-                  align="start"
-                  sideOffset={-3}
-                  alignOffset={-100}
-                  className="rounded-tremor-default cursor-pointer bg-background dark:bg-dark-background"
-                >
-                  {userItems?.map((val, id) => {
-                    return (
-                      <MenubarItem
-                        onClick={val?.onclick}
-                        key={id}
-                        className="cursor-pointer tremor-SelectItem-root flex justify-start items-center text-tremor-default  ui-selected:text-tremor-content-strong ui-selected:bg-tremor-background-muted text-tremor-content-emphasis dark:ui-active:bg-dark-tremor-background-muted dark:ui-active:text-dark-tremor-content-strong dark:ui-selected:text-dark-tremor-content-strong dark:ui-selected:bg-dark-tremor-background-muted dark:text-dark-tremor-content-emphasis px-2.5 py-2.5"
-                      >
-                        {val?.name}
-                      </MenubarItem>
-                    );
-                  })}
-                </MenubarContent>
-              </MenubarMenu>
-            </Menubar>
+            <MenubarCard
+              trigger={<Icons.moreHorizontal className="cursor-pointer" />}
+              items={fanItems}
+            />
           </div>
         </TableCell>
       </TableRow>

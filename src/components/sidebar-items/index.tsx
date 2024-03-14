@@ -6,6 +6,10 @@ import { usePathname, useParams, useRouter } from "next/navigation";
 import { Icons } from "../Icons";
 import { Text } from "@tremor/react";
 import SkillIcon from "../Icons/skill";
+import { useRootStore } from "@/mobx";
+import { Badge } from "@/components/ui/badge";
+import { observer } from "mobx-react-lite";
+
 interface SidebarItemsProps {
   handleNavigation: (val: string) => void;
 }
@@ -16,6 +20,9 @@ type IconProps = {
 };
 
 const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
+  const {
+    verificationRequestStore: { verificationRequest },
+  } = useRootStore();
   const pathname = usePathname();
 
   const items = [
@@ -81,6 +88,8 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
         {
           name: "Create School",
           path: "/schools/new",
+          hasBadge: false,
+          count: 0,
         },
       ],
       icon: ({ className, color }: IconProps) => (
@@ -99,6 +108,8 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
         {
           name: "Verification Request",
           path: "/skill-types/verification-request",
+          hasBadge: verificationRequest.length > 0 ? true : false,
+          count: verificationRequest?.length,
         },
       ],
       icon: ({ className, color }: IconProps) => (
@@ -122,9 +133,9 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
         let pathToCheck: any = parentPath?.split("?");
         pathToCheck = pathToCheck?.length ? pathToCheck[0] : null;
         const childPath = val?.items?.some((data: any) =>
-          pathname.includes(data?.path)
+          pathname?.includes(data?.path)
         );
-        const isActive = pathname.includes(pathToCheck) || childPath;
+        const isActive = pathname?.includes(pathToCheck) || childPath;
         const iconColor = "";
         const iconClass = `h-[19px] w-[19px] ${
           val?.hasFill
@@ -134,7 +145,7 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
           isActive &&
           `${
             val?.hasFill
-              ? " fill-gray-700 dark:fill-white"
+              ? "fill-gray-700 dark:fill-white"
               : "stroke-white stroke-gray-700 dark:stroke-white"
           }`
         }`;
@@ -160,17 +171,25 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
               </Text>
             </div>
             {isActive && val?.items?.length ? (
-              <div className="pr-2 pl-5 pb-3 mt-2">
-                {val?.items?.map((val, index) => {
+              <div className="pr-2 pl-4 pb-3 mt-4">
+                {val?.items?.map((value: any, index) => {
                   return (
-                    <div
-                      key={index}
-                      className={`${
-                        isActive && pathname === val.path ? "text-teal-700" : ""
-                      } cursor-pointer text-[16px] text-tremor-default`}
-                      onClick={() => handleNavigation(val?.path)}
-                    >
-                      {val?.name}
+                    <div key={index} className="flex flex-row items-center">
+                      <div
+                        className={`${
+                          isActive && pathname === value?.path
+                            ? "text-teal-700"
+                            : ""
+                        } cursor-pointer text-[16px] text-tremor-default`}
+                        onClick={() => handleNavigation(value?.path)}
+                      >
+                        {value?.name}
+                      </div>
+                      {value?.hasBadge ? (
+                        <div className="ml-auto">
+                          <Badge className="">{value?.count}</Badge>
+                        </div>
+                      ) : null}
                     </div>
                   );
                 })}
@@ -183,4 +202,4 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
   );
 };
 
-export default SidebarItems;
+export default observer(SidebarItems);

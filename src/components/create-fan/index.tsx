@@ -75,7 +75,7 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
     watch,
     getValues,
     setFocus,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting, isValid, isDirty },
   } = useForm({
     mode: "onBlur",
     resolver: yupResolver(FanValidator),
@@ -152,7 +152,12 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
           },
         },
       });
-      router.push(`/fans`);
+      await toast({
+        title: "Profile successfully updated",
+        description: `@${values?.username} profile has been successfully updated`,
+        variant: "successfull",
+      });
+      router.push(`/fan/${searchParams?.fan}`);
     } catch (error: any) {
       toast({
         title: "Something went wrong.",
@@ -258,7 +263,7 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
               id="dob"
               type="date"
               label="Date of Birth"
-              value={dob}
+              value={dob && formatDate(dob, "yyyy-MM-dd")}
               className="bg-transparent inputdate"
               placeholder="Enter Year Founded"
               error={errors?.dob?.message}
@@ -286,10 +291,14 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
                 items={accountTypeOptions as any}
                 selectedValue={{ id: accountType?.accountTypeId }}
                 onSelectValue={(item) => {
-                  setValue("accountType", {
-                    accountTypeId: item?.id,
-                    roleId: item?.roleId,
-                  });
+                  setValue(
+                    "accountType",
+                    {
+                      accountTypeId: item?.id,
+                      roleId: item?.roleId,
+                    },
+                    { shouldDirty: true }
+                  );
                 }}
               />
             </div>
@@ -309,7 +318,9 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
               onBlur={countryInput.onBlur}
               ref={countryInput.ref}
               name={countryInput.name}
-              onSelectCountry={(country) => setValue("country", country?.value)}
+              onSelectCountry={(country) =>
+                setValue("country", country?.value, { shouldDirty: true })
+              }
               // {...register("country", { required: true })}
               error={errors?.country?.message}
             />
@@ -324,7 +335,9 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
               selectedState={state as string}
               error={errors?.state?.message}
               countryId={selectedCountryId || 0}
-              onSelectState={(state) => setValue("state", state?.label)}
+              onSelectState={(state) =>
+                setValue("state", state?.label, { shouldDirty: true })
+              }
               selectStateId={(item) => setSelectedStateId(item)}
             />
           </div>
@@ -341,14 +354,16 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
               countryId={selectedCountryId || 0}
               stateId={selectedStateId || 0}
               error={errors?.city?.message}
-              onSelectCity={(city) => setValue("city", city?.label)}
+              onSelectCity={(city) =>
+                setValue("city", city?.label, { shouldDirty: true })
+              }
             />
           </div>
         </div>
         <div className="w-full">
           <Button
             variant="default"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !isDirty}
             className="w-full mt-6"
             type="submit"
           >

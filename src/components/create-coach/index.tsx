@@ -20,7 +20,7 @@ import {
 } from "@/services/graphql";
 import ComboBoxCard from "../combobox-card";
 import SchoolDropdown from "../school-dropdown";
-import { coachTitleOptions } from "@/lib/utils";
+import { coachTitleOptions, formatDate } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { Icons } from "../Icons";
 import { projectAuth } from "@/services/firebase/config";
@@ -31,6 +31,7 @@ import { SelectCountry } from "../select-country";
 import SelectCity from "../select-city";
 import SelectState from "../select-state";
 import { useRouter } from "next/navigation";
+
 type FormData = yup.InferType<typeof CoachValidator>;
 
 interface CreateCoachProps {
@@ -83,7 +84,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
     watch,
     getValues,
     setFocus,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting, isValid, isDirty },
   } = useForm({
     mode: "onBlur",
     resolver: yupResolver(CoachValidator),
@@ -100,8 +101,10 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
       state: "",
       city: "",
       country: "",
+      dob: "",
     },
     values: {
+      dob: coachData?.coachProfile?.user?.dob || "",
       avatar: coachData?.coachProfile?.user?.avatar || "",
       firstName: coachData?.coachProfile?.user?.firstname || "",
       email: coachData?.coachProfile?.user?.email || "",
@@ -139,6 +142,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
     country,
     state,
     city,
+    dob,
   } = getValues();
 
   const countryInput = register("country", { required: true });
@@ -176,6 +180,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
           state: { set: values?.state },
           user: {
             update: {
+              dob: { set: values?.dob },
               firstname: { set: values?.firstName },
               surname: { set: values?.lastName },
               email: { set: values?.email },
@@ -211,14 +216,15 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
       variables: {
         data: {
           firebaseUid: "",
-          firstname: values.firstName,
-          surname: values.lastName,
-          email: values.email,
-          username: values.username,
-          avatar: values.avatar,
+          dob: { set: values?.dob },
+          firstname: values?.firstName,
+          surname: values?.lastName,
+          email: values?.email,
+          username: values?.username,
+          avatar: values?.avatar,
           accountType: {
             connect: {
-              id: Number(values.accountType?.accountTypeId),
+              id: Number(values?.accountType?.accountTypeId),
             },
           },
           role: {
@@ -226,8 +232,8 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
           },
           coachProfile: {
             create: {
-              title: values.title,
-              canReceiveMessages: values.canReceiveMessages,
+              title: values?.title,
+              canReceiveMessages: values?.canReceiveMessages,
               city: values?.city,
               state: values?.state,
               school: { connect: { id: Number(values?.school?.id) } },
@@ -249,21 +255,21 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
       const updateType = editType && searchParams?.coach;
       if (updateType) {
         await updateCoachFn(payload);
-        toast({
-          title: "Caoch updated",
-          description: "You have successfully updated a coach",
-          variant: "default",
+        await toast({
+          title: "Profile successfully updated",
+          description: `@${values?.username} profile has been successfully updated`,
+          variant: "successfull",
         });
       } else {
         await createCoach(payload);
         await sendPasswordResetEmail(projectAuth, values?.email);
-        toast({
-          title: "Coach successfully created.",
+        await toast({
+          title: "Profile successfully created.",
           description: `A password reset link has been sent to ${values?.email} to complete the process.`,
-          variant: "default",
+          variant: "successfull",
         });
       }
-      router.push(`/coaches`);
+      router.push(`/coach/${searchParams?.coach}`);
     } catch (error: any) {
       toast({
         title: "Something went wrong.",
@@ -370,10 +376,14 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               items={accountTypeOptions as any}
               selectedValue={{ id: accountType?.accountTypeId }}
               onSelectValue={(item) => {
-                setValue("accountType", {
-                  accountTypeId: item?.id,
-                  roleId: item?.roleId,
-                });
+                setValue(
+                  "accountType",
+                  {
+                    accountTypeId: item?.id,
+                    roleId: item?.roleId,
+                  },
+                  { shouldDirty: true }
+                );
               }}
             />
           </div>
@@ -393,7 +403,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               items={coachTitleOptions}
               selectedValue={{ value: title }}
               onSelectValue={(item) => {
-                setValue("title", item?.label);
+                setValue("title", item?.label, { shouldDirty: true });
               }}
             />
           </div>
@@ -409,10 +419,14 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               isOpen={openSchool}
               selectedValue={{ value: school?.name }}
               onSelectValue={(school) => {
-                setValue("school", {
-                  id: school?.id,
-                  name: school?.label,
-                });
+                setValue(
+                  "school",
+                  {
+                    id: school?.id,
+                    name: school?.label,
+                  },
+                  { shouldDirty: true }
+                );
               }}
               placeholder={"Select high school"}
               label="High School"
@@ -438,8 +452,9 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               onBlur={countryInput.onBlur}
               ref={countryInput.ref}
               name={countryInput.name}
-              onSelectCountry={(country) => setValue("country", country?.value)}
-              // {...register("country", { required: true })}
+              onSelectCountry={(country) =>
+                setValue("country", country?.value, { shouldDirty: true })
+              }
               error={errors?.country?.message}
             />
           </div>
@@ -455,7 +470,9 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               selectedState={state as string}
               error={errors?.state?.message}
               countryId={selectedCountryId || 0}
-              onSelectState={(state) => setValue("state", state?.label)}
+              onSelectState={(state) =>
+                setValue("state", state?.label, { shouldDirty: true })
+              }
               selectStateId={(item) => setSelectedStateId(item)}
             />
           </div>
@@ -470,7 +487,21 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               countryId={selectedCountryId || 0}
               stateId={selectedStateId || 0}
               error={errors?.city?.message}
-              onSelectCity={(city) => setValue("city", city?.label)}
+              onSelectCity={(city) =>
+                setValue("city", city?.label, { shouldDirty: true })
+              }
+            />
+          </div>
+          <div className="col-span-12 sm:col-span-6">
+            <Input
+              id="dob"
+              type="date"
+              label="Date of Birth"
+              value={dob && formatDate(dob, "yyyy-MM-dd")}
+              className="bg-transparent inputdate w-full"
+              placeholder="Enter Year Founded"
+              error={errors?.dob?.message}
+              {...register("dob", { required: true })}
             />
           </div>
         </div>
@@ -499,7 +530,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
         <div className="w-full">
           <Button
             variant="default"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !isDirty}
             className="w-full mt-6"
             type="submit"
           >

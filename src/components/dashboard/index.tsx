@@ -3,33 +3,36 @@
 "use client";
 
 import { FC, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
-  Title,
-  Text,
   Divider,
-  TabGroup,
-  TabPanels,
-  TabPanel,
-  Flex,
   Grid,
+  Text,
+  Title,
   TextInput,
-  TableCell,
   TableRow,
+  TableCell,
+  TabGroup,
+  TabPanel,
+  TabPanels,
+  Flex,
   Badge,
 } from "@tremor/react";
-import { StatusOfflineIcon, StatusOnlineIcon } from "@heroicons/react/outline";
-import { useDebouncedValue } from "@mantine/hooks";
-import { useRouter } from "next/navigation";
-import SelectCard from "@/components/select";
+import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
+import FanCount from "@/components/counts/fans";
 import UsersCount from "@/components/counts/users";
+import CoachesCount from "@/components/counts/coaches";
+import { useDebouncedValue } from "@mantine/hooks";
+import SelectCard from "@/components/select";
 import Pagination from "@/components/pagination";
+import AthletesCount from "@/components/counts/athletes";
 import UniversalTable from "@/components/universal-table";
-import { observer } from "mobx-react-lite";
-import { Icons } from "@/components/Icons";
 import UserAvatar from "@/components/user-avatar";
 import { AccountType } from "@/lib/enums/account-type.enum";
 import { useToast } from "@/hooks/use-toast";
+import { observer } from "mobx-react-lite";
 import { useRootStore } from "@/mobx";
+import { Icons } from "@/components/Icons";
 import {
   GetUsersQuery,
   QueryMode,
@@ -66,9 +69,9 @@ enum FilterEnum {
   COACH = "Coach",
 }
 
-interface UsersProps {}
+interface DashboardProps {}
 
-const Users: FC<UsersProps> = ({}) => {
+const Dashboard: FC<DashboardProps> = () => {
   const { toast } = useToast();
   const {
     userStore: { setUsers },
@@ -76,7 +79,7 @@ const Users: FC<UsersProps> = ({}) => {
   const router = useRouter();
   const [status, setStatus] = useState<string>("");
   const [value, setValue] = useState<string>("");
-  const [isActivating, setIsactivating] = useState<boolean>();
+  const [isActivating, setIsactivating] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [debounced] = useDebouncedValue(value, 300);
   const [deteteUser] = useDeleteUserMutation();
@@ -139,9 +142,9 @@ const Users: FC<UsersProps> = ({}) => {
       where: {
         ...whereClause,
         OR: [
+          { username: { contains: debounced, mode: QueryMode.Insensitive } },
           { firstname: { contains: debounced, mode: QueryMode.Insensitive } },
           { surname: { contains: debounced, mode: QueryMode.Insensitive } },
-          { username: { contains: debounced, mode: QueryMode.Insensitive } },
         ],
       },
     });
@@ -302,11 +305,11 @@ const Users: FC<UsersProps> = ({}) => {
           router.push(`/${userType}/${Number(userId)}`, { scroll: true }),
       },
       {
-        name: `${item?.isActive ? "Deactivate" : "Activate"} User`,
+        name: `${item?.isActive ? "Deactivate" : "Activate"} Profile`,
         onClick: async () => await handleActiveUser(item),
       },
       // {
-      //   name: "Delete User",
+      //   name: "Delete Profile",
       //   onclick: async () => await handleDeleteUser(item),
       // },
     ];
@@ -334,10 +337,10 @@ const Users: FC<UsersProps> = ({}) => {
           </Flex>
         </TableCell>
         <TableCell className="text-center">
-          <Text>@{item?.username}</Text>
+          <Text>{item?.username ? `@${item?.username}` : ""}</Text>
         </TableCell>
         <TableCell className="text-center">
-          <Text>{item.accountType?.role?.title}</Text>
+          <Text>{item?.accountType?.role?.title}</Text>
         </TableCell>
         <TableCell className="text-center">
           <Text>{item?.email}</Text>
@@ -361,6 +364,7 @@ const Users: FC<UsersProps> = ({}) => {
             </Badge>
           )}
         </TableCell>
+
         <TableCell>
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
@@ -375,37 +379,30 @@ const Users: FC<UsersProps> = ({}) => {
 
   return (
     <main className="w-full h-full">
-      <Title>Users</Title>
-      {/* <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text> */}
+      <Title>Dashboard Overview</Title>
+      <Text>Welcome to DynastyU Admin</Text>
       <Divider></Divider>
       <TabGroup className="mt-6">
-        {/* <TabList>
-          <Tab>Overview</Tab>
-          <Tab>Detail</Tab>
-        </TabList> */}
         <TabPanels>
           <TabPanel>
-            <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
+            <Grid
+              numItemsMd={2}
+              numItemsLg={2}
+              numItemsSm={2}
+              className="mt-6 gap-6"
+            >
               <UsersCount />
-              {/* <UsersAnalytics /> */}
+              <AthletesCount />
+              <CoachesCount />
+              <FanCount />
             </Grid>
             <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
               <SearchInput
                 onChange={(e) => setValue(e.target.value)}
                 placeholder="Search..."
               />
-              {/* <TextInput
-                className="bg-background dark:bg-dark-background"
-                icon={() => {
-                  return (
-                    <Icons.search className="tremor-TextInput-icon shrink-0 text-tremor-content-subtle dark:text-dark-tremor-content-subtle h-5 w-5 ml-2.5" />
-                  );
-                }}
-                onValueChange={(e) => setValue(e)}
-                placeholder="Search..."
-              /> */}
               <SelectCard
-                className="h-[38px] bg-background dark:bg-dark-background"
+                className="bg-background dark:bg-dark-background dark:bg-dark-tremor-background"
                 items={filterItems}
                 selectedItem={status}
                 onValueChange={(e) => {
@@ -415,9 +412,9 @@ const Users: FC<UsersProps> = ({}) => {
             </Grid>
             <UniversalTable
               title="User List"
-              loading={loading}
               headerItems={headerItems}
               items={users?.users as any[]}
+              loading={loading}
               renderItems={renderItems}
             />
             {loading || !users?.users?.length ? null : (
@@ -429,4 +426,5 @@ const Users: FC<UsersProps> = ({}) => {
     </main>
   );
 };
-export default observer(Users);
+
+export default Dashboard;

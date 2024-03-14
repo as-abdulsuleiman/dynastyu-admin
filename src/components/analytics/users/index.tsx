@@ -18,6 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { StatusOfflineIcon, StatusOnlineIcon } from "@heroicons/react/outline";
 import { observer } from "mobx-react-lite";
 import StarIcon from "@/components/Icons/starIcon";
+import { Icons } from "@/components/Icons";
 
 type BarData = {
   key?: string;
@@ -37,6 +38,8 @@ interface indexProps {
   showStatus?: boolean;
   showFeatured?: boolean;
   featured?: boolean;
+  showVerified?: boolean;
+  isVerified?: boolean;
   valueFormatter?: ValueFormatter;
 }
 
@@ -56,6 +59,8 @@ const UsersAnalytics: FC<indexProps> = ({
   isActive,
   showFeatured,
   featured,
+  isVerified,
+  showVerified,
   valueFormatter,
 }) => {
   return (
@@ -89,6 +94,8 @@ const UsersAnalytics: FC<indexProps> = ({
           <div className="flex flex-row items-center">
             <Title>{title}</Title>
             <div className="ml-auto flex flex-row items-center">
+              {/* {isVerified ?} */}
+
               {showStatus ? (
                 <Badge
                   datatype={isActive ? "increase" : "decrease"}
@@ -99,6 +106,34 @@ const UsersAnalytics: FC<indexProps> = ({
                   {isActive ? "Active" : "Deactivated"}
                 </Badge>
               ) : null}
+
+              {showVerified ? (
+                <Badge
+                  datatype={isVerified ? "increase" : "decrease"}
+                  className="flex flex-row ml-3"
+                  color={isVerified ? "sky" : "rose"}
+                  icon={() => {
+                    if (isVerified) {
+                      return (
+                        <Icons.badgeCheck
+                          className="h-4 w-4 mr-2"
+                          color="sky"
+                        />
+                      );
+                    } else {
+                      return (
+                        <Icons.badgeAlert
+                          className="h-4 w-4 mr-2"
+                          color="rose"
+                        />
+                      );
+                    }
+                  }}
+                >
+                  {isVerified ? "Verified" : "Not Verified"}
+                </Badge>
+              ) : null}
+
               {showFeatured ? (
                 <Badge
                   datatype={featured ? "increase" : "decrease"}
