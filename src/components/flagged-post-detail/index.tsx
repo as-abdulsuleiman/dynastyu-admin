@@ -43,7 +43,7 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
             width={90}
             fallbackType="icon"
             fallbackClassName={"h-[120px] w-[120px]"}
-            avatar={post?.user.avatar as string}
+            avatar={post?.user?.avatar as string}
             fallback={`${post?.user?.firstname?.charAt(
               0
             )} ${post?.user?.surname?.charAt(0)}`}
@@ -72,7 +72,7 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
             width={90}
             fallbackType="icon"
             fallbackClassName={"h-[120px] w-[120px]"}
-            avatar={user.avatar as string}
+            avatar={user?.avatar as string}
             fallback={`${user?.firstname?.charAt(0)} ${user?.surname?.charAt(
               0
             )}`}
