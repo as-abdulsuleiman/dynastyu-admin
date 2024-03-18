@@ -6,15 +6,12 @@ import { FC, useEffect, useMemo, useState } from "react";
 import {
   Divider,
   Title,
-  Text,
   TableRow,
   TableCell,
-  TabGroup,
-  TabPanel,
-  TabPanels,
   Flex,
   Badge,
   Grid,
+  TextInput,
 } from "@tremor/react";
 import { useRouter } from "next/navigation";
 import {
@@ -29,12 +26,14 @@ import { Icons } from "../Icons";
 import UniversalTable from "@/components/universal-table";
 import UserAvatar from "../user-avatar";
 import Pagination from "../pagination";
-import { SearchInput } from "../search-input";
 import SelectCard from "@/components/select";
 import { useDebouncedValue } from "@mantine/hooks";
 import MenubarCard from "../menubar";
 import SkillIcon from "../Icons/skill";
 import { observer } from "mobx-react-lite";
+import SkillVerificationRequestCount from "../counts/skill-verification-request-count";
+import { formatDate } from "@/lib/utils";
+
 interface SkillVerificationRequestProps {}
 
 const headerItems = [
@@ -43,13 +42,13 @@ const headerItems = [
   { name: "Skill" },
   { name: "Email" },
   { name: "Verified" },
-  { name: "Action" },
+  { name: "Date" },
+  { name: "Actions" },
 ];
+
 const filterItems = [
   { name: "Verified", value: "Verified" },
   { name: "Not Verified", value: "Not Verified" },
-  // { name: "Approved", value: "Approved" },
-  // { name: "Not Approved", value: "Not Approved" },
 ];
 
 enum FilterEnum {
@@ -261,9 +260,9 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
                 0
               )} ${item?.user?.surname?.charAt(0)}`}
             />
-            <Text className="ml-4 cursor-pointer">
+            <div className="ml-4 cursor-pointer">
               {item?.user?.firstname} {item?.user?.firstname}
-            </Text>
+            </div>
           </Flex>
         </TableCell>
         <TableCell className="text-center">@{item?.user?.username}</TableCell>
@@ -283,19 +282,21 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
               className="cursor-pointer"
               color={item?.verified ? "sky" : "rose"}
               // tooltip="decrease"
-              // icon={() => {
-              //   return (
-              //     <Icons.pentagon
-              //       className="rotate-180 h-5 w-5 mr-1"
-              //       color="teal"
-              //     />
-              //   );
-              // }}
+              icon={() => {
+                return (
+                  <Icons.badgeAlert className="h-4 w-4 mr-1" color="rose" />
+                );
+              }}
               datatype="moderateDecrease"
             >
               {item?.verified ? "DU Verified" : "Not Verified"}
             </Badge>
           )}
+        </TableCell>
+        <TableCell className="text-center">
+          <div>
+            {item.createdAt ? formatDate(item?.createdAt, "dd MMM yyyy") : ""}
+          </div>
         </TableCell>
         <TableCell className="text-center cursor-pointer ">
           <div className="text-right w-100 flex flex-row items-center justify-center">
@@ -321,48 +322,39 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
         </div>
       </div>
       <Divider></Divider>
-      <TabGroup className="mt-6">
-        <TabPanels>
-          <TabPanel>
-            <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-              <SearchInput
-                onChange={(e) => setValue(e.target.value)}
-                placeholder="Search..."
-              />
-              {/* <TextInput
-                className="h-[38px] bg-background dark:bg-dark-background"
-                icon={() => {
-                  return (
-                    <Icons.search className="tremor-TextInput-icon shrink-0 text-tremor-content-subtle dark:text-dark-tremor-content-subtle h-5 w-5 ml-2.5" />
-                  );
-                }}
-                onValueChange={(e) => setValue(e)}
-                placeholder="Search for athlete..."
-              /> */}
-              <SelectCard
-                className="ring-0 bg-background dark:bg-dark-background"
-                items={filterItems}
-                selectedItem={status}
-                onValueChange={(e) => {
-                  setStatus(e);
-                }}
-              />
-            </Grid>
-            <div>
-              <UniversalTable
-                title="Verification Request List"
-                headerItems={headerItems}
-                items={data?.skillVerificationRequests as any[]}
-                loading={loading}
-                renderItems={renderItems}
-              />
-              {loading || !data?.skillVerificationRequests?.length ? null : (
-                <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
-              )}
-            </div>
-          </TabPanel>
-        </TabPanels>
-      </TabGroup>
+      <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
+        <SkillVerificationRequestCount />
+      </Grid>
+      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
+        <TextInput
+          className="h-[38px]"
+          icon={() => {
+            return <Icons.search className="h-10 w-5 ml-2.5" />;
+          }}
+          onValueChange={(e) => setValue(e)}
+          placeholder="Type to search..."
+        />
+        <SelectCard
+          className="ring-0 bg-background dark:bg-dark-background"
+          items={filterItems}
+          selectedItem={status}
+          onValueChange={(e) => {
+            setStatus(e);
+          }}
+        />
+      </Grid>
+      <div>
+        <UniversalTable
+          title="Verification Request List"
+          headerItems={headerItems}
+          items={data?.skillVerificationRequests as any[]}
+          loading={loading}
+          renderItems={renderItems}
+        />
+        {loading || !data?.skillVerificationRequests?.length ? null : (
+          <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
+        )}
+      </div>
     </main>
   );
 };

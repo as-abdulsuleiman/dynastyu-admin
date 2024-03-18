@@ -26070,14 +26070,14 @@ export type GetPostFlagsQueryVariables = Exact<{
 }>;
 
 
-export type GetPostFlagsQuery = { __typename?: 'Query', postFlags: Array<{ __typename?: 'PostFlag', id: any, uuid: string, createdAt: any, updatedAt: any, userId: any, postId: any, reason: string, user: { __typename?: 'User', id: any, uuid: string, username?: string | null, firstname: string, surname: string, avatar?: string | null, email: string }, post: { __typename?: 'Post', id: any, uuid: string, videos: Array<string>, images: Array<string>, user: { __typename?: 'User', id: any, uuid: string, username?: string | null, firstname: string, surname: string, avatar?: string | null, email: string } } }> };
+export type GetPostFlagsQuery = { __typename?: 'Query', postFlags: Array<{ __typename?: 'PostFlag', id: any, uuid: string, createdAt: any, updatedAt: any, userId: any, postId: any, reason: string, user: { __typename?: 'User', id: any, uuid: string, username?: string | null, firstname: string, surname: string, avatar?: string | null, email: string }, post: { __typename?: 'Post', id: any, uuid: string, videos: Array<string>, images: Array<string>, visibility: Visibility, createdAt: any, videosAspectRatio: Array<string>, caption: string, user: { __typename?: 'User', id: any, uuid: string, username?: string | null, firstname: string, surname: string, avatar?: string | null, email: string } } }> };
 
 export type GetPostFlagQueryVariables = Exact<{
   where: PostFlagWhereUniqueInput;
 }>;
 
 
-export type GetPostFlagQuery = { __typename?: 'Query', postFlag?: { __typename?: 'PostFlag', id: any, uuid: string, createdAt: any, updatedAt: any, userId: any, postId: any, reason: string, user: { __typename?: 'User', id: any, uuid: string, username?: string | null, firstname: string, surname: string, avatar?: string | null, email: string }, post: { __typename?: 'Post', id: any, uuid: string, videos: Array<string>, images: Array<string>, user: { __typename?: 'User', id: any, uuid: string, username?: string | null, firstname: string, surname: string, avatar?: string | null, email: string } } } | null };
+export type GetPostFlagQuery = { __typename?: 'Query', postFlag?: { __typename?: 'PostFlag', id: any, uuid: string, createdAt: any, updatedAt: any, userId: any, postId: any, reason: string, user: { __typename?: 'User', id: any, uuid: string, username?: string | null, firstname: string, surname: string, avatar?: string | null, email: string }, post: { __typename?: 'Post', id: any, uuid: string, videos: Array<string>, images: Array<string>, caption: string, visibility: Visibility, createdAt: any, videosAspectRatio: Array<string>, user: { __typename?: 'User', id: any, uuid: string, username?: string | null, firstname: string, surname: string, avatar?: string | null, email: string } } } | null };
 
 export type SchoolCommonPartsFragment = { __typename?: 'School', id: any, uuid: string, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, state?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', id: any, name: string } };
 
@@ -26329,14 +26329,14 @@ export type GetSkillVerificationRequestsQueryVariables = Exact<{
 }>;
 
 
-export type GetSkillVerificationRequestsQuery = { __typename?: 'Query', skillVerificationRequests: Array<{ __typename?: 'SkillVerificationRequest', id: any, uuid: string, dateOfVerfication?: any | null, verified: boolean, createdAt: any, skillId: any, userId: any, skill: { __typename?: 'Skills', id: any, athleteId?: any | null, videos: Array<string>, secondValue?: string | null, value: string, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, skills: Array<{ __typename?: 'Skills', value: string }> } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null, avatar?: string | null, email: string }, camp?: { __typename?: 'Camp', name: string, id: any, uuid: string, address: string, description?: string | null } | null }> };
+export type GetSkillVerificationRequestsQuery = { __typename?: 'Query', skillVerificationRequests: Array<{ __typename?: 'SkillVerificationRequest', id: any, uuid: string, dateOfVerfication?: any | null, verified: boolean, createdAt: any, updatedAt: any, skillId: any, userId: any, skill: { __typename?: 'Skills', id: any, athleteId?: any | null, videos: Array<string>, secondValue?: string | null, value: string, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, skills: Array<{ __typename?: 'Skills', value: string }> } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null, avatar?: string | null, email: string }, camp?: { __typename?: 'Camp', name: string, id: any, uuid: string, address: string, description?: string | null } | null }> };
 
 export type GetSkillVerificationRequestQueryVariables = Exact<{
   where: SkillVerificationRequestWhereUniqueInput;
 }>;
 
 
-export type GetSkillVerificationRequestQuery = { __typename?: 'Query', skillVerificationRequest?: { __typename?: 'SkillVerificationRequest', id: any, uuid: string, dateOfVerfication?: any | null, verified: boolean, createdAt: any, skillId: any, userId: any, skill: { __typename?: 'Skills', id: any, athleteId?: any | null, videos: Array<string>, secondValue?: string | null, value: string, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, skills: Array<{ __typename?: 'Skills', value: string }> } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null, avatar?: string | null, email: string, athleteProfile?: { __typename?: 'AthleteProfile', id: any, verified: boolean, userId: any, verifiedBy?: { __typename?: 'CoachProfile', title?: string | null, user: { __typename?: 'User', username?: string | null, firstname: string, surname: string } } | null } | null }, camp?: { __typename?: 'Camp', name: string, id: any, uuid: string, address: string, description?: string | null } | null } | null };
+export type GetSkillVerificationRequestQuery = { __typename?: 'Query', skillVerificationRequest?: { __typename?: 'SkillVerificationRequest', id: any, uuid: string, dateOfVerfication?: any | null, verified: boolean, createdAt: any, updatedAt: any, skillId: any, userId: any, skill: { __typename?: 'Skills', id: any, athleteId?: any | null, videos: Array<string>, secondValue?: string | null, value: string, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, skills: Array<{ __typename?: 'Skills', value: string }> } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null, avatar?: string | null, email: string, athleteProfile?: { __typename?: 'AthleteProfile', id: any, verified: boolean, userId: any, verifiedBy?: { __typename?: 'CoachProfile', title?: string | null, user: { __typename?: 'User', username?: string | null, firstname: string, surname: string } } | null } | null }, camp?: { __typename?: 'Camp', name: string, id: any, uuid: string, address: string, description?: string | null } | null } | null };
 
 export type UserCommonPartsFragment = { __typename?: 'User', id: any, firstname: string, surname: string, email: string, isActive: boolean, avatar?: string | null, dob?: any | null, username?: string | null, address?: string | null, firebaseUid: string, city?: string | null, state?: string | null, createdAt: any, accountTypeId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, comments: number, postLikes: number, commentLikes: number, postReports: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluationsCreated: number, postFlag: number, blockedByUsers: number, blockedUsers: number, reposts: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, schoolId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } };
 
@@ -28518,6 +28518,10 @@ export const GetPostFlagsDocument = gql`
       uuid
       videos
       images
+      visibility
+      createdAt
+      videosAspectRatio
+      caption
       user {
         id
         uuid
@@ -28595,6 +28599,10 @@ export const GetPostFlagDocument = gql`
       uuid
       videos
       images
+      caption
+      visibility
+      createdAt
+      videosAspectRatio
       user {
         id
         uuid
@@ -30012,6 +30020,7 @@ export const GetSkillVerificationRequestsDocument = gql`
     dateOfVerfication
     verified
     createdAt
+    updatedAt
     skillId
     userId
     skill {
@@ -30096,6 +30105,7 @@ export const GetSkillVerificationRequestDocument = gql`
     dateOfVerfication
     verified
     createdAt
+    updatedAt
     skillId
     userId
     skill {

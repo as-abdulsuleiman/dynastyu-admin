@@ -45,7 +45,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
   } = useRootStore();
   const router = useRouter();
   const { toast } = useToast();
-  const [showimage, setShowImage] = useState(true);
+  const [loadingImage, setLoadingImage] = useState(true);
   const [viewPlayerCardUrl, setViewPlayerCardUrl] = useState(false);
   const [updateAthlete] = useUpdateAthleteMutation();
   const [deleteUser] = useDeleteUserMutation();
@@ -442,7 +442,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
         />
       </Grid>
       <Grid numItemsMd={1} numItemsLg={1} className="mt-6 gap-6">
-        <Card className="bg-background dark:bg-dark-background">
+        <Card className="">
           <div className="flex flex-col items-center justify-start relative">
             <ModalCard
               isModal={true}
@@ -466,15 +466,15 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               content={
                 <AspectRatio ratio={16 / 16} className="cursor-pointer">
                   <Image
-                    onLoadingComplete={() => setShowImage(false)}
+                    onLoadingComplete={() => setLoadingImage(false)}
                     priority
                     fill
                     sizes="100vw"
                     quality={80}
                     src={data?.athleteProfile?.user?.avatar as string}
                     alt="profile_picture"
-                    className={`rounded-2xl object-cover border-[#717070] border-[0.1px] relative ${
-                      showimage ? "blur-sm " : "blur-none"
+                    className={`rounded-2xl object-cover relative ${
+                      loadingImage ? "blur-sm " : "blur-none"
                     }`}
                   />
                 </AspectRatio>

@@ -3,15 +3,7 @@
 "use client";
 
 import { FC } from "react";
-import {
-  Divider,
-  Grid,
-  TabGroup,
-  TabPanel,
-  TabPanels,
-  Title,
-  Text,
-} from "@tremor/react";
+import { Divider, Grid, Title, Text } from "@tremor/react";
 import { observer } from "mobx-react-lite";
 
 interface PageProps {}
@@ -22,15 +14,9 @@ const Page: FC<PageProps> = ({}) => {
       <Title>Settings</Title>
       <Text>In Progress.</Text>
       <Divider></Divider>
-      <TabGroup className="mt-6">
-        <TabPanels>
-          <TabPanel>
-            <Grid numItemsMd={2} numItemsLg={3} className="mt-6 gap-6">
-              <div>Settings</div>
-            </Grid>
-          </TabPanel>
-        </TabPanels>
-      </TabGroup>
+      <Grid numItemsMd={2} numItemsLg={3} className="mt-6 gap-6">
+        <div>Settings</div>
+      </Grid>
     </main>
   );
 };

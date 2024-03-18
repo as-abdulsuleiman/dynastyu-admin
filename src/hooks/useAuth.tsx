@@ -57,7 +57,7 @@ function useAuthProvider() {
   const { toast } = useToast();
   const siteUrl =
     process?.env?.NODE_ENV === "production"
-      ? process?.env?.NEXT_PUBLIC_KNEXTT_URL
+      ? process?.env?.NEXT_PUBLIC_DYNASTYU_URL
       : typeof window !== "undefined" && window?.location?.origin;
 
   const [getUser] = useGetUserLazyQuery();

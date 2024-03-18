@@ -29,8 +29,8 @@ const CarouselCard: FC<CarouselCardProps> = ({ videos }) => {
                     key={index}
                     url={val}
                     controls
-                    // width="100%"
-                    // height="100%"
+                    width="100%"
+                    height="100%"
                     previewTabIndex={0}
                     fallback={<div>Loading...</div>}
                     // playing

@@ -1,9 +1,10 @@
 /** @format */
 
+import { FC, ReactNode } from "react";
+import { cn } from "@/lib/utils";
 import { UserCircleIcon } from "@heroicons/react/outline";
 import { Select, SelectItem } from "@tremor/react";
 import { observer } from "mobx-react-lite";
-import { FC } from "react";
 
 interface SelectCardProps {
   items: Items[];
@@ -12,38 +13,43 @@ interface SelectCardProps {
   className: string;
   placeholder?: string;
   defaultValue?: string;
+  disabled?: boolean;
+  enableClear?: boolean;
 }
 
 type Items = {
   name: string;
   value: string;
+  icon?: ReactNode | JSX.Element;
 };
 
 const SelectCard: FC<SelectCardProps> = ({
   items,
+  disabled,
+  className,
   selectedItem,
   onValueChange,
-  className,
   placeholder,
   defaultValue,
+  enableClear = false,
 }) => {
   return (
     <Select
+      disabled={disabled}
       defaultValue={defaultValue}
-      className={
-        "bg-tremor-background dark:bg-dark-tremor-background bg-background dark:bg-dark-background hover:bg-transparent dark:hover:bg-dark-bg-transparent"
-      }
+      className={cn("hover:bg-transparent ", className)}
       value={selectedItem}
       placeholder={placeholder || "Filter by..."}
       onValueChange={onValueChange}
+      enableClear={enableClear}
     >
       {items?.map((a, index) => {
         return (
           <SelectItem
             key={index}
-            value={a.value}
-            icon={UserCircleIcon}
-            className="cursor-pointer bg-background dark:bg-dark-background"
+            value={a?.value}
+            // icon={a?.icon || UserCircleIcon}
+            className="cursor-pointer"
           >
             {a?.name}
           </SelectItem>

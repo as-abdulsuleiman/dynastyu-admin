@@ -4,17 +4,20 @@ import { FC } from "react";
 import { FolderRoot, Home, Medal, Settings } from "lucide-react";
 import { usePathname, useParams, useRouter } from "next/navigation";
 import { Icons } from "../Icons";
-import { Text } from "@tremor/react";
 import SkillIcon from "../Icons/skill";
 import { useRootStore } from "@/mobx";
-import { Badge } from "@/components/ui/badge";
 import { observer } from "mobx-react-lite";
 import FlagOffIcon from "@/components/Icons/flag-off";
 import ChevronDownIcon from "@/components/Icons/chevron-down";
 import { cn } from "@/lib/utils";
 import UseThemeColor from "@/hooks/useThemeColor";
+import Link from "next/link";
+import LayoutGridIcon from "@/components/Icons/layout-grid";
+
 interface SidebarItemsProps {
   handleNavigation: (val: string) => void;
+  sidebarExpanded: boolean;
+  setSidebarExpanded: (arg: boolean) => void;
 }
 
 type IconProps = {
@@ -22,23 +25,32 @@ type IconProps = {
   color: string;
 };
 
-const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
+const SidebarLinkGroup: FC<SidebarItemsProps> = ({
+  handleNavigation,
+  setSidebarExpanded,
+  sidebarExpanded,
+}) => {
   const {
-    verificationRequestStore: { verificationRequest },
+    skillVerificationRequestStore: { skillVerificationRequest },
   } = useRootStore();
   const pathname = usePathname();
-
   const themeColor = UseThemeColor();
+
+  const formatCount = (count: number) => {
+    return +count > 99 ? `${Math.max(0, 99)}+` : Math.max(0, +count || 0);
+  };
 
   const items = [
     {
       name: "Dashboard",
       path: "/dashboard",
-      icon: ({ className, color }: IconProps) => (
-        <Home className={className} color={color} />
-      ),
-      hasFill: false,
+      count: 0,
       items: [],
+      hasFill: false,
+      hasBadge: false,
+      icon: ({ className, color }: IconProps) => (
+        <LayoutGridIcon className={className} color={color} />
+      ),
     },
     // {
     //   name: "Users",
@@ -53,6 +65,8 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
       hasFill: false,
       path: "/athletes",
       items: [],
+      hasBadge: false,
+      count: 0,
       icon: ({ className, color }: IconProps) => (
         <Icons.athlete className={className} color={color} />
       ),
@@ -61,6 +75,8 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
       name: "Coaches",
       hasFill: true,
       path: "/coaches",
+      hasBadge: false,
+      count: 0,
       items: [
         {
           name: "Create Coach",
@@ -75,6 +91,8 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
       name: "Fans",
       hasFill: true,
       path: "/fans",
+      hasBadge: false,
+      count: 0,
       // items: [
       //   {
       //     name: "Create Fan",
@@ -89,6 +107,8 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
       name: "Schools",
       hasFill: false,
       path: "/schools",
+      hasBadge: false,
+      count: 0,
       items: [
         {
           name: "Create School",
@@ -105,6 +125,8 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
       name: "Flagged Posts",
       hasFill: false,
       path: "/flagged-posts",
+      hasBadge: false,
+      count: 11,
       items: [],
       icon: ({ className, color }: IconProps) => (
         <FlagOffIcon className={cn(className, "h-4 w-4")} color={color} />
@@ -114,6 +136,8 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
       name: "Skill Types",
       hasFill: true,
       path: "/skill-types",
+      hasBadge: false,
+      count: 0,
       items: [
         // {
         //   name: "Create Skill",
@@ -122,8 +146,8 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
         {
           name: "Verification Request",
           path: "/skill-types/verification-request",
-          hasBadge: verificationRequest.length > 0 ? true : false,
-          count: verificationRequest?.length,
+          hasBadge: skillVerificationRequest.length > 0 ? true : false,
+          count: skillVerificationRequest?.length,
         },
       ],
       icon: ({ className, color }: IconProps) => (
@@ -137,9 +161,11 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
       name: "Settings",
       hasFill: false,
       path: "/settings",
+      hasBadge: false,
+      count: 0,
       items: [],
       icon: ({ className, color }: IconProps) => (
-        <Settings className={className} color={color} />
+        <Settings className={cn(className, "stroke-[1.7]")} color={color} />
       ),
     },
   ];
@@ -175,26 +201,46 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
         return (
           <div key={index}>
             <div
-              onClick={() => handleNavigation(val?.path)}
-              className={`group flex flex-row ${
-                isActive
-                  ? "bg-primary"
-                  : "bg-background dark:bg-dark-background"
-              }  flex cursor-pointer items-center py-[8px] px-[16px] border rounded-lg mt-4 hover:scale-105 transition-transform ease-out duration-200`}
+              key={index}
+              onClick={(e) => {
+                // handleNavigation();
+              }}
+              className={`group flex-row flex cursor-pointer items-center mt-4 hover:scale-105 transition-transform ease-linear duration-200`}
             >
-              <>
+              <div
+                className={`flex flex-row w-full h-full py-[8px] px-[16px] rounded-lg items-center ${
+                  isActive ? "bg-primary hover:bg-primary/90" : "bg-secondary"
+                }`}
+              >
                 <Icon />
-                <Text
+                <div
                   className={`text-[16px] dark:text-gray-200 text-gray-700 ${
-                    isActive ? "text-gray-200 dark:text-dark-gray-700" : ""
-                  } ml-4 mt-[0px] text-tremor-default`}
+                    isActive ? "text-primary-foreground" : ""
+                  } ml-4 mt-[0px] text-base`}
                 >
-                  {val?.name}
-                </Text>
-              </>
-              {isActive ? (
-                <ChevronDownIcon className="ml-auto h-5 w-5 stroke-gray-200 dark:stroke-gray-200" />
-              ) : null}
+                  <Link
+                    className={`text-[16px]  ${
+                      isActive
+                        ? "text-gray-200"
+                        : "dark:text-gray-200 text-gray-700"
+                    } ml-4 mt-[0px] text-base`}
+                    key={index}
+                    href={val?.path}
+                    scroll={true}
+                  >
+                    {val?.name}
+                  </Link>
+                </div>
+                {isActive && val?.hasBadge ? (
+                  <div className="ml-auto">
+                    <div className="h-5 w-7 bg-teal-500 rounded-lg flex flex-row items-center justify-center m-auto text-gray-200 dark:text-dark-gray-700 text-sm">
+                      {formatCount(val?.count)}
+                    </div>
+                  </div>
+                ) : (
+                  <ChevronDownIcon className="ml-auto h-5 w-5 stroke-gray-200 dark:stroke-gray-200" />
+                )}
+              </div>
             </div>
             {isActive && val?.items?.length ? (
               <div className="pr-2 pl-4 pb-3 mt-4">
@@ -206,14 +252,22 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
                           isActive && pathname === value?.path
                             ? "text-teal-700"
                             : ""
-                        } cursor-pointer text-[16px] text-tremor-default`}
-                        onClick={() => handleNavigation(value?.path)}
+                        } cursor-pointer text-base`}
+                        // onClick={() => handleNavigation()}
                       >
-                        {value?.name}
+                        <Link
+                          href={value?.path}
+                          scroll
+                          className="flex flex-row items-center"
+                        >
+                          {value?.name}
+                        </Link>
                       </div>
                       {value?.hasBadge ? (
                         <div className="ml-auto">
-                          <Badge className="">{value?.count}</Badge>
+                          <div className="h-5 w-7 bg-primary rounded-full flex flex-row items-center justify-center m-auto text-gray-200 dark:text-dark-gray-700 text-sm">
+                            {formatCount(value?.count)}
+                          </div>
                         </div>
                       ) : null}
                     </div>
@@ -228,4 +282,4 @@ const SidebarItems: FC<SidebarItemsProps> = ({ handleNavigation }) => {
   );
 };
 
-export default observer(SidebarItems);
+export default observer(SidebarLinkGroup);

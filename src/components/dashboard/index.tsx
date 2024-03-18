@@ -9,14 +9,11 @@ import {
   Grid,
   Text,
   Title,
-  TextInput,
   TableRow,
   TableCell,
-  TabGroup,
-  TabPanel,
-  TabPanels,
   Flex,
   Badge,
+  TextInput,
 } from "@tremor/react";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 import FanCount from "@/components/counts/fans";
@@ -43,7 +40,6 @@ import {
   useGetUsersQuery,
   useUpdateUserMutation,
 } from "@/services/graphql";
-import { SearchInput } from "@/components/search-input";
 import MenubarCard from "@/components/menubar";
 
 const filterItems = [
@@ -59,7 +55,7 @@ const headerItems = [
   { name: "Role" },
   { name: "Email" },
   { name: "Status" },
-  { name: "Action" },
+  { name: "Actions" },
 ];
 enum FilterEnum {
   ACTIVE = "Active",
@@ -331,19 +327,19 @@ const Dashboard: FC<DashboardProps> = () => {
                 0
               )}`}
             />
-            <Text className="ml-4 cursor-pointer">
+            <div className="ml-4 cursor-pointer">
               {item?.firstname} {item?.surname}
-            </Text>
+            </div>
           </Flex>
         </TableCell>
         <TableCell className="text-center">
-          <Text>{item?.username ? `@${item?.username}` : ""}</Text>
+          <div>{item?.username ? `@${item?.username}` : ""}</div>
         </TableCell>
         <TableCell className="text-center">
-          <Text>{item?.accountType?.role?.title}</Text>
+          <div>{item?.accountType?.role?.title}</div>
         </TableCell>
         <TableCell className="text-center">
-          <Text>{item?.email}</Text>
+          <div>{item?.email}</div>
         </TableCell>
         <TableCell className="text-center">
           {item?.id === selectedUser && isActivating ? (
@@ -382,47 +378,45 @@ const Dashboard: FC<DashboardProps> = () => {
       <Title>Dashboard Overview</Title>
       <Text>Welcome to DynastyU Admin</Text>
       <Divider></Divider>
-      <TabGroup className="mt-6">
-        <TabPanels>
-          <TabPanel>
-            <Grid
-              numItemsMd={2}
-              numItemsLg={2}
-              numItemsSm={2}
-              className="mt-6 gap-6"
-            >
-              <UsersCount />
-              <AthletesCount />
-              <CoachesCount />
-              <FanCount />
-            </Grid>
-            <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-              <SearchInput
-                onChange={(e) => setValue(e.target.value)}
-                placeholder="Search..."
-              />
-              <SelectCard
-                className="bg-background dark:bg-dark-background dark:bg-dark-tremor-background"
-                items={filterItems}
-                selectedItem={status}
-                onValueChange={(e) => {
-                  setStatus(e);
-                }}
-              />
-            </Grid>
-            <UniversalTable
-              title="User List"
-              headerItems={headerItems}
-              items={users?.users as any[]}
-              loading={loading}
-              renderItems={renderItems}
-            />
-            {loading || !users?.users?.length ? null : (
-              <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
-            )}
-          </TabPanel>
-        </TabPanels>
-      </TabGroup>
+
+      <Grid numItemsMd={2} numItemsLg={2} numItemsSm={2} className="mt-6 gap-6">
+        <UsersCount />
+        <AthletesCount />
+        <CoachesCount />
+        <FanCount />
+      </Grid>
+      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
+        <TextInput
+          className="h-[38px]"
+          icon={() => {
+            return <Icons.search className="h-10 shrink-0 w-5 ml-2.5" />;
+          }}
+          onValueChange={(e) => setValue(e)}
+          placeholder="Type to search..."
+        />
+        {/* <SearchInput
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Search..."
+        /> */}
+        <SelectCard
+          className="bg-background dark:bg-dark-background dark:bg-dark-tremor-background"
+          items={filterItems}
+          selectedItem={status}
+          onValueChange={(e) => {
+            setStatus(e);
+          }}
+        />
+      </Grid>
+      <UniversalTable
+        title="User List"
+        headerItems={headerItems}
+        items={users?.users as any[]}
+        loading={loading}
+        renderItems={renderItems}
+      />
+      {loading || !users?.users?.length ? null : (
+        <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
+      )}
     </main>
   );
 };

@@ -1,0 +1,131 @@
+{
+    "name": "DynastyU",
+    "short_name": "DynastyU",
+    "start_url": "/",
+    "description": "A social media-based recruiting app that connects high school athletes, college coaches, and fans on one central platform.",
+    "background_color": "#262626",
+    "theme_color": "#fff",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "id": "/portfolio",
+    "spcope": "/",
+    "lang": "en-US",
+    "display_override": [
+        "window-controls-overlay",
+        "fullscreen",
+        "minimal-ui"
+    ],
+    "categories": [
+        "Sports"
+    ],
+    "icons": [
+        {
+            "src": "/favicon/android-icon-36x36.png",
+            "sizes": "36x36",
+            "type": "image/png"
+        },
+        {
+            "src": "/favicon/android-icon-48x48.png",
+            "sizes": "48x48",
+            "type": "image/png"
+        },
+        {
+            "src": "/favicon/android-icon-72x72.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        },
+        {
+            "src": "/favicon/android-icon-96x96.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
+        {
+            "src": "/favicon/android-icon-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "/favicon/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/favicon/apple-icon-152x152.png",
+            "sizes": "152x152",
+            "type": "image/png"
+        },
+        {
+            "src": "/favicon/ms-icon-70x70.png",
+            "sizes": "70x70",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/favicon/ms-icon-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/favicon/ms-icon-150x150.png",
+            "sizes": "150x150",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/favicon/ms-icon-310x310.png",
+            "sizes": "310x310",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/favicon/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "https://dynastyu-admin.vercel.app/card-bg.png",
+            "type": "image/jpg",
+            "form_factor": "wide",
+            "sizes": "2770x1506"
+        },
+        {
+            "src": "https://dynastyu-admin.vercel.app/card-bg.png",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "sizes": "2770x1506"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "DynastyU / Dashboard",
+            "short_name": "Dashboard",
+            "description": "A social media-based recruiting app that connects high school athletes, college coaches, and fans on one central platform.",
+            "url": "/",
+            "icons": [
+                {
+                    "src": "/favicon/android-icon-192x192.png",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                }
+            ]
+        },
+        {
+            "name": "DynastyU / Athletes",
+            "short_name": "Athletes",
+            "description": "A social media-based recruiting app that connects high school athletes, college coaches, and fans on one central platform.",
+            "url": "/athletes",
+            "icons": [
+                {
+                    "src": "/favicon/android-icon-192x192.png",
+                    "sizes": "192x192",
+                    "type": "image/png"
+                }
+            ]
+        }
+    ]
+}

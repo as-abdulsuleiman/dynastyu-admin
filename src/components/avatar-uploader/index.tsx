@@ -161,7 +161,7 @@ const AvatarUploader: FC<AvatarUploaderProps> = ({
               }
             }}
           >
-            <Icons.camera className="stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            <Icons.camera className="stroke-dark-tremor-content-emphasis" />
           </div>
         </div>
         <div>

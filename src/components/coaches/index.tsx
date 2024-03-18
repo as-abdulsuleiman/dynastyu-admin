@@ -7,14 +7,12 @@ import {
   Title,
   Text,
   Divider,
-  TabGroup,
-  TabPanels,
-  TabPanel,
   Grid,
   TableRow,
   TableCell,
   Flex,
   Badge,
+  TextInput,
 } from "@tremor/react";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 import CoachesCount from "@/components/counts/coaches";
@@ -71,7 +69,7 @@ const headerItems = [
   { name: "Coach Title" },
   { name: "Status" },
   { name: "Verified" },
-  { name: "Action" },
+  { name: "Actions" },
 ];
 
 type FormData = yup.InferType<typeof CoachValidator>;
@@ -504,19 +502,19 @@ const Coaches: FC<CoachesProps> = ({}) => {
                 0
               )} ${item?.user?.firstname?.charAt(0)}`}
             />
-            <Text className="ml-4 cursor-pointer">
+            <div className="ml-4 cursor-pointer">
               {item?.user?.firstname} {item?.user?.surname}
-            </Text>
+            </div>
           </Flex>
         </TableCell>
         <TableCell className="text-center">
-          <Text>{item?.user?.username ? `@${item?.user?.username}` : ""}</Text>
+          <div>{item?.user?.username ? `@${item?.user?.username}` : ""}</div>
         </TableCell>
         <TableCell className="text-center">
-          <Text>{item?.user?.email}</Text>
+          <div>{item?.user?.email}</div>
         </TableCell>
         <TableCell className="text-center">
-          <Text>{item?.title}</Text>
+          <div>{item?.title}</div>
         </TableCell>
         <TableCell className="text-center">
           {item?.id === selectedUser && isActivating ? (
@@ -588,57 +586,44 @@ const Coaches: FC<CoachesProps> = ({}) => {
           <Button onClick={() => router.push("/coaches/new")}>
             Add New Coach
           </Button>
-          {/* <CreateCoach
-              onCreateCoach={(values) => handleCreateCoach(values)}
-              isOpen={isOpen}
-              onClose={() => setIsOpen(!isOpen)}
-            /> */}
         </div>
       </div>
       <Divider></Divider>
-      <TabGroup className="mt-6">
-        <TabPanels>
-          <TabPanel>
-            <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
-              <CoachesCount />
-            </Grid>
-            <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-              <SearchInput
-                onChange={(e) => setValue(e.target.value)}
-                placeholder="Search..."
-              />
-              {/* <TextInput
-                  className="h-[38px] bg-background dark:bg-dark-background"
-                  icon={() => {
-                    return (
-                      <Icons.search className="tremor-TextInput-icon shrink-0 text-tremor-content-subtle dark:text-dark-tremor-content-subtle h-5 w-5 ml-2.5" />
-                    );
-                  }}
-                  onValueChange={(e) => setValue(e)}
-                  placeholder="Search for coach..."
-                /> */}
-              <SelectCard
-                className="ring-0 bg-background dark:bg-dark-background"
-                items={filterItems}
-                selectedItem={status}
-                onValueChange={(e) => {
-                  setStatus(e);
-                }}
-              />
-            </Grid>
-            <UniversalTable
-              title="Coach List"
-              headerItems={headerItems}
-              items={coachesData?.coachProfiles as any[]}
-              loading={loading}
-              renderItems={renderItems}
-            />
-            {loading || !coachesData?.coachProfiles?.length ? null : (
-              <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
-            )}
-          </TabPanel>
-        </TabPanels>
-      </TabGroup>
+      <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
+        <CoachesCount />
+      </Grid>
+      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
+        {/* <SearchInput
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Search..."
+        /> */}
+        <TextInput
+          className="h-[38px] bg-background dark:bg-dark-background"
+          icon={() => {
+            return <Icons.search className="h-5 w-5 ml-2.5" />;
+          }}
+          onValueChange={(e) => setValue(e)}
+          placeholder="Type to search..."
+        />
+        <SelectCard
+          className="ring-0 bg-background dark:bg-dark-background"
+          items={filterItems}
+          selectedItem={status}
+          onValueChange={(e) => {
+            setStatus(e);
+          }}
+        />
+      </Grid>
+      <UniversalTable
+        title="Coach List"
+        headerItems={headerItems}
+        items={coachesData?.coachProfiles as any[]}
+        loading={loading}
+        renderItems={renderItems}
+      />
+      {loading || !coachesData?.coachProfiles?.length ? null : (
+        <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
+      )}
     </main>
   );
 };

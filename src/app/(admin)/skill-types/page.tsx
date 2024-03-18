@@ -7,15 +7,11 @@ import {
   Title,
   Text,
   Divider,
-  TabGroup,
-  TabPanels,
-  TabPanel,
   Grid,
-  TextInput,
   TableRow,
   TableCell,
   Flex,
-  Badge,
+  TextInput,
 } from "@tremor/react";
 import { Button } from "@/components/ui/button";
 import {
@@ -264,58 +260,46 @@ const Page: FC<pageProps> = ({}) => {
         </div>
         <div className="ml-auto justify-end">
           <Button>Create Skill Type</Button>
-          {/* <CreateCoach
-            onCreateCoach={(values) => handleCreateCoach(values)}
-            isOpen={isOpen}
-            onClose={() => setIsOpen(!isOpen)}
-          /> */}
         </div>
       </div>
       <Divider></Divider>
-      <TabGroup className="mt-6">
-        <TabPanels>
-          <TabPanel>
-            <Grid numItemsMd={2} numItemsLg={3} className="mt-6 gap-6">
-              <SkillTypesCount title="Skill Types" />
-            </Grid>
-            <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6 hidden">
-              <SearchInput
-                onChange={(e) => setValue(e.target.value)}
-                placeholder="Search..."
-              />
-              {/* <TextInput
-                className="h-[38px] bg-background dark:bg-dark-background"
-                icon={() => {
-                  return (
-                    <Icons.search className="tremor-TextInput-icon shrink-0 text-tremor-content-subtle dark:text-dark-tremor-content-subtle h-5 w-5 ml-2.5" />
-                  );
-                }}
-                onValueChange={(e) => setValue(e)}
-                placeholder="Search..."
-              /> */}
-              <SelectCard
-                className="bg-background dark:bg-dark-background"
-                defaultValue="College"
-                items={filterItems}
-                selectedItem={status}
-                onValueChange={(e) => {
-                  setStatus(e);
-                }}
-              />
-            </Grid>
-            <UniversalTable
-              title="Skill Type List"
-              headerItems={headerItems}
-              items={skillTypesData?.skillTypes as any[]}
-              loading={loading}
-              renderItems={renderItems}
-            />
-            {loading || !skillTypesData?.skillTypes.length ? null : (
-              <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
-            )}
-          </TabPanel>
-        </TabPanels>
-      </TabGroup>
+
+      <Grid numItemsMd={2} numItemsLg={3} className="mt-6 gap-6">
+        <SkillTypesCount title="Skill Types" />
+      </Grid>
+      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6 hidden">
+        {/* <SearchInput
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Search..."
+        /> */}
+        <TextInput
+          className="h-[38px]"
+          icon={() => {
+            return <Icons.search className="h-10 w-5 ml-2.5" />;
+          }}
+          onValueChange={(e) => setValue(e)}
+          placeholder="Type to search..."
+        />
+        <SelectCard
+          className="bg-background dark:bg-dark-background"
+          defaultValue="College"
+          items={filterItems}
+          selectedItem={status}
+          onValueChange={(e) => {
+            setStatus(e);
+          }}
+        />
+      </Grid>
+      <UniversalTable
+        title="Skill Type List"
+        headerItems={headerItems}
+        items={skillTypesData?.skillTypes as any[]}
+        loading={loading}
+        renderItems={renderItems}
+      />
+      {loading || !skillTypesData?.skillTypes.length ? null : (
+        <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
+      )}
     </main>
   );
 };

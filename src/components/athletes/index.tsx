@@ -9,15 +9,12 @@ import {
   Title,
   Text,
   Divider,
-  TabGroup,
-  TabPanels,
-  TabPanel,
   Grid,
-  TextInput,
   TableRow,
   TableCell,
   Flex,
   Badge,
+  TextInput,
 } from "@tremor/react";
 import SelectCard from "@/components/select";
 import AthletesCount from "@/components/counts/athletes";
@@ -39,7 +36,6 @@ import { useRouter } from "next/navigation";
 import UserAvatar from "@/components/user-avatar";
 import { useToast } from "@/hooks/use-toast";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
-import { SearchInput } from "@/components/search-input";
 import StarIcon from "@/components/Icons/starIcon";
 import MenubarCard from "../menubar";
 
@@ -48,8 +44,6 @@ const filterItems = [
   { name: "Inactive", value: "Inactive" },
   { name: "Verified", value: "Verified" },
   { name: "Not Verified", value: "Not Verified" },
-  // { name: "Approved", value: "Approved" },
-  // { name: "Not Approved", value: "Not Approved" },
 ];
 
 const headerItems = [
@@ -60,7 +54,7 @@ const headerItems = [
   { name: "Status" },
   { name: "Verified" },
   { name: "Featured" },
-  { name: "Action" },
+  { name: "Actions" },
 ];
 
 enum FilterEnum {
@@ -489,21 +483,21 @@ const Athletes: FC<AthletesProps> = ({}) => {
                 0
               )} ${item?.user?.firstname?.charAt(0)}`}
             />
-            <Text className="ml-4 cursor-pointer">
+            <div className="ml-4 cursor-pointer">
               {item?.user?.firstname} {item?.user?.surname}
-            </Text>
+            </div>
           </Flex>
         </TableCell>
         <TableCell className="text-center">
-          <Text>{item?.user?.username ? `@${item?.user?.username}` : ""}</Text>
+          <div>{item?.user?.username ? `@${item?.user?.username}` : ""}</div>
         </TableCell>
         <TableCell className="text-center">
-          <Text>{item?.user?.email}</Text>
+          <div>{item?.user?.email}</div>
         </TableCell>
         <TableCell className="text-center">
           <div className="flex flex-row items-center justify-center">
-            <Text className="mr-2">{item?.position?.name}</Text>{" "}
-            <Text>({item?.position?.shortName})</Text>
+            <div className="mr-2">{item?.position?.name}</div>{" "}
+            <div>({item?.position?.shortName})</div>
           </div>
         </TableCell>
         <TableCell className="text-center">
@@ -591,49 +585,42 @@ const Athletes: FC<AthletesProps> = ({}) => {
       </div>
       <Text>Athletes Overview</Text>
       <Divider></Divider>
-      <TabGroup className="mt-6">
-        <TabPanels>
-          <TabPanel>
-            <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
-              <AthletesCount />
-            </Grid>
-            <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-              <SearchInput
-                onChange={(e) => setValue(e.target.value)}
-                placeholder="Search..."
-              />
-              {/* <TextInput
-                className="h-[38px] bg-background dark:bg-dark-background"
-                icon={() => {
-                  return (
-                    <Icons.search className="tremor-TextInput-icon shrink-0 text-tremor-content-subtle dark:text-dark-tremor-content-subtle h-5 w-5 ml-2.5" />
-                  );
-                }}
-                onValueChange={(e) => setValue(e)}
-                placeholder="Search for athlete..."
-              /> */}
-              <SelectCard
-                className="ring-0 bg-background dark:bg-dark-background"
-                items={filterItems}
-                selectedItem={status}
-                onValueChange={(e) => {
-                  setStatus(e);
-                }}
-              />
-            </Grid>
-            <UniversalTable
-              title="Athlete List"
-              headerItems={headerItems}
-              items={data?.athleteProfiles as any[]}
-              loading={loading}
-              renderItems={renderItems}
-            />
-            {loading || !data?.athleteProfiles?.length ? null : (
-              <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
-            )}
-          </TabPanel>
-        </TabPanels>
-      </TabGroup>
+      <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
+        <AthletesCount />
+      </Grid>
+      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
+        <TextInput
+          className="h-[38px]"
+          icon={() => {
+            return <Icons.search className="h-10 w-5 ml-2.5" />;
+          }}
+          onValueChange={(e) => setValue(e)}
+          placeholder="Type to search..."
+        />
+        {/* <SearchInput
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Search..."
+        /> */}
+
+        <SelectCard
+          className="ring-0 bg-background dark:bg-dark-background"
+          items={filterItems}
+          selectedItem={status}
+          onValueChange={(e) => {
+            setStatus(e);
+          }}
+        />
+      </Grid>
+      <UniversalTable
+        title="Athlete List"
+        headerItems={headerItems}
+        items={data?.athleteProfiles as any[]}
+        loading={loading}
+        renderItems={renderItems}
+      />
+      {loading || !data?.athleteProfiles?.length ? null : (
+        <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
+      )}
     </main>
   );
 };

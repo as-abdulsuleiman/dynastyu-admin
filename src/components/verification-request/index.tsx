@@ -3,16 +3,7 @@
 "use client";
 
 import { FC, useState } from "react";
-import {
-  Title,
-  Text,
-  Divider,
-  Card,
-  TabGroup,
-  TabPanels,
-  TabPanel,
-  Badge,
-} from "@tremor/react";
+import { Title, Text, Divider, Card, Badge } from "@tremor/react";
 import { Icons } from "../Icons";
 import {
   SortOrder,
@@ -24,12 +15,12 @@ import UserAvatar from "../user-avatar";
 import HoverCard from "../hover-card";
 import { Skeleton } from "../ui/skeleton";
 import { useRouter } from "next/navigation";
-import CarouselCard from "../carousel-card";
 import { Button } from "../ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/utils";
 import MenubarCard from "../menubar";
 import { useRootStore } from "@/mobx";
+import MediaCard from "../media-card";
 
 interface VerificationRequestProps {
   params: {
@@ -48,14 +39,19 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
   const { toast } = useToast();
   const {
     authStore: { user },
-    verificationRequestStore: { verificationRequest, setVerificationRequest },
+    skillVerificationRequestStore: {
+      setSkillVerificationRequest,
+      skillVerificationRequest,
+    },
   } = useRootStore();
 
   const [updating, setUpdating] = useState<boolean>(false);
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [getSkillVerificationRequest] =
     useGetSkillVerificationRequestsLazyQuery();
+
   const [updateSkillVerificationRequest] = useUpdateSkillVerificationMutation();
+
   const { data, loading, refetch } = useGetSkillVerificationRequestQuery({
     variables: {
       where: {
@@ -67,13 +63,13 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
   const renderVerifiedBy = (verifiedBy: any) => {
     return (
       <div className="flex flex-col">
-        <Text className="text-center text-lg">Verified By</Text>
+        <div className="text-center text-lg">Verified By</div>
         <div className="flex flex-row">
-          <Text className="text-center ">
+          <div className="text-center ">
             Coach {verifiedBy?.user?.firstname} {verifiedBy?.user?.surname}
-          </Text>
+          </div>
         </div>
-        <Text className="text-[13px] text-center">{verifiedBy?.title}</Text>
+        <div className="text-[13px] text-center">{verifiedBy?.title}</div>
       </div>
     );
   };
@@ -121,7 +117,7 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
           },
         },
       });
-      setVerificationRequest(res?.data?.skillVerificationRequests as any);
+      setSkillVerificationRequest(res?.data?.skillVerificationRequests as any);
       toast({
         title: "Skill verification successfully updated",
         description: `${
@@ -154,187 +150,171 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
         <Text>Skill Overview</Text>
       </div>
       <Divider></Divider>
-      <TabGroup className="mt-6">
-        <TabPanels>
-          <TabPanel>
-            <Card className="bg-background dark:bg-dark-background">
-              <div className="flex flex-col items-center justify-center relative">
-                <UserAvatar
-                  className="h-[120px] w-[120px] shadow"
-                  height={120}
-                  width={120}
-                  fallbackType="icon"
-                  fallbackClassName={"h-[120px] w-[120px]"}
-                  avatar={data?.skillVerificationRequest?.user.avatar as string}
-                  fallback={`${data?.skillVerificationRequest?.user?.firstname?.charAt(
-                    0
-                  )} ${data?.skillVerificationRequest?.user?.surname?.charAt(
-                    0
-                  )}`}
-                  icon={<Icons.user className="h-8 w-8" />}
+      <div className="flex-col hidden md:flex ">
+        <Button
+          disabled={isVerifying}
+          className="ml-auto "
+          onClick={() => handleVerifySkill()}
+        >
+          {updating
+            ? "Verifying..."
+            : data?.skillVerificationRequest?.verified
+            ? "Unverify Skill"
+            : "Verify Skill"}
+        </Button>
+      </div>
+      <Card className="mt-6 gap-6">
+        <MediaCard
+          loading={loading}
+          items={data?.skillVerificationRequest?.skill?.videos || []}
+          type={"video"}
+        />
+      </Card>
+      <Card className="mt-6 gap-6">
+        <div className="flex flex-col items-center justify-center relative">
+          <UserAvatar
+            className="h-[120px] w-[120px] shadow"
+            height={120}
+            width={120}
+            fallbackType="icon"
+            fallbackClassName={"h-[120px] w-[120px]"}
+            avatar={data?.skillVerificationRequest?.user.avatar as string}
+            fallback={`${data?.skillVerificationRequest?.user?.firstname?.charAt(
+              0
+            )} ${data?.skillVerificationRequest?.user?.surname?.charAt(0)}`}
+            icon={<Icons.user className="h-8 w-8" />}
+          />
+          {loading ? (
+            <div className="flex flex-row items-center">
+              <Skeleton className="w-[170px] h-[28px] mt-2 mr-1" />
+              <Skeleton className="w-[16.67px] h-[16.67px] mt-2 rounded-full" />
+            </div>
+          ) : (
+            <div className="flex flex-row items-center justify-center mt-1">
+              <div className="text-xl relative mr-1">
+                @{data?.skillVerificationRequest?.user?.username}
+              </div>
+              {data?.skillVerificationRequest?.verified ? (
+                <HoverCard
+                  content={renderVerifiedBy(
+                    data?.skillVerificationRequest?.user?.athleteProfile
+                      ?.verifiedBy
+                  )}
+                  trigger={
+                    <div className="cursor-pointer">
+                      <Icons.badgeCheck className="h-5 w-5" color="teal" />
+                    </div>
+                  }
                 />
-                {loading ? (
-                  <div className="flex flex-row items-center">
-                    <Skeleton className="w-[170px] h-[28px] mt-2 mr-1" />
-                    <Skeleton className="w-[16.67px] h-[16.67px] mt-2 rounded-full" />
-                  </div>
-                ) : (
-                  <div className="flex flex-row items-center justify-center mt-1">
-                    <Text className="text-xl relative mr-1">
-                      @{data?.skillVerificationRequest?.user?.username}
-                    </Text>
-                    {data?.skillVerificationRequest?.verified ? (
-                      <HoverCard
-                        content={renderVerifiedBy(
-                          data?.skillVerificationRequest?.user?.athleteProfile
-                            ?.verifiedBy
-                        )}
-                        trigger={
-                          <div className="cursor-pointer">
-                            <Icons.badgeCheck
-                              className="h-5 w-5"
-                              color="teal"
-                            />
-                          </div>
-                        }
-                      />
-                    ) : (
-                      <HoverCard
-                        content={<Text>{"Not Verified"}</Text>}
-                        trigger={
-                          <div className="cursor-pointer">
-                            <Icons.badgeAlert
-                              className="h-5 w-5"
-                              color="teal"
-                            />
-                          </div>
-                        }
-                      />
-                    )}
-                  </div>
-                )}
-                <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
-                  <MenubarCard
-                    trigger={
-                      <Icons.moreHorizontal className="cursor-pointer md:mr-6" />
-                    }
-                    items={dropdownItems}
-                  />
-                  <div className="flex-col hidden md:flex ">
-                    <Button
-                      disabled={isVerifying}
-                      className="ml-auto "
-                      onClick={() => handleVerifySkill()}
-                    >
-                      {updating
-                        ? "Verifying..."
-                        : data?.skillVerificationRequest?.verified
-                        ? "Unverify Skill"
-                        : "Verify Skill"}
-                    </Button>
-                  </div>
-                </div>
-              </div>
-              <div className="grid grid-cols-12 gap-6 mt-2 md:mt-0">
-                <div className="col-span-12 sm:col-span-6">
-                  <Title>Skill</Title>
-                  <div className="flex flex-row items-center mt-4 text-tremor-default ">
-                    Name:{" "}
-                    <Text className="ml-2">
-                      {data?.skillVerificationRequest?.skill?.skillType?.name}
-                    </Text>
-                  </div>
-                  <div className="flex flex-row items-center text-tremor-default">
-                    Value:{" "}
-                    <Text className="ml-2">
-                      {data?.skillVerificationRequest?.skill?.value}
-                    </Text>
-                  </div>
-                  <div className="flex flex-row items-center text-tremor-default">
-                    Second Value:
-                    <Text>
-                      {data?.skillVerificationRequest?.skill?.secondValue}
-                    </Text>
-                  </div>
-                  <div className="mt-1">
-                    {data?.skillVerificationRequest?.verified ? (
-                      <div className="flex flex-col">
-                        <Badge className="px-1.5 pr-2" color="teal">
-                          <span className="flex flex-row items-center text-tremor-default">
-                            {data?.skillVerificationRequest?.verified ? (
-                              <Icons.shield
-                                className="h-4 w-4 stroke-[1.5px]"
-                                color="teal"
-                              />
-                            ) : null}
-                            <span className="text-[15px] text-teal-700 ml-1 text-tremor-default">
-                              DU Verified
-                            </span>
-                          </span>
-                        </Badge>
-                        <div className="flex flex-row items-center text-tremor-default mt-1">
-                          Verification Date:{" "}
-                          <Text className="ml-2">
-                            {formatDate(
-                              data?.skillVerificationRequest.dateOfVerfication,
-                              "dd MMMM, yyyy"
-                            )}
-                          </Text>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="text-[15px] text-teal-700 ml-0">
-                        Verification Pending
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="col-span-12 sm:col-span-6  md:place-self-end">
-                  <Title>Camp</Title>
-                  <div className="flex flex-row items-center mt-4 text-tremor-default">
-                    Name:
-                    <Text className="ml-2">
-                      {data?.skillVerificationRequest?.camp?.name}
-                    </Text>
-                  </div>
-                  <div className="flex flex-row items-center text-tremor-default">
-                    Address:
-                    <Text className="ml-2">
-                      {data?.skillVerificationRequest?.camp?.address}
-                    </Text>
-                  </div>
-                  <div className="flex flex-row items-center text-tremor-default">
-                    Description:
-                    <Text className="ml-2">
-                      {data?.skillVerificationRequest?.camp?.description}
-                    </Text>
-                  </div>
-                </div>
-              </div>
-              <div className="flex md:hidden mt-4">
-                <Button
-                  className="ml-auto"
-                  disabled={isVerifying}
-                  onClick={() => handleVerifySkill()}
-                >
-                  {updating
-                    ? "Verifying..."
-                    : data?.skillVerificationRequest?.verified
-                    ? "Unverify Skill"
-                    : "Verify Skill"}
-                </Button>
-              </div>
-            </Card>
-            {data?.skillVerificationRequest?.skill?.videos ? (
-              <div className="flex flex-row mx-auto mt-3">
-                <CarouselCard
-                  videos={data?.skillVerificationRequest?.skill?.videos}
+              ) : (
+                <HoverCard
+                  content={<Text>{"Not Verified"}</Text>}
+                  trigger={
+                    <div className="cursor-pointer">
+                      <Icons.badgeAlert className="h-5 w-5" color="teal" />
+                    </div>
+                  }
                 />
+              )}
+            </div>
+          )}
+          <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
+            <MenubarCard
+              trigger={
+                <Icons.moreHorizontal className="cursor-pointer md:mr-6" />
+              }
+              items={dropdownItems}
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-12 gap-6 mt-2 md:mt-0">
+          <div className="col-span-12 sm:col-span-6">
+            <Title>Skill</Title>
+            <div className="flex flex-row items-center mt-4 text-tremor-default ">
+              Name:{" "}
+              <div className="ml-2">
+                {data?.skillVerificationRequest?.skill?.skillType?.name}
               </div>
-            ) : null}
-          </TabPanel>
-        </TabPanels>
-      </TabGroup>
+            </div>
+            <div className="flex flex-row items-center text-tremor-default">
+              Value:{" "}
+              <div className="ml-2">
+                {data?.skillVerificationRequest?.skill?.value}
+              </div>
+            </div>
+            <div className="flex flex-row items-center text-tremor-default">
+              Second Value:
+              <div>{data?.skillVerificationRequest?.skill?.secondValue}</div>
+            </div>
+            <div className="mt-1">
+              {data?.skillVerificationRequest?.verified ? (
+                <div className="flex flex-col">
+                  <Badge className="px-1.5 pr-2" color="teal">
+                    <span className="flex flex-row items-center text-tremor-default">
+                      {data?.skillVerificationRequest?.verified ? (
+                        <Icons.shield
+                          className="h-4 w-4 stroke-[1.5px]"
+                          color="teal"
+                        />
+                      ) : null}
+                      <span className="text-[15px] text-teal-700 ml-1 text-tremor-default">
+                        DU Verified
+                      </span>
+                    </span>
+                  </Badge>
+                  <div className="flex flex-row items-center text-tremor-default mt-1">
+                    Verification Date:{" "}
+                    <div className="ml-2">
+                      {formatDate(
+                        data?.skillVerificationRequest.dateOfVerfication,
+                        "dd MMMM, yyyy"
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-[15px] text-teal-700 ml-0">
+                  Verification Pending
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="col-span-12 sm:col-span-6  md:place-self-end">
+            <Title>Camp</Title>
+            <div className="flex flex-row items-center mt-4 text-tremor-default">
+              Name:
+              <div className="ml-2">
+                {data?.skillVerificationRequest?.camp?.name}
+              </div>
+            </div>
+            <div className="flex flex-row items-center text-tremor-default">
+              Address:
+              <div className="ml-2">
+                {data?.skillVerificationRequest?.camp?.address}
+              </div>
+            </div>
+            <div className="flex flex-row items-center text-tremor-default">
+              Description:
+              <div className="ml-2">
+                {data?.skillVerificationRequest?.camp?.description}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="flex md:hidden mt-4">
+          <Button
+            className="ml-auto w-full"
+            disabled={isVerifying}
+            onClick={() => handleVerifySkill()}
+          >
+            {updating
+              ? "Verifying..."
+              : data?.skillVerificationRequest?.verified
+              ? "Unverify Skill"
+              : "Verify Skill"}
+          </Button>
+        </div>
+      </Card>
     </main>
   );
 };
