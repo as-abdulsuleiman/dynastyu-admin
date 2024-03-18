@@ -194,6 +194,7 @@ query getSkillVerificationRequests(
     dateOfVerfication
     verified
     createdAt
+    updatedAt
     skillId
     userId
     skill {
@@ -239,6 +240,7 @@ query getSkillVerificationRequest($where: SkillVerificationRequestWhereUniqueInp
     dateOfVerfication
     verified
     createdAt
+    updatedAt
     skillId
     userId
     skill {

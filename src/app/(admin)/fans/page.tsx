@@ -1,11 +1,11 @@
 /** @format */
 
-import FansCard from "@/components/fans-card";
+import Fans from "@/components/fans";
 import { FC } from "react";
 
 interface FansProps {}
 
-const Fans: FC<FansProps> = ({}) => {
-  return <FansCard />;
+const Page: FC<FansProps> = ({}) => {
+  return <Fans />;
 };
-export default Fans;
+export default Page;

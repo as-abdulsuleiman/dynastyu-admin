@@ -7,20 +7,17 @@ import {
   Divider,
   Title,
   Text,
-  TabGroup,
-  TabPanels,
-  TabPanel,
   Grid,
   TableRow,
   TableCell,
   Flex,
+  TextInput,
 } from "@tremor/react";
 import { SearchInput } from "../search-input";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import UniversalTable from "../universal-table";
 import SelectCard from "@/components/select";
-import PostIcon from "../Icons/post";
 import FlaggedPostCount from "@/components/counts/flagged-posts";
 import { observer } from "mobx-react-lite";
 import {
@@ -35,6 +32,9 @@ import { useDebouncedValue } from "@mantine/hooks";
 import FlagOffIcon from "@/components/Icons/flag-off";
 import MoreHorizontal from "@/components/Icons/more-horizontal";
 import MenubarCard from "../menubar";
+import { Icons } from "../Icons";
+import { formatDate } from "@/lib/utils";
+
 const filterItems = [
   { name: "Active", value: "Active" },
   { name: "Inactive", value: "Inactive" },
@@ -49,7 +49,8 @@ const headerItems = [
   { name: "Posted By" },
   { name: "Flagged By" },
   { name: "Reason" },
-  { name: "Action" },
+  { name: "Date" },
+  { name: "Actions" },
 ];
 
 enum FilterEnum {
@@ -196,7 +197,7 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
       {
         name: "View Post",
         onClick: () => {
-          // router.push(`/athlete/${Number(item?.id)}`, { scroll: true });
+          router.push(`/flagged-post/${item?.id}`, { scroll: true });
         },
       },
     ];
@@ -207,7 +208,7 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
             alignItems="center"
             justifyContent="start"
             onClick={() => {
-              // router.push(`/athlete/${item?.id}`, { scroll: true })
+              router.push(`/flagged-post/${item?.id}`, { scroll: true });
             }}
           >
             <div className="relative">
@@ -226,16 +227,21 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
           </Flex>
         </TableCell>
         <TableCell className="text-center">
-          <Text>
+          <div>
             {item?.post?.user?.username ? `@${item?.post?.user?.username}` : ""}
-          </Text>
+          </div>
         </TableCell>
         <TableCell className="text-center">
-          <Text>{item?.user?.username ? `@${item?.user?.username}` : ""}</Text>
+          <div>{item?.user?.username ? `@${item?.user?.username}` : ""}</div>
         </TableCell>
         <TableCell className="text-center">
           <div className="flex flex-row items-center justify-center">
-            <Text className="mr-2">{item?.reason}</Text>{" "}
+            <div className="mr-2">{item?.reason}</div>{" "}
+          </div>
+        </TableCell>
+        <TableCell className="text-center">
+          <div>
+            {item.createdAt ? formatDate(item?.createdAt, "dd MMM yyyy") : ""}
           </div>
         </TableCell>
         <TableCell className="text-center cursor-pointer">
@@ -253,56 +259,49 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
   return (
     <main className="w-full h-full">
       <div className="flex flex-row items-center">
-        <Title>Flagged Post</Title>
+        <Title>Flagged Posts</Title>
         <div className="h-4 w-4 bg-[rgb(103, 114, 132)]">
           <FlagOffIcon className="h-4 w-4 ml-2 stroke-gray-700 dark:stroke-white" />
         </div>
       </div>
       <Text>Flagged Post Overview</Text>
       <Divider></Divider>
-      <TabGroup className="mt-6">
-        <TabPanels>
-          <TabPanel>
-            <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
-              <FlaggedPostCount />
-            </Grid>
-            <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-              <SearchInput
-                onChange={(e) => setValue(e.target.value)}
-                placeholder="Search..."
-              />
-              {/* <TextInput
-                className="h-[38px] bg-background dark:bg-dark-background"
-                icon={() => {
-                  return (
-                    <Icons.search className="tremor-TextInput-icon shrink-0 text-tremor-content-subtle dark:text-dark-tremor-content-subtle h-5 w-5 ml-2.5" />
-                  );
-                }}
-                onValueChange={(e) => setValue(e)}
-                placeholder="Search for athlete..."
-              /> */}
-              <SelectCard
-                className="ring-0 bg-background dark:bg-dark-background"
-                items={filterItems}
-                selectedItem={status}
-                onValueChange={(e) => {
-                  setStatus(e);
-                }}
-              />
-            </Grid>
-            <UniversalTable
-              title="Flagged Post List"
-              headerItems={headerItems}
-              items={flaggedPostData?.postFlags as any[]}
-              loading={loading}
-              renderItems={renderItems}
-            />
-            {loading || !flaggedPostData?.postFlags?.length ? null : (
-              <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
-            )}
-          </TabPanel>
-        </TabPanels>
-      </TabGroup>
+      <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
+        <FlaggedPostCount />
+      </Grid>
+      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
+        <TextInput
+          className="h-[38px]"
+          icon={() => {
+            return <Icons.search className="h-10 w-5 ml-2.5" />;
+          }}
+          onValueChange={(e) => setValue(e)}
+          placeholder="Type to search..."
+        />
+        {/* <SearchInput
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Search..."
+        /> */}
+        <SelectCard
+          disabled
+          className="ring-0 bg-background dark:bg-dark-background"
+          items={filterItems}
+          selectedItem={status}
+          onValueChange={(e) => {
+            setStatus(e);
+          }}
+        />
+      </Grid>
+      <UniversalTable
+        title="Flagged Post List"
+        headerItems={headerItems}
+        items={flaggedPostData?.postFlags as any[]}
+        loading={loading}
+        renderItems={renderItems}
+      />
+      {loading || !flaggedPostData?.postFlags?.length ? null : (
+        <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
+      )}
     </main>
   );
 };

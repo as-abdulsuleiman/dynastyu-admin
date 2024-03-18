@@ -2559,6 +2559,11 @@
   dependencies:
     undici-types "~5.26.4"
 
+"@types/nprogress@^0.2.2":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@types/nprogress/-/nprogress-0.2.3.tgz#b2150b054a13622fabcba12cf6f0b54c48b14287"
+  integrity sha512-k7kRA033QNtC+gLc4VPlfnue58CM1iQLgn1IMAU8VPHGOj7oIHPp9UlhedEnD/Gl8evoCjwkZjlBORtZ3JByUA==
+
 "@types/prop-types@*":
   version "15.7.10"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.10.tgz#892afc9332c4d62a5ea7e897fe48ed2085bbb08a"
@@ -5265,13 +5270,6 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==
 
-next-nprogress-bar@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/next-nprogress-bar/-/next-nprogress-bar-2.1.2.tgz#47ccfba165569a1ecd03410af432fd23d2227676"
-  integrity sha512-2Df5d7fr6uPx+BX8MkoWCfl+RjG+uWI5mA399e5sEe8mbT3q/GIUvCXLzBgJBIISpKuMmdLAOYEzqpjlsRVOWw==
-  dependencies:
-    nprogress "^0.2.0"
-
 next-themes@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/next-themes/-/next-themes-0.2.1.tgz#0c9f128e847979daf6c67f70b38e6b6567856e45"
@@ -5299,6 +5297,15 @@ next@14.0.2:
     "@next/swc-win32-arm64-msvc" "14.0.2"
     "@next/swc-win32-ia32-msvc" "14.0.2"
     "@next/swc-win32-x64-msvc" "14.0.2"
+
+nextjs-toploader@^1.6.6:
+  version "1.6.6"
+  resolved "https://registry.yarnpkg.com/nextjs-toploader/-/nextjs-toploader-1.6.6.tgz#ee7a332f8fc938ea774f1fac2dd29b54ec81b333"
+  integrity sha512-LKow/aV28/DLhj4yH1E8ydF/I5QDNsb5NqlbsXBaIVFrmZ9/OGHyxPLdumvPE2IOYoQdvJ4XWoaCA1v7aivYBg==
+  dependencies:
+    "@types/nprogress" "^0.2.2"
+    nprogress "^0.2.0"
+    prop-types "^15.8.1"
 
 no-case@^3.0.4:
   version "3.0.4"

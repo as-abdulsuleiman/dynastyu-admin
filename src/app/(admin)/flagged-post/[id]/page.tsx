@@ -1,11 +1,16 @@
 /** @format */
 
 import { FC } from "react";
+import FlaggedPostDetail from "@/components/flagged-post-detail";
 
-interface pageProps {}
+interface pageProps {
+  params: {
+    id: number;
+  };
+}
 
-const page: FC<pageProps> = ({}) => {
-  return <div>page</div>;
+const Page: FC<pageProps> = ({ params }) => {
+  return <FlaggedPostDetail params={params} />;
 };
 
-export default page;
+export default Page;

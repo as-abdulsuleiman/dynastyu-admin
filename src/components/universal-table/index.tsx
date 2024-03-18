@@ -4,16 +4,13 @@
 
 import { FC } from "react";
 import {
-  Badge,
   Card,
-  Flex,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeaderCell,
   TableRow,
-  Text,
   Title,
 } from "@tremor/react";
 import { observer } from "mobx-react-lite";
@@ -36,7 +33,7 @@ const renderEmptyItems = (colSpan: number) => {
     <TableRow>
       <TableCell colSpan={colSpan || 0}>
         <div className="flex items-center justify-center h-full w-full mx-auto my-auto py-4">
-          <span>No Result Found</span>
+          <span className="text-base">No Result Found</span>
         </div>
       </TableCell>
     </TableRow>
@@ -60,7 +57,7 @@ const UniversalTable: FC<UniversalTableProps> = ({
               const firstElem = id !== 0 ? "text-center" : "";
               return (
                 <TableHeaderCell className={firstElem} key={id}>
-                  {a?.name}
+                  <div className="text-base font-normal"> {a?.name}</div>
                 </TableHeaderCell>
               );
             })}
@@ -71,8 +68,8 @@ const UniversalTable: FC<UniversalTableProps> = ({
             <TableRow>
               <TableCell colSpan={headerItems?.length || 0}>
                 <div className="flex items-center justify-center h-full w-full mx-auto my-auto py-4">
-                  <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  <span>Loading...</span>
+                  <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                  <span className="text-sm font-normal">Loading...</span>
                 </div>
               </TableCell>
             </TableRow>

@@ -11,8 +11,8 @@ import { FanStore } from "./fans";
 import { AthleteStore } from "./athletes";
 import { SchoolStore } from "./schools";
 import { SkillTypeStore } from "./skill-types";
-import { VerificationRequestStore } from "./verification-request";
 import { FlaggedPostStore } from "./flagged-posts";
+import { SkillVerificationRequestStore } from "./skill-verification-requests";
 
 export const RootStore = types.model("RootStore", {
   counterStore: CounterStore,
@@ -22,9 +22,9 @@ export const RootStore = types.model("RootStore", {
   coacheStore: CoacheStore,
   fanStore: FanStore,
   schoolStore: SchoolStore,
-  SkillTypeStore :SkillTypeStore,
-  verificationRequestStore:VerificationRequestStore,
+  skillTypeStore :SkillTypeStore,
   flaggedPostStore:FlaggedPostStore,
+  skillVerificationRequestStore: SkillVerificationRequestStore
 });
 
 export interface RootStore extends Instance<typeof RootStore> {}
@@ -39,9 +39,9 @@ export const createRootStore = () => {
       coacheStore: CoacheStore.create(),
       fanStore: FanStore.create(),
       schoolStore: SchoolStore.create(),
-      SkillTypeStore :SkillTypeStore.create(),
-      verificationRequestStore: VerificationRequestStore.create(),
-      flaggedPostStore: FlaggedPostStore.create()
+      skillTypeStore :SkillTypeStore.create(),
+      flaggedPostStore: FlaggedPostStore.create(),
+      skillVerificationRequestStore: SkillVerificationRequestStore.create()
 
     },
     { NODE_ENV: process.env.NODE_ENV }
@@ -53,7 +53,7 @@ export const createRootStore = () => {
       // default: localStorage
       jsonify: false, // if you use AsyncStorage, this shoud be true
       // default: true
-      // whitelist: ['athleteStore','userStore','coacheStore','fanStore']
+      // whitelist: []
     }).then(() => console.log("rootStore has been hydrated"));
   }
 

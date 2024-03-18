@@ -23,7 +23,7 @@ const SkillTypesCount: FC<indexProps> = ({ title }) => {
   const pathname = usePathname();
 
   const {
-    SkillTypeStore: { setSkillTypes, skillTypes: skillTypeCount },
+    skillTypeStore: { setSkillTypes, skillTypes: skillTypeCount },
   } = useRootStore();
 
   //   const {

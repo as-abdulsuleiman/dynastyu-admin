@@ -7,12 +7,8 @@ import {
   Title,
   Text,
   Divider,
-  TabGroup,
-  TabPanels,
-  TabPanel,
   Flex,
   Grid,
-  TextInput,
   TableCell,
   TableRow,
   Badge,
@@ -378,23 +374,17 @@ const Users: FC<UsersProps> = ({}) => {
       <Title>Users</Title>
       {/* <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text> */}
       <Divider></Divider>
-      <TabGroup className="mt-6">
-        {/* <TabList>
-          <Tab>Overview</Tab>
-          <Tab>Detail</Tab>
-        </TabList> */}
-        <TabPanels>
-          <TabPanel>
-            <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
-              <UsersCount />
-              {/* <UsersAnalytics /> */}
-            </Grid>
-            <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-              <SearchInput
-                onChange={(e) => setValue(e.target.value)}
-                placeholder="Search..."
-              />
-              {/* <TextInput
+
+      <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
+        <UsersCount />
+        {/* <UsersAnalytics /> */}
+      </Grid>
+      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
+        <SearchInput
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Search..."
+        />
+        {/* <TextInput
                 className="bg-background dark:bg-dark-background"
                 icon={() => {
                   return (
@@ -404,28 +394,25 @@ const Users: FC<UsersProps> = ({}) => {
                 onValueChange={(e) => setValue(e)}
                 placeholder="Search..."
               /> */}
-              <SelectCard
-                className="h-[38px] bg-background dark:bg-dark-background"
-                items={filterItems}
-                selectedItem={status}
-                onValueChange={(e) => {
-                  setStatus(e);
-                }}
-              />
-            </Grid>
-            <UniversalTable
-              title="User List"
-              loading={loading}
-              headerItems={headerItems}
-              items={users?.users as any[]}
-              renderItems={renderItems}
-            />
-            {loading || !users?.users?.length ? null : (
-              <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
-            )}
-          </TabPanel>
-        </TabPanels>
-      </TabGroup>
+        <SelectCard
+          className="h-[38px] bg-background dark:bg-dark-background"
+          items={filterItems}
+          selectedItem={status}
+          onValueChange={(e) => {
+            setStatus(e);
+          }}
+        />
+      </Grid>
+      <UniversalTable
+        title="User List"
+        loading={loading}
+        headerItems={headerItems}
+        items={users?.users as any[]}
+        renderItems={renderItems}
+      />
+      {loading || !users?.users?.length ? null : (
+        <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
+      )}
     </main>
   );
 };

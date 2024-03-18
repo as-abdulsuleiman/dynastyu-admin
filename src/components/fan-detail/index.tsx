@@ -8,16 +8,7 @@ import {
   useGetUserQuery,
   useUpdateUserMutation,
 } from "@/services/graphql";
-import {
-  Divider,
-  Title,
-  Text,
-  TabGroup,
-  TabPanels,
-  TabPanel,
-  Card,
-  Callout,
-} from "@tremor/react";
+import { Divider, Title, Text, Card, Callout } from "@tremor/react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "../ui/skeleton";
@@ -216,153 +207,134 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
         title={`${fanData?.user?.firstname} 
         ${fanData?.user?.surname} Analytics`}
       />
-      <TabGroup className="mt-6">
-        <TabPanels>
-          <TabPanel>
-            <Card className="bg-background dark:bg-dark-background">
-              <div className="flex flex-col items-center justify-center relative">
-                <ModalCard
-                  isModal={true}
-                  isOpen={viewPlayerCardUrl}
-                  onOpenChange={() => setViewPlayerCardUrl(!viewPlayerCardUrl)}
-                  contentClass="container mx-auto max-w-2xl rounded-2xl bg-primary-black bg-gradient-to-bl from-primary-black via-primary-black/5 to-primary-black px-[16px] md:px-[2rem] py-[2rem]"
-                  trigger={
-                    <UserAvatar
-                      className="h-[120px] w-[120px] shadow cursor-pointer"
-                      height={120}
-                      width={120}
-                      fallbackType="icon"
-                      fallbackClassName={"h-[120px] w-[120px]"}
-                      avatar={fanData?.user?.avatar as string}
-                      fallback={`${fanData?.user?.firstname?.charAt(
-                        0
-                      )} ${fanData?.user?.surname?.charAt(0)}`}
-                      icon={<Icons.user className="h-8 w-8" />}
-                    />
-                  }
-                  content={
-                    <AspectRatio ratio={16 / 16} className="cursor-pointer">
-                      <Image
-                        onLoadingComplete={() => setShowImage(false)}
-                        priority
-                        fill
-                        sizes="100vw"
-                        quality={80}
-                        src={fanData?.user?.avatar as string}
-                        alt="profile_picture"
-                        className={`rounded-2xl object-cover border-[#717070] border-[0.1px] relative ${
-                          showimage ? "blur-sm " : "blur-none"
-                        }`}
-                      />
-                    </AspectRatio>
-                  }
-                />
 
-                {loading ? (
-                  <div className="flex flex-row items-center">
-                    <Skeleton className="w-[170px] h-[28px] mt-2 mr-1" />
-                    <Skeleton className="w-[16.67px] h-[16.67px] mt-2 rounded-full" />
-                  </div>
-                ) : (
-                  <div className="flex flex-row items-center justify-center mt-1">
-                    <Text className="text-xl relative mr-1">
-                      @{fanData?.user?.username}
-                    </Text>
-                  </div>
-                )}
-                <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
-                  {loading ? (
-                    <Skeleton className="w-[40px] h-[20px]" />
-                  ) : (
-                    <MenubarCard
-                      trigger={
-                        <Icons.moreHorizontal className="cursor-pointer" />
-                      }
-                      items={dropdownItems}
-                    />
-                  )}
-                </div>
-              </div>
-              <Divider></Divider>
-              <Callout
-                className="mt-4 min-h-[75px]"
-                title="Name"
-                icon={() => {
-                  return (
-                    <Icons.user
-                      className="h-[19px] w-[19px] mr-2"
-                      color="teal"
-                    />
-                  );
-                }}
+      <Card className="bg-background dark:bg-dark-background">
+        <div className="flex flex-col items-center justify-center relative">
+          <ModalCard
+            isModal={true}
+            isOpen={viewPlayerCardUrl}
+            onOpenChange={() => setViewPlayerCardUrl(!viewPlayerCardUrl)}
+            contentClass="container mx-auto max-w-2xl rounded-2xl bg-primary-black bg-gradient-to-bl from-primary-black via-primary-black/5 to-primary-black px-[16px] md:px-[2rem] py-[2rem]"
+            trigger={
+              <UserAvatar
+                className="h-[120px] w-[120px] shadow cursor-pointer"
+                height={120}
+                width={120}
+                fallbackType="icon"
+                fallbackClassName={"h-[120px] w-[120px]"}
+                avatar={fanData?.user?.avatar as string}
+                fallback={`${fanData?.user?.firstname?.charAt(
+                  0
+                )} ${fanData?.user?.surname?.charAt(0)}`}
+                icon={<Icons.user className="h-8 w-8" />}
+              />
+            }
+            content={
+              <AspectRatio ratio={16 / 16} className="cursor-pointer">
+                <Image
+                  onLoadingComplete={() => setShowImage(false)}
+                  priority
+                  fill
+                  sizes="100vw"
+                  quality={80}
+                  src={fanData?.user?.avatar as string}
+                  alt="profile_picture"
+                  className={`rounded-2xl object-cover border-[#717070] border-[0.1px] relative ${
+                    showimage ? "blur-sm " : "blur-none"
+                  }`}
+                />
+              </AspectRatio>
+            }
+          />
+
+          {loading ? (
+            <div className="flex flex-row items-center">
+              <Skeleton className="w-[170px] h-[28px] mt-2 mr-1" />
+              <Skeleton className="w-[16.67px] h-[16.67px] mt-2 rounded-full" />
+            </div>
+          ) : (
+            <div className="flex flex-row items-center justify-center mt-1">
+              <Text className="text-xl relative mr-1">
+                @{fanData?.user?.username}
+              </Text>
+            </div>
+          )}
+          <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
+            {loading ? (
+              <Skeleton className="w-[40px] h-[20px]" />
+            ) : (
+              <MenubarCard
+                trigger={<Icons.moreHorizontal className="cursor-pointer" />}
+                items={dropdownItems}
+              />
+            )}
+          </div>
+        </div>
+        <Divider></Divider>
+        <Callout
+          className="mt-4 min-h-[75px]"
+          title="Name"
+          icon={() => {
+            return (
+              <Icons.user className="h-[19px] w-[19px] mr-2" color="teal" />
+            );
+          }}
+          color="teal"
+        >
+          {fanData?.user?.firstname} {fanData?.user?.surname}
+        </Callout>
+        <Callout
+          className="mt-4 min-h-[75px]"
+          title="Email"
+          icon={() => {
+            return (
+              <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
+            );
+          }}
+          color="teal"
+        >
+          {fanData?.user?.email}
+        </Callout>
+        <Callout
+          className="mt-4 min-h-[75px]"
+          title="Date of Birth"
+          icon={() => {
+            return (
+              <Icons.cake className="h-[19px] w-[19px] mr-2" color="teal" />
+            );
+          }}
+          color="teal"
+        >
+          {fanData?.user?.dob && formatDate(fanData?.user?.dob)}
+        </Callout>
+        <Callout
+          className="mt-4"
+          title="State"
+          icon={() => {
+            return (
+              <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+            );
+          }}
+          color="teal"
+        >
+          {fanData?.user?.state}
+        </Callout>
+        <Callout
+          className="mt-4"
+          title="City"
+          icon={() => {
+            return (
+              <Icons.locateFixed
+                className="h-[20px] w-[20px] mr-2"
                 color="teal"
-              >
-                {fanData?.user?.firstname} {fanData?.user?.surname}
-              </Callout>
-              <Callout
-                className="mt-4 min-h-[75px]"
-                title="Email"
-                icon={() => {
-                  return (
-                    <Icons.mail
-                      className="h-[19px] w-[19px] mr-2"
-                      color="teal"
-                    />
-                  );
-                }}
-                color="teal"
-              >
-                {fanData?.user?.email}
-              </Callout>
-              <Callout
-                className="mt-4 min-h-[75px]"
-                title="Date of Birth"
-                icon={() => {
-                  return (
-                    <Icons.cake
-                      className="h-[19px] w-[19px] mr-2"
-                      color="teal"
-                    />
-                  );
-                }}
-                color="teal"
-              >
-                {fanData?.user?.dob && formatDate(fanData?.user?.dob)}
-              </Callout>
-              <Callout
-                className="mt-4"
-                title="State"
-                icon={() => {
-                  return (
-                    <Icons.mapPin
-                      className="h-[20px] w-[20px] mr-2"
-                      color="teal"
-                    />
-                  );
-                }}
-                color="teal"
-              >
-                {fanData?.user?.state}
-              </Callout>
-              <Callout
-                className="mt-4"
-                title="City"
-                icon={() => {
-                  return (
-                    <Icons.locateFixed
-                      className="h-[20px] w-[20px] mr-2"
-                      color="teal"
-                    />
-                  );
-                }}
-                color="teal"
-              >
-                {fanData?.user?.city}
-              </Callout>
-            </Card>
-          </TabPanel>
-        </TabPanels>
-      </TabGroup>
+              />
+            );
+          }}
+          color="teal"
+        >
+          {fanData?.user?.city}
+        </Callout>
+      </Card>
     </main>
   );
 };

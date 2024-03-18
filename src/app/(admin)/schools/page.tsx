@@ -17,14 +17,11 @@ import {
   Divider,
   Title,
   Text,
-  TabGroup,
-  TabPanels,
   Grid,
-  TabPanel,
-  TextInput,
   TableRow,
   TableCell,
   Flex,
+  TextInput,
 } from "@tremor/react";
 import { useRouter } from "next/navigation";
 import SelectCard from "@/components/select";
@@ -306,50 +303,43 @@ const Schools: FC<SchoolsProps> = ({}) => {
         </div>
       </div>
       <Divider></Divider>
-      <TabGroup className="mt-6">
-        <TabPanels>
-          <TabPanel>
-            <Grid numItemsMd={2} numItemsLg={3} className="mt-6 gap-6">
-              <SchoolsCount whereClause={whereClause} title={status} />
-            </Grid>
-            <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-              <SearchInput
-                onChange={(e) => setValue(e.target.value)}
-                placeholder="Search..."
-              />
-              {/* <TextInput
-                className="h-[38px] bg-background dark:bg-dark-background"
-                icon={() => {
-                  return (
-                    <Icons.search className="tremor-TextInput-icon shrink-0 text-tremor-content-subtle dark:text-dark-tremor-content-subtle h-5 w-5 ml-2.5" />
-                  );
-                }}
-                onValueChange={(e) => setValue(e)}
-                placeholder="Search..."
-              /> */}
-              <SelectCard
-                className="bg-background dark:bg-dark-background"
-                defaultValue="College"
-                items={filterItems}
-                selectedItem={status}
-                onValueChange={(e) => {
-                  setStatus(e);
-                }}
-              />
-            </Grid>
-            <UniversalTable
-              title="School List"
-              headerItems={headerItems}
-              items={schools?.schools as any[]}
-              loading={loading}
-              renderItems={renderItems}
-            />
-            {loading || !schools?.schools?.length ? null : (
-              <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
-            )}
-          </TabPanel>
-        </TabPanels>
-      </TabGroup>
+
+      <Grid numItemsMd={2} numItemsLg={3} className="mt-6 gap-6">
+        <SchoolsCount whereClause={whereClause} title={status} />
+      </Grid>
+      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
+        {/* <SearchInput
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Search..."
+        /> */}
+        <TextInput
+          className="h-[38px]"
+          icon={() => {
+            return <Icons.search className="h-10 w-5 ml-2.5" />;
+          }}
+          onValueChange={(e) => setValue(e)}
+          placeholder="Type to search..."
+        />
+        <SelectCard
+          className="bg-background dark:bg-dark-background"
+          defaultValue="College"
+          items={filterItems}
+          selectedItem={status}
+          onValueChange={(e) => {
+            setStatus(e);
+          }}
+        />
+      </Grid>
+      <UniversalTable
+        title="School List"
+        headerItems={headerItems}
+        items={schools?.schools as any[]}
+        loading={loading}
+        renderItems={renderItems}
+      />
+      {loading || !schools?.schools?.length ? null : (
+        <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
+      )}
     </main>
   );
 };

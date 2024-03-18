@@ -37,7 +37,7 @@ const AthletesCount: FC<indexProps> = ({}) => {
       dataCount={athletesCount?.length || 0}
       title="Total Athletes"
       loading={loading}
-      categoryValues={[activeAthletes, inactiveAthletes]}
+      categoryValues={[activeAthletes || 0, inactiveAthletes || 0]}
       categories={["Active athletes", "Inactive athletes"]}
       onClick={() => router.push("/athletes")}
       showIcon={pathname === "/athletes"}

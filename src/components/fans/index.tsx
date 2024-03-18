@@ -12,6 +12,7 @@ import {
   TableCell,
   TableRow,
   Badge,
+  TextInput,
 } from "@tremor/react";
 import { StatusOfflineIcon, StatusOnlineIcon } from "@heroicons/react/outline";
 import {
@@ -38,22 +39,19 @@ const filterItems = [
   { name: "Inactive", value: "Inactive" },
   { name: "Verified", value: "Verified" },
   { name: "Not Verified", value: "Not Verified" },
-  // { name: "Approved", value: "Approved" },
-  // { name: "Not Approved", value: "Not Approved" },
 ];
 
 const headerItems = [
   { name: "Name" },
   { name: "Username" },
-  // { name: "Role" },
   { name: "Email" },
   { name: "Status" },
-  { name: "Action" },
+  { name: "Actions" },
 ];
 
 interface FansProps {}
 
-const FansCard: FC<FansProps> = ({}) => {
+const Fans: FC<FansProps> = ({}) => {
   const { toast } = useToast();
   // const {
   //   userStore: { setUsers },
@@ -218,16 +216,16 @@ const FansCard: FC<FansProps> = ({}) => {
                 0
               )}`}
             />
-            <Text className="ml-4 cursor-pointer">
+            <div className="ml-4 cursor-pointer">
               {item?.firstname} {item?.surname}
-            </Text>
+            </div>
           </Flex>
         </TableCell>
         <TableCell className="text-center">
-          <Text>{item?.username ? `@${item?.username}` : ""}</Text>
+          <div>{item?.username ? `@${item?.username}` : ""}</div>
         </TableCell>
         <TableCell className="text-center">
-          <Text>{item?.email}</Text>
+          <div>{item?.email}</div>
         </TableCell>
         <TableCell className="text-center">
           {item?.id === selectedUser && isActivating ? (
@@ -272,20 +270,18 @@ const FansCard: FC<FansProps> = ({}) => {
         <FanCount />
       </Grid>
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-        <SearchInput
+        {/* <SearchInput
           onChange={(e) => setValue(e.target.value)}
           placeholder="Search..."
+        /> */}
+        <TextInput
+          className="h-[38px]"
+          icon={() => {
+            return <Icons.search className="h-10 w-5 ml-2.5" />;
+          }}
+          onValueChange={(e) => setValue(e)}
+          placeholder="Type to search..."
         />
-        {/* <TextInput
-                className="h-[38px] bg-background dark:bg-dark-background"
-                icon={() => {
-                  return (
-                    <Icons.search className="tremor-TextInput-icon shrink-0 text-tremor-content-subtle dark:text-dark-tremor-content-subtle h-5 w-5 ml-2.5" />
-                  );
-                }}
-                onValueChange={(e) => setValue(e)}
-                placeholder="Search for athlete..."
-              /> */}
         <SelectCard
           className="ring-0 bg-background dark:bg-dark-background"
           items={filterItems}
@@ -309,4 +305,4 @@ const FansCard: FC<FansProps> = ({}) => {
   );
 };
 
-export default observer(FansCard);
+export default observer(Fans);

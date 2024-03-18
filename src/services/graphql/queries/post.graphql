@@ -204,6 +204,10 @@ query getPostFlags(
       uuid
       videos
       images
+      visibility
+      createdAt
+      videosAspectRatio
+      caption
       user {
         id
         uuid
@@ -242,6 +246,10 @@ query getPostFlag($where: PostFlagWhereUniqueInput!) {
       uuid
       videos
       images
+      caption
+      visibility
+      createdAt
+      videosAspectRatio
       user {
         id
         uuid

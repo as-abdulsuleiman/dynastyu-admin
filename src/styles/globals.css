@@ -4,10 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  overflow-y: scroll !important;
-}
-
 ::-webkit-scrollbar {
   width: 6px !important;
   height: 6px !important;
@@ -109,6 +105,17 @@ input[type="search"]::-webkit-search-cancel-button {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground text-base font-normal relative;
+  }
+}
+
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }

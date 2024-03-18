@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 
-const { fontFamily } = require("tailwindcss/defaultTheme");
+const { fontFamily, screens } = require("tailwindcss/defaultTheme");
 
 module.exports = {
   darkMode: ["class"],
@@ -17,6 +17,10 @@ module.exports = {
       padding: "2rem",
       screens: {
         "2xl": "1536px",
+        "2xsm": "375px",
+        xsm: "425px",
+        "3xl": "2000px",
+        ...screens,
       },
     },
     extend: {
@@ -65,10 +69,10 @@ module.exports = {
             inverted: "#ffffff", // white
           },
           background: {
-            muted: "#f9fafb", // gray-50
-            subtle: "#f3f4f6", // gray-100
+            muted: "hsl(var(--muted-foreground))", // gray-50
+            subtle: 'hsl(var(--background))', // gray-100
             DEFAULT: 'hsl(var(--background))', // white
-            emphasis: "#374151", // gray-700
+            emphasis:'hsl(var(--background))', // gray-700
           },
           border: {
             DEFAULT: "hsl(var(--border))", // gray-200
@@ -77,11 +81,11 @@ module.exports = {
             DEFAULT: "hsl(var(--border))", // gray-200
           },
           content: {
-            subtle: "#9ca3af", // gray-400
-            DEFAULT: "#6b7280", // gray-500
-            emphasis: "#374151", // gray-700
-            strong: "#111827", // gray-900
-            inverted: "#ffffff", // white
+            subtle: "#0A0A0A", // gray-400
+            DEFAULT: "#0A0A0A", // gray-500
+            emphasis: "#0A0A0A", // gray-700
+            strong: "#0A0A0A", // gray-900
+            inverted:"#0A0A0A", // white
             teal: "#14b8a6",
             iconColor: "#374151"
           },
@@ -89,31 +93,31 @@ module.exports = {
         "dark-tremor": {
           brand: {
             faint: "#0B1229", // custom
-            muted: "#172554", // blue-950
+            muted:  "hsl(var(--muted))", // blue-950
             subtle: "#1e40af", // blue-800
             DEFAULT: "#3b82f6", // blue-500
             emphasis: "#60a5fa", // blue-400
             inverted: "#030712", // gray-950
           },
           background: {
-            muted: "#131A2B", // custom
-            subtle: "#1f2937", // gray-800
+            muted:  "hsl(var(--background))", // custom
+            subtle:  'hsl(var(--background))', // gray-800
             DEFAULT: 'hsl(var(--background))', // gray-900
-            emphasis: "#d1d5db", // gray-300
+            emphasis: 'hsl(var(--background))', // gray-300
           },
           border: {
             DEFAULT: "hsl(var(--border))", // gray-700
           },
           ring: {
-            DEFAULT:"hsl(var(--border))", // gray-800
+            DEFAULT: "hsl(var(--border))", // gray-800
             // DEFAULT: "#1f2937", // gray-800
           },
           content: {
-            subtle: "#4b5563", // gray-600
-            DEFAULT: "#6b7280", // gray-500
-            emphasis: "#e5e7eb", // gray-200
-            strong: "#f9fafb", // gray-50
-            inverted: "#000000", // black
+            subtle:"#FAFAFA", // gray-600
+            DEFAULT: "#FAFAFA", // gray-500
+            emphasis: "#FAFAFA", // gray-200
+            strong:"#FAFAFA",// gray-50
+            inverted:"#FAFAFA", // black
             teal: "#14b8a6",
             iconColor: "#E5E7EB"
           },
@@ -146,11 +150,11 @@ module.exports = {
       },
       boxShadow: {
         // light
-        "tremor-input": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+        "tremor-input": "hsl(var(--input))",
         "tremor-card": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
         "tremor-dropdown": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
         // dark
-        "dark-tremor-input": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+        "dark-tremor-input": "hsl(var(--input))",
         "dark-tremor-card": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
         "dark-tremor-dropdown": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
       },
