@@ -231,15 +231,9 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
                     {val?.name}
                   </Link>
                 </div>
-                {isActive && val?.hasBadge ? (
-                  <div className="ml-auto">
-                    <div className="h-5 w-7 bg-teal-500 rounded-lg flex flex-row items-center justify-center m-auto text-gray-200 dark:text-dark-gray-700 text-sm">
-                      {formatCount(val?.count)}
-                    </div>
-                  </div>
-                ) : (
+                {isActive ? (
                   <ChevronDownIcon className="ml-auto h-5 w-5 stroke-gray-200 dark:stroke-gray-200" />
-                )}
+                ) : null}
               </div>
             </div>
             {isActive && val?.items?.length ? (
