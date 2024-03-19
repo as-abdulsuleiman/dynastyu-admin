@@ -1,4 +1,5 @@
 /** @format */
+
 "use client";
 
 import { Suspense, useState } from "react";
@@ -21,7 +22,7 @@ export default function AdminLayout({
           <Navbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
           <main className="flex-1">
             <div className="mx-auto p-4 md:p-6 2xl:p-10">
-              <Suspense fallback={<SuspenseLoader />}> {children}</Suspense>
+              <Suspense fallback={<SuspenseLoader />}>{children}</Suspense>
             </div>
           </main>
         </div>

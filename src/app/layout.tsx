@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     ],
   },
   manifest: "/favicon/manifest.json",
-  applicationName: "DynastyUrec",
+  applicationName: "DynastyU",
 };
 export const viewport = {
   width: 1,
