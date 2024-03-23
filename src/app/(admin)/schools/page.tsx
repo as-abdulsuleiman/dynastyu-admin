@@ -13,19 +13,11 @@ import {
   useGetSchoolsQuery,
 } from "@/services/graphql";
 import { useDebouncedValue } from "@mantine/hooks";
-import {
-  Divider,
-  Title,
-  Text,
-  Grid,
-  TableRow,
-  TableCell,
-  Flex,
-  TextInput,
-} from "@tremor/react";
+import { Title, Text, Grid, Flex, TextInput } from "@tremor/react";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
 import SelectCard from "@/components/select";
-import SchoolsCount from "@/components/counts/schools";
+import SchoolStatCard from "@/components/stat-cards/school";
 import UniversalTable from "@/components/universal-table";
 import Pagination from "@/components/pagination";
 import UserAvatar from "@/components/user-avatar";
@@ -42,6 +34,9 @@ import CreateSchool from "@/components/create-school";
 import { SearchInput } from "@/components/search-input";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
+import { Separator } from "@/components/ui/separator";
+import MenubarCard from "@/components/menubar";
+import MoreHorizontal from "@/components/Icons/more-horizontal";
 
 const filterItems = [
   { name: "College", value: "College" },
@@ -215,12 +210,12 @@ const Schools: FC<SchoolsProps> = ({}) => {
     const userItems = [
       {
         name: "View Details",
-        onclick: () =>
+        onClick: () =>
           router.push(`/school/${Number(item?.id)}`, { scroll: true }),
       },
       {
         name: `Edit School`,
-        onclick: () => handleEditSchool(item),
+        onClick: () => handleEditSchool(item),
       },
       // {
       //   name: "Delete School",
@@ -230,9 +225,8 @@ const Schools: FC<SchoolsProps> = ({}) => {
     return (
       <TableRow key={item?.id}>
         <TableCell>
-          <Flex
-            alignItems="center"
-            justifyContent="start"
+          <div
+            className="flex flex-row items-center justify-start"
             onClick={() => router.push(`/school/${item?.id}`, { scroll: true })}
           >
             <UserAvatar
@@ -243,43 +237,21 @@ const Schools: FC<SchoolsProps> = ({}) => {
               avatar={item?.logo as string}
               fallback={`${item?.name?.charAt(0)}`}
             />
-            <Text className="ml-4 cursor-pointer">{item?.name}</Text>
-          </Flex>
+            <div className="ml-4 cursor-pointer text-base">{item?.name}</div>
+          </div>
         </TableCell>
-        <TableCell className="text-center">
-          <Text>{item?.schoolType?.name}</Text>
+        <TableCell className="text-center text-sm">
+          <div>{item?.schoolType?.name}</div>
         </TableCell>
-        <TableCell className="text-center">
-          <Text>{item?.email}</Text>
+        <TableCell className="text-center text-sm">
+          <div>{item?.email}</div>
         </TableCell>
-        <TableCell>
+        <TableCell className="text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
-            <Menubar className="bg-transparent border-0 hover:bg-transparent focus:bg-transparent">
-              <MenubarMenu>
-                <MenubarTrigger className="cursor-pointer data-[state=open]:bg-transparent hover:bg-transparent focus:bg-transparent bg-transparent focus-within:bg-transparent focus-visible:bg-transparent active:bg-transparent">
-                  <Icons.moreHorizontal />
-                </MenubarTrigger>
-                <MenubarContent
-                  side="bottom"
-                  align="start"
-                  sideOffset={-3}
-                  alignOffset={-100}
-                  className="rounded-tremor-default cursor-pointer bg-background dark:bg-dark-background"
-                >
-                  {userItems?.map((val, id) => {
-                    return (
-                      <MenubarItem
-                        onClick={val?.onclick}
-                        key={id}
-                        className="cursor-pointer tremor-SelectItem-root flex justify-start items-center text-tremor-default  ui-selected:text-tremor-content-strong ui-selected:bg-tremor-background-muted text-tremor-content-emphasis dark:ui-active:bg-dark-tremor-background-muted dark:ui-active:text-dark-tremor-content-strong dark:ui-selected:text-dark-tremor-content-strong dark:ui-selected:bg-dark-tremor-background-muted dark:text-dark-tremor-content-emphasis px-2.5 py-2.5"
-                      >
-                        {val?.name}
-                      </MenubarItem>
-                    );
-                  })}
-                </MenubarContent>
-              </MenubarMenu>
-            </Menubar>
+            <MenubarCard
+              trigger={<MoreHorizontal className="cursor-pointer" />}
+              items={userItems}
+            />
           </div>
         </TableCell>
       </TableRow>
@@ -295,29 +267,19 @@ const Schools: FC<SchoolsProps> = ({}) => {
           </div>
           <Text>Schools Overview</Text>
         </div>
-        <div className="ml-auto justify-end">
+        {/* <div className="ml-auto justify-end">
           <Button onClick={() => router.push("/schools/new")}>
             Add New School
           </Button>
-          {/* <CreateSchool isOpen={isOpen} onClose={() => setIsOpen(!isOpen)} /> */}
-        </div>
+        </div> */}
       </div>
-      <Divider></Divider>
-
+      <Separator className="my-6" />
       <Grid numItemsMd={2} numItemsLg={3} className="mt-6 gap-6">
-        <SchoolsCount whereClause={whereClause} title={status} />
+        <SchoolStatCard whereClause={whereClause} title={status} />
       </Grid>
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-        {/* <SearchInput
+        <SearchInput
           onChange={(e) => setValue(e.target.value)}
-          placeholder="Search..."
-        /> */}
-        <TextInput
-          className="h-[38px]"
-          icon={() => {
-            return <Icons.search className="h-10 w-5 ml-2.5" />;
-          }}
-          onValueChange={(e) => setValue(e)}
           placeholder="Type to search..."
         />
         <SelectCard

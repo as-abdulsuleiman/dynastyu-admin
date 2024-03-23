@@ -1,0 +1,29 @@
+/** @format */
+
+@font-face {
+  font-family: "TTHovesBold";
+  src: url("/fonts/TTHovesBold.otf") format("opentype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TTHovesExtraBold";
+  src: url("/fonts/TTHovesExtraBold.otf") format("opentype");
+  font-weight: 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TTHovesRegular";
+  src: url("/fonts/TTHovesRegular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "TTHovesDemiBold";
+  src: url("/fonts/TTHovesDemiBold.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}

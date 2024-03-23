@@ -4,7 +4,7 @@
 
 import { FC, useCallback, useMemo, useState } from "react";
 import { Button } from "../ui/button";
-import { Title, Text, Divider } from "@tremor/react";
+import { Title, Text } from "@tremor/react";
 import { useRouter } from "next/navigation";
 import { Icons } from "../Icons";
 import { observer } from "mobx-react-lite";
@@ -25,6 +25,7 @@ import SelectCity from "../select-city";
 import { SelectCountry } from "../select-country";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/utils";
+import { Separator } from "../ui/separator";
 
 type FormData = yup.InferType<typeof FanValidator>;
 
@@ -186,7 +187,11 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
 
   return (
     <main className="w-full h-full">
-      <Button variant="ghost" className="mb-6" onClick={() => router.back()}>
+      <Button
+        variant="destructive"
+        className="mb-6"
+        onClick={() => router.back()}
+      >
         Go Back
       </Button>
       <div className="flex flex-col">
@@ -196,7 +201,7 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
         </div>
         <Text>Fan Overview</Text>
       </div>
-      <Divider></Divider>
+      <Separator className="my-6" />
       <form id="create_fan" name="create_fan" onSubmit={handleSubmit(onSubmit)}>
         <div className="grid grid-cols-12 gap-6 py-2">
           <div className="col-span-12 place-self-center">

@@ -2,7 +2,8 @@
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "../styles/globals.css";
+import "@/styles/globals.css";
+import "@/styles/fonts.css";
 import "react-color-palette/css";
 import "react-country-state-city/dist/react-country-state-city.css";
 import { cn } from "@/lib/utils";
@@ -68,7 +69,7 @@ export default function RootLayout({
       <body
         suppressHydrationWarning={true}
         className={cn(
-          "min-h-screen antialiased w-full mt-0 p-0",
+          "min-h-screen antialiased w-full mt-0 p-0 font-TTHovesRegular text-[16px]",
           inter.className
         )}
       >

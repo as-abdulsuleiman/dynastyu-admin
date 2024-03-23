@@ -3,19 +3,10 @@
 "use client";
 
 import { FC, useEffect, useMemo, useState } from "react";
-import {
-  Title,
-  Text,
-  Divider,
-  Grid,
-  TableRow,
-  TableCell,
-  Flex,
-  Badge,
-  TextInput,
-} from "@tremor/react";
+import { Title, Text, Grid, Flex, Badge, TextInput } from "@tremor/react";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
-import CoachesCount from "@/components/counts/coaches";
+import CoacheStatCard from "@/components/stat-cards/coache";
 import SelectCard from "@/components/select";
 import {
   CoachProfileWhereInput,
@@ -27,7 +18,6 @@ import {
   useGetCoachesLazyQuery,
   useGetCoachesQuery,
   useGetUsersLazyQuery,
-  useRegisterCoachMutation,
   useUpdateCoachMutation,
 } from "@/services/graphql";
 import Pagination from "@/components/pagination";
@@ -35,8 +25,6 @@ import UniversalTable from "@/components/universal-table";
 import { useRouter } from "next/navigation";
 import { useDebouncedValue } from "@mantine/hooks";
 import { useToast } from "@/hooks/use-toast";
-import { CoachValidator } from "@/lib/validators/coach";
-import * as yup from "yup";
 import UserAvatar from "@/components/user-avatar";
 import { Icons } from "@/components/Icons";
 import { useRootStore } from "@/mobx";
@@ -44,6 +32,7 @@ import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
 import MenubarCard from "../menubar";
 import { observer } from "mobx-react-lite";
+import { Separator } from "../ui/separator";
 
 enum FilterEnum {
   ACTIVE = "Active",
@@ -72,8 +61,6 @@ const headerItems = [
   { name: "Actions" },
 ];
 
-type FormData = yup.InferType<typeof CoachValidator>;
-
 interface CoachesProps {}
 
 const Coaches: FC<CoachesProps> = ({}) => {
@@ -92,7 +79,6 @@ const Coaches: FC<CoachesProps> = ({}) => {
   const [isActivating, setIsactivating] = useState<boolean>(false);
   const [isVerifying, setIsVerifying] = useState<boolean>();
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
-  const [registerCoach] = useRegisterCoachMutation();
   const [deleteCoach] = useDeleteCoachMutation();
   const [updateCoach] = useUpdateCoachMutation();
   const [deleteUser] = useDeleteUserMutation();
@@ -209,58 +195,6 @@ const Coaches: FC<CoachesProps> = ({}) => {
       coachesData?.coachProfiles[coachesData?.coachProfiles?.length - 1];
     return lastPostInResults?.id;
   }, [coachesData?.coachProfiles]);
-
-  // const handleCreateCoach = async (values: FormData) => {
-  //   try {
-  //     const response = await registerCoach({
-  //       variables: {
-  //         data: {
-  //           firebaseUid: "",
-  //           firstname: values.firstName,
-  //           surname: values.lastName,
-  //           email: values.email,
-  //           username: values.username,
-  //           avatar: values.avatar,
-  //           accountType: {
-  //             connect: {
-  //               id: Number(values.accountType?.accountTypeId),
-  //             },
-  //           },
-  //           role: {
-  //             connect: { id: Number(values?.accountType?.roleId) },
-  //           },
-  //           coachProfile: {
-  //             create: {
-  //               title: values.title,
-  //               canReceiveMessages: values.canReceiveMessages,
-  //               school: { connect: { id: Number(values.schoolId) } },
-  //             },
-  //           },
-  //         },
-  //       },
-  //     });
-  //     if (response.data?.registerCoach) {
-  //       await sendPasswordResetEmail(projectAuth, values?.email);
-  //       // toast({
-  //       //   title: "Coach successfully created.",
-  //       //   description: `A password reset link has been sent to ${values.email} to complete the process.`,
-  //       //   variant: "default",
-  //       // });
-  //       const response = await getCoaches({});
-  //       await refetch();
-  //       setCoaches(response.data?.coachProfiles as any);
-  //       setIsOpen(!isOpen);
-  //     }
-  //   } catch (error) {
-  //     toast({
-  //       title: "Something went wrong.",
-  //       description: `${
-  //         error || "Could not successfully created a coach. Please try again."
-  //       }`,
-  //       variant: "destructive",
-  //     });
-  //   }
-  // };
 
   const handleDeleteCoach = async (item: any) => {
     try {
@@ -487,9 +421,8 @@ const Coaches: FC<CoachesProps> = ({}) => {
     return (
       <TableRow key={item?.id}>
         <TableCell>
-          <Flex
-            alignItems="center"
-            justifyContent="start"
+          <div
+            className="flex flex-row justify-start items-center"
             onClick={() =>
               router.push(`/coach/${Number(item?.id)}`, { scroll: true })
             }
@@ -502,21 +435,21 @@ const Coaches: FC<CoachesProps> = ({}) => {
                 0
               )} ${item?.user?.firstname?.charAt(0)}`}
             />
-            <div className="ml-4 cursor-pointer">
+            <div className="ml-4 cursor-pointer text-base">
               {item?.user?.firstname} {item?.user?.surname}
             </div>
-          </Flex>
+          </div>
         </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
           <div>{item?.user?.username ? `@${item?.user?.username}` : ""}</div>
         </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
           <div>{item?.user?.email}</div>
         </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
           <div>{item?.title}</div>
         </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
           {item?.id === selectedUser && isActivating ? (
             <div className="text-center flex flex-row justify-center items-center">
               <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin " />
@@ -525,7 +458,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
           ) : (
             <Badge
               size="xs"
-              className="cursor-pointer"
+              className="cursor-pointer text-sm"
               color={item?.user?.isActive ? "teal" : "rose"}
               // tooltip={item?.user?.isActive ? "Active" : "Deactivated"}
               icon={item?.user?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
@@ -535,7 +468,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
             </Badge>
           )}
         </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
           {item?.id === selectedUser && isVerifying ? (
             <div className="text-center flex flex-row justify-center items-center">
               <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin " />
@@ -544,7 +477,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
           ) : (
             <Badge
               size="xs"
-              className="cursor-pointer px-[8px]"
+              className="cursor-pointer px-[8px text-sm"
               color={item?.verified ? "sky" : "rose"}
               // tooltip={item?.verified ? "Verified" : "Not Verified"}
               icon={() => {
@@ -560,7 +493,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
             </Badge>
           )}
         </TableCell>
-        <TableCell className="text-center cursor-pointer">
+        <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
               trigger={<Icons.moreHorizontal className="cursor-pointer" />}
@@ -578,32 +511,19 @@ const Coaches: FC<CoachesProps> = ({}) => {
         <div className="flex flex-col">
           <div className="flex flex-row items-center">
             <Title>Coaches</Title>
-            <Icons.whistle className="h-4 w-4 ml-2 fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis" />
+            <Icons.whistle className="h-4 w-4 ml-2 fill-foreground dark:fill-foreground" />
           </div>
           <Text>Coaches Overview</Text>
         </div>
-        <div className="ml-auto justify-end">
-          <Button onClick={() => router.push("/coaches/new")}>
-            Add New Coach
-          </Button>
-        </div>
       </div>
-      <Divider></Divider>
+      <Separator className="my-6" />
       <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
-        <CoachesCount />
+        <CoacheStatCard />
       </Grid>
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-        {/* <SearchInput
+        <SearchInput
           onChange={(e) => setValue(e.target.value)}
           placeholder="Search..."
-        /> */}
-        <TextInput
-          className="h-[38px] bg-background dark:bg-dark-background"
-          icon={() => {
-            return <Icons.search className="h-5 w-5 ml-2.5" />;
-          }}
-          onValueChange={(e) => setValue(e)}
-          placeholder="Type to search..."
         />
         <SelectCard
           className="ring-0 bg-background dark:bg-dark-background"

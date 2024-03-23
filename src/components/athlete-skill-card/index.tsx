@@ -1,22 +1,28 @@
 /** @format */
 
 import { FC, useState } from "react";
-import { Card, Title, Text } from "@tremor/react";
-import AccordionCard from "../accordion-card";
+import { Title, Text } from "@tremor/react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Icons } from "../Icons";
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
 import { observer } from "mobx-react-lite";
-import CarouselCard from "../carousel-card";
 import { useUpdateAthleteMutation } from "@/services/graphql";
 import { useToast } from "@/hooks/use-toast";
 import SkillIcon from "../Icons/skill";
 import { useRouter } from "next/navigation";
+import { Card, CardContent } from "../ui/card";
+import MediaCard from "../media-card";
 
 interface AthleteSkillsCardProps {
   athleteSkills: AthleteSkill[];
   loading: boolean;
-  athleteId: string;
+  athleteId: number;
 }
 
 type AthleteSkill = {
@@ -94,6 +100,7 @@ const AthleteSkillCard: FC<AthleteSkillsCardProps> = ({
         setIsUpdating(null);
       }
     };
+
     return (
       <div className="flex flex-col">
         <div className="flex flex-row items-start md:items-center mb-1">
@@ -136,44 +143,50 @@ const AthleteSkillCard: FC<AthleteSkillsCardProps> = ({
             </Button>
           ) : null}
         </div>
-        {val?.videos?.length ? (
-          <div className="flex flex-row mx-auto mt-3">
-            <CarouselCard videos={val?.videos} />
-          </div>
+        {val?.videos?.length > 0 ? (
+          <Card className="border-none">
+            <CardContent className="p-6 border-none">
+              <MediaCard
+                loading={loading}
+                items={val?.videos || []}
+                type={"video"}
+              />
+            </CardContent>
+          </Card>
         ) : null}
       </div>
     );
   };
 
   return (
-    <Card className="bg-background dark:bg-dark-background">
-      <div className="flex flex-row items-center mb-3">
-        <Title>Skills</Title>
-        <SkillIcon
-          className="ml-auto h-6 w-6 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis"
-          color="#374151"
-        />
-      </div>
-      {loading ? (
-        <> {renderLoader()}</>
-      ) : !athleteSkills.length ? (
-        <>
-          <Text className="text-center h-full">No Result Found</Text>
-        </>
-      ) : (
-        <>
-          {athleteSkills?.map((val: AthleteSkill, index: number) => {
-            return (
-              <AccordionCard
-                key={index}
-                value={`${"item"}-${index + 1}`}
-                trigger={val?.skillType?.name}
-                content={renderContent(val)}
-              />
-            );
-          })}
-        </>
-      )}
+    <Card>
+      <CardContent className="p-6">
+        <div className="flex flex-row items-center mb-3">
+          <Title>Skills</Title>
+          <SkillIcon
+            className="ml-auto h-6 w-6 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis"
+            color="#374151"
+          />
+        </div>
+        {loading ? (
+          <> {renderLoader()}</>
+        ) : !athleteSkills.length ? (
+          <>
+            <Text className="text-center h-full">No Result Found</Text>
+          </>
+        ) : (
+          <Accordion type="single" collapsible className="w-full">
+            {athleteSkills?.map((val: AthleteSkill, index: number) => {
+              return (
+                <AccordionItem value={`${"item"}-${index + 1}`} key={index}>
+                  <AccordionTrigger>{val?.skillType?.name}</AccordionTrigger>
+                  <AccordionContent>{renderContent(val)}</AccordionContent>
+                </AccordionItem>
+              );
+            })}
+          </Accordion>
+        )}
+      </CardContent>
     </Card>
   );
 };

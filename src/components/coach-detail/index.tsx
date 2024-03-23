@@ -10,7 +10,7 @@ import {
   useGetCoachQuery,
   useUpdateCoachMutation,
 } from "@/services/graphql";
-import { Title, Divider, Text, Grid, Card, Callout } from "@tremor/react";
+import { Title, Text, Grid, Callout } from "@tremor/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import UsersAnalytics from "@/components/analytics/users";
@@ -22,10 +22,12 @@ import { useToast } from "@/hooks/use-toast";
 import MenubarCard from "@/components/menubar";
 import ModalCard from "../modal";
 import { AspectRatio } from "../ui/aspect-ratio";
+import { Card, CardContent } from "../ui/card";
+import { Separator } from "../ui/separator";
 
 interface CoachDetailProps {
   params: {
-    coachId: string;
+    id: number;
   };
 }
 
@@ -41,7 +43,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   const { data, loading, refetch } = useGetCoachQuery({
     variables: {
       where: {
-        id: params?.coachId,
+        id: params?.id,
       },
     },
   });
@@ -51,7 +53,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       const response = await deleteCoach({
         variables: {
           where: {
-            id: params?.coachId,
+            id: params?.id,
           },
         },
       });
@@ -87,7 +89,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       await updateCoach({
         variables: {
           where: {
-            id: params?.coachId,
+            id: params?.id,
           },
           data: {
             user: {
@@ -122,7 +124,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       await updateCoach({
         variables: {
           where: {
-            id: params?.coachId,
+            id: params?.id,
           },
           data: {
             verified: {
@@ -154,7 +156,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   };
 
   const handleEditCoach = (item: any) => {
-    router.push(`/coaches/edit?coach=${params?.coachId}`, { scroll: true });
+    router.push(`/coaches/edit?coach=${params?.id}`, { scroll: true });
   };
 
   const dropdownItems = [
@@ -260,7 +262,11 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
 
   return (
     <main className="w-full h-full relative">
-      <Button variant="ghost" className="mb-6" onClick={() => router.back()}>
+      <Button
+        variant="destructive"
+        className="mb-6"
+        onClick={() => router.back()}
+      >
         Go Back
       </Button>
       {loading ? (
@@ -295,7 +301,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
           </div>
         </div>
       )}
-      <Divider></Divider>
+      <Separator className="my-6" />
       <UsersAnalytics
         loading={loading}
         data={dataList}
@@ -307,185 +313,198 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
           ${data?.coachProfile?.user?.surname} Analytics`}
       />
       <Grid numItemsMd={1} numItemsLg={1} className="mt-6 gap-6">
-        <Card className="bg-background dark:bg-dark-background">
-          <div className="flex flex-col items-center justify-center relative">
-            <ModalCard
-              isModal={true}
-              isOpen={viewPlayerCardUrl}
-              onOpenChange={() => setViewPlayerCardUrl(!viewPlayerCardUrl)}
-              contentClass="container mx-auto max-w-2xl rounded-2xl bg-primary-black bg-gradient-to-bl from-primary-black via-primary-black/5 to-primary-black px-[16px] md:px-[2rem] py-[2rem]"
-              trigger={
-                <UserAvatar
-                  className="h-[120px] w-[120px] shadow cursor-pointer"
-                  height={120}
-                  width={120}
-                  fallbackType="icon"
-                  fallbackClassName={"h-[120px] w-[120px]"}
-                  avatar={data?.coachProfile?.user.avatar as string}
-                  fallback={`${data?.coachProfile?.user?.username?.charAt(
-                    0
-                  )} ${data?.coachProfile?.user?.firstname?.charAt(0)}`}
-                  icon={<Icons.user className="h-8 w-8" />}
-                />
-              }
-              content={
-                <AspectRatio ratio={16 / 16} className="cursor-pointer">
-                  <Image
-                    onLoadingComplete={() => setShowImage(false)}
-                    priority
-                    fill
-                    sizes="100vw"
-                    quality={80}
-                    src={data?.coachProfile?.user?.avatar as string}
-                    alt=""
-                    className={`rounded-2xl object-cover border-[#717070] border-[0.1px] relative ${
-                      showimage ? "blur-sm " : "blur-none"
-                    }`}
+        <Card>
+          <CardContent>
+            <div className="flex flex-col items-center justify-center relative">
+              <ModalCard
+                isModal={true}
+                isOpen={viewPlayerCardUrl}
+                onOpenChange={() => setViewPlayerCardUrl(!viewPlayerCardUrl)}
+                contentClass="container mx-auto max-w-2xl rounded-2xl bg-primary-black bg-gradient-to-bl from-primary-black via-primary-black/5 to-primary-black px-[16px] md:px-[2rem] py-[2rem]"
+                trigger={
+                  <UserAvatar
+                    className="h-[120px] w-[120px] shadow cursor-pointer"
+                    height={120}
+                    width={120}
+                    fallbackType="icon"
+                    fallbackClassName={"h-[120px] w-[120px]"}
+                    avatar={data?.coachProfile?.user.avatar as string}
+                    fallback={`${data?.coachProfile?.user?.username?.charAt(
+                      0
+                    )} ${data?.coachProfile?.user?.firstname?.charAt(0)}`}
+                    icon={<Icons.user className="h-8 w-8" />}
                   />
-                </AspectRatio>
-              }
-            />
+                }
+                content={
+                  <AspectRatio ratio={16 / 16} className="cursor-pointer">
+                    <Image
+                      onLoadingComplete={() => setShowImage(false)}
+                      priority
+                      fill
+                      sizes="100vw"
+                      quality={80}
+                      src={data?.coachProfile?.user?.avatar as string}
+                      alt=""
+                      className={`rounded-2xl object-cover border-[#717070] border-[0.1px] relative ${
+                        showimage ? "blur-sm " : "blur-none"
+                      }`}
+                    />
+                  </AspectRatio>
+                }
+              />
 
-            {loading ? (
-              <div className="flex flex-row items-center">
-                <Skeleton className="w-[120px] h-[25px] mt-2 mr-1" />
-                <Skeleton className="w-[24px] h-[24px] mt-2 rounded-full" />
-              </div>
-            ) : (
-              <div className="flex flex-row items-center justify-center">
-                <Text className="text-xl relative mr-1">
-                  {/* {data?.coachProfile?.user?.firstname}{" "} */}@
-                  {data?.coachProfile?.user?.username}
-                </Text>
-                {data?.coachProfile?.verified ? (
-                  <TooltipCard
-                    message="Verified"
-                    trigger={
-                      <Icons.badgeCheck className="h-5 w-5" color="teal" />
-                    }
-                  />
+              {loading ? (
+                <div className="flex flex-row items-center">
+                  <Skeleton className="w-[120px] h-[25px] mt-2 mr-1" />
+                  <Skeleton className="w-[24px] h-[24px] mt-2 rounded-full" />
+                </div>
+              ) : (
+                <div className="flex flex-row items-center justify-center">
+                  <Text className="text-xl relative mr-1">
+                    {/* {data?.coachProfile?.user?.firstname}{" "} */}@
+                    {data?.coachProfile?.user?.username}
+                  </Text>
+                  {data?.coachProfile?.verified ? (
+                    <TooltipCard
+                      message="Verified"
+                      trigger={
+                        <Icons.badgeCheck className="h-5 w-5" color="teal" />
+                      }
+                    />
+                  ) : (
+                    <TooltipCard
+                      message="Not Verified"
+                      trigger={
+                        <Icons.badgeAlert className="h-5 w-5" color="teal" />
+                      }
+                    />
+                  )}
+                </div>
+              )}
+              <div className="ml-auto absolute right-0 top-0">
+                {loading ? (
+                  <Skeleton className="w-[40px] h-[20px]" />
                 ) : (
-                  <TooltipCard
-                    message="Not Verified"
+                  <MenubarCard
                     trigger={
-                      <Icons.badgeAlert className="h-5 w-5" color="teal" />
+                      <Icons.moreHorizontal className="cursor-pointer" />
                     }
+                    items={dropdownItems}
                   />
                 )}
               </div>
-            )}
-            <div className="ml-auto absolute right-0 top-0">
-              {loading ? (
-                <Skeleton className="w-[40px] h-[20px]" />
-              ) : (
-                <MenubarCard
-                  trigger={<Icons.moreHorizontal className="cursor-pointer" />}
-                  items={dropdownItems}
-                />
-              )}
             </div>
-          </div>
-          <Divider></Divider>
-          <Callout
-            className="mt-4"
-            title="Name"
-            icon={() => {
-              return <Icons.user className="h-5 w-5" color="teal" />;
-            }}
-            color="teal"
-          >
-            {data?.coachProfile?.user?.firstname}{" "}
-            {data?.coachProfile?.user?.surname}
-          </Callout>
-          <Callout
-            className="mt-4"
-            title="Email"
-            icon={() => {
-              return (
-                <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
-              );
-            }}
-            color="teal"
-          >
-            {data?.coachProfile?.user.email}
-          </Callout>
-          <Callout
-            className="mt-4"
-            title="Coach Title"
-            icon={() => {
-              return (
-                <Icons.tags className="h-[20px] w-[20px] mr-2" color="teal" />
-              );
-            }}
-            color="teal"
-          >
-            {data?.coachProfile?.title}
-          </Callout>
-          <Callout
-            className="mt-4"
-            title="High Scool"
-            icon={() => {
-              return (
-                <Icons.school className="h-[19px] w-[19px] mr-2" color="teal" />
-              );
-            }}
-            color="teal"
-          >
-            {data?.coachProfile?.school?.name}
-          </Callout>
-          <Callout
-            className="mt-4"
-            title="Country"
-            icon={() => {
-              return (
-                <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
-              );
-            }}
-            color="teal"
-          >
-            <span className="flex flex-row items-center">
-              <>{data?.coachProfile?.country?.name}</>
-              {data?.coachProfile?.country?.flag ? (
-                <Image
-                  alt="country_flag"
-                  width={30}
-                  height={30}
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
-                  quality={100}
-                  priority
-                  src={data?.coachProfile?.country?.flag}
-                  className="h-[30px] w-[30px] rounded-full ml-auto object-cover"
-                />
-              ) : null}
-            </span>
-          </Callout>
-          <Callout
-            className="mt-4"
-            title="State"
-            icon={() => {
-              return (
-                <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
-              );
-            }}
-            color="teal"
-          >
-            {data?.coachProfile?.state}
-          </Callout>
-          <Callout
-            className="mt-4"
-            title="City"
-            icon={() => {
-              return (
-                <Icons.locateFixed
-                  className="h-[20px] w-[20px] mr-2"
-                  color="teal"
-                />
-              );
-            }}
-            color="teal"
-          >
-            {data?.coachProfile?.city}
-          </Callout>
+            <Separator className="my-6" />
+            <Callout
+              className="mt-4"
+              title="Name"
+              icon={() => {
+                return <Icons.user className="h-5 w-5" color="teal" />;
+              }}
+              color="teal"
+            >
+              {data?.coachProfile?.user?.firstname}{" "}
+              {data?.coachProfile?.user?.surname}
+            </Callout>
+            <Callout
+              className="mt-4"
+              title="Email"
+              icon={() => {
+                return (
+                  <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
+                );
+              }}
+              color="teal"
+            >
+              {data?.coachProfile?.user.email}
+            </Callout>
+            <Callout
+              className="mt-4"
+              title="Coach Title"
+              icon={() => {
+                return (
+                  <Icons.tags className="h-[20px] w-[20px] mr-2" color="teal" />
+                );
+              }}
+              color="teal"
+            >
+              {data?.coachProfile?.title}
+            </Callout>
+            <Callout
+              className="mt-4"
+              title="High Scool"
+              icon={() => {
+                return (
+                  <Icons.school
+                    className="h-[19px] w-[19px] mr-2"
+                    color="teal"
+                  />
+                );
+              }}
+              color="teal"
+            >
+              {data?.coachProfile?.school?.name}
+            </Callout>
+            <Callout
+              className="mt-4"
+              title="Country"
+              icon={() => {
+                return (
+                  <Icons.mapPin
+                    className="h-[20px] w-[20px] mr-2"
+                    color="teal"
+                  />
+                );
+              }}
+              color="teal"
+            >
+              <span className="flex flex-row items-center">
+                <>{data?.coachProfile?.country?.name}</>
+                {data?.coachProfile?.country?.flag ? (
+                  <Image
+                    alt="country_flag"
+                    width={30}
+                    height={30}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
+                    quality={100}
+                    priority
+                    src={data?.coachProfile?.country?.flag}
+                    className="h-[30px] w-[30px] rounded-full ml-auto object-cover"
+                  />
+                ) : null}
+              </span>
+            </Callout>
+            <Callout
+              className="mt-4"
+              title="State"
+              icon={() => {
+                return (
+                  <Icons.mapPin
+                    className="h-[20px] w-[20px] mr-2"
+                    color="teal"
+                  />
+                );
+              }}
+              color="teal"
+            >
+              {data?.coachProfile?.state}
+            </Callout>
+            <Callout
+              className="mt-4"
+              title="City"
+              icon={() => {
+                return (
+                  <Icons.locateFixed
+                    className="h-[20px] w-[20px] mr-2"
+                    color="teal"
+                  />
+                );
+              }}
+              color="teal"
+            >
+              {data?.coachProfile?.city}
+            </Callout>
+          </CardContent>
         </Card>
         {/* <SchoolCard
             loading={loading}

@@ -3,7 +3,7 @@
 "use client";
 
 import { FC, useMemo, useState } from "react";
-import { Divider, Title, Text, Card, Grid, Callout } from "@tremor/react";
+import { Title, Text, Grid, Callout } from "@tremor/react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import {
@@ -32,10 +32,12 @@ import InstagramIcon from "@/components/Icons/instagram";
 import TiktokIcon from "@/components/Icons/tiktok";
 import ModalCard from "../modal";
 import { AspectRatio } from "../ui/aspect-ratio";
+import { Card, CardContent } from "../ui/card";
+import { Separator } from "../ui/separator";
 
 interface AthleteDetailProps {
   params: {
-    athleteId: string;
+    id: number;
   };
 }
 
@@ -55,7 +57,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
   const { data, loading, refetch } = useGetAthleteProfileQuery({
     variables: {
       where: {
-        id: Number(params?.athleteId),
+        id: params?.id,
       },
     },
   });
@@ -157,7 +159,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
       const resp = await updateAthlete({
         variables: {
           where: {
-            id: Number(params?.athleteId),
+            id: params?.id,
           },
           data: {
             user: {
@@ -225,7 +227,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
       const response = await deleteAthlete({
         variables: {
           where: {
-            id: params?.athleteId,
+            id: params?.id,
           },
         },
       });
@@ -263,7 +265,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
       const isVerified = item?.verified;
       const resp = await updateAthlete({
         variables: {
-          where: { id: params?.athleteId },
+          where: { id: params?.id },
           data: {
             verified: { set: !isVerified },
             verifiedBy: { connect: { id: user?.coachProfile?.id } },
@@ -298,7 +300,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
       const resp = await updateAthlete({
         variables: {
           where: {
-            id: Number(params?.athleteId),
+            id: params?.id,
           },
           data: {
             featured: { set: !isAthleteFeatured },
@@ -330,7 +332,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     {
       name: `Edit Profile`,
       onClick: () =>
-        router.push(`/athletes/edit?athlete=${Number(params?.athleteId)}`, {
+        router.push(`/athletes/edit?athlete=${params?.id}`, {
           scroll: true,
         }),
     },
@@ -373,7 +375,11 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
 
   return (
     <main className="w-full h-full relative">
-      <Button variant="ghost" className="mb-6" onClick={() => router.back()}>
+      <Button
+        variant="destructive"
+        className="mb-6"
+        onClick={() => router.back()}
+      >
         Go Back
       </Button>
       {loading ? (
@@ -403,7 +409,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
           </Text>
         </div>
       )}
-      <Divider></Divider>
+      <Separator className="my-6" />
       <UsersAnalytics
         loading={loading}
         data={dataList}
@@ -436,265 +442,280 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
           transcripts={(data?.athleteProfile?.transcripts as any) || []}
         />
         <AthleteSkillCard
-          athleteId={params?.athleteId}
+          athleteId={params?.id}
           loading={loading}
           athleteSkills={(data?.athleteProfile?.skills as any) || []}
         />
       </Grid>
       <Grid numItemsMd={1} numItemsLg={1} className="mt-6 gap-6">
-        <Card className="">
-          <div className="flex flex-col items-center justify-start relative">
-            <ModalCard
-              isModal={true}
-              isOpen={viewPlayerCardUrl}
-              onOpenChange={() => setViewPlayerCardUrl(!viewPlayerCardUrl)}
-              contentClass="container mx-auto max-w-2xl rounded-2xl bg-primary-black bg-gradient-to-bl from-primary-black via-primary-black/5 to-primary-black px-[16px] md:px-[2rem] py-[2rem]"
-              trigger={
-                <UserAvatar
-                  className="h-[120px] w-[120px] shadow cursor-pointer"
-                  height={120}
-                  width={120}
-                  fallbackType="icon"
-                  fallbackClassName={"h-[120px] w-[120px]"}
-                  avatar={data?.athleteProfile?.user.avatar as string}
-                  fallback={`${data?.athleteProfile?.user?.firstname?.charAt(
-                    0
-                  )} ${data?.athleteProfile?.user?.surname?.charAt(0)}`}
-                  icon={<Icons.user className="h-8 w-8" />}
-                />
-              }
-              content={
-                <AspectRatio ratio={16 / 16} className="cursor-pointer">
-                  <Image
-                    onLoadingComplete={() => setLoadingImage(false)}
-                    priority
-                    fill
-                    sizes="100vw"
-                    quality={80}
-                    src={data?.athleteProfile?.user?.avatar as string}
-                    alt="profile_picture"
-                    className={`rounded-2xl object-cover relative ${
-                      loadingImage ? "blur-sm " : "blur-none"
-                    }`}
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex flex-col items-center justify-start relative">
+              <ModalCard
+                isModal={true}
+                isOpen={viewPlayerCardUrl}
+                onOpenChange={() => setViewPlayerCardUrl(!viewPlayerCardUrl)}
+                contentClass="container mx-auto max-w-2xl rounded-2xl bg-primary-black bg-gradient-to-bl from-primary-black via-primary-black/5 to-primary-black px-[16px] md:px-[2rem] py-[2rem]"
+                trigger={
+                  <UserAvatar
+                    className="h-[120px] w-[120px] shadow cursor-pointer"
+                    height={120}
+                    width={120}
+                    fallbackType="icon"
+                    fallbackClassName={"h-[120px] w-[120px]"}
+                    avatar={data?.athleteProfile?.user.avatar as string}
+                    fallback={`${data?.athleteProfile?.user?.firstname?.charAt(
+                      0
+                    )} ${data?.athleteProfile?.user?.surname?.charAt(0)}`}
+                    icon={<Icons.user className="h-8 w-8" />}
                   />
-                </AspectRatio>
-              }
-            />
-            {loading ? (
-              <div className="flex flex-row items-center">
-                <Skeleton className="w-[170px] h-[28px] mt-2 mr-1" />
-                <Skeleton className="w-[16.67px] h-[16.67px] mt-2 rounded-full" />
-              </div>
-            ) : (
-              <div className="flex flex-row items-center justify-center mt-1">
-                <Text className="text-xl relative mr-1">
-                  @{data?.athleteProfile?.user?.username}
-                </Text>
-                {data?.athleteProfile?.verified ? (
-                  <HoverCard
-                    content={renderVerifiedBy(data?.athleteProfile?.verifiedBy)}
-                    trigger={
-                      <div className="cursor-pointer">
-                        <Icons.badgeCheck className="h-5 w-5" color="teal" />
-                      </div>
-                    }
-                  />
+                }
+                content={
+                  <AspectRatio ratio={16 / 16} className="cursor-pointer">
+                    <Image
+                      onLoadingComplete={() => setLoadingImage(false)}
+                      priority
+                      fill
+                      sizes="100vw"
+                      quality={80}
+                      src={data?.athleteProfile?.user?.avatar as string}
+                      alt="profile_picture"
+                      className={`rounded-2xl object-cover relative ${
+                        loadingImage ? "blur-sm " : "blur-none"
+                      }`}
+                    />
+                  </AspectRatio>
+                }
+              />
+              {loading ? (
+                <div className="flex flex-row items-center">
+                  <Skeleton className="w-[170px] h-[28px] mt-2 mr-1" />
+                  <Skeleton className="w-[16.67px] h-[16.67px] mt-2 rounded-full" />
+                </div>
+              ) : (
+                <div className="flex flex-row items-center justify-center mt-1">
+                  <Text className="text-xl relative mr-1">
+                    @{data?.athleteProfile?.user?.username}
+                  </Text>
+                  {data?.athleteProfile?.verified ? (
+                    <HoverCard
+                      content={renderVerifiedBy(
+                        data?.athleteProfile?.verifiedBy
+                      )}
+                      trigger={
+                        <div className="cursor-pointer">
+                          <Icons.badgeCheck className="h-5 w-5" color="teal" />
+                        </div>
+                      }
+                    />
+                  ) : (
+                    <HoverCard
+                      content={<Text>{"Not Verified"}</Text>}
+                      trigger={
+                        <div className="cursor-pointer">
+                          <Icons.badgeAlert className="h-5 w-5" color="teal" />
+                        </div>
+                      }
+                    />
+                  )}
+                </div>
+              )}
+              <div className="ml-auto absolute right-0 top-0">
+                {loading ? (
+                  <Skeleton className="w-[40px] h-[20px]" />
                 ) : (
-                  <HoverCard
-                    content={<Text>{"Not Verified"}</Text>}
+                  <MenubarCard
                     trigger={
-                      <div className="cursor-pointer">
-                        <Icons.badgeAlert className="h-5 w-5" color="teal" />
-                      </div>
+                      <Icons.moreHorizontal className="cursor-pointer" />
                     }
+                    items={dropdownItems}
                   />
                 )}
               </div>
-            )}
-            <div className="ml-auto absolute right-0 top-0">
-              {loading ? (
-                <Skeleton className="w-[40px] h-[20px]" />
-              ) : (
-                <MenubarCard
-                  trigger={<Icons.moreHorizontal className="cursor-pointer" />}
-                  items={dropdownItems}
-                />
-              )}
             </div>
-          </div>
-          <Divider></Divider>
-          <Callout
-            className="mt-4 min-h-[75px]"
-            title="Name"
-            icon={() => {
-              return (
-                <Icons.user className="h-[19px] w-[19px] mr-2" color="teal" />
-              );
-            }}
-            color="teal"
-          >
-            {data?.athleteProfile?.user?.firstname}{" "}
-            {data?.athleteProfile?.user?.surname}
-          </Callout>
-          <Callout
-            className="mt-4 min-h-[75px]"
-            title="Email"
-            icon={() => {
-              return (
-                <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
-              );
-            }}
-            color="teal"
-          >
-            {data?.athleteProfile?.user?.email}
-          </Callout>
-          <Callout
-            className="mt-4"
-            title="High Scool"
-            icon={() => {
-              return (
-                <Icons.school className="h-[19px] w-[19px] mr-2" color="teal" />
-              );
-            }}
-            color="teal"
-          >
-            {data?.athleteProfile?.school?.name}
-          </Callout>
-          <Callout
-            className="mt-4"
-            title="Position"
-            icon={() => {
-              return (
-                <Icons.athlete
-                  className="h-[19px] w-[19px] mr-2"
-                  color="teal"
-                />
-              );
-            }}
-            color="teal"
-          >
-            {data?.athleteProfile?.position?.name} (
-            {data?.athleteProfile?.position?.shortName})
-          </Callout>
-          <Callout
-            className="mt-4 min-h-[75px]"
-            title="Graduation Year"
-            icon={() => {
-              return (
-                <Icons.graduationCap
-                  className="h-[19px] w-[19px] mr-2"
-                  color="teal"
-                />
-              );
-            }}
-            color="teal"
-          >
-            {data?.athleteProfile?.graduationYear}
-          </Callout>
-          <Callout
-            className="mt-4 min-h-[75px]"
-            title="gpa"
-            icon={() => {
-              return (
-                <Icons.presentation
-                  className="h-[19px] w-[19px] mr-2"
-                  color="teal"
-                />
-              );
-            }}
-            color="teal"
-          >
-            {data?.athleteProfile?.gpa}
-          </Callout>
-          {data?.athleteProfile?.hudlLink ? (
+            <Separator className="my-6" />
             <Callout
               className="mt-4 min-h-[75px]"
-              title="Huddle"
+              title="Name"
               icon={() => {
                 return (
-                  <Icons.link className="h-[19px] w-[19px] mr-2" color="teal" />
+                  <Icons.user className="h-[19px] w-[19px] mr-2" color="teal" />
                 );
               }}
               color="teal"
             >
-              <input
-                onClick={() => {
-                  if (data?.athleteProfile?.hudlLink as string) {
-                    window.open(
-                      data?.athleteProfile?.hudlLink as string,
-                      "_blank"
-                    );
-                  }
-                }}
-                className="border-none right-0 rounded-none bg-transparent w-full focus-visible:outline-none cursor-pointer focus-visible:ring-0"
-                readOnly
-                type="url"
-                defaultValue={data?.athleteProfile?.hudlLink as string}
-              />
+              {data?.athleteProfile?.user?.firstname}{" "}
+              {data?.athleteProfile?.user?.surname}
             </Callout>
-          ) : null}
-          {socialAccounts?.map((val, index) => {
-            return (
+            <Callout
+              className="mt-4 min-h-[75px]"
+              title="Email"
+              icon={() => {
+                return (
+                  <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
+                );
+              }}
+              color="teal"
+            >
+              {data?.athleteProfile?.user?.email}
+            </Callout>
+            <Callout
+              className="mt-4"
+              title="High Scool"
+              icon={() => {
+                return (
+                  <Icons.school
+                    className="h-[19px] w-[19px] mr-2"
+                    color="teal"
+                  />
+                );
+              }}
+              color="teal"
+            >
+              {data?.athleteProfile?.school?.name}
+            </Callout>
+            <Callout
+              className="mt-4"
+              title="Position"
+              icon={() => {
+                return (
+                  <Icons.athlete
+                    className="h-[19px] w-[19px] mr-2"
+                    color="teal"
+                  />
+                );
+              }}
+              color="teal"
+            >
+              {data?.athleteProfile?.position?.name} (
+              {data?.athleteProfile?.position?.shortName})
+            </Callout>
+            <Callout
+              className="mt-4 min-h-[75px]"
+              title="Graduation Year"
+              icon={() => {
+                return (
+                  <Icons.graduationCap
+                    className="h-[19px] w-[19px] mr-2"
+                    color="teal"
+                  />
+                );
+              }}
+              color="teal"
+            >
+              {data?.athleteProfile?.graduationYear}
+            </Callout>
+            <Callout
+              className="mt-4 min-h-[75px]"
+              title="gpa"
+              icon={() => {
+                return (
+                  <Icons.presentation
+                    className="h-[19px] w-[19px] mr-2"
+                    color="teal"
+                  />
+                );
+              }}
+              color="teal"
+            >
+              {data?.athleteProfile?.gpa}
+            </Callout>
+            {data?.athleteProfile?.hudlLink ? (
               <Callout
-                key={index}
                 className="mt-4 min-h-[75px]"
-                title={val?.name}
+                title="Huddle"
                 icon={() => {
-                  return <> {val?.icon}</>;
+                  return (
+                    <Icons.link
+                      className="h-[19px] w-[19px] mr-2"
+                      color="teal"
+                    />
+                  );
                 }}
                 color="teal"
               >
                 <input
                   onClick={() => {
-                    window.open(val?.link as string, "_blank");
+                    if (data?.athleteProfile?.hudlLink as string) {
+                      window.open(
+                        data?.athleteProfile?.hudlLink as string,
+                        "_blank"
+                      );
+                    }
                   }}
                   className="border-none right-0 rounded-none bg-transparent w-full focus-visible:outline-none cursor-pointer focus-visible:ring-0"
                   readOnly
                   type="url"
-                  defaultValue={val?.link}
+                  defaultValue={data?.athleteProfile?.hudlLink as string}
                 />
               </Callout>
-            );
-          })}
-          <Callout
-            className="mt-4 min-h-[75px]"
-            title="Date of Birth"
-            icon={() => {
+            ) : null}
+            {socialAccounts?.map((val, index) => {
               return (
-                <Icons.cake className="h-[19px] w-[19px] mr-2" color="teal" />
+                <Callout
+                  key={index}
+                  className="mt-4 min-h-[75px]"
+                  title={val?.name}
+                  icon={() => {
+                    return <> {val?.icon}</>;
+                  }}
+                  color="teal"
+                >
+                  <input
+                    onClick={() => {
+                      window.open(val?.link as string, "_blank");
+                    }}
+                    className="border-none right-0 rounded-none bg-transparent w-full focus-visible:outline-none cursor-pointer focus-visible:ring-0"
+                    readOnly
+                    type="url"
+                    defaultValue={val?.link}
+                  />
+                </Callout>
               );
-            }}
-            color="teal"
-          >
-            {data?.athleteProfile?.user?.dob &&
-              formatDate(data?.athleteProfile?.user?.dob)}
-          </Callout>
-          <Callout
-            className="mt-4"
-            title="Country"
-            icon={() => {
-              return (
-                <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
-              );
-            }}
-            color="teal"
-          >
-            <span className="flex flex-row items-center">
-              <>{data?.athleteProfile?.country?.name}</>
-              {data?.athleteProfile?.country?.flag ? (
-                <Image
-                  alt="country_flag"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
-                  quality={100}
-                  priority
-                  width={30}
-                  height={30}
-                  src={data?.athleteProfile?.country?.flag}
-                  className="h-[30px] w-[30px] rounded-full ml-auto object-cover"
-                />
-              ) : null}
-            </span>
-          </Callout>
+            })}
+            <Callout
+              className="mt-4 min-h-[75px]"
+              title="Date of Birth"
+              icon={() => {
+                return (
+                  <Icons.cake className="h-[19px] w-[19px] mr-2" color="teal" />
+                );
+              }}
+              color="teal"
+            >
+              {data?.athleteProfile?.user?.dob &&
+                formatDate(data?.athleteProfile?.user?.dob)}
+            </Callout>
+            <Callout
+              className="mt-4"
+              title="Country"
+              icon={() => {
+                return (
+                  <Icons.mapPin
+                    className="h-[20px] w-[20px] mr-2"
+                    color="teal"
+                  />
+                );
+              }}
+              color="teal"
+            >
+              <span className="flex flex-row items-center">
+                <>{data?.athleteProfile?.country?.name}</>
+                {data?.athleteProfile?.country?.flag ? (
+                  <Image
+                    alt="country_flag"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
+                    quality={100}
+                    priority
+                    width={30}
+                    height={30}
+                    src={data?.athleteProfile?.country?.flag}
+                    className="h-[30px] w-[30px] rounded-full ml-auto object-cover"
+                  />
+                ) : null}
+              </span>
+            </Callout>
+          </CardContent>
         </Card>
       </Grid>
     </main>

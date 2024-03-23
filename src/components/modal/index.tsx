@@ -13,11 +13,11 @@ import {
 interface ModalProps {
   isOpen: boolean;
   onOpenChange: () => void;
-  trigger: React.ReactNode | JSX.Element;
+  trigger?: React.ReactNode | JSX.Element;
   content: React.ReactNode | JSX.Element;
   contentClass?: string;
   label?: string;
-  isModal: boolean;
+  isModal?: boolean;
 }
 
 const ModalCard: FC<ModalProps> = ({
@@ -32,7 +32,12 @@ const ModalCard: FC<ModalProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange} modal={isModal}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className={cn("sm:max-w-[425px]", contentClass)}>
+      <DialogContent
+        className={cn(
+          "w-full sm:max-w-[425px] md:max-w-lg m-auto",
+          contentClass
+        )}
+      >
         {label ? (
           <DialogHeader>
             <DialogTitle>{label}</DialogTitle>

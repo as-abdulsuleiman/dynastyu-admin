@@ -26,11 +26,12 @@ import { Icons } from "../Icons";
 import { projectAuth } from "@/services/firebase/config";
 import { useRootStore } from "@/mobx";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { Title, Text, Divider } from "@tremor/react";
+import { Title, Text } from "@tremor/react";
 import { SelectCountry } from "../select-country";
 import SelectCity from "../select-city";
 import SelectState from "../select-state";
 import { useRouter } from "next/navigation";
+import { Separator } from "../ui/separator";
 
 type FormData = yup.InferType<typeof CoachValidator>;
 
@@ -278,7 +279,11 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
 
   return (
     <main className="w-full h-full">
-      <Button variant="ghost" className="mb-6" onClick={() => router.back()}>
+      <Button
+        variant="destructive"
+        className="mb-6"
+        onClick={() => router.back()}
+      >
         Go Back
       </Button>
       <div className="flex flex-col">
@@ -288,7 +293,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
         </div>
         <Text>Coach Overview</Text>
       </div>
-      <Divider></Divider>
+      <Separator className="my-6" />
       <form
         id="create_coach"
         name="create_coach"

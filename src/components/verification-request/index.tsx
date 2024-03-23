@@ -3,13 +3,13 @@
 "use client";
 
 import { FC, useState } from "react";
-import { Title, Text, Divider, Card, Badge } from "@tremor/react";
+import { Title, Text, Card, Badge } from "@tremor/react";
 import { Icons } from "../Icons";
 import {
   SortOrder,
   useGetSkillVerificationRequestQuery,
   useGetSkillVerificationRequestsLazyQuery,
-  useUpdateSkillVerificationMutation,
+  useUpdateSkillVerificationRequestMutation,
 } from "@/services/graphql";
 import UserAvatar from "../user-avatar";
 import HoverCard from "../hover-card";
@@ -21,6 +21,7 @@ import { formatDate } from "@/lib/utils";
 import MenubarCard from "../menubar";
 import { useRootStore } from "@/mobx";
 import MediaCard from "../media-card";
+import { Separator } from "../ui/separator";
 
 interface VerificationRequestProps {
   params: {
@@ -50,7 +51,8 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
   const [getSkillVerificationRequest] =
     useGetSkillVerificationRequestsLazyQuery();
 
-  const [updateSkillVerificationRequest] = useUpdateSkillVerificationMutation();
+  const [updateSkillVerificationRequest] =
+    useUpdateSkillVerificationRequestMutation();
 
   const { data, loading, refetch } = useGetSkillVerificationRequestQuery({
     variables: {
@@ -139,7 +141,11 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
 
   return (
     <main className="w-full h-full relative">
-      <Button variant="ghost" className="mb-6" onClick={() => router.back()}>
+      <Button
+        variant="destructive"
+        className="mb-6"
+        onClick={() => router.back()}
+      >
         Go Back
       </Button>
       <div className="flex flex-col">
@@ -149,7 +155,7 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
         </div>
         <Text>Skill Overview</Text>
       </div>
-      <Divider></Divider>
+      <Separator className="my-6" />
       <div className="flex-col hidden md:flex ">
         <Button
           disabled={isVerifying}

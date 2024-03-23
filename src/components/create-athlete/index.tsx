@@ -4,7 +4,7 @@
 
 import { FC, useCallback, useMemo, useState } from "react";
 import { Button } from "../ui/button";
-import { Title, Text, Divider } from "@tremor/react";
+import { Title, Text } from "@tremor/react";
 import { useRouter } from "next/navigation";
 import { Icons } from "../Icons";
 import AvatarUploader from "../avatar-uploader";
@@ -28,6 +28,7 @@ import SelectState from "../select-state";
 import SelectCity from "../select-city";
 import { useToast } from "@/hooks/use-toast";
 import SuspenseLoader from "../suspense-loader";
+import { Separator } from "../ui/separator";
 
 type FormData = yup.InferType<typeof AthleteValidator>;
 
@@ -265,7 +266,7 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
   return (
     <main className="w-full h-full">
       <Button
-        variant="ghost"
+        variant="destructive"
         className="mb-6"
         onClick={() => {
           router.back();
@@ -282,7 +283,7 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
         </div>
         <Text>Athlete Overview</Text>
       </div>
-      <Divider></Divider>
+      <Separator className="my-6" />
       <form
         id="create_athlete"
         name="create_athlete"

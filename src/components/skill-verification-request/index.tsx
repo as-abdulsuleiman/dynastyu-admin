@@ -3,16 +3,8 @@
 "use client";
 
 import { FC, useEffect, useMemo, useState } from "react";
-import {
-  Divider,
-  Title,
-  TableRow,
-  TableCell,
-  Flex,
-  Badge,
-  Grid,
-  TextInput,
-} from "@tremor/react";
+import { Title, Flex, Badge, Grid, TextInput } from "@tremor/react";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
 import {
   GetSkillVerificationRequestsQuery,
@@ -20,7 +12,6 @@ import {
   SkillVerificationRequestWhereInput,
   SortOrder,
   useGetSkillVerificationRequestsQuery,
-  useUpdateSkillVerificationMutation,
 } from "@/services/graphql";
 import { Icons } from "../Icons";
 import UniversalTable from "@/components/universal-table";
@@ -31,8 +22,10 @@ import { useDebouncedValue } from "@mantine/hooks";
 import MenubarCard from "../menubar";
 import SkillIcon from "../Icons/skill";
 import { observer } from "mobx-react-lite";
-import SkillVerificationRequestCount from "../counts/skill-verification-request-count";
+import SkillVerificationRequestCountStatCard from "@/components/stat-cards/skill-verification-request-count";
 import { formatDate } from "@/lib/utils";
+import { Separator } from "../ui/separator";
+import { SearchInput } from "../search-input";
 
 interface SkillVerificationRequestProps {}
 
@@ -68,8 +61,6 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
   const [status, setStatus] = useState<string>("Not Verified");
   const [value, setValue] = useState<string>("");
   const [debounced] = useDebouncedValue(value, 300);
-
-  const [updateSkillVerification] = useUpdateSkillVerificationMutation();
 
   const { data, loading, refetch, fetchMore } =
     useGetSkillVerificationRequestsQuery({
@@ -245,9 +236,8 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
         }
       >
         <TableCell>
-          <Flex
-            alignItems="center"
-            justifyContent="start"
+          <div
+            className="flex flex-row items-center justify-start"
             onClick={() =>
               router.push(`/skill-types/verification-request/${item?.id}`)
             }
@@ -260,17 +250,21 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
                 0
               )} ${item?.user?.surname?.charAt(0)}`}
             />
-            <div className="ml-4 cursor-pointer">
+            <div className="ml-4 cursor-pointer text-base">
               {item?.user?.firstname} {item?.user?.firstname}
             </div>
-          </Flex>
+          </div>
         </TableCell>
-        <TableCell className="text-center">@{item?.user?.username}</TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
+          @{item?.user?.username}
+        </TableCell>
+        <TableCell className="text-center text-sm">
           {item?.skill?.skillType?.name}
         </TableCell>
-        <TableCell className="text-center">{item?.user?.email}</TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
+          {item?.user?.email}
+        </TableCell>
+        <TableCell className="text-center text-sm">
           {item?.id === selectedUser && isActivating ? (
             <div className="text-center flex flex-row justify-center items-center">
               <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin" />
@@ -293,12 +287,12 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
             </Badge>
           )}
         </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
           <div>
             {item.createdAt ? formatDate(item?.createdAt, "dd MMM yyyy") : ""}
           </div>
         </TableCell>
-        <TableCell className="text-center cursor-pointer ">
+        <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
               trigger={<Icons.moreHorizontal className="cursor-pointer" />}
@@ -321,19 +315,23 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
           />
         </div>
       </div>
-      <Divider></Divider>
+      <Separator className="my-6" />
       <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
-        <SkillVerificationRequestCount />
+        <SkillVerificationRequestCountStatCard />
       </Grid>
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-        <TextInput
+        <SearchInput
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Type to search..."
+        />
+        {/* <TextInput
           className="h-[38px]"
           icon={() => {
             return <Icons.search className="h-10 w-5 ml-2.5" />;
           }}
           onValueChange={(e) => setValue(e)}
           placeholder="Type to search..."
-        />
+        /> */}
         <SelectCard
           className="ring-0 bg-background dark:bg-dark-background"
           items={filterItems}

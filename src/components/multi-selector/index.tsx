@@ -1,22 +1,29 @@
 /** @format */
 
 import { FC, ReactNode } from "react";
-import { MultiSelect, MultiSelectItem } from "@tremor/react";
+import {
+  MultiSelect,
+  MultiSelectItem,
+  SearchSelect,
+  SearchSelectItem,
+} from "@tremor/react";
 import { UserCircleIcon } from "@heroicons/react/outline";
 import { cn } from "@/lib/utils";
+import { Checkbox } from "../ui/checkbox";
+import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 
 interface MultiSelectorProps {
   items: Items[];
   selectedItem: string[];
   onValueChange: (e: any) => void;
-  className: string;
+  className?: string;
   placeholder?: string;
-  defaultValue?: string;
+  defaultValue?: string[];
+  placeholderSearch?: string;
 }
 type Items = {
   name: string;
   value: string;
-  icon?: ReactNode;
 };
 
 const MultiSelector: FC<MultiSelectorProps> = ({
@@ -26,26 +33,29 @@ const MultiSelector: FC<MultiSelectorProps> = ({
   className,
   placeholder,
   defaultValue,
+  placeholderSearch,
 }) => {
   return (
     <MultiSelect
-      className={cn(
-        "dark:bg-dark-tremor-background bg-background dark:bg-dark-background hover:bg-transparent dark:hover:bg-dark-bg-transparent",
-        className
-      )}
+      className={cn("", className)}
       value={selectedItem}
       placeholder={placeholder || "Filter by..."}
+      placeholderSearch={placeholderSearch}
       onValueChange={onValueChange}
+      // icon={UserCircleIcon}
     >
-      {items?.map((a, index) => {
+      {/* <SearchSelectItem icon={UserCircleIcon} value="5">
+        Very Long DropdownItem Value as an edge case
+      </SearchSelectItem> */}
+      {items?.map((val, index) => {
         return (
           <MultiSelectItem
             key={index}
-            value={a?.value}
+            value={val.value}
+            className="cursor-pointer"
             // icon={UserCircleIcon}
-            className="cursor-pointer bg-background dark:bg-dark-background"
           >
-            {a?.name}
+            {val.name}
           </MultiSelectItem>
         );
       })}

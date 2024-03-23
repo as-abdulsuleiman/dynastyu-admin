@@ -1,8 +1,9 @@
 /** @format */
 
 import * as Yup from "yup";
-const hudlPattern = /^https:\/\/app\.dynastyu\.com\/user\/\d+$/;
+// const hudlPattern = /^https:\/\/app\.dynastyu\.com\/user\/\d+$/;
 // const hudlPattern = /^https:\/\/www\.hudl\.com\/video\/\w+/;
+const hudlPattern = /^https:\/\/www\.hudl\.com\/video\/[a-zA-Z0-9]+$/;
 
 export const AthleteValidator = Yup.object({
   email: Yup.string()
