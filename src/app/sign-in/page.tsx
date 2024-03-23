@@ -26,7 +26,7 @@ const Page: FC<SignInProps> = ({}) => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm({
     mode: "onBlur",
     resolver: yupResolver(SignInValidator),
@@ -91,7 +91,7 @@ const Page: FC<SignInProps> = ({}) => {
             className="mt-3 w-full"
             size="lg"
             variant="default"
-            disabled={isSubmitting || !isValid}
+            disabled={isSubmitting || !isDirty}
             type="submit"
           >
             {isSubmitting ? (

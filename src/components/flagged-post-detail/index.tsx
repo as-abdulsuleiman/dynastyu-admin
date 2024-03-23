@@ -8,12 +8,14 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { useGetPostFlagQuery } from "@/services/graphql";
-import { Title, Text, Divider, Card } from "@tremor/react";
+import { Title, Text } from "@tremor/react";
 import MediaCard from "../media-card";
 import FlagOffIcon from "@/components/Icons/flag-off";
 import TabCard from "../tab-card";
 import UserAvatar from "../user-avatar";
 import { Icons } from "../Icons";
+import { Card, CardContent } from "../ui/card";
+import { Separator } from "../ui/separator";
 
 interface FlaggedPostDetailProps {
   params: {
@@ -51,7 +53,6 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
           />
           <div className="ml-3">
             <div>
-              {" "}
               {post?.user?.firstname} {""}
               {post?.user?.surname}
             </div>
@@ -95,9 +96,14 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
     data?.postFlag?.post?.videos && data?.postFlag?.post?.videos?.length;
   return (
     <main className="w-full h-full relative">
-      <Button variant="ghost" className="mb-6" onClick={() => router.back()}>
+      <Button
+        variant="destructive"
+        className="mb-6"
+        onClick={() => router.back()}
+      >
         Go Back
       </Button>
+
       <div className="flex flex-col">
         <div className="flex flex-row items-center">
           <Title>Flagged Post</Title>
@@ -105,7 +111,15 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
         </div>
         <Text>Flagged Post Details</Text>
       </div>
-      <Divider></Divider>
+      <Separator className="my-6" />
+
+      <TabCard
+        tabs={[{ name: "Posted By" }, { name: "Flagged By" }]}
+        tabContent={[
+          { content: renderPostedBy(data?.postFlag?.post) },
+          { content: renderFlaggedBy(data?.postFlag?.user) },
+        ]}
+      />
       <Button
         variant="default"
         className="my-6 ml-auto flex flex-row"
@@ -114,25 +128,20 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
       >
         Disable Post
       </Button>
-      <Card className="">
-        <MediaCard
-          loading={loading}
-          caption={data?.postFlag?.post?.caption}
-          items={
-            (!isImageType
-              ? data?.postFlag?.post?.images
-              : data?.postFlag?.post?.videos) || []
-          }
-          type={!isImageType ? "image" : "video"}
-        />
+      <Card>
+        <CardContent className="p-6">
+          <MediaCard
+            loading={loading}
+            caption={data?.postFlag?.post?.caption}
+            items={
+              (!isImageType
+                ? data?.postFlag?.post?.images
+                : data?.postFlag?.post?.videos) || []
+            }
+            type={!isImageType ? "image" : "video"}
+          />
+        </CardContent>
       </Card>
-      <TabCard
-        tabs={[{ name: "Posted By" }, { name: "Flagged By" }]}
-        tabContent={[
-          { content: renderPostedBy(data?.postFlag?.post) },
-          { content: renderFlaggedBy(data?.postFlag?.user) },
-        ]}
-      />
     </main>
   );
 };

@@ -3,21 +3,13 @@
 "use client";
 
 import { FC, useEffect, useMemo, useState } from "react";
-import {
-  Title,
-  Text,
-  Divider,
-  Flex,
-  Grid,
-  TableCell,
-  TableRow,
-  Badge,
-} from "@tremor/react";
+import { Title, Grid, Badge } from "@tremor/react";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOfflineIcon, StatusOnlineIcon } from "@heroicons/react/outline";
 import { useDebouncedValue } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import SelectCard from "@/components/select";
-import UsersCount from "@/components/counts/users";
+import UserStatCard from "@/components/stat-cards/user";
 import Pagination from "@/components/pagination";
 import UniversalTable from "@/components/universal-table";
 import { observer } from "mobx-react-lite";
@@ -38,6 +30,7 @@ import {
 } from "@/services/graphql";
 import { SearchInput } from "@/components/search-input";
 import MenubarCard from "@/components/menubar";
+import { Separator } from "@/components/ui/separator";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -309,9 +302,8 @@ const Users: FC<UsersProps> = ({}) => {
     return (
       <TableRow key={item?.id}>
         <TableCell>
-          <Flex
-            alignItems="center"
-            justifyContent="start"
+          <div
+            className="flex flex-row items-center justify-start"
             onClick={() =>
               router.push(`/${userType}/${Number(userId)}`, { scroll: true })
             }
@@ -324,21 +316,17 @@ const Users: FC<UsersProps> = ({}) => {
                 0
               )}`}
             />
-            <Text className="ml-2 cursor-pointer">
+            <div className="ml-2 cursor-pointer">
               {item?.firstname} {item?.surname}
-            </Text>
-          </Flex>
+            </div>
+          </div>
         </TableCell>
-        <TableCell className="text-center">
-          <Text>@{item?.username}</Text>
+        <TableCell className="text-center text-sm">@{item?.username}</TableCell>
+        <TableCell className="text-center text-sm">
+          {item.accountType?.role?.title}
         </TableCell>
-        <TableCell className="text-center">
-          <Text>{item.accountType?.role?.title}</Text>
-        </TableCell>
-        <TableCell className="text-center">
-          <Text>{item?.email}</Text>
-        </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">{item?.email}</TableCell>
+        <TableCell className="text-center text-sm">
           {item?.id === selectedUser && isActivating ? (
             <div className="text-center flex flex-row justify-center items-center">
               <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin" />
@@ -347,9 +335,8 @@ const Users: FC<UsersProps> = ({}) => {
           ) : (
             <Badge
               size="xs"
-              className="cursor-pointer"
+              className="cursor-pointer text-sm"
               color={item?.isActive ? "teal" : "rose"}
-              // tooltip="decrease"
               icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
               datatype="moderateDecrease"
             >
@@ -357,7 +344,7 @@ const Users: FC<UsersProps> = ({}) => {
             </Badge>
           )}
         </TableCell>
-        <TableCell>
+        <TableCell className="text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
               trigger={<Icons.moreHorizontal className="cursor-pointer" />}
@@ -373,16 +360,15 @@ const Users: FC<UsersProps> = ({}) => {
     <main className="w-full h-full">
       <Title>Users</Title>
       {/* <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text> */}
-      <Divider></Divider>
+      <Separator className="my-6" />
 
       <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
-        <UsersCount />
-        {/* <UsersAnalytics /> */}
+        <UserStatCard />
       </Grid>
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
         <SearchInput
           onChange={(e) => setValue(e.target.value)}
-          placeholder="Search..."
+          placeholder="Type to search..."
         />
         {/* <TextInput
                 className="bg-background dark:bg-dark-background"

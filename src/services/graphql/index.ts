@@ -25890,7 +25890,7 @@ export type GetCoachesQueryVariables = Exact<{
 }>;
 
 
-export type GetCoachesQuery = { __typename?: 'Query', coachProfiles: Array<{ __typename?: 'CoachProfile', id: any, title?: string | null, schoolId: any, verified: boolean, city?: string | null, state?: string | null, canReceiveMessages?: boolean | null, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null }, user: { __typename?: 'User', firstname: string, surname: string, id: any, username?: string | null, avatar?: string | null, isActive: boolean, roleId?: any | null, email: string, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null } } }> };
+export type GetCoachesQuery = { __typename?: 'Query', coachProfiles: Array<{ __typename?: 'CoachProfile', id: any, title?: string | null, schoolId: any, verified: boolean, createdAt: any, city?: string | null, state?: string | null, canReceiveMessages?: boolean | null, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null }, user: { __typename?: 'User', firstname: string, surname: string, id: any, username?: string | null, avatar?: string | null, isActive: boolean, roleId?: any | null, email: string, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null } } }> };
 
 export type RegisterCoachMutationVariables = Exact<{
   data: UserCreateInput;
@@ -25904,7 +25904,7 @@ export type GetCoachQueryVariables = Exact<{
 }>;
 
 
-export type GetCoachQuery = { __typename?: 'Query', coachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, schoolId: any, verified: boolean, city?: string | null, state?: string | null, canReceiveMessages?: boolean | null, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } }, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, user: { __typename?: 'User', firstname: string, surname: string, id: any, username?: string | null, avatar?: string | null, isActive: boolean, email: string, dob?: any | null, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null }, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, reposts: number, comments: number, interestedSchools: number, evaluationsCreated: number, prospectedSchools: number } | null } } | null };
+export type GetCoachQuery = { __typename?: 'Query', coachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, schoolId: any, verified: boolean, city?: string | null, state?: string | null, createdAt: any, canReceiveMessages?: boolean | null, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } }, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, user: { __typename?: 'User', firstname: string, surname: string, id: any, username?: string | null, avatar?: string | null, isActive: boolean, email: string, dob?: any | null, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null }, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, reposts: number, comments: number, interestedSchools: number, evaluationsCreated: number, prospectedSchools: number } | null } } | null };
 
 export type UpdateCoachMutationVariables = Exact<{
   data: CoachProfileUpdateInput;
@@ -26248,6 +26248,18 @@ export type DeleteSchoolMutationVariables = Exact<{
 
 export type DeleteSchoolMutation = { __typename?: 'Mutation', deleteOneSchool?: { __typename?: 'School', id: any, uuid: string, email: string } | null };
 
+export type GetManySkillsQueryVariables = Exact<{
+  where?: InputMaybe<SkillsWhereInput>;
+  orderBy?: InputMaybe<Array<SkillsOrderByWithRelationInput> | SkillsOrderByWithRelationInput>;
+  cursor?: InputMaybe<SkillsWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  distinct?: InputMaybe<Array<SkillsScalarFieldEnum> | SkillsScalarFieldEnum>;
+}>;
+
+
+export type GetManySkillsQuery = { __typename?: 'Query', findFirstSkills?: { __typename?: 'Skills', id: any, skillId: any, videos: Array<string>, athleteId?: any | null, secondValue?: string | null, value: string, skillType: { __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string> }, athlete?: { __typename?: 'AthleteProfile', id: any } | null } | null };
+
 export type GetSkillTypesQueryVariables = Exact<{
   where?: InputMaybe<SkillTypeWhereInput>;
   orderBy?: InputMaybe<Array<SkillTypeOrderByWithRelationInput> | SkillTypeOrderByWithRelationInput>;
@@ -26258,27 +26270,14 @@ export type GetSkillTypesQueryVariables = Exact<{
 }>;
 
 
-export type GetSkillTypesQuery = { __typename?: 'Query', skillTypes: Array<{ __typename?: 'SkillType', name: string, id: any, uuid: string, mask: Array<string>, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, position?: number | null, icon?: string | null, _count?: { __typename?: 'SkillTypeCount', skills: number } | null }> };
+export type GetSkillTypesQuery = { __typename?: 'Query', skillTypes: Array<{ __typename?: 'SkillType', name: string, id: any, uuid: string, mask: Array<string>, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, _count?: { __typename?: 'SkillTypeCount', skills: number } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, skillId: any, secondValue?: string | null, value: string, athleteId?: any | null, verified: boolean, createdAt: any, skillHistory: Array<{ __typename?: 'SkillHistory', id: any, uuid: string, skillId: any, value: string, secondValue?: string | null, athleteId: any }>, skillVerificationRequests: Array<{ __typename?: 'SkillVerificationRequest', id: any, uuid: string, userId: any, skillId: any }> }> }> };
 
-export type GetSkillsQueryVariables = Exact<{
-  where?: InputMaybe<SkillsWhereInput>;
-  orderBy?: InputMaybe<Array<SkillsOrderByWithRelationInput> | SkillsOrderByWithRelationInput>;
-  cursor?: InputMaybe<SkillsWhereUniqueInput>;
-  take?: InputMaybe<Scalars['Int']['input']>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  distinct?: InputMaybe<Array<SkillsScalarFieldEnum> | SkillsScalarFieldEnum>;
+export type GetSkillTypeQueryVariables = Exact<{
+  where: SkillTypeWhereUniqueInput;
 }>;
 
 
-export type GetSkillsQuery = { __typename?: 'Query', findManySkills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, secondValue?: string | null, value: string, skillType: { __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string> }, athlete?: { __typename?: 'AthleteProfile', id: any } | null }> };
-
-export type SkillsTypesQueryVariables = Exact<{
-  where?: InputMaybe<SkillsWhereInput>;
-  orderBy?: InputMaybe<Array<SkillTypeOrderByWithRelationInput> | SkillTypeOrderByWithRelationInput>;
-}>;
-
-
-export type SkillsTypesQuery = { __typename?: 'Query', skillTypes: Array<{ __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, description?: string | null, unit: string, position?: number | null, icon?: string | null, _count?: { __typename?: 'SkillTypeCount', skills: number } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, secondValue?: string | null, value: string }> }> };
+export type GetSkillTypeQuery = { __typename?: 'Query', skillType?: { __typename?: 'SkillType', id: any, uuid: string, name: string, mask: Array<string>, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, position?: number | null, icon?: string | null, isPrimaryForRecruitment: boolean, _count?: { __typename?: 'SkillTypeCount', skills: number } | null } | null };
 
 export type CreateSkillMutationVariables = Exact<{
   data: SkillsCreateInput;
@@ -26311,13 +26310,13 @@ export type CreateOneSkillVerificationMutationVariables = Exact<{
 
 export type CreateOneSkillVerificationMutation = { __typename?: 'Mutation', createOneSkillVerificationRequest: { __typename?: 'SkillVerificationRequest', id: any, uuid: string, skillId: any, userId: any, campId?: any | null } };
 
-export type UpdateSkillVerificationMutationVariables = Exact<{
+export type UpdateSkillVerificationRequestMutationVariables = Exact<{
   data: SkillVerificationRequestUpdateInput;
   where: SkillVerificationRequestWhereUniqueInput;
 }>;
 
 
-export type UpdateSkillVerificationMutation = { __typename?: 'Mutation', updateOneSkillVerificationRequest?: { __typename?: 'SkillVerificationRequest', id: any, uuid: string, skillId: any, userId: any, campId?: any | null } | null };
+export type UpdateSkillVerificationRequestMutation = { __typename?: 'Mutation', updateOneSkillVerificationRequest?: { __typename?: 'SkillVerificationRequest', id: any, uuid: string, skillId: any, userId: any, campId?: any | null } | null };
 
 export type GetSkillVerificationRequestsQueryVariables = Exact<{
   where?: InputMaybe<SkillVerificationRequestWhereInput>;
@@ -26337,6 +26336,49 @@ export type GetSkillVerificationRequestQueryVariables = Exact<{
 
 
 export type GetSkillVerificationRequestQuery = { __typename?: 'Query', skillVerificationRequest?: { __typename?: 'SkillVerificationRequest', id: any, uuid: string, dateOfVerfication?: any | null, verified: boolean, createdAt: any, updatedAt: any, skillId: any, userId: any, skill: { __typename?: 'Skills', id: any, athleteId?: any | null, videos: Array<string>, secondValue?: string | null, value: string, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, skills: Array<{ __typename?: 'Skills', value: string }> } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null, avatar?: string | null, email: string, athleteProfile?: { __typename?: 'AthleteProfile', id: any, verified: boolean, userId: any, verifiedBy?: { __typename?: 'CoachProfile', title?: string | null, user: { __typename?: 'User', username?: string | null, firstname: string, surname: string } } | null } | null }, camp?: { __typename?: 'Camp', name: string, id: any, uuid: string, address: string, description?: string | null } | null } | null };
+
+export type CreateSkillTypeMutationVariables = Exact<{
+  data: SkillTypeCreateInput;
+}>;
+
+
+export type CreateSkillTypeMutation = { __typename?: 'Mutation', createOneSkillType: { __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, description?: string | null, position?: number | null, isPrimaryForRecruitment: boolean, unit: string } };
+
+export type UpdateSkillTypeMutationVariables = Exact<{
+  data: SkillTypeUpdateInput;
+  where: SkillTypeWhereUniqueInput;
+}>;
+
+
+export type UpdateSkillTypeMutation = { __typename?: 'Mutation', updateOneSkillType?: { __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, description?: string | null, position?: number | null, isPrimaryForRecruitment: boolean, unit: string } | null };
+
+export type DeleteSkillTypeMutationVariables = Exact<{
+  where: SkillTypeWhereUniqueInput;
+}>;
+
+
+export type DeleteSkillTypeMutation = { __typename?: 'Mutation', deleteOneSkillType?: { __typename?: 'SkillType', id: any, uuid: string, name: string } | null };
+
+export type DeleteManySkillVerificationRequestMutationVariables = Exact<{
+  where?: InputMaybe<SkillVerificationRequestWhereInput>;
+}>;
+
+
+export type DeleteManySkillVerificationRequestMutation = { __typename?: 'Mutation', deleteManySkillVerificationRequest: { __typename?: 'AffectedRowsOutput', count: number } };
+
+export type DeleteManySkillsMutationVariables = Exact<{
+  where?: InputMaybe<SkillsWhereInput>;
+}>;
+
+
+export type DeleteManySkillsMutation = { __typename?: 'Mutation', deleteManySkills: { __typename?: 'AffectedRowsOutput', count: number } };
+
+export type DeleteManySkillHistoryMutationVariables = Exact<{
+  where?: InputMaybe<SkillHistoryWhereInput>;
+}>;
+
+
+export type DeleteManySkillHistoryMutation = { __typename?: 'Mutation', deleteManySkillHistory: { __typename?: 'AffectedRowsOutput', count: number } };
 
 export type UserCommonPartsFragment = { __typename?: 'User', id: any, firstname: string, surname: string, email: string, isActive: boolean, avatar?: string | null, dob?: any | null, username?: string | null, address?: string | null, firebaseUid: string, city?: string | null, state?: string | null, createdAt: any, accountTypeId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, comments: number, postLikes: number, commentLikes: number, postReports: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluationsCreated: number, postFlag: number, blockedByUsers: number, blockedUsers: number, reposts: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, schoolId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } };
 
@@ -27369,6 +27411,7 @@ export const GetCoachesDocument = gql`
     title
     schoolId
     verified
+    createdAt
     country {
       name
       flag
@@ -27498,6 +27541,7 @@ export const GetCoachDocument = gql`
     verified
     city
     state
+    createdAt
     _count {
       verifiedAthletes
     }
@@ -29620,6 +29664,75 @@ export function useDeleteSchoolMutation(baseOptions?: ApolloReactHooks.MutationH
 export type DeleteSchoolMutationHookResult = ReturnType<typeof useDeleteSchoolMutation>;
 export type DeleteSchoolMutationResult = Apollo.MutationResult<DeleteSchoolMutation>;
 export type DeleteSchoolMutationOptions = Apollo.BaseMutationOptions<DeleteSchoolMutation, DeleteSchoolMutationVariables>;
+export const GetManySkillsDocument = gql`
+    query getManySkills($where: SkillsWhereInput, $orderBy: [SkillsOrderByWithRelationInput!], $cursor: SkillsWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SkillsScalarFieldEnum!]) {
+  findFirstSkills(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    id
+    skillId
+    videos
+    athleteId
+    secondValue
+    value
+    skillType {
+      id
+      name
+      options
+      numberOfVideos
+      secondFieldName
+      secondValueOptions
+      videosLabels
+    }
+    athlete {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetManySkillsQuery__
+ *
+ * To run a query within a React component, call `useGetManySkillsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetManySkillsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetManySkillsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      distinct: // value for 'distinct'
+ *   },
+ * });
+ */
+export function useGetManySkillsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetManySkillsQuery, GetManySkillsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetManySkillsQuery, GetManySkillsQueryVariables>(GetManySkillsDocument, options);
+      }
+export function useGetManySkillsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetManySkillsQuery, GetManySkillsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetManySkillsQuery, GetManySkillsQueryVariables>(GetManySkillsDocument, options);
+        }
+export function useGetManySkillsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetManySkillsQuery, GetManySkillsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetManySkillsQuery, GetManySkillsQueryVariables>(GetManySkillsDocument, options);
+        }
+export type GetManySkillsQueryHookResult = ReturnType<typeof useGetManySkillsQuery>;
+export type GetManySkillsLazyQueryHookResult = ReturnType<typeof useGetManySkillsLazyQuery>;
+export type GetManySkillsSuspenseQueryHookResult = ReturnType<typeof useGetManySkillsSuspenseQuery>;
+export type GetManySkillsQueryResult = Apollo.QueryResult<GetManySkillsQuery, GetManySkillsQueryVariables>;
 export const GetSkillTypesDocument = gql`
     query getSkillTypes($where: SkillTypeWhereInput, $orderBy: [SkillTypeOrderByWithRelationInput!], $cursor: SkillTypeWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SkillTypeScalarFieldEnum!]) {
   skillTypes(
@@ -29641,10 +29754,33 @@ export const GetSkillTypesDocument = gql`
     description
     secondValueOptions
     videosLabels
-    position
-    icon
     _count {
       skills
+    }
+    skills {
+      id
+      videos
+      skillId
+      secondValue
+      value
+      athleteId
+      verified
+      createdAt
+      skillId
+      skillHistory {
+        id
+        uuid
+        skillId
+        value
+        secondValue
+        athleteId
+      }
+      skillVerificationRequests {
+        id
+        uuid
+        userId
+        skillId
+      }
     }
   }
 }
@@ -29687,133 +29823,62 @@ export type GetSkillTypesQueryHookResult = ReturnType<typeof useGetSkillTypesQue
 export type GetSkillTypesLazyQueryHookResult = ReturnType<typeof useGetSkillTypesLazyQuery>;
 export type GetSkillTypesSuspenseQueryHookResult = ReturnType<typeof useGetSkillTypesSuspenseQuery>;
 export type GetSkillTypesQueryResult = Apollo.QueryResult<GetSkillTypesQuery, GetSkillTypesQueryVariables>;
-export const GetSkillsDocument = gql`
-    query getSkills($where: SkillsWhereInput, $orderBy: [SkillsOrderByWithRelationInput!], $cursor: SkillsWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SkillsScalarFieldEnum!]) {
-  findManySkills(
-    where: $where
-    orderBy: $orderBy
-    take: $take
-    skip: $skip
-    distinct: $distinct
-    cursor: $cursor
-  ) {
+export const GetSkillTypeDocument = gql`
+    query getSkillType($where: SkillTypeWhereUniqueInput!) {
+  skillType(where: $where) {
     id
-    videos
-    secondValue
-    value
-    skillType {
-      id
-      name
-      options
-      numberOfVideos
-      secondFieldName
-      secondValueOptions
-      videosLabels
-    }
-    athlete {
-      id
-    }
-  }
-}
-    `;
-
-/**
- * __useGetSkillsQuery__
- *
- * To run a query within a React component, call `useGetSkillsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetSkillsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetSkillsQuery({
- *   variables: {
- *      where: // value for 'where'
- *      orderBy: // value for 'orderBy'
- *      cursor: // value for 'cursor'
- *      take: // value for 'take'
- *      skip: // value for 'skip'
- *      distinct: // value for 'distinct'
- *   },
- * });
- */
-export function useGetSkillsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetSkillsQuery, GetSkillsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<GetSkillsQuery, GetSkillsQueryVariables>(GetSkillsDocument, options);
-      }
-export function useGetSkillsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetSkillsQuery, GetSkillsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<GetSkillsQuery, GetSkillsQueryVariables>(GetSkillsDocument, options);
-        }
-export function useGetSkillsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetSkillsQuery, GetSkillsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useSuspenseQuery<GetSkillsQuery, GetSkillsQueryVariables>(GetSkillsDocument, options);
-        }
-export type GetSkillsQueryHookResult = ReturnType<typeof useGetSkillsQuery>;
-export type GetSkillsLazyQueryHookResult = ReturnType<typeof useGetSkillsLazyQuery>;
-export type GetSkillsSuspenseQueryHookResult = ReturnType<typeof useGetSkillsSuspenseQuery>;
-export type GetSkillsQueryResult = Apollo.QueryResult<GetSkillsQuery, GetSkillsQueryVariables>;
-export const SkillsTypesDocument = gql`
-    query skillsTypes($where: SkillsWhereInput, $orderBy: [SkillTypeOrderByWithRelationInput!]) {
-  skillTypes(orderBy: $orderBy) {
-    id
+    uuid
     name
+    mask
+    unit
     options
     numberOfVideos
     secondFieldName
+    description
     secondValueOptions
     videosLabels
-    description
-    unit
     position
     icon
+    isPrimaryForRecruitment
     _count {
       skills
-    }
-    skills(where: $where) {
-      id
-      videos
-      secondValue
-      value
     }
   }
 }
     `;
 
 /**
- * __useSkillsTypesQuery__
+ * __useGetSkillTypeQuery__
  *
- * To run a query within a React component, call `useSkillsTypesQuery` and pass it any options that fit your needs.
- * When your component renders, `useSkillsTypesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetSkillTypeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSkillTypeQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useSkillsTypesQuery({
+ * const { data, loading, error } = useGetSkillTypeQuery({
  *   variables: {
  *      where: // value for 'where'
- *      orderBy: // value for 'orderBy'
  *   },
  * });
  */
-export function useSkillsTypesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SkillsTypesQuery, SkillsTypesQueryVariables>) {
+export function useGetSkillTypeQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetSkillTypeQuery, GetSkillTypeQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<SkillsTypesQuery, SkillsTypesQueryVariables>(SkillsTypesDocument, options);
+        return ApolloReactHooks.useQuery<GetSkillTypeQuery, GetSkillTypeQueryVariables>(GetSkillTypeDocument, options);
       }
-export function useSkillsTypesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SkillsTypesQuery, SkillsTypesQueryVariables>) {
+export function useGetSkillTypeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetSkillTypeQuery, GetSkillTypeQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<SkillsTypesQuery, SkillsTypesQueryVariables>(SkillsTypesDocument, options);
+          return ApolloReactHooks.useLazyQuery<GetSkillTypeQuery, GetSkillTypeQueryVariables>(GetSkillTypeDocument, options);
         }
-export function useSkillsTypesSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<SkillsTypesQuery, SkillsTypesQueryVariables>) {
+export function useGetSkillTypeSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetSkillTypeQuery, GetSkillTypeQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useSuspenseQuery<SkillsTypesQuery, SkillsTypesQueryVariables>(SkillsTypesDocument, options);
+          return ApolloReactHooks.useSuspenseQuery<GetSkillTypeQuery, GetSkillTypeQueryVariables>(GetSkillTypeDocument, options);
         }
-export type SkillsTypesQueryHookResult = ReturnType<typeof useSkillsTypesQuery>;
-export type SkillsTypesLazyQueryHookResult = ReturnType<typeof useSkillsTypesLazyQuery>;
-export type SkillsTypesSuspenseQueryHookResult = ReturnType<typeof useSkillsTypesSuspenseQuery>;
-export type SkillsTypesQueryResult = Apollo.QueryResult<SkillsTypesQuery, SkillsTypesQueryVariables>;
+export type GetSkillTypeQueryHookResult = ReturnType<typeof useGetSkillTypeQuery>;
+export type GetSkillTypeLazyQueryHookResult = ReturnType<typeof useGetSkillTypeLazyQuery>;
+export type GetSkillTypeSuspenseQueryHookResult = ReturnType<typeof useGetSkillTypeSuspenseQuery>;
+export type GetSkillTypeQueryResult = Apollo.QueryResult<GetSkillTypeQuery, GetSkillTypeQueryVariables>;
 export const CreateSkillDocument = gql`
     mutation createSkill($data: SkillsCreateInput!) {
   createOneSkills(data: $data) {
@@ -29967,8 +30032,8 @@ export function useCreateOneSkillVerificationMutation(baseOptions?: ApolloReactH
 export type CreateOneSkillVerificationMutationHookResult = ReturnType<typeof useCreateOneSkillVerificationMutation>;
 export type CreateOneSkillVerificationMutationResult = Apollo.MutationResult<CreateOneSkillVerificationMutation>;
 export type CreateOneSkillVerificationMutationOptions = Apollo.BaseMutationOptions<CreateOneSkillVerificationMutation, CreateOneSkillVerificationMutationVariables>;
-export const UpdateSkillVerificationDocument = gql`
-    mutation updateSkillVerification($data: SkillVerificationRequestUpdateInput!, $where: SkillVerificationRequestWhereUniqueInput!) {
+export const UpdateSkillVerificationRequestDocument = gql`
+    mutation updateSkillVerificationRequest($data: SkillVerificationRequestUpdateInput!, $where: SkillVerificationRequestWhereUniqueInput!) {
   updateOneSkillVerificationRequest(data: $data, where: $where) {
     id
     uuid
@@ -29978,33 +30043,33 @@ export const UpdateSkillVerificationDocument = gql`
   }
 }
     `;
-export type UpdateSkillVerificationMutationFn = Apollo.MutationFunction<UpdateSkillVerificationMutation, UpdateSkillVerificationMutationVariables>;
+export type UpdateSkillVerificationRequestMutationFn = Apollo.MutationFunction<UpdateSkillVerificationRequestMutation, UpdateSkillVerificationRequestMutationVariables>;
 
 /**
- * __useUpdateSkillVerificationMutation__
+ * __useUpdateSkillVerificationRequestMutation__
  *
- * To run a mutation, you first call `useUpdateSkillVerificationMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateSkillVerificationMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateSkillVerificationRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSkillVerificationRequestMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateSkillVerificationMutation, { data, loading, error }] = useUpdateSkillVerificationMutation({
+ * const [updateSkillVerificationRequestMutation, { data, loading, error }] = useUpdateSkillVerificationRequestMutation({
  *   variables: {
  *      data: // value for 'data'
  *      where: // value for 'where'
  *   },
  * });
  */
-export function useUpdateSkillVerificationMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateSkillVerificationMutation, UpdateSkillVerificationMutationVariables>) {
+export function useUpdateSkillVerificationRequestMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateSkillVerificationRequestMutation, UpdateSkillVerificationRequestMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useMutation<UpdateSkillVerificationMutation, UpdateSkillVerificationMutationVariables>(UpdateSkillVerificationDocument, options);
+        return ApolloReactHooks.useMutation<UpdateSkillVerificationRequestMutation, UpdateSkillVerificationRequestMutationVariables>(UpdateSkillVerificationRequestDocument, options);
       }
-export type UpdateSkillVerificationMutationHookResult = ReturnType<typeof useUpdateSkillVerificationMutation>;
-export type UpdateSkillVerificationMutationResult = Apollo.MutationResult<UpdateSkillVerificationMutation>;
-export type UpdateSkillVerificationMutationOptions = Apollo.BaseMutationOptions<UpdateSkillVerificationMutation, UpdateSkillVerificationMutationVariables>;
+export type UpdateSkillVerificationRequestMutationHookResult = ReturnType<typeof useUpdateSkillVerificationRequestMutation>;
+export type UpdateSkillVerificationRequestMutationResult = Apollo.MutationResult<UpdateSkillVerificationRequestMutation>;
+export type UpdateSkillVerificationRequestMutationOptions = Apollo.BaseMutationOptions<UpdateSkillVerificationRequestMutation, UpdateSkillVerificationRequestMutationVariables>;
 export const GetSkillVerificationRequestsDocument = gql`
     query getSkillVerificationRequests($where: SkillVerificationRequestWhereInput, $orderBy: [SkillVerificationRequestOrderByWithRelationInput!], $cursor: SkillVerificationRequestWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SkillVerificationRequestScalarFieldEnum!]) {
   skillVerificationRequests(
@@ -30190,6 +30255,227 @@ export type GetSkillVerificationRequestQueryHookResult = ReturnType<typeof useGe
 export type GetSkillVerificationRequestLazyQueryHookResult = ReturnType<typeof useGetSkillVerificationRequestLazyQuery>;
 export type GetSkillVerificationRequestSuspenseQueryHookResult = ReturnType<typeof useGetSkillVerificationRequestSuspenseQuery>;
 export type GetSkillVerificationRequestQueryResult = Apollo.QueryResult<GetSkillVerificationRequestQuery, GetSkillVerificationRequestQueryVariables>;
+export const CreateSkillTypeDocument = gql`
+    mutation createSkillType($data: SkillTypeCreateInput!) {
+  createOneSkillType(data: $data) {
+    id
+    name
+    options
+    numberOfVideos
+    secondFieldName
+    secondValueOptions
+    videosLabels
+    description
+    position
+    isPrimaryForRecruitment
+    unit
+  }
+}
+    `;
+export type CreateSkillTypeMutationFn = Apollo.MutationFunction<CreateSkillTypeMutation, CreateSkillTypeMutationVariables>;
+
+/**
+ * __useCreateSkillTypeMutation__
+ *
+ * To run a mutation, you first call `useCreateSkillTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSkillTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSkillTypeMutation, { data, loading, error }] = useCreateSkillTypeMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateSkillTypeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateSkillTypeMutation, CreateSkillTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateSkillTypeMutation, CreateSkillTypeMutationVariables>(CreateSkillTypeDocument, options);
+      }
+export type CreateSkillTypeMutationHookResult = ReturnType<typeof useCreateSkillTypeMutation>;
+export type CreateSkillTypeMutationResult = Apollo.MutationResult<CreateSkillTypeMutation>;
+export type CreateSkillTypeMutationOptions = Apollo.BaseMutationOptions<CreateSkillTypeMutation, CreateSkillTypeMutationVariables>;
+export const UpdateSkillTypeDocument = gql`
+    mutation updateSkillType($data: SkillTypeUpdateInput!, $where: SkillTypeWhereUniqueInput!) {
+  updateOneSkillType(data: $data, where: $where) {
+    id
+    name
+    options
+    numberOfVideos
+    secondFieldName
+    secondValueOptions
+    videosLabels
+    description
+    position
+    isPrimaryForRecruitment
+    unit
+  }
+}
+    `;
+export type UpdateSkillTypeMutationFn = Apollo.MutationFunction<UpdateSkillTypeMutation, UpdateSkillTypeMutationVariables>;
+
+/**
+ * __useUpdateSkillTypeMutation__
+ *
+ * To run a mutation, you first call `useUpdateSkillTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSkillTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSkillTypeMutation, { data, loading, error }] = useUpdateSkillTypeMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useUpdateSkillTypeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateSkillTypeMutation, UpdateSkillTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateSkillTypeMutation, UpdateSkillTypeMutationVariables>(UpdateSkillTypeDocument, options);
+      }
+export type UpdateSkillTypeMutationHookResult = ReturnType<typeof useUpdateSkillTypeMutation>;
+export type UpdateSkillTypeMutationResult = Apollo.MutationResult<UpdateSkillTypeMutation>;
+export type UpdateSkillTypeMutationOptions = Apollo.BaseMutationOptions<UpdateSkillTypeMutation, UpdateSkillTypeMutationVariables>;
+export const DeleteSkillTypeDocument = gql`
+    mutation deleteSkillType($where: SkillTypeWhereUniqueInput!) {
+  deleteOneSkillType(where: $where) {
+    id
+    uuid
+    name
+  }
+}
+    `;
+export type DeleteSkillTypeMutationFn = Apollo.MutationFunction<DeleteSkillTypeMutation, DeleteSkillTypeMutationVariables>;
+
+/**
+ * __useDeleteSkillTypeMutation__
+ *
+ * To run a mutation, you first call `useDeleteSkillTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteSkillTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteSkillTypeMutation, { data, loading, error }] = useDeleteSkillTypeMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteSkillTypeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteSkillTypeMutation, DeleteSkillTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteSkillTypeMutation, DeleteSkillTypeMutationVariables>(DeleteSkillTypeDocument, options);
+      }
+export type DeleteSkillTypeMutationHookResult = ReturnType<typeof useDeleteSkillTypeMutation>;
+export type DeleteSkillTypeMutationResult = Apollo.MutationResult<DeleteSkillTypeMutation>;
+export type DeleteSkillTypeMutationOptions = Apollo.BaseMutationOptions<DeleteSkillTypeMutation, DeleteSkillTypeMutationVariables>;
+export const DeleteManySkillVerificationRequestDocument = gql`
+    mutation deleteManySkillVerificationRequest($where: SkillVerificationRequestWhereInput) {
+  deleteManySkillVerificationRequest(where: $where) {
+    count
+  }
+}
+    `;
+export type DeleteManySkillVerificationRequestMutationFn = Apollo.MutationFunction<DeleteManySkillVerificationRequestMutation, DeleteManySkillVerificationRequestMutationVariables>;
+
+/**
+ * __useDeleteManySkillVerificationRequestMutation__
+ *
+ * To run a mutation, you first call `useDeleteManySkillVerificationRequestMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteManySkillVerificationRequestMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteManySkillVerificationRequestMutation, { data, loading, error }] = useDeleteManySkillVerificationRequestMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteManySkillVerificationRequestMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteManySkillVerificationRequestMutation, DeleteManySkillVerificationRequestMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteManySkillVerificationRequestMutation, DeleteManySkillVerificationRequestMutationVariables>(DeleteManySkillVerificationRequestDocument, options);
+      }
+export type DeleteManySkillVerificationRequestMutationHookResult = ReturnType<typeof useDeleteManySkillVerificationRequestMutation>;
+export type DeleteManySkillVerificationRequestMutationResult = Apollo.MutationResult<DeleteManySkillVerificationRequestMutation>;
+export type DeleteManySkillVerificationRequestMutationOptions = Apollo.BaseMutationOptions<DeleteManySkillVerificationRequestMutation, DeleteManySkillVerificationRequestMutationVariables>;
+export const DeleteManySkillsDocument = gql`
+    mutation deleteManySkills($where: SkillsWhereInput) {
+  deleteManySkills(where: $where) {
+    count
+  }
+}
+    `;
+export type DeleteManySkillsMutationFn = Apollo.MutationFunction<DeleteManySkillsMutation, DeleteManySkillsMutationVariables>;
+
+/**
+ * __useDeleteManySkillsMutation__
+ *
+ * To run a mutation, you first call `useDeleteManySkillsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteManySkillsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteManySkillsMutation, { data, loading, error }] = useDeleteManySkillsMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteManySkillsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteManySkillsMutation, DeleteManySkillsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteManySkillsMutation, DeleteManySkillsMutationVariables>(DeleteManySkillsDocument, options);
+      }
+export type DeleteManySkillsMutationHookResult = ReturnType<typeof useDeleteManySkillsMutation>;
+export type DeleteManySkillsMutationResult = Apollo.MutationResult<DeleteManySkillsMutation>;
+export type DeleteManySkillsMutationOptions = Apollo.BaseMutationOptions<DeleteManySkillsMutation, DeleteManySkillsMutationVariables>;
+export const DeleteManySkillHistoryDocument = gql`
+    mutation deleteManySkillHistory($where: SkillHistoryWhereInput) {
+  deleteManySkillHistory(where: $where) {
+    count
+  }
+}
+    `;
+export type DeleteManySkillHistoryMutationFn = Apollo.MutationFunction<DeleteManySkillHistoryMutation, DeleteManySkillHistoryMutationVariables>;
+
+/**
+ * __useDeleteManySkillHistoryMutation__
+ *
+ * To run a mutation, you first call `useDeleteManySkillHistoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteManySkillHistoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteManySkillHistoryMutation, { data, loading, error }] = useDeleteManySkillHistoryMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteManySkillHistoryMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteManySkillHistoryMutation, DeleteManySkillHistoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteManySkillHistoryMutation, DeleteManySkillHistoryMutationVariables>(DeleteManySkillHistoryDocument, options);
+      }
+export type DeleteManySkillHistoryMutationHookResult = ReturnType<typeof useDeleteManySkillHistoryMutation>;
+export type DeleteManySkillHistoryMutationResult = Apollo.MutationResult<DeleteManySkillHistoryMutation>;
+export type DeleteManySkillHistoryMutationOptions = Apollo.BaseMutationOptions<DeleteManySkillHistoryMutation, DeleteManySkillHistoryMutationVariables>;
 export const GetFollowersDocument = gql`
     query getFollowers($where: FollowsWhereInput, $orderBy: [FollowsOrderByWithRelationInput!], $cursor: FollowsWhereUniqueInput, $take: Int, $skip: Int, $distinct: [FollowsScalarFieldEnum!]) {
   findManyFollows(

@@ -3,15 +3,21 @@
 "use client";
 
 import { FC } from "react";
-import { Card, Text, Title } from "@tremor/react";
+import { Text, Title } from "@tremor/react";
 import { Skeleton } from "../ui/skeleton";
 import { Button } from "../ui/button";
 import UserAvatar from "../user-avatar";
 import { Icons } from "../Icons";
-import AccordionCard from "../accordion-card";
 import { useRouter } from "next/navigation";
 import { observer } from "mobx-react-lite";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { Card, CardContent } from "../ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
 
 interface SchoolCoachesProps {
   loading: boolean;
@@ -81,31 +87,33 @@ const renderLoader = () => {
 const SchoolCoaches: FC<SchoolCoachesProps> = ({ loading, coaches }) => {
   const router = useRouter();
   return (
-    <Card className="bg-background dark:bg-dark-background">
-      <div className="flex flex-row items-center mb-3">
-        <Title>Coaches</Title>
-        <Icons.whistle className="ml-auto h-6 w-6 fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis" />
-      </div>
-      {loading ? (
-        <> {renderLoader()}</>
-      ) : !coaches?.length ? (
-        <>
-          <Text className="text-center h-full">No Result Found</Text>
-        </>
-      ) : (
-        <>
-          {coaches?.map((val: Coach, index: number) => {
-            return (
-              <AccordionCard
-                key={index}
-                value={`${"item"}-${index + 1}`}
-                trigger={`@${val?.user?.username}`}
-                content={renderContent(val, router)}
-              />
-            );
-          })}
-        </>
-      )}
+    <Card>
+      <CardContent className="p-6">
+        <div className="flex flex-row items-center mb-3">
+          <Title>Coaches</Title>
+          <Icons.whistle className="ml-auto h-6 w-6 fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis" />
+        </div>
+        {loading ? (
+          <> {renderLoader()}</>
+        ) : !coaches?.length ? (
+          <>
+            <Text className="text-center h-full">No Result Found</Text>
+          </>
+        ) : (
+          <Accordion type="single" collapsible className="w-full">
+            {coaches?.map((val: Coach, index: number) => {
+              return (
+                <AccordionItem value={`${"item"}-${index + 1}`} key={index}>
+                  <AccordionTrigger>{val?.user?.username}</AccordionTrigger>
+                  <AccordionContent>
+                    {renderContent(val, router)}
+                  </AccordionContent>
+                </AccordionItem>
+              );
+            })}
+          </Accordion>
+        )}
+      </CardContent>
     </Card>
   );
 };

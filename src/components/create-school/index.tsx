@@ -4,7 +4,7 @@
 
 import { FC, useCallback, useMemo, useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import { Title, Text, Divider } from "@tremor/react";
+import { Title, Text } from "@tremor/react";
 import { Icons } from "@/components/Icons";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,6 +33,7 @@ import SelectCity from "@/components/select-city";
 import { useRouter } from "next/navigation";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/services/firebase/config";
+import { Separator } from "../ui/separator";
 
 type FormData = yup.InferType<typeof SchoolValidator>;
 
@@ -350,7 +351,11 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
 
   return (
     <main className="w-full h-full">
-      <Button variant="ghost" className="mb-6" onClick={() => router.back()}>
+      <Button
+        variant="destructive"
+        className="mb-6"
+        onClick={() => router.back()}
+      >
         Go Back
       </Button>
       <div className="flex flex-col">
@@ -362,7 +367,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
         </div>
         <Text>School Overview</Text>
       </div>
-      <Divider></Divider>
+      <Separator className="my-6" />
       <form
         id="create_school"
         name="create_school"

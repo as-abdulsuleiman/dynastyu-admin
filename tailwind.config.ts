@@ -69,7 +69,7 @@ module.exports = {
             inverted: "#ffffff", // white
           },
           background: {
-            muted: "hsl(var(--muted-foreground))", // gray-50
+            // muted: "hsl(var(--muted-foreground))", // gray-50
             subtle: 'hsl(var(--background))', // gray-100
             DEFAULT: 'hsl(var(--background))', // white
             emphasis:'hsl(var(--background))', // gray-700
@@ -100,7 +100,7 @@ module.exports = {
             inverted: "#030712", // gray-950
           },
           background: {
-            muted:  "hsl(var(--background))", // custom
+            // muted:  "hsl(var(--background))", // custom
             subtle:  'hsl(var(--background))', // gray-800
             DEFAULT: 'hsl(var(--background))', // gray-900
             emphasis: 'hsl(var(--background))', // gray-300
@@ -133,6 +133,10 @@ module.exports = {
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
+        TTHovesRegular: ["TTHovesRegular", "sans-serif"],
+        TTHovesExtraBold: ["TTHovesExtraBold", "sans-serif"],
+        TTHovesBold: ["TTHovesBold", "sans-serif"],
+        TTHovesDemiBold: ["TTHovesDemiBold", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {
@@ -196,5 +200,5 @@ module.exports = {
         /^(fill-(?:slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950))$/,
     },
   ],
-  plugins: [require("@headlessui/tailwindcss")],
+  plugins: [require("@headlessui/tailwindcss"),],
 };

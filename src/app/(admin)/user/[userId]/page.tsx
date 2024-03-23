@@ -2,11 +2,11 @@
 
 "use client";
 
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useGetUserQuery } from "@/services/graphql";
-import { Title, Divider, Text } from "@tremor/react";
+import { Title } from "@tremor/react";
 import {
   Loader2,
   UserCheck,
@@ -18,6 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import UsersAnalytics from "@/components/analytics/users";
 import { observer } from "mobx-react-lite";
+import { Separator } from "@/components/ui/separator";
 
 interface pageProps {
   params: {
@@ -104,7 +105,7 @@ const Page: FC<pageProps> = ({ params }) => {
   return (
     <div className="w-full h-full relative">
       <Button
-        variant="ghost"
+        variant="destructive"
         className="absolute top-[-53px]"
         onClick={() => router.back()}
       >
@@ -118,7 +119,7 @@ const Page: FC<pageProps> = ({ params }) => {
         </Title>
       )}
       {/* <Text>Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</Text> */}
-      <Divider></Divider>
+      <Separator className="my-6" />
       <UsersAnalytics
         loading={loading}
         showStatus={data?.user?.isActive}

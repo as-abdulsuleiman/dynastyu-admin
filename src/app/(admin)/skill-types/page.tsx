@@ -3,52 +3,46 @@
 "use client";
 
 import { FC, useEffect, useMemo, useState } from "react";
+import { Title, Text, Grid, Flex, TextInput } from "@tremor/react";
+import { TableCell, TableRow } from "@/components/ui/table";
 import {
-  Title,
-  Text,
-  Divider,
-  Grid,
-  TableRow,
-  TableCell,
-  Flex,
-  TextInput,
-} from "@tremor/react";
-import { Button } from "@/components/ui/button";
-import {
-  QueryMode,
+  GetSkillTypesQuery,
   SkillTypeWhereInput,
-  SkillsTypesQuery,
   SortOrder,
-  useCreateSkillMutation,
-  useSkillsTypesQuery,
-  useUpsertOneSkillMutation,
+  useDeleteManySkillHistoryMutation,
+  useDeleteManySkillVerificationRequestMutation,
+  useDeleteManySkillsMutation,
+  useDeleteSkillTypeMutation,
+  useGetSkillTypesQuery,
 } from "@/services/graphql";
-import SkillTypesCount from "@/components/counts/skillTypes";
+import SkillTypeStatCard from "@/components/stat-cards/skillType";
 import SelectCard from "@/components/select";
 import Pagination from "@/components/pagination";
 import UniversalTable from "@/components/universal-table";
 import { useDebouncedValue } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { Icons } from "@/components/Icons";
-import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import MenubarCard from "@/components/menubar";
+import { useToast } from "@/hooks/use-toast";
+import { Separator } from "@/components/ui/separator";
+import PromptAlert from "@/components/prompt-alert";
 import { SearchInput } from "@/components/search-input";
 
 const headerItems = [
   { name: "Name" },
-  { name: "Position" },
+  { name: "Second Field Name" },
   { name: "Unit" },
   { name: "Number Of Videos" },
-  { name: "Second Field Name" },
   { name: "Action" },
 ];
 
-const filterItems = [{ name: "Unit", value: "secs" }];
+const filterItems = [
+  { name: "Secs", value: "secs" },
+  { name: "Reps", value: "reps" },
+  { name: "Lbs", value: "lbs" },
+];
 
 enum FilterEnum {
   SECS = "secs",
@@ -56,26 +50,31 @@ enum FilterEnum {
 interface pageProps {}
 
 const Page: FC<pageProps> = ({}) => {
+  const { toast } = useToast();
   const router = useRouter();
-
   const [status, setStatus] = useState<string>("");
   const [value, setValue] = useState<string>("");
-  const [isActivating, setIsActivating] = useState<boolean>(false);
-  const [isVerifying, setIsVerifying] = useState<boolean>(false);
-  const [selectedUser, setSelectedUser] = useState<number | null>(null);
+  const [deleteSkillTypePrompt, setDeleteSkillTypePrompt] = useState(false);
+  const [deletingSkillType, setDeletingSkillType] = useState(false);
+
+  const [activeSkillType, setActiveSkillType] = useState({});
   const [debounced] = useDebouncedValue(value, 300);
-  const [createSkill] = useCreateSkillMutation();
-  const [upsertOneSkill] = useUpsertOneSkillMutation();
+  const [deleteSkillType] = useDeleteSkillTypeMutation();
+  const [deleteSkills] = useDeleteManySkillsMutation();
+  const [deleteManySkillHistory] = useDeleteManySkillHistoryMutation();
+  const [deleteManySkillVerificationRequest] =
+    useDeleteManySkillVerificationRequestMutation();
 
   const {
     data: skillTypesData,
     loading: loading,
     fetchMore,
     refetch,
-  } = useSkillsTypesQuery({
+  } = useGetSkillTypesQuery({
     variables: {
-      // where: { athleteId: { equals: user?.athleteProfile?.id } },
-      orderBy: { position: SortOrder.Asc },
+      where: {},
+      take: 10,
+      orderBy: { createdAt: SortOrder.Desc },
     },
   });
 
@@ -93,7 +92,6 @@ const Page: FC<pageProps> = ({}) => {
     refetch({
       where: {
         ...whereClause,
-        OR: [{}],
       },
     });
   }, [status, whereClause, debounced, refetch]);
@@ -113,13 +111,13 @@ const Page: FC<pageProps> = ({}) => {
           id: lastSkillTypeId,
         },
         orderBy: {
-          createdAt: SortOrder.Desc,
+          createdAt: SortOrder?.Desc,
         },
       },
       updateQuery: (
-        previousResult: SkillsTypesQuery,
+        previousResult: GetSkillTypesQuery,
         { fetchMoreResult }
-      ): SkillsTypesQuery => {
+      ): GetSkillTypesQuery => {
         if (!fetchMoreResult || fetchMoreResult?.skillTypes?.length === 0) {
           return previousResult;
         } else {
@@ -141,13 +139,13 @@ const Page: FC<pageProps> = ({}) => {
           id: lastSkillTypeId,
         },
         orderBy: {
-          createdAt: SortOrder.Desc,
+          createdAt: SortOrder?.Desc,
         },
       },
       updateQuery: (
-        previousResult: SkillsTypesQuery,
+        previousResult: GetSkillTypesQuery,
         { fetchMoreResult }
-      ): SkillsTypesQuery => {
+      ): GetSkillTypesQuery => {
         if (!fetchMoreResult || fetchMoreResult?.skillTypes?.length === 0) {
           return previousResult;
         } else {
@@ -160,91 +158,115 @@ const Page: FC<pageProps> = ({}) => {
     });
   };
 
+  const handleDeleteSkillType = async (item: any) => {
+    setDeleteSkillTypePrompt(true);
+    setActiveSkillType(item);
+  };
+
+  const handleConfirmPrompt = async (item: any) => {
+    setDeletingSkillType(true);
+    const skillId = await item?.skills?.map((a: any) => a?.id);
+    const skillVerificationRequests = item?.skills
+      .flatMap((skill: any) => skill?.skillVerificationRequests)
+      .map((y: any) => y?.skillId);
+    const skillHistories = item?.skills
+      .flatMap((skill: any) => skill?.skillHistory)
+      .map((a: any) => a?.skillId);
+
+    try {
+      await deleteManySkillVerificationRequest({
+        variables: {
+          where: {
+            skillId: { in: skillVerificationRequests },
+          },
+        },
+      });
+      await deleteManySkillHistory({
+        variables: {
+          where: {
+            skillId: { in: skillHistories },
+          },
+        },
+      });
+      await deleteSkills({
+        variables: {
+          where: {
+            id: { in: skillId },
+          },
+        },
+      });
+      await deleteSkillType({
+        variables: {
+          where: {
+            id: item?.id,
+          },
+        },
+      });
+      refetch();
+      toast({
+        title: "Skill type successfully deleted.",
+        description: `${item?.name} has been deleted`,
+        variant: "successfull",
+      });
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not successfully update Athlete. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    } finally {
+      setActiveSkillType({});
+      setDeletingSkillType(false);
+      setDeleteSkillTypePrompt(false);
+    }
+  };
+
   const renderItems = ({ item, id }: { item: any; id: any }) => {
     const skillTypeItems = [
       {
-        name: "View Details",
-        onclick: () => {
-          // router.push(`/athlete/${Number(item?.id)}`, { scroll: true });
+        name: "Edit Skill Type",
+        onClick: () => {
+          router.push(`/skill-types/edit?skillType=${item?.id}`, {
+            scroll: true,
+          });
         },
       },
       {
-        name: "Edit Skill Type",
-        onclick: () => {
-          // router.push(`/athletes/edit?athlete=${Number(item?.id)}`, {
-          //   scroll: true,
-          // });
-        },
+        name: "Delete Skill Type",
+        onClick: () => handleDeleteSkillType(item),
       },
-      // {
-      //   name: `${item.verified ? "Unverify" : "Verify"} Profile`,
-      //   // onclick: () => handleVerifyAthlete(item),
-      // },
-      // {
-      //   name: `${item?.user?.isActive ? "Deactivate" : "Activate"} Profile`,
-      //   // onclick: () => handleActivateAthlete(item),
-      // },
-      // {
-      //   name: "Delete Profile",
-      //   onclick: async () => await handleDeleteAthlete(item),
-      // },
     ];
     return (
-      <TableRow key={item?.id}>
+      <TableRow key={item?.id} className="text-base">
         <TableCell>
-          <Flex
-            alignItems="center"
-            justifyContent="start"
-            // onClick={() =>
-            //   router.push(`/athlete/${item?.id}`, { scroll: true })
-            // }
+          <div
+            className="flex flex-row items-center justify- cursor-pointer text-base"
+            onClick={() =>
+              router.push(`/skill-types/edit?skillType=${item?.id}`, {
+                scroll: true,
+              })
+            }
           >
-            <Text className="ml-2 cursor-pointer">{item?.name}</Text>
-          </Flex>
-        </TableCell>
-        <TableCell className="text-center">
-          <Text>{item?.position}</Text>
-        </TableCell>
-        <TableCell className="text-center">
-          <Text>{item?.unit}</Text>
-        </TableCell>
-        <TableCell className="text-center">
-          <Text>{item?.numberOfVideos}</Text>
-        </TableCell>
-        <TableCell className="text-center">
-          <div className="flex flex-row items-center justify-center">
-            <Text>{item?.secondFieldName}</Text>{" "}
+            {item?.name}
           </div>
         </TableCell>
-
-        <TableCell className="text-center cursor-pointer">
+        <TableCell className="text-center text-sm">
+          <div className="flex flex-row items-center justify-center">
+            {item?.secondFieldName}
+          </div>
+        </TableCell>
+        <TableCell className="text-center text-sm">{item?.unit}</TableCell>
+        <TableCell className="text-center text-sm">
+          {item?.numberOfVideos}
+        </TableCell>
+        <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
-            <Menubar className="bg-transparent border-0 hover:bg-transparent focus:bg-transparent">
-              <MenubarMenu>
-                <MenubarTrigger className="cursor-pointer data-[state=open]:bg-transparent hover:bg-transparent focus:bg-transparent bg-transparent focus-within:bg-transparent focus-visible:bg-transparent active:bg-transparent">
-                  <Icons.moreHorizontal />
-                </MenubarTrigger>
-                <MenubarContent
-                  side="bottom"
-                  align="start"
-                  sideOffset={-3}
-                  alignOffset={-100}
-                  className="rounded-tremor-default cursor-pointer bg-background dark:bg-dark-background"
-                >
-                  {skillTypeItems?.map((val, id) => {
-                    return (
-                      <MenubarItem
-                        onClick={val?.onclick}
-                        key={id}
-                        className="cursor-pointer tremor-SelectItem-root flex justify-start items-center text-tremor-default  ui-selected:text-tremor-content-strong ui-selected:bg-tremor-background-muted text-tremor-content-emphasis dark:ui-active:bg-dark-tremor-background-muted dark:ui-active:text-dark-tremor-content-strong dark:ui-selected:text-dark-tremor-content-strong dark:ui-selected:bg-dark-tremor-background-muted dark:text-dark-tremor-content-emphasis px-2.5 py-2.5"
-                      >
-                        {val?.name}
-                      </MenubarItem>
-                    );
-                  })}
-                </MenubarContent>
-              </MenubarMenu>
-            </Menubar>
+            <MenubarCard
+              trigger={<Icons.moreHorizontal className="cursor-pointer" />}
+              items={skillTypeItems}
+            />
           </div>
         </TableCell>
       </TableRow>
@@ -258,33 +280,23 @@ const Page: FC<pageProps> = ({}) => {
           <Title>Skill Types</Title>
           <Text className="hidden">Skill Types Overview</Text>
         </div>
-        <div className="ml-auto justify-end">
-          <Button>Create Skill Type</Button>
-        </div>
       </div>
-      <Divider></Divider>
-
+      <Separator className="my-6" />
       <Grid numItemsMd={2} numItemsLg={3} className="mt-6 gap-6">
-        <SkillTypesCount title="Skill Types" />
+        <SkillTypeStatCard title="Skill Types" />
       </Grid>
-      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6 hidden">
-        {/* <SearchInput
+      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
+        <SearchInput
           onChange={(e) => setValue(e.target.value)}
-          placeholder="Search..."
-        /> */}
-        <TextInput
-          className="h-[38px]"
-          icon={() => {
-            return <Icons.search className="h-10 w-5 ml-2.5" />;
-          }}
-          onValueChange={(e) => setValue(e)}
           placeholder="Type to search..."
         />
         <SelectCard
-          className="bg-background dark:bg-dark-background"
+          disabled
+          className=""
           defaultValue="College"
           items={filterItems}
           selectedItem={status}
+          enableClear={true}
           onValueChange={(e) => {
             setStatus(e);
           }}
@@ -297,9 +309,19 @@ const Page: FC<pageProps> = ({}) => {
         loading={loading}
         renderItems={renderItems}
       />
-      {loading || !skillTypesData?.skillTypes.length ? null : (
+      {loading || !skillTypesData?.skillTypes?.length ? null : (
         <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
       )}
+      <PromptAlert
+        loading={deletingSkillType}
+        content={`This action cannot be undone. This will permanently delete this data from our servers.`}
+        showPrompt={deleteSkillTypePrompt}
+        handleHidePrompt={() => {
+          setActiveSkillType({});
+          setDeleteSkillTypePrompt(false);
+        }}
+        handleConfirmPrompt={() => handleConfirmPrompt(activeSkillType)}
+      />
     </main>
   );
 };

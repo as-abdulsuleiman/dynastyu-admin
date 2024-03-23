@@ -2,7 +2,7 @@
 
 "use client";
 
-import { SortOrder, useSkillsTypesQuery } from "@/services/graphql";
+import { SortOrder, useGetSkillTypesQuery } from "@/services/graphql";
 import { FC } from "react";
 
 interface AthleteSkillProps {
@@ -14,9 +14,9 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ AthleteId }) => {
     data: skillTypesData,
     loading: skillTypesLoading,
     refetch,
-  } = useSkillsTypesQuery({
+  } = useGetSkillTypesQuery({
     variables: {
-      where: { athleteId: { equals: AthleteId } },
+      // where: { athleteId: { equals: AthleteId } },
       orderBy: { position: SortOrder.Asc },
     },
   });

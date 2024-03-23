@@ -4,25 +4,16 @@
 
 import { FC, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Divider,
-  Grid,
-  Text,
-  Title,
-  TableRow,
-  TableCell,
-  Flex,
-  Badge,
-  TextInput,
-} from "@tremor/react";
+import { Grid, Text, Title, Flex, Badge, TextInput } from "@tremor/react";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
-import FanCount from "@/components/counts/fans";
-import UsersCount from "@/components/counts/users";
-import CoachesCount from "@/components/counts/coaches";
+import FanStatCard from "@/components/stat-cards/fan";
+import UserStatCard from "@/components/stat-cards/user";
+import CoacheStatCard from "@/components/stat-cards/coache";
 import { useDebouncedValue } from "@mantine/hooks";
 import SelectCard from "@/components/select";
 import Pagination from "@/components/pagination";
-import AthletesCount from "@/components/counts/athletes";
+import AthleteStatCard from "@/components/stat-cards/athlete";
 import UniversalTable from "@/components/universal-table";
 import UserAvatar from "@/components/user-avatar";
 import { AccountType } from "@/lib/enums/account-type.enum";
@@ -41,6 +32,8 @@ import {
   useUpdateUserMutation,
 } from "@/services/graphql";
 import MenubarCard from "@/components/menubar";
+import { Separator } from "../ui/separator";
+import { SearchInput } from "../search-input";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -312,9 +305,8 @@ const Dashboard: FC<DashboardProps> = () => {
     return (
       <TableRow key={item?.id}>
         <TableCell>
-          <Flex
-            alignItems="center"
-            justifyContent="start"
+          <div
+            className="flex flex-row items-center justify-start"
             onClick={() =>
               router.push(`/${userType}/${Number(userId)}`, { scroll: true })
             }
@@ -327,21 +319,19 @@ const Dashboard: FC<DashboardProps> = () => {
                 0
               )}`}
             />
-            <div className="ml-4 cursor-pointer">
+            <div className="ml-4 cursor-pointer text-base">
               {item?.firstname} {item?.surname}
             </div>
-          </Flex>
+          </div>
         </TableCell>
-        <TableCell className="text-center">
-          <div>{item?.username ? `@${item?.username}` : ""}</div>
+        <TableCell className="text-center text-sm">
+          {item?.username ? `@${item?.username}` : ""}
         </TableCell>
-        <TableCell className="text-center">
-          <div>{item?.accountType?.role?.title}</div>
+        <TableCell className="text-center text-sm">
+          {item?.accountType?.role?.title}
         </TableCell>
-        <TableCell className="text-center">
-          <div>{item?.email}</div>
-        </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">{item?.email}</TableCell>
+        <TableCell className="text-center text-sm">
           {item?.id === selectedUser && isActivating ? (
             <div className="text-center flex flex-row justify-center items-center">
               <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin" />
@@ -350,9 +340,8 @@ const Dashboard: FC<DashboardProps> = () => {
           ) : (
             <Badge
               size="xs"
-              className="cursor-pointer"
+              className="cursor-pointer text-sm"
               color={item?.isActive ? "teal" : "rose"}
-              // tooltip="decrease"
               icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
               datatype="moderateDecrease"
             >
@@ -360,8 +349,7 @@ const Dashboard: FC<DashboardProps> = () => {
             </Badge>
           )}
         </TableCell>
-
-        <TableCell>
+        <TableCell className="text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
               trigger={<Icons.moreHorizontal className="cursor-pointer" />}
@@ -377,27 +365,18 @@ const Dashboard: FC<DashboardProps> = () => {
     <main className="w-full h-full">
       <Title>Dashboard Overview</Title>
       <Text>Welcome to DynastyU Admin</Text>
-      <Divider></Divider>
-
+      <Separator className="my-6" />
       <Grid numItemsMd={2} numItemsLg={2} numItemsSm={2} className="mt-6 gap-6">
-        <UsersCount />
-        <AthletesCount />
-        <CoachesCount />
-        <FanCount />
+        <UserStatCard />
+        <AthleteStatCard />
+        <CoacheStatCard />
+        <FanStatCard />
       </Grid>
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-        <TextInput
-          className="h-[38px]"
-          icon={() => {
-            return <Icons.search className="h-10 shrink-0 w-5 ml-2.5" />;
-          }}
-          onValueChange={(e) => setValue(e)}
+        <SearchInput
+          onChange={(e) => setValue(e.target.value)}
           placeholder="Type to search..."
         />
-        {/* <SearchInput
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Search..."
-        /> */}
         <SelectCard
           className="bg-background dark:bg-dark-background dark:bg-dark-tremor-background"
           items={filterItems}

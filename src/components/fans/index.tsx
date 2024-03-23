@@ -3,17 +3,8 @@
 "use client";
 
 import { FC, useMemo, useState } from "react";
-import {
-  Title,
-  Text,
-  Divider,
-  Flex,
-  Grid,
-  TableCell,
-  TableRow,
-  Badge,
-  TextInput,
-} from "@tremor/react";
+import { Title, Text, Flex, Grid, Badge, TextInput } from "@tremor/react";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOfflineIcon, StatusOnlineIcon } from "@heroicons/react/outline";
 import {
   GetUsersQuery,
@@ -21,7 +12,7 @@ import {
   useGetUsersQuery,
   useUpdateUserMutation,
 } from "@/services/graphql";
-import FanCount from "@/components/counts/fans";
+import FanStatCard from "@/components/stat-cards/fan";
 import { SearchInput } from "../search-input";
 import { useDebouncedValue } from "@mantine/hooks";
 import SelectCard from "@/components/select";
@@ -33,6 +24,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Icons } from "../Icons";
 import MenubarCard from "../menubar";
 import { observer } from "mobx-react-lite";
+import { Separator } from "../ui/separator";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -203,9 +195,8 @@ const Fans: FC<FansProps> = ({}) => {
     return (
       <TableRow key={item?.id}>
         <TableCell>
-          <Flex
-            alignItems="center"
-            justifyContent="start"
+          <div
+            className="flex flex-ro items-center justify-start"
             onClick={() => router.push(`/fan/${item?.id}`, { scroll: true })}
           >
             <UserAvatar
@@ -216,18 +207,18 @@ const Fans: FC<FansProps> = ({}) => {
                 0
               )}`}
             />
-            <div className="ml-4 cursor-pointer">
+            <div className="ml-4 cursor-pointer text-base">
               {item?.firstname} {item?.surname}
             </div>
-          </Flex>
+          </div>
         </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
           <div>{item?.username ? `@${item?.username}` : ""}</div>
         </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
           <div>{item?.email}</div>
         </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
           {item?.id === selectedUser && isActivating ? (
             <div className="text-center flex flex-row justify-center items-center">
               <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin" />
@@ -236,9 +227,8 @@ const Fans: FC<FansProps> = ({}) => {
           ) : (
             <Badge
               size="xs"
-              className="cursor-pointer"
+              className="cursor-pointer text-sm"
               color={item?.isActive ? "teal" : "rose"}
-              // tooltip="decrease"
               icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
               datatype="moderateDecrease"
             >
@@ -246,7 +236,7 @@ const Fans: FC<FansProps> = ({}) => {
             </Badge>
           )}
         </TableCell>
-        <TableCell>
+        <TableCell className="text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
               trigger={<Icons.moreHorizontal className="cursor-pointer" />}
@@ -262,26 +252,23 @@ const Fans: FC<FansProps> = ({}) => {
     <main className="w-full h-full">
       <Title>Fans</Title>
       <Text>In Progress</Text>
-      <Divider></Divider>
+      <Separator className="my-6" />
       <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
-        {/* <UsersCount />
-              <AthletesCount />
-              <CoachesCount /> */}
-        <FanCount />
+        <FanStatCard />
       </Grid>
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-        {/* <SearchInput
+        <SearchInput
           onChange={(e) => setValue(e.target.value)}
-          placeholder="Search..."
-        /> */}
-        <TextInput
+          placeholder="Type to search..."
+        />
+        {/* <TextInput
           className="h-[38px]"
           icon={() => {
             return <Icons.search className="h-10 w-5 ml-2.5" />;
           }}
           onValueChange={(e) => setValue(e)}
           placeholder="Type to search..."
-        />
+        /> */}
         <SelectCard
           className="ring-0 bg-background dark:bg-dark-background"
           items={filterItems}

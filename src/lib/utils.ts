@@ -1,16 +1,18 @@
-import { type ClassValue, clsx } from "clsx"
-import { format } from "date-fns"
-import { twMerge } from "tailwind-merge"
- 
+/** @format */
+
+import { type ClassValue, clsx } from "clsx";
+import { format } from "date-fns";
+import { twMerge } from "tailwind-merge";
+
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
-export const noSchool = "https://firebasestorage.googleapis.com/v0/b/dynastyu-9de03.appspot.com/o/coaches%2F1702870984666-noschoolNew.png?alt=media&token=1542cdb4-691b-449d-a2b5-f4f071128975"
+export const noSchool =
+  "https://firebasestorage.googleapis.com/v0/b/dynastyu-9de03.appspot.com/o/coaches%2F1702870984666-noschoolNew.png?alt=media&token=1542cdb4-691b-449d-a2b5-f4f071128975";
 
 export const noImage =
-"https://firebasestorage.googleapis.com/v0/b/dynastyu-9de03.appspot.com/o/coaches%2F1702818443312-noImage.png?alt=media&token=d2cb441b-e46c-438b-893f-3c96efba8824"
-
+  "https://firebasestorage.googleapis.com/v0/b/dynastyu-9de03.appspot.com/o/coaches%2F1702818443312-noImage.png?alt=media&token=d2cb441b-e46c-438b-893f-3c96efba8824";
 
 export const coachTitleOptions = [
   { label: "Head Coach (HC)", value: "Head Coach (HC)" },
@@ -48,21 +50,20 @@ export const classificationOptions = [
   { label: "5A", value: "5A" },
   { label: "6A", value: "6A" },
   { label: "7A", value: "7A" },
-]
+];
 
 
 export const formatDate = (
   date: Date | number | string,
-  dateFormat ="MMMM dd, yyyy",
+  dateFormat = "MMMM dd, yyyy"
 ): string => format(new Date(date), dateFormat);
 
-
-export const getYears = (back:number, type: "sub" | "add" = "sub") => {
-  const year = new Date().getFullYear()
+export const getYears = (back: number, type: "sub" | "add" = "sub") => {
+  const year = new Date().getFullYear();
   return Array.from({ length: back }, (v, i) =>
-    type === "sub" ? year - back + i + 1 : year + back - i,
-  )
-}
+    type === "sub" ? year - back + i + 1 : year + back - i
+  );
+};
 
 export function getRandomString(length = 20) {
   var randomChars =

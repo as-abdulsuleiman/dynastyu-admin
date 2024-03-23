@@ -3,25 +3,18 @@
 "use client";
 
 import { FC, useEffect, useMemo, useState } from "react";
-import {
-  Divider,
-  Title,
-  Text,
-  Grid,
-  TableRow,
-  TableCell,
-  Flex,
-  TextInput,
-} from "@tremor/react";
+import { Title, Text, Grid, Flex, TextInput } from "@tremor/react";
+import { TableCell, TableRow } from "@/components/ui/table";
 import { SearchInput } from "../search-input";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import UniversalTable from "../universal-table";
 import SelectCard from "@/components/select";
-import FlaggedPostCount from "@/components/counts/flagged-posts";
+import FlaggedPostStatCard from "@/components/stat-cards/flagged-post";
 import { observer } from "mobx-react-lite";
 import {
   GetPostFlagsQuery,
+  PostFlagWhereInput,
   QueryMode,
   SortOrder,
   useGetPostFlagsQuery,
@@ -34,14 +27,23 @@ import MoreHorizontal from "@/components/Icons/more-horizontal";
 import MenubarCard from "../menubar";
 import { Icons } from "../Icons";
 import { formatDate } from "@/lib/utils";
+import { Separator } from "../ui/separator";
 
 const filterItems = [
-  { name: "Active", value: "Active" },
-  { name: "Inactive", value: "Inactive" },
-  { name: "Verified", value: "Verified" },
-  { name: "Not Verified", value: "Not Verified" },
-  // { name: "Approved", value: "Approved" },
-  // { name: "Not Approved", value: "Not Approved" },
+  { name: "Spam", value: "Spam" },
+  { name: "Inappropriate Content", value: "Inappropriate Content" },
+  { name: "Harassment or Bullying", value: "Harassment or Bullying" },
+  {
+    name: "Not Misinformation or Fake News",
+    value: "Misinformation or Fake News",
+  },
+  {
+    name: "Intellectual Property Violation",
+    value: "Intellectual Property Violation",
+  },
+  { name: "Violence or Self-Harm", value: "Violence or Self-Harm" },
+  { name: "Impersonation", value: "Impersonation" },
+  { name: "Privacy Concerns", value: "Privacy Concerns" },
 ];
 
 const headerItems = [
@@ -68,13 +70,8 @@ interface FlagPostProps {}
 const FlaggedPosts: FC<FlagPostProps> = ({}) => {
   const router = useRouter();
   const { toast } = useToast();
-
   const [status, setStatus] = useState<string>("");
   const [value, setValue] = useState<string>("");
-  const [isActivating, setIsActivating] = useState<boolean>(false);
-  const [isFeaturing, setIsFeaturing] = useState<boolean>(false);
-  const [isVerifying, setIsVerifying] = useState<boolean>(false);
-  const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [debounced] = useDebouncedValue(value, 300);
 
   const {
@@ -91,9 +88,19 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
     },
   });
 
+  const whereClause: PostFlagWhereInput = useMemo(() => {
+    return {
+      reason: {
+        contains: status,
+        mode: QueryMode.Insensitive,
+      },
+    };
+  }, [status]);
+
   useEffect(() => {
     refetch({
       where: {
+        ...whereClause,
         OR: [
           {
             user: {
@@ -128,7 +135,7 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
         ],
       },
     });
-  }, [status, debounced, refetch]);
+  }, [status, debounced, refetch, whereClause]);
 
   const lastpostFlagId = useMemo(() => {
     const lastPostInResults =
@@ -226,25 +233,25 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
             </div>
           </Flex>
         </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
           <div>
             {item?.post?.user?.username ? `@${item?.post?.user?.username}` : ""}
           </div>
         </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
           <div>{item?.user?.username ? `@${item?.user?.username}` : ""}</div>
         </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
           <div className="flex flex-row items-center justify-center">
             <div className="mr-2">{item?.reason}</div>{" "}
           </div>
         </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
           <div>
             {item.createdAt ? formatDate(item?.createdAt, "dd MMM yyyy") : ""}
           </div>
         </TableCell>
-        <TableCell className="text-center cursor-pointer">
+        <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
               trigger={<MoreHorizontal className="cursor-pointer" />}
@@ -265,26 +272,26 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
         </div>
       </div>
       <Text>Flagged Post Overview</Text>
-      <Divider></Divider>
+      <Separator className="my-6" />
       <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
-        <FlaggedPostCount />
+        <FlaggedPostStatCard />
       </Grid>
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-        <TextInput
+        {/* <TextInput
           className="h-[38px]"
           icon={() => {
             return <Icons.search className="h-10 w-5 ml-2.5" />;
           }}
           onValueChange={(e) => setValue(e)}
           placeholder="Type to search..."
-        />
-        {/* <SearchInput
+        /> */}
+        <SearchInput
           onChange={(e) => setValue(e.target.value)}
           placeholder="Search..."
-        /> */}
+        />
         <SelectCard
-          disabled
-          className="ring-0 bg-background dark:bg-dark-background"
+          className=""
+          enableClear
           items={filterItems}
           selectedItem={status}
           onValueChange={(e) => {

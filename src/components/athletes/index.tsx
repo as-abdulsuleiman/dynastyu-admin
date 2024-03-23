@@ -5,19 +5,10 @@
 import { FC, useEffect, useMemo, useState } from "react";
 import { Icons } from "@/components/Icons";
 import { useRootStore } from "@/mobx";
-import {
-  Title,
-  Text,
-  Divider,
-  Grid,
-  TableRow,
-  TableCell,
-  Flex,
-  Badge,
-  TextInput,
-} from "@tremor/react";
+import { Title, Text, Grid, Flex, Badge, TextInput } from "@tremor/react";
+import { TableCell, TableRow } from "@/components/ui/table";
 import SelectCard from "@/components/select";
-import AthletesCount from "@/components/counts/athletes";
+import AthleteStatCard from "@/components/stat-cards/athlete";
 import { useDebouncedValue } from "@mantine/hooks";
 import {
   AthleteProfileWhereInput,
@@ -38,6 +29,8 @@ import { useToast } from "@/hooks/use-toast";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 import StarIcon from "@/components/Icons/starIcon";
 import MenubarCard from "../menubar";
+import { Separator } from "../ui/separator";
+import { SearchInput } from "../search-input";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -468,9 +461,8 @@ const Athletes: FC<AthletesProps> = ({}) => {
     return (
       <TableRow key={item?.id}>
         <TableCell>
-          <Flex
-            alignItems="center"
-            justifyContent="start"
+          <div
+            className="flex flex-row items-center justify-start"
             onClick={() =>
               router.push(`/athlete/${item?.id}`, { scroll: true })
             }
@@ -483,18 +475,18 @@ const Athletes: FC<AthletesProps> = ({}) => {
                 0
               )} ${item?.user?.firstname?.charAt(0)}`}
             />
-            <div className="ml-4 cursor-pointer">
+            <div className="ml-4 cursor-pointer text-base">
               {item?.user?.firstname} {item?.user?.surname}
             </div>
-          </Flex>
+          </div>
         </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
           <div>{item?.user?.username ? `@${item?.user?.username}` : ""}</div>
         </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
           <div>{item?.user?.email}</div>
         </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
           <div className="flex flex-row items-center justify-center">
             <div className="mr-2">{item?.position?.name}</div>{" "}
             <div>({item?.position?.shortName})</div>
@@ -509,7 +501,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
           ) : (
             <Badge
               size="xs"
-              className="cursor-pointer"
+              className="cursor-pointer text-sm"
               color={item?.user?.isActive ? "teal" : "rose"}
               // tooltip={item?.user?.isActive ? "Active" : "Deactivated"}
               icon={item?.user?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
@@ -519,7 +511,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
             </Badge>
           )}
         </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
           {item?.id === selectedUser && isVerifying ? (
             <div className="text-center flex flex-row justify-center items-center">
               <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin " />
@@ -528,9 +520,8 @@ const Athletes: FC<AthletesProps> = ({}) => {
           ) : (
             <Badge
               size="xs"
-              className="cursor-pointer px-[8px]"
+              className="cursor-pointer px-[8px] text-sm"
               color={item?.verified ? "sky" : "rose"}
-              // tooltip={item?.verified ? "Verified" : "Not Verified"}
               icon={() => {
                 return item.verified ? (
                   <Icons.badgeCheck className="h-4 w-4 mr-1" color="sky" />
@@ -544,7 +535,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
             </Badge>
           )}
         </TableCell>
-        <TableCell className="text-center">
+        <TableCell className="text-center text-sm">
           {item?.id === selectedUser && isFeaturing ? (
             <div className="text-center flex flex-row justify-center items-center">
               <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin" />
@@ -553,9 +544,8 @@ const Athletes: FC<AthletesProps> = ({}) => {
           ) : (
             <Badge
               size="xs"
-              className="cursor-pointer px-[8px]"
+              className="cursor-pointer px-[8px] text-sm"
               color={item?.featured ? "yellow" : "rose"}
-              // tooltip={item?.featured ? "Featured" : "Not Featured"}
               icon={() => {
                 return <StarIcon className="h-4 w-4 mr-1" />;
               }}
@@ -565,7 +555,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
             </Badge>
           )}
         </TableCell>
-        <TableCell className="text-center cursor-pointer">
+        <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
               trigger={<Icons.moreHorizontal className="cursor-pointer" />}
@@ -584,23 +574,23 @@ const Athletes: FC<AthletesProps> = ({}) => {
         <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
       </div>
       <Text>Athletes Overview</Text>
-      <Divider></Divider>
+      <Separator className="my-6" />
       <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
-        <AthletesCount />
+        <AthleteStatCard />
       </Grid>
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-        <TextInput
+        {/* <TextInput
           className="h-[38px]"
           icon={() => {
             return <Icons.search className="h-10 w-5 ml-2.5" />;
           }}
           onValueChange={(e) => setValue(e)}
           placeholder="Type to search..."
-        />
-        {/* <SearchInput
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Search..."
         /> */}
+        <SearchInput
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Type to search..."
+        />
 
         <SelectCard
           className="ring-0 bg-background dark:bg-dark-background"

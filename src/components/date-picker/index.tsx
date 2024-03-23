@@ -17,7 +17,7 @@ import { ChangeHandler } from "react-hook-form";
 import { SelectSingleEventHandler } from "react-day-picker";
 
 interface DatePickerProps {
-  placeholder: string;
+  placeholder?: string;
   id: string;
   label: string;
   error?: string;
@@ -63,7 +63,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
             <div
               // variant={"outline"}
               className={cn(
-                "w-full text-left h-[40px] bg-background border border-input px-[12px] py-[4px] relative mt-1.5 hover:bg-transparent inline-flex items-center justify-start rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+                "w-full text-left h-[40px] bg-background border border-input px-[12px] py-[4px] relative hover:bg-transparent inline-flex items-center justify-start rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
                 !value && "text-muted-foreground"
               )}
             >
