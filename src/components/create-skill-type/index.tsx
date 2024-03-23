@@ -181,7 +181,10 @@ const CreateSkillType: FC<CreateSkillTypeProps> = ({
     const field = getValues()?.[dataField];
     if (Array?.isArray(field)) {
       const filteredItems = [...field?.filter((f: any) => f !== val)];
-      setValue(fieldName, [...filteredItems]);
+      setValue(fieldName, [...filteredItems], {
+        shouldTouch: true,
+        shouldDirty: true,
+      });
     }
   };
 
