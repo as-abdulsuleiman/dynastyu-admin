@@ -47,7 +47,13 @@ const UserAvatar: FC<UserAvatarProps> = ({
         <AvatarFallback
           className={`capitalize text-xs h-[79px] w-[79px] ${fallbackClassName}`}
         >
-          {fallbackType === "icon" ? <>{icon}</> : <>{fallback}</>}
+          {fallbackType === "icon" ? (
+            <div className="flex h-full w-full flex-row items-center justify-center m-auto absolute inset-0">
+              {icon}
+            </div>
+          ) : (
+            <>{fallback}</>
+          )}
         </AvatarFallback>
       )}
     </Avatar>

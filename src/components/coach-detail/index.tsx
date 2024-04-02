@@ -24,6 +24,8 @@ import ModalCard from "../modal";
 import { AspectRatio } from "../ui/aspect-ratio";
 import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
+import MoreHorizontal from "../Icons/more-horizontal";
+import VerifiedIcon from "@/components/Icons/verified";
 
 interface CoachDetailProps {
   params: {
@@ -314,13 +316,12 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       />
       <Grid numItemsMd={1} numItemsLg={1} className="mt-6 gap-6">
         <Card>
-          <CardContent>
+          <CardContent className="p-6">
             <div className="flex flex-col items-center justify-center relative">
               <ModalCard
                 isModal={true}
                 isOpen={viewPlayerCardUrl}
                 onOpenChange={() => setViewPlayerCardUrl(!viewPlayerCardUrl)}
-                contentClass="container mx-auto max-w-2xl rounded-2xl bg-primary-black bg-gradient-to-bl from-primary-black via-primary-black/5 to-primary-black px-[16px] md:px-[2rem] py-[2rem]"
                 trigger={
                   <UserAvatar
                     className="h-[120px] w-[120px] shadow cursor-pointer"
@@ -335,23 +336,22 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                     icon={<Icons.user className="h-8 w-8" />}
                   />
                 }
-                content={
-                  <AspectRatio ratio={16 / 16} className="cursor-pointer">
-                    <Image
-                      onLoadingComplete={() => setShowImage(false)}
-                      priority
-                      fill
-                      sizes="100vw"
-                      quality={80}
-                      src={data?.coachProfile?.user?.avatar as string}
-                      alt=""
-                      className={`rounded-2xl object-cover border-[#717070] border-[0.1px] relative ${
-                        showimage ? "blur-sm " : "blur-none"
-                      }`}
-                    />
-                  </AspectRatio>
-                }
-              />
+              >
+                <AspectRatio ratio={16 / 16} className="cursor-pointer">
+                  <Image
+                    onLoadingComplete={() => setShowImage(false)}
+                    priority
+                    fill
+                    sizes="100vw"
+                    quality={80}
+                    src={data?.coachProfile?.user?.avatar as string}
+                    alt=""
+                    className={`rounded-2xl object-cover border-[#717070] border-[0.1px] relative ${
+                      showimage ? "blur-sm " : "blur-none"
+                    }`}
+                  />
+                </AspectRatio>
+              </ModalCard>
 
               {loading ? (
                 <div className="flex flex-row items-center">
@@ -360,25 +360,16 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                 </div>
               ) : (
                 <div className="flex flex-row items-center justify-center">
-                  <Text className="text-xl relative mr-1">
+                  <Text className="text-sm relative mr-1">
                     {/* {data?.coachProfile?.user?.firstname}{" "} */}@
                     {data?.coachProfile?.user?.username}
                   </Text>
                   {data?.coachProfile?.verified ? (
                     <TooltipCard
                       message="Verified"
-                      trigger={
-                        <Icons.badgeCheck className="h-5 w-5" color="teal" />
-                      }
+                      trigger={<VerifiedIcon className="cursor-pointer" />}
                     />
-                  ) : (
-                    <TooltipCard
-                      message="Not Verified"
-                      trigger={
-                        <Icons.badgeAlert className="h-5 w-5" color="teal" />
-                      }
-                    />
-                  )}
+                  ) : null}
                 </div>
               )}
               <div className="ml-auto absolute right-0 top-0">
@@ -387,7 +378,9 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                 ) : (
                   <MenubarCard
                     trigger={
-                      <Icons.moreHorizontal className="cursor-pointer" />
+                      <Button size="icon" variant="outline">
+                        <MoreHorizontal className="cursor-pointer" />
+                      </Button>
                     }
                     items={dropdownItems}
                   />

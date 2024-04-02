@@ -23,6 +23,7 @@ import { AspectRatio } from "../ui/aspect-ratio";
 import Image from "next/image";
 import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
+import MoreHorizontal from "../Icons/more-horizontal";
 
 interface FanDetailProps {
   params: {
@@ -214,14 +215,13 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
         ${fanData?.user?.surname} Analytics`}
       />
 
-      <Card>
+      <Card className="mt-6 gap-6">
         <CardContent className="p-6">
           <div className="flex flex-col items-center justify-center relative">
             <ModalCard
               isModal={true}
               isOpen={viewPlayerCardUrl}
               onOpenChange={() => setViewPlayerCardUrl(!viewPlayerCardUrl)}
-              contentClass="container mx-auto max-w-2xl rounded-2xl bg-primary-black bg-gradient-to-bl from-primary-black via-primary-black/5 to-primary-black px-[16px] md:px-[2rem] py-[2rem]"
               trigger={
                 <UserAvatar
                   className="h-[120px] w-[120px] shadow cursor-pointer"
@@ -236,24 +236,22 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
                   icon={<Icons.user className="h-8 w-8" />}
                 />
               }
-              content={
-                <AspectRatio ratio={16 / 16} className="cursor-pointer">
-                  <Image
-                    onLoadingComplete={() => setShowImage(false)}
-                    priority
-                    fill
-                    sizes="100vw"
-                    quality={80}
-                    src={fanData?.user?.avatar as string}
-                    alt="profile_picture"
-                    className={`rounded-2xl object-cover border-[#717070] border-[0.1px] relative ${
-                      showimage ? "blur-sm " : "blur-none"
-                    }`}
-                  />
-                </AspectRatio>
-              }
-            />
-
+            >
+              <AspectRatio ratio={16 / 16} className="cursor-pointer">
+                <Image
+                  onLoadingComplete={() => setShowImage(false)}
+                  priority
+                  fill
+                  sizes="100vw"
+                  quality={80}
+                  src={fanData?.user?.avatar as string}
+                  alt="profile_picture"
+                  className={`rounded-2xl object-cover border-[#717070] border-[0.1px] relative ${
+                    showimage ? "blur-sm " : "blur-none"
+                  }`}
+                />
+              </AspectRatio>
+            </ModalCard>
             {loading ? (
               <div className="flex flex-row items-center">
                 <Skeleton className="w-[170px] h-[28px] mt-2 mr-1" />
@@ -261,7 +259,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
               </div>
             ) : (
               <div className="flex flex-row items-center justify-center mt-1">
-                <Text className="text-xl relative mr-1">
+                <Text className="text-sm relative mr-1">
                   @{fanData?.user?.username}
                 </Text>
               </div>
@@ -271,7 +269,11 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
                 <Skeleton className="w-[40px] h-[20px]" />
               ) : (
                 <MenubarCard
-                  trigger={<Icons.moreHorizontal className="cursor-pointer" />}
+                  trigger={
+                    <Button size="icon" variant="outline">
+                      <MoreHorizontal className="cursor-pointer" />
+                    </Button>
+                  }
                   items={dropdownItems}
                 />
               )}

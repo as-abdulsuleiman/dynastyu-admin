@@ -17,6 +17,8 @@ import { useToast } from "@/hooks/use-toast";
 import MenubarCard from "../menubar";
 import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
+import MoreHorizontal from "../Icons/more-horizontal";
+import { Button } from "../ui/button";
 interface SchoolCardProps {
   loading?: boolean;
   school: any;
@@ -129,7 +131,11 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
               <Skeleton className="w-[40px] h-[20px]" />
             ) : (
               <MenubarCard
-                trigger={<Icons.moreHorizontal className="cursor-pointer" />}
+                trigger={
+                  <Button size="icon" variant="outline">
+                    <MoreHorizontal className="cursor-pointer" />
+                  </Button>
+                }
                 items={dropdownItems}
               />
             )}

@@ -31,6 +31,8 @@ import StarIcon from "@/components/Icons/starIcon";
 import MenubarCard from "../menubar";
 import { Separator } from "../ui/separator";
 import { SearchInput } from "../search-input";
+import MoreHorizontal from "../Icons/more-horizontal";
+import { Button } from "../ui/button";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -434,6 +436,14 @@ const Athletes: FC<AthletesProps> = ({}) => {
         },
       },
       {
+        name: "View Skills",
+        onClick: () => {
+          router.push(`/skills?athlete=${item?.id}`, {
+            scroll: true,
+          });
+        },
+      },
+      {
         name: "Edit Profile",
         onClick: () => {
           router.push(`/athletes/edit?athlete=${Number(item?.id)}`, {
@@ -458,6 +468,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
       //   onclick: async () => await handleDeleteAthlete(item),
       // },
     ];
+
     return (
       <TableRow key={item?.id}>
         <TableCell>
@@ -558,7 +569,11 @@ const Athletes: FC<AthletesProps> = ({}) => {
         <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
-              trigger={<Icons.moreHorizontal className="cursor-pointer" />}
+              trigger={
+                <Button size="icon" variant="outline">
+                  <MoreHorizontal className="cursor-pointer" />
+                </Button>
+              }
               items={athleteItems}
             />
           </div>

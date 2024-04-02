@@ -222,6 +222,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
       //   onclick: async () => await handleDeleteSchool(item),
       // },
     ];
+
     return (
       <TableRow key={item?.id}>
         <TableCell>
@@ -237,7 +238,12 @@ const Schools: FC<SchoolsProps> = ({}) => {
               avatar={item?.logo as string}
               fallback={`${item?.name?.charAt(0)}`}
             />
-            <div className="ml-4 cursor-pointer text-base">{item?.name}</div>
+            <div className="ml-4 cursor-pointer text-base">
+              <div className="text-base">{item?.name}</div>
+              <div className="text-sm text-primary">
+                {item?.city ? `${item?.city},` : ""} {item?.state}
+              </div>
+            </div>
           </div>
         </TableCell>
         <TableCell className="text-center text-sm">
@@ -249,7 +255,11 @@ const Schools: FC<SchoolsProps> = ({}) => {
         <TableCell className="text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
-              trigger={<MoreHorizontal className="cursor-pointer" />}
+              trigger={
+                <Button size="icon" variant="outline">
+                  <MoreHorizontal className="cursor-pointer" />
+                </Button>
+              }
               items={userItems}
             />
           </div>

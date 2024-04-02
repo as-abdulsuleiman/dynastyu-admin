@@ -19,7 +19,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "../ui/scroll-area";
-import { observer } from "mobx-react-lite";
 import { Icons } from "../Icons";
 
 interface ComboBoxCardProps {
@@ -175,4 +174,4 @@ const ComboBoxCard: FC<ComboBoxCardProps> = ({
   );
 };
 
-export default observer(ComboBoxCard);
+export default ComboBoxCard;

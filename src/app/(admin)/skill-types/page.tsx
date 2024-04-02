@@ -29,6 +29,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
 import PromptAlert from "@/components/prompt-alert";
 import { SearchInput } from "@/components/search-input";
+import { Button } from "@/components/ui/button";
 
 const headerItems = [
   { name: "Name" },
@@ -264,7 +265,11 @@ const Page: FC<pageProps> = ({}) => {
         <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
-              trigger={<Icons.moreHorizontal className="cursor-pointer" />}
+              trigger={
+                <Button size="icon" variant="outline">
+                  <Icons.moreHorizontal className="cursor-pointer" />
+                </Button>
+              }
               items={skillTypeItems}
             />
           </div>

@@ -34,6 +34,7 @@ import MenubarCard from "../menubar";
 import { observer } from "mobx-react-lite";
 import { Separator } from "../ui/separator";
 import { formatDate } from "@/lib/utils";
+import MoreHorizontal from "../Icons/more-horizontal";
 
 enum FilterEnum {
   ACTIVE = "Active",
@@ -481,7 +482,11 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
         <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
-              trigger={<Icons.moreHorizontal className="cursor-pointer" />}
+              trigger={
+                <Button size="icon" variant="outline">
+                  <MoreHorizontal className="cursor-pointer" />
+                </Button>
+              }
               items={coacheItems}
             />
           </div>

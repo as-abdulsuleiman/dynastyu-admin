@@ -449,7 +449,7 @@ const CreateSkillType: FC<CreateSkillTypeProps> = ({
                   htmlFor="is_primary_for_recruitment"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  Can recieve and message
+                  Primary for recruitment
                 </label>
               </div>
             </div>

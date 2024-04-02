@@ -28,6 +28,7 @@ import MenubarCard from "../menubar";
 import { Icons } from "../Icons";
 import { formatDate } from "@/lib/utils";
 import { Separator } from "../ui/separator";
+import { Button } from "../ui/button";
 
 const filterItems = [
   { name: "Spam", value: "Spam" },
@@ -254,7 +255,11 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
         <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
-              trigger={<MoreHorizontal className="cursor-pointer" />}
+              trigger={
+                <Button size="icon" variant="outline">
+                  <MoreHorizontal className="cursor-pointer" />
+                </Button>
+              }
               items={flaggedPostItems}
             />
           </div>

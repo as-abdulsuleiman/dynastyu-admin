@@ -117,12 +117,12 @@ const AthleteSkillCard: FC<AthleteSkillsCardProps> = ({
         </div>
         <div className="flex flex-row items-center mb-1">
           {val?.videos?.length ? (
-            <div className="flex flex-row items-center">
-              {val?.verified ? (
+            <div className=" flex-row items-center hidden">
+              {/* {val?.verified ? (
                 <Icons.shield className="h-5 w-5 stroke-[1.5px]" color="teal" />
-              ) : null}
+              ) : null} */}
 
-              <div
+              {/* <div
                 className={`text-[15px] ${
                   val?.verified ? "text-teal-700 ml-1" : "text-gray-600 ml-0"
                 }`}
@@ -130,10 +130,10 @@ const AthleteSkillCard: FC<AthleteSkillsCardProps> = ({
                 {val?.verified && val?.videos?.length
                   ? "Verified"
                   : "Verification Pending"}
-              </div>
+              </div> */}
             </div>
           ) : null}
-          {val?.videos?.length ? (
+          {/* {val?.videos?.length ? (
             <Button className="ml-auto" onClick={() => handleVerifySkill(val)}>
               {isUpdating === val?.id
                 ? "Verifying..."
@@ -141,9 +141,9 @@ const AthleteSkillCard: FC<AthleteSkillsCardProps> = ({
                 ? "Unverified skill"
                 : "Verify skill"}
             </Button>
-          ) : null}
+          ) : null} */}
         </div>
-        {val?.videos?.length > 0 ? (
+        {/* {val?.videos?.length > 0 ? (
           <Card className="border-none">
             <CardContent className="p-6 border-none">
               <MediaCard
@@ -153,7 +153,7 @@ const AthleteSkillCard: FC<AthleteSkillsCardProps> = ({
               />
             </CardContent>
           </Card>
-        ) : null}
+        ) : null} */}
       </div>
     );
   };

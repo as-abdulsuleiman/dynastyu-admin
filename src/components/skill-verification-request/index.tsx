@@ -26,6 +26,8 @@ import SkillVerificationRequestCountStatCard from "@/components/stat-cards/skill
 import { formatDate } from "@/lib/utils";
 import { Separator } from "../ui/separator";
 import { SearchInput } from "../search-input";
+import { Button } from "../ui/button";
+import MoreHorizontal from "../Icons/more-horizontal";
 
 interface SkillVerificationRequestProps {}
 
@@ -295,7 +297,11 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
         <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
-              trigger={<Icons.moreHorizontal className="cursor-pointer" />}
+              trigger={
+                <Button size="icon" variant="outline">
+                  <MoreHorizontal className="cursor-pointer" />
+                </Button>
+              }
               items={verificationItems}
             />
           </div>

@@ -34,6 +34,8 @@ import {
 import MenubarCard from "@/components/menubar";
 import { Separator } from "../ui/separator";
 import { SearchInput } from "../search-input";
+import { Button } from "../ui/button";
+import MoreHorizontal from "../Icons/more-horizontal";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -352,7 +354,11 @@ const Dashboard: FC<DashboardProps> = () => {
         <TableCell className="text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
-              trigger={<Icons.moreHorizontal className="cursor-pointer" />}
+              trigger={
+                <Button size="icon" variant="outline">
+                  <MoreHorizontal className="cursor-pointer" />
+                </Button>
+              }
               items={userItems}
             />
           </div>

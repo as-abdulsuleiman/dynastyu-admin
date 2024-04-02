@@ -418,7 +418,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               // onBlur={() => setFocus("school", { shouldSelect: true })}
               onClose={() => setOpenSchool(!openSchool)}
               isOpen={openSchool}
-              selectedValue={{ value: school?.name }}
+              selectedValue={{ value: school?.name, id: school?.id }}
               onSelectValue={(school) => {
                 setValue(
                   "school",

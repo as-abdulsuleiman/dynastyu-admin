@@ -34,7 +34,8 @@ import ModalCard from "../modal";
 import { AspectRatio } from "../ui/aspect-ratio";
 import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
-
+import VerifiedIcon from "@/components/Icons/verified";
+import MoreHorizontal from "../Icons/more-horizontal";
 interface AthleteDetailProps {
   params: {
     id: number;
@@ -337,6 +338,14 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
         }),
     },
     {
+      name: "View Skills",
+      onClick: () => {
+        router.push(`/skills?athlete=${data?.athleteProfile?.id}`, {
+          scroll: true,
+        });
+      },
+    },
+    {
       name: `${
         data?.athleteProfile?.verified ? "Unverify Profile" : "Verify Profile"
       }`,
@@ -455,7 +464,6 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                 isModal={true}
                 isOpen={viewPlayerCardUrl}
                 onOpenChange={() => setViewPlayerCardUrl(!viewPlayerCardUrl)}
-                contentClass="container mx-auto max-w-2xl rounded-2xl bg-primary-black bg-gradient-to-bl from-primary-black via-primary-black/5 to-primary-black px-[16px] md:px-[2rem] py-[2rem]"
                 trigger={
                   <UserAvatar
                     className="h-[120px] w-[120px] shadow cursor-pointer"
@@ -470,23 +478,22 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                     icon={<Icons.user className="h-8 w-8" />}
                   />
                 }
-                content={
-                  <AspectRatio ratio={16 / 16} className="cursor-pointer">
-                    <Image
-                      onLoadingComplete={() => setLoadingImage(false)}
-                      priority
-                      fill
-                      sizes="100vw"
-                      quality={80}
-                      src={data?.athleteProfile?.user?.avatar as string}
-                      alt="profile_picture"
-                      className={`rounded-2xl object-cover relative ${
-                        loadingImage ? "blur-sm " : "blur-none"
-                      }`}
-                    />
-                  </AspectRatio>
-                }
-              />
+              >
+                <AspectRatio ratio={16 / 16} className="cursor-pointer">
+                  <Image
+                    onLoadingComplete={() => setLoadingImage(false)}
+                    priority
+                    fill
+                    sizes="100vw"
+                    quality={80}
+                    src={data?.athleteProfile?.user?.avatar as string}
+                    alt="profile_picture"
+                    className={`rounded-2xl object-cover relative ${
+                      loadingImage ? "blur-sm " : "blur-none"
+                    }`}
+                  />
+                </AspectRatio>
+              </ModalCard>
               {loading ? (
                 <div className="flex flex-row items-center">
                   <Skeleton className="w-[170px] h-[28px] mt-2 mr-1" />
@@ -494,7 +501,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                 </div>
               ) : (
                 <div className="flex flex-row items-center justify-center mt-1">
-                  <Text className="text-xl relative mr-1">
+                  <Text className="text-base relative mr-1">
                     @{data?.athleteProfile?.user?.username}
                   </Text>
                   {data?.athleteProfile?.verified ? (
@@ -502,22 +509,9 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                       content={renderVerifiedBy(
                         data?.athleteProfile?.verifiedBy
                       )}
-                      trigger={
-                        <div className="cursor-pointer">
-                          <Icons.badgeCheck className="h-5 w-5" color="teal" />
-                        </div>
-                      }
+                      trigger={<VerifiedIcon className="cursor-pointer" />}
                     />
-                  ) : (
-                    <HoverCard
-                      content={<Text>{"Not Verified"}</Text>}
-                      trigger={
-                        <div className="cursor-pointer">
-                          <Icons.badgeAlert className="h-5 w-5" color="teal" />
-                        </div>
-                      }
-                    />
-                  )}
+                  ) : null}
                 </div>
               )}
               <div className="ml-auto absolute right-0 top-0">
@@ -526,7 +520,9 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                 ) : (
                   <MenubarCard
                     trigger={
-                      <Icons.moreHorizontal className="cursor-pointer" />
+                      <Button size="icon" variant="outline">
+                        <MoreHorizontal className="cursor-pointer" />
+                      </Button>
                     }
                     items={dropdownItems}
                   />

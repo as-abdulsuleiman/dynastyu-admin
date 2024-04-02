@@ -26258,7 +26258,31 @@ export type GetManySkillsQueryVariables = Exact<{
 }>;
 
 
-export type GetManySkillsQuery = { __typename?: 'Query', findFirstSkills?: { __typename?: 'Skills', id: any, skillId: any, videos: Array<string>, athleteId?: any | null, secondValue?: string | null, value: string, skillType: { __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string> }, athlete?: { __typename?: 'AthleteProfile', id: any } | null } | null };
+export type GetManySkillsQuery = { __typename?: 'Query', findFirstSkills?: { __typename?: 'Skills', id: any, skillId: any, videos: Array<string>, athleteId?: any | null, secondValue?: string | null, value: string, verified: boolean, verifiedAt?: any | null, skillType: { __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string> }, athlete?: { __typename?: 'AthleteProfile', id: any } | null } | null };
+
+export type GetFindManySkillsQueryVariables = Exact<{
+  where?: InputMaybe<SkillsWhereInput>;
+  orderBy?: InputMaybe<Array<SkillsOrderByWithRelationInput> | SkillsOrderByWithRelationInput>;
+  cursor?: InputMaybe<SkillsWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  distinct?: InputMaybe<Array<SkillsScalarFieldEnum> | SkillsScalarFieldEnum>;
+}>;
+
+
+export type GetFindManySkillsQuery = { __typename?: 'Query', findManySkills: Array<{ __typename?: 'Skills', id: any, skillId: any, videos: Array<string>, athleteId?: any | null, secondValue?: string | null, value: string, verified: boolean, verifiedAt?: any | null, skillType: { __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string> }, athlete?: { __typename?: 'AthleteProfile', id: any } | null }> };
+
+export type GetAthleteSkillTypesQueryVariables = Exact<{
+  where?: InputMaybe<SkillsWhereInput>;
+  orderBy?: InputMaybe<Array<SkillTypeOrderByWithRelationInput> | SkillTypeOrderByWithRelationInput>;
+  cursor?: InputMaybe<SkillTypeWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  distinct?: InputMaybe<Array<SkillTypeScalarFieldEnum> | SkillTypeScalarFieldEnum>;
+}>;
+
+
+export type GetAthleteSkillTypesQuery = { __typename?: 'Query', skillTypes: Array<{ __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, description?: string | null, position?: number | null, isPrimaryForRecruitment: boolean, unit: string, _count?: { __typename?: 'SkillTypeCount', skills: number } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, skillId: any, secondValue?: string | null, value: string, athleteId?: any | null, verified: boolean, createdAt: any, skillVerificationRequests: Array<{ __typename?: 'SkillVerificationRequest', id: any, uuid: string, verified: boolean }> }> }> };
 
 export type GetSkillTypesQueryVariables = Exact<{
   where?: InputMaybe<SkillTypeWhereInput>;
@@ -29680,6 +29704,8 @@ export const GetManySkillsDocument = gql`
     athleteId
     secondValue
     value
+    verified
+    verifiedAt
     skillType {
       id
       name
@@ -29733,6 +29759,160 @@ export type GetManySkillsQueryHookResult = ReturnType<typeof useGetManySkillsQue
 export type GetManySkillsLazyQueryHookResult = ReturnType<typeof useGetManySkillsLazyQuery>;
 export type GetManySkillsSuspenseQueryHookResult = ReturnType<typeof useGetManySkillsSuspenseQuery>;
 export type GetManySkillsQueryResult = Apollo.QueryResult<GetManySkillsQuery, GetManySkillsQueryVariables>;
+export const GetFindManySkillsDocument = gql`
+    query getFindManySkills($where: SkillsWhereInput, $orderBy: [SkillsOrderByWithRelationInput!], $cursor: SkillsWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SkillsScalarFieldEnum!]) {
+  findManySkills(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    id
+    skillId
+    videos
+    athleteId
+    secondValue
+    value
+    verified
+    verifiedAt
+    skillType {
+      id
+      name
+      options
+      numberOfVideos
+      secondFieldName
+      secondValueOptions
+      videosLabels
+    }
+    athlete {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetFindManySkillsQuery__
+ *
+ * To run a query within a React component, call `useGetFindManySkillsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFindManySkillsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFindManySkillsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      distinct: // value for 'distinct'
+ *   },
+ * });
+ */
+export function useGetFindManySkillsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetFindManySkillsQuery, GetFindManySkillsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetFindManySkillsQuery, GetFindManySkillsQueryVariables>(GetFindManySkillsDocument, options);
+      }
+export function useGetFindManySkillsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetFindManySkillsQuery, GetFindManySkillsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetFindManySkillsQuery, GetFindManySkillsQueryVariables>(GetFindManySkillsDocument, options);
+        }
+export function useGetFindManySkillsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetFindManySkillsQuery, GetFindManySkillsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetFindManySkillsQuery, GetFindManySkillsQueryVariables>(GetFindManySkillsDocument, options);
+        }
+export type GetFindManySkillsQueryHookResult = ReturnType<typeof useGetFindManySkillsQuery>;
+export type GetFindManySkillsLazyQueryHookResult = ReturnType<typeof useGetFindManySkillsLazyQuery>;
+export type GetFindManySkillsSuspenseQueryHookResult = ReturnType<typeof useGetFindManySkillsSuspenseQuery>;
+export type GetFindManySkillsQueryResult = Apollo.QueryResult<GetFindManySkillsQuery, GetFindManySkillsQueryVariables>;
+export const GetAthleteSkillTypesDocument = gql`
+    query getAthleteSkillTypes($where: SkillsWhereInput, $orderBy: [SkillTypeOrderByWithRelationInput!], $cursor: SkillTypeWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SkillTypeScalarFieldEnum!]) {
+  skillTypes(
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    id
+    name
+    options
+    numberOfVideos
+    secondFieldName
+    secondValueOptions
+    videosLabels
+    description
+    position
+    isPrimaryForRecruitment
+    unit
+    _count {
+      skills
+    }
+    skills(where: $where) {
+      id
+      videos
+      skillId
+      secondValue
+      value
+      athleteId
+      verified
+      createdAt
+      skillVerificationRequests(
+        where: {verified: {equals: true}}
+        take: 1
+        orderBy: {createdAt: desc}
+      ) {
+        id
+        uuid
+        verified
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAthleteSkillTypesQuery__
+ *
+ * To run a query within a React component, call `useGetAthleteSkillTypesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAthleteSkillTypesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAthleteSkillTypesQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      distinct: // value for 'distinct'
+ *   },
+ * });
+ */
+export function useGetAthleteSkillTypesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAthleteSkillTypesQuery, GetAthleteSkillTypesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAthleteSkillTypesQuery, GetAthleteSkillTypesQueryVariables>(GetAthleteSkillTypesDocument, options);
+      }
+export function useGetAthleteSkillTypesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAthleteSkillTypesQuery, GetAthleteSkillTypesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAthleteSkillTypesQuery, GetAthleteSkillTypesQueryVariables>(GetAthleteSkillTypesDocument, options);
+        }
+export function useGetAthleteSkillTypesSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetAthleteSkillTypesQuery, GetAthleteSkillTypesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAthleteSkillTypesQuery, GetAthleteSkillTypesQueryVariables>(GetAthleteSkillTypesDocument, options);
+        }
+export type GetAthleteSkillTypesQueryHookResult = ReturnType<typeof useGetAthleteSkillTypesQuery>;
+export type GetAthleteSkillTypesLazyQueryHookResult = ReturnType<typeof useGetAthleteSkillTypesLazyQuery>;
+export type GetAthleteSkillTypesSuspenseQueryHookResult = ReturnType<typeof useGetAthleteSkillTypesSuspenseQuery>;
+export type GetAthleteSkillTypesQueryResult = Apollo.QueryResult<GetAthleteSkillTypesQuery, GetAthleteSkillTypesQueryVariables>;
 export const GetSkillTypesDocument = gql`
     query getSkillTypes($where: SkillTypeWhereInput, $orderBy: [SkillTypeOrderByWithRelationInput!], $cursor: SkillTypeWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SkillTypeScalarFieldEnum!]) {
   skillTypes(

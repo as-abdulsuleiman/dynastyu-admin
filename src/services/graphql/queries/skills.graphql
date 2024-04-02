@@ -21,6 +21,8 @@ query getManySkills(
     athleteId
     secondValue
     value
+    verified
+    verifiedAt
     skillType {
       id
       name
@@ -36,17 +38,47 @@ query getManySkills(
   }
 }
 
+query getFindManySkills(
+  $where: SkillsWhereInput
+  $orderBy: [SkillsOrderByWithRelationInput!]
+  $cursor: SkillsWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [SkillsScalarFieldEnum!]
+) {
+  findManySkills(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    id
+    skillId
+    videos
+    athleteId
+    secondValue
+    value
+    verified
+    verifiedAt
+    skillType {
+      id
+      name
+      options
+      numberOfVideos
+      secondFieldName
+      secondValueOptions
+      videosLabels
+    }
+    athlete {
+      id
+    }
+  }
+}
 
-# query skillsTypes($where: SkillsWhereInput, $orderBy: [SkillTypeOrderByWithRelationInput!] $cursor: SkillTypeWhereUniqueInput
-#   $take: Int
-#   $skip: Int
-#   $distinct: [SkillTypeScalarFieldEnum!] ) {
-#   skillTypes(
-#     orderBy: $orderBy
-#     take: $take
-#     skip: $skip
-#     distinct: $distinct
-#     cursor: $cursor) {
+# query getskillsTypes($where: SkillsWhereInput, $orderBy: [SkillTypeOrderByWithRelationInput!]) {
+#   skillTypes(orderBy: $orderBy) {
 #     id
 #     name
 #     options
@@ -55,28 +87,73 @@ query getManySkills(
 #     secondValueOptions
 #     videosLabels
 #     description
-#     position
-#     isPrimaryForRecruitment
 #     unit
-#     _count{
-#       skills
-#     }
 #     skills(where: $where) {
 #       id
 #       videos
-#       skillId
 #       secondValue
 #       value
-#       athleteId
-#       verified
-#       createdAt
-#       skillVerificationRequests{
+#       skillVerificationRequests(
+#         where: { verified: { equals: true } }
+#         take: 1
+#         orderBy: { createdAt: desc }
+#       ) {
 #         id
-#         uuid
-#       } 
+#       }
 #     }
 #   }
 # }
+
+query getAthleteSkillTypes(
+  $where: SkillsWhereInput
+  $orderBy: [SkillTypeOrderByWithRelationInput!]
+  $cursor: SkillTypeWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [SkillTypeScalarFieldEnum!]
+) {
+  skillTypes(
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    id
+    name
+    options
+    numberOfVideos
+    secondFieldName
+    secondValueOptions
+    videosLabels
+    description
+    position
+    isPrimaryForRecruitment
+    unit
+    _count {
+      skills
+    }
+    skills(where: $where) {
+      id
+      videos
+      skillId
+      secondValue
+      value
+      athleteId
+      verified
+      createdAt
+      skillVerificationRequests(
+        where: { verified: { equals: true } }
+        take: 1
+        orderBy: { createdAt: desc }
+      ) {
+        id
+        uuid
+        verified
+      }
+    }
+  }
+}
 
 query getSkillTypes(
   $where: SkillTypeWhereInput
@@ -105,10 +182,10 @@ query getSkillTypes(
     description
     secondValueOptions
     videosLabels
-     _count{
+    _count {
       skills
     }
-    skills{
+    skills {
       id
       videos
       skillId
@@ -118,7 +195,7 @@ query getSkillTypes(
       verified
       createdAt
       skillId
-      skillHistory{
+      skillHistory {
         id
         uuid
         skillId
@@ -126,7 +203,7 @@ query getSkillTypes(
         secondValue
         athleteId
       }
-      skillVerificationRequests{
+      skillVerificationRequests {
         id
         uuid
         userId
@@ -135,7 +212,6 @@ query getSkillTypes(
     }
   }
 }
-
 
 query getSkillType($where: SkillTypeWhereUniqueInput!) {
   skillType(where: $where) {
@@ -360,8 +436,11 @@ mutation createSkillType($data: SkillTypeCreateInput!) {
   }
 }
 
-mutation updateSkillType($data: SkillTypeUpdateInput!  $where: SkillTypeWhereUniqueInput!) {
-  updateOneSkillType(data: $data where: $where) {
+mutation updateSkillType(
+  $data: SkillTypeUpdateInput!
+  $where: SkillTypeWhereUniqueInput!
+) {
+  updateOneSkillType(data: $data, where: $where) {
     id
     name
     options
@@ -384,7 +463,9 @@ mutation deleteSkillType($where: SkillTypeWhereUniqueInput!) {
   }
 }
 
-mutation deleteManySkillVerificationRequest($where: SkillVerificationRequestWhereInput) {
+mutation deleteManySkillVerificationRequest(
+  $where: SkillVerificationRequestWhereInput
+) {
   deleteManySkillVerificationRequest(where: $where) {
     count
   }
@@ -401,5 +482,3 @@ mutation deleteManySkillHistory($where: SkillHistoryWhereInput) {
     count
   }
 }
-
-

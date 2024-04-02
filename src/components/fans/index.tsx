@@ -25,6 +25,8 @@ import { Icons } from "../Icons";
 import MenubarCard from "../menubar";
 import { observer } from "mobx-react-lite";
 import { Separator } from "../ui/separator";
+import { Button } from "../ui/button";
+import MoreHorizontal from "../Icons/more-horizontal";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -239,7 +241,11 @@ const Fans: FC<FansProps> = ({}) => {
         <TableCell className="text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
-              trigger={<Icons.moreHorizontal className="cursor-pointer" />}
+              trigger={
+                <Button size="icon" variant="outline">
+                  <MoreHorizontal className="cursor-pointer" />
+                </Button>
+              }
               items={fanItems}
             />
           </div>
