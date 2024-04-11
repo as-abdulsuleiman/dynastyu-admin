@@ -117,7 +117,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
       school:
         {
           id: coachData?.coachProfile?.schoolId,
-          name: coachData?.coachProfile?.school.name,
+          name: coachData?.coachProfile?.school?.name,
         } || {},
       accountType:
         {
