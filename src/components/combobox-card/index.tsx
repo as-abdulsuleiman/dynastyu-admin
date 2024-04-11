@@ -36,12 +36,22 @@ interface ComboBoxCardProps {
   placeholder?: string;
   searchPlaceholder?: string;
   hasSearch?: boolean;
-  onClose: () => void;
-  selectedValue: any;
-  onSelectValue: (item: any | null) => void;
+  onClose?: () => void;
+  selectedValue?: any;
+  onSelectValue?: (item: any | null) => void;
   onBlur?: React.FocusEventHandler<HTMLInputElement> | undefined;
   loading?: boolean;
   disabled?: boolean;
+  searchValue?: string;
+  shouldFilter?: boolean;
+  handleSearch?: (search: string) => void;
+  customRenderItems?: ({
+    item,
+    id,
+  }: {
+    item: {};
+    id: number;
+  }) => React.ReactNode;
 }
 
 const ComboBoxCard: FC<ComboBoxCardProps> = ({
@@ -64,6 +74,10 @@ const ComboBoxCard: FC<ComboBoxCardProps> = ({
   iconKey = "emoji",
   scrollAreaClass,
   searchPlaceholder,
+  handleSearch,
+  searchValue,
+  shouldFilter = false,
+  customRenderItems,
 }) => {
   const displaySelectedItem = items?.find(
     (item: Record<string, any>) => item[valueKey] === selectedValue[valueKey]
@@ -106,10 +120,17 @@ const ComboBoxCard: FC<ComboBoxCardProps> = ({
           className="PopoverContent"
         >
           <ScrollArea className={`h-72 rounded-md border ${scrollAreaClass}`}>
-            <Command className="w-[100%] max-w-[100%] min-w-[100%]">
+            <Command
+              shouldFilter={shouldFilter}
+              className="w-[100%] max-w-[100%] min-w-[100%]"
+            >
               {hasSearch ? (
                 <>
                   <CommandInput
+                    value={searchValue}
+                    onValueChange={(e) => {
+                      handleSearch ? handleSearch(e) : null;
+                    }}
                     placeholder={searchPlaceholder}
                     className="h-9 w-[100%] max-w-[100%] min-w-[100%]"
                   />
@@ -125,39 +146,50 @@ const ComboBoxCard: FC<ComboBoxCardProps> = ({
                 ) : (
                   <>
                     {items?.map((item: Record<string, any>, id) => {
-                      let valueType: string | number;
-                      if (typeof selectedValue[valueKey] == "string") {
-                        valueType = selectedValue[valueKey]?.toLowerCase();
+                      if (customRenderItems) {
+                        return customRenderItems({ item, id });
                       } else {
-                        valueType = selectedValue[valueKey];
+                        let valueType: string | number;
+                        if (typeof selectedValue[valueKey] == "string") {
+                          valueType = selectedValue[valueKey]?.toLowerCase();
+                        } else {
+                          valueType = selectedValue[valueKey];
+                        }
+                        return (
+                          <CommandItem
+                            className="capitalize"
+                            key={item?.id || item[IdKey] || id}
+                            value={item[valueKey]}
+                            onSelect={(currentValue) => {
+                              onSelectValue
+                                ? onSelectValue(
+                                    currentValue === valueType ? "" : item
+                                  )
+                                : null;
+
+                              if (onClose) {
+                                onClose();
+                              }
+                            }}
+                          >
+                            <>
+                              <>
+                                {item[iconKey] ? <>{item[iconKey]} </> : null}
+                              </>
+                              {""}
+                              {item[displayKey]}
+                            </>
+                            <CheckIcon
+                              className={cn(
+                                "ml-auto h-4 w-4",
+                                selectedValue[valueKey] === item[valueKey]
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                          </CommandItem>
+                        );
                       }
-                      return (
-                        <CommandItem
-                          className="capitalize"
-                          key={item?.id || item[IdKey] || id}
-                          value={item[valueKey]}
-                          onSelect={(currentValue) => {
-                            onSelectValue(
-                              currentValue === valueType ? "" : item
-                            );
-                            onClose();
-                          }}
-                        >
-                          <>
-                            <>{item[iconKey] ? <>{item[iconKey]} </> : null}</>
-                            {""}
-                            {item[displayKey]}
-                          </>
-                          <CheckIcon
-                            className={cn(
-                              "ml-auto h-4 w-4",
-                              selectedValue[valueKey] === item[valueKey]
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-                        </CommandItem>
-                      );
                     })}
                   </>
                 )}
