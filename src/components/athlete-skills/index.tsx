@@ -641,9 +641,9 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
 
   useEffect(() => {
     refetch({
-      where: {
-        athleteId: { equals: athleteProfile?.id },
-      },
+      // where: {
+      //   athleteId: { equals: athleteProfile?.id },
+      // },
       whereSkillType: {
         OR: [
           { name: { contains: debounced, mode: QueryMode.Insensitive } },
@@ -660,7 +660,7 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
         createdAt: SortOrder.Desc,
       },
     });
-  }, [debounced, refetch, athleteProfile?.id]);
+  }, [debounced, refetch]);
 
   const lastSkillTypeId = useMemo(() => {
     const lastPostInResults = data?.skillTypes[data?.skillTypes?.length - 1];
@@ -882,7 +882,7 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
         title="Athlete List"
         headerItems={headerItems}
         items={data?.skillTypes as any[]}
-        loading={loading}
+        loading={loadingAthlete}
         renderItems={renderItems}
       />
       {loading || !data?.skillTypes?.length ? null : (
