@@ -113,6 +113,12 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       count: 0,
       items: [
         {
+          name: "Create School",
+          path: "/schools/new",
+          hasBadge: false,
+          count: 0,
+        },
+        {
           name: "College",
           path: "/schools/college",
           hasBadge: false,
@@ -121,12 +127,6 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
         {
           name: "High School",
           path: "/schools/high-school",
-          hasBadge: false,
-          count: 0,
-        },
-        {
-          name: "Create School",
-          path: "/schools/new",
           hasBadge: false,
           count: 0,
         },

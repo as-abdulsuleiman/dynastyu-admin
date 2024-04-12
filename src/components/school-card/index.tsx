@@ -21,6 +21,8 @@ import MoreHorizontal from "../Icons/more-horizontal";
 import { Button } from "../ui/button";
 import { BadgeDollarSign, Calendar } from "lucide-react";
 import PromptAlert from "../prompt-alert";
+import ModalCard from "@/components/modal";
+import UsersAnalytics from "@/components/analytics/users";
 
 interface SchoolCardProps {
   loading?: boolean;
@@ -34,6 +36,75 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   const [updateSchool] = useUpdateSchoolMutation();
   const [isDeletingSchool, setIsDeletingSchool] = useState(false);
   const [openDeleteSchoolPrompt, setOpenDeleteSchoolPrompt] = useState(false);
+  const [viewAnalytics, setViewAnalytics] = useState(false);
+
+  const dataList: any = [
+    {
+      name: "Athletes Interested",
+      value: school?._count?.athletesInterested || 0,
+      color: "teal",
+      icon: () => (
+        <Icons.users2 className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
+    },
+
+    {
+      name: "Athletes Prospected",
+      value: school?._count?.athletesProspected || 0,
+      color: "teal",
+      icon: () => (
+        <Icons.usersRound className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
+    },
+    {
+      name: "Athletes Recruited",
+      color: "teal",
+      value: school?._count?.athletesRecruited || 0,
+      icon: () => (
+        <Icons.athlete className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
+    },
+
+    {
+      name: "Coaches",
+      color: "teal",
+      value: school?._count?.coaches || 0,
+      icon: () => (
+        <Icons.whistle className="mr-2.5 mb-[-6px] h-5 w-5 fill-teal-600" />
+      ),
+    },
+
+    {
+      name: "Evaluations",
+      value: school?._count?.evaluations || 0,
+      icon: () => (
+        <Icons.clipboardEdit className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
+    },
+    {
+      name: "Posts",
+      value: school?._count?.posts || 0,
+      icon: () => (
+        <Icons.fileImage className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
+    },
+    // {
+    //   name: "Evaluations Created",
+    //   color: "teal",
+    //   value: data?.school?._count?.evaluationsCreated || 0,
+    //   icon: () => (
+    //     <Icons.clipboardEdit className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+    //   ),
+    // },
+    // {
+    //   name: "Comments",
+    //   color: "teal",
+    //   value: data?.school?._count?.comments || 0,
+    //   icon: () => (
+    //     <Icons.messageCircleCode className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+    //   ),
+    // },
+  ];
 
   const handleConfirmPrompt = async (school: any) => {
     setIsDeletingSchool(true);
@@ -146,6 +217,10 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
     {
       name: `Delete ${school?.schoolType?.name}`,
       onClick: () => handleDeleteSchoolPrompt(),
+    },
+    {
+      name: "View Analytics",
+      onClick: () => setViewAnalytics(true),
     },
   ];
   return (
@@ -358,6 +433,23 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           }}
           handleConfirmPrompt={() => handleConfirmPrompt(school)}
         />
+        <ModalCard
+          isModal={true}
+          isOpen={viewAnalytics}
+          onOpenChange={() => setViewAnalytics(!viewAnalytics)}
+        >
+          <div className="grid grid-cols-12 gap-6">
+            <div className="col-span-12">
+              <UsersAnalytics
+                loading={loading}
+                data={dataList}
+                showStatus={false}
+                // isActive={data?.school?.user?.isActive || false}
+                title={`${school?.name} Analytics`}
+              />
+            </div>
+          </div>
+        </ModalCard>
       </CardContent>
     </Card>
   );

@@ -55,18 +55,11 @@ import { useDebouncedValue } from "@mantine/hooks";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "../ui/skeleton";
 
-const filterItems = [
-  { name: "Active", value: "Active" },
-  { name: "Inactive", value: "Inactive" },
-  { name: "Verified", value: "Verified" },
-  { name: "Not Verified", value: "Not Verified" },
-];
-
 const headerItems = [
-  { name: "Skill Type" },
-  { name: "Unit" },
+  { name: "Skill" },
   { name: "Value" },
   { name: "Second Field Value" },
+  { name: "Unit" },
   { name: "Created At" },
   { name: "Videos" },
   { name: "Actions" },
@@ -115,6 +108,10 @@ const RenderSkillHistory = ({
         athleteId: {
           equals: athleteId,
         },
+      },
+      take: 10,
+      orderBy: {
+        createdAt: SortOrder.Desc,
       },
     },
     skip: !fetchHistory,
@@ -194,7 +191,6 @@ const RenderEditSkillModal = ({
   const [isSubmiting, setIsSubmiting] = useState(false);
 
   const inputRef = useRef<ElementRef<"input">>(null);
-
   const { uploadFiles } = useStorage({
     userId: userId,
     folder: "skills",
@@ -630,7 +626,7 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
   const { data, loading, fetchMore, refetch } = useGetAthleteSkillTypesQuery({
     variables: {
       where: {
-        athleteId: { equals: athleteProfile?.id },
+        athleteId: { equals: athleteId },
       },
       take: 10,
       orderBy: {
@@ -641,9 +637,9 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
 
   useEffect(() => {
     refetch({
-      where: {
-        athleteId: { equals: athleteProfile?.id },
-      },
+      // where: {
+      //   athleteId: { equals: athleteProfile?.id },
+      // },
       whereSkillType: {
         OR: [
           { name: { contains: debounced, mode: QueryMode.Insensitive } },
@@ -660,7 +656,7 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
         createdAt: SortOrder.Desc,
       },
     });
-  }, [debounced, refetch, athleteProfile?.id]);
+  }, [debounced, refetch]);
 
   const lastSkillTypeId = useMemo(() => {
     const lastPostInResults = data?.skillTypes[data?.skillTypes?.length - 1];
@@ -766,13 +762,13 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
           </div>
         </TableCell>
         <TableCell className="text-center text-sm">
-          <div className="">{item?.unit}</div>
-        </TableCell>
-        <TableCell className="text-center text-sm">
           <div className="">{fieldValues?.value}</div>
         </TableCell>
         <TableCell className="text-center text-sm">
           <div className="">{fieldValues?.secondValue}</div>
+        </TableCell>
+        <TableCell className="text-center text-sm">
+          <div className="">{item?.unit}</div>
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
@@ -864,20 +860,14 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
         )}
       </div>
       <Separator className="my-6" />
-      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-        <SearchInput
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Type to search..."
-        />
-        {/* <SelectCard
-          className="ring-0 bg-background dark:bg-dark-background"
-          items={filterItems}
-          selectedItem={status}
-          onValueChange={(e) => {
-            setStatus(e);
-          }}
-        /> */}
-      </Grid>
+      <div className="flex mt-6 gap-6 w-full justify-end">
+        <div className="w-full md:w-1/2 order-2">
+          <SearchInput
+            onChange={(e) => setValue(e.target.value)}
+            placeholder="Type to search..."
+          />
+        </div>
+      </div>
       <UniversalTable
         title="Athlete List"
         headerItems={headerItems}

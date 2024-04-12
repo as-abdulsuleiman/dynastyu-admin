@@ -10,7 +10,9 @@ import {
   SchoolWhereInput,
   SortOrder,
   useDeleteSchoolMutation,
+  useGetSchoolLazyQuery,
   useGetSchoolsQuery,
+  useUpdateSchoolMutation,
 } from "@/services/graphql";
 import { useDebouncedValue } from "@mantine/hooks";
 import { Title, Text, Grid, Flex, TextInput } from "@tremor/react";
@@ -23,20 +25,14 @@ import Pagination from "@/components/pagination";
 import UserAvatar from "@/components/user-avatar";
 import { Button } from "@/components/ui/button";
 import { observer } from "mobx-react-lite";
-import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
-import CreateSchool from "@/components/create-school";
 import { SearchInput } from "@/components/search-input";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { Separator } from "@/components/ui/separator";
 import MenubarCard from "@/components/menubar";
 import MoreHorizontal from "@/components/Icons/more-horizontal";
+import { formatDate } from "@/lib/utils";
+import PromptAlert from "@/components/prompt-alert";
 
 const filterItems = [
   { name: "College", value: "College" },
@@ -46,6 +42,7 @@ const headerItems = [
   { name: "Name" },
   { name: "School Type" },
   { name: "Email" },
+  { name: "Created At" },
   { name: "Action" },
 ];
 
@@ -56,16 +53,17 @@ enum FilterEnum {
 
 interface SchoolsProps {}
 
-const HighSchool: FC<SchoolsProps> = ({}) => {
+const Schools: FC<SchoolsProps> = ({}) => {
   const { toast } = useToast();
   const router = useRouter();
-  const [status, setStatus] = useState<string>("High School");
   const [value, setValue] = useState<string>("");
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [isActivating, setIsactivating] = useState<boolean>();
-  const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [debounced] = useDebouncedValue(value, 300);
   const [deleteSchool] = useDeleteSchoolMutation();
+  const [updateSchool] = useUpdateSchoolMutation();
+  const [getSchool] = useGetSchoolLazyQuery();
+  const [isDeletingSchool, setIsDeletingSchool] = useState(false);
+  const [openDeleteSchoolPrompt, setOpenDeleteSchoolPrompt] = useState(false);
+  const [activeSchool, setActiveSchool] = useState({});
   const {
     data: schools,
     loading,
@@ -73,38 +71,35 @@ const HighSchool: FC<SchoolsProps> = ({}) => {
     refetch,
   } = useGetSchoolsQuery({
     variables: {
-      where: { schoolTypeId: { equals: 1 } },
+      where: {
+        schoolType: {
+          is: {
+            name: { equals: "High School" },
+          },
+        },
+      },
       orderBy: {
         createdAt: SortOrder.Desc,
       },
       take: 10,
     },
-    // pollInterval: 30 * 1000,
   });
-
-  const whereClause: SchoolWhereInput = useMemo(() => {
-    if (status === FilterEnum.HIGHSCHOOL) {
-      return {
-        schoolTypeId: { equals: 1 },
-      };
-    } else {
-      return {
-        schoolTypeId: { equals: 1 },
-      };
-    }
-  }, [status]);
 
   useEffect(() => {
     refetch({
       where: {
-        ...whereClause,
+        schoolType: {
+          is: {
+            name: { equals: "High School" },
+          },
+        },
         OR: [
           { name: { contains: debounced, mode: QueryMode.Insensitive } },
           { email: { contains: debounced, mode: QueryMode.Insensitive } },
         ],
       },
     });
-  }, [status, whereClause, debounced, refetch]);
+  }, [debounced, refetch]);
 
   const lastUserId = useMemo(() => {
     const lastPostInResults = schools?.schools[schools?.schools?.length - 1];
@@ -166,39 +161,125 @@ const HighSchool: FC<SchoolsProps> = ({}) => {
       },
     });
   };
+  const handleDeleteSchoolPrompt = (item: any) => {
+    setActiveSchool(item);
+    setOpenDeleteSchoolPrompt(true);
+  };
 
-  const handleDeleteSchool = async (school: any) => {
+  const handleConfirmPrompt = async (school: any) => {
     try {
-      const response = await deleteSchool({
+      setIsDeletingSchool(true);
+      const { data: schoolData } = await getSchool({
         variables: {
           where: {
-            id: Number(school?.id),
+            id: school?.id,
           },
         },
       });
-      if (response.data?.deleteOneSchool) {
-        // await refetch();
-        toast({
-          title: "School successfully deleted.",
-          description: `${school?.name} has been deleted.`,
-          variant: "default",
-        });
-      }
+      const athletesInterestedId = schoolData?.school?.athletesInterested?.map(
+        (val: any) => val?.athleteId
+      );
+      const athletesRecruitedId = schoolData?.school?.athletesRecruited?.map(
+        (val: any) => val?.athleteId
+      );
+      const athletesProspectedId = schoolData?.school?.athletesProspected?.map(
+        (val: any) => val?.athleteId
+      );
+      const schoolPostId = schoolData?.school?.posts?.map(
+        (val: any) => val?.id
+      );
+      const athletesId = schoolData?.school?.athletes?.map(
+        (val: any) => val?.id
+      );
+      const coachesId = schoolData?.school?.coaches?.map((val: any) => val?.id);
+
+      await updateSchool({
+        variables: {
+          where: {
+            id: school.id,
+          },
+          data: {
+            athletesProspected: {
+              deleteMany: [
+                {
+                  athleteId: {
+                    in: athletesProspectedId || [],
+                  },
+                },
+              ],
+            },
+            athletesRecruited: {
+              deleteMany: [
+                {
+                  athleteId: {
+                    in: athletesRecruitedId || [],
+                  },
+                },
+              ],
+            },
+            athletesInterested: {
+              deleteMany: [
+                {
+                  athleteId: {
+                    in: athletesInterestedId || [],
+                  },
+                },
+              ],
+            },
+            posts: {
+              deleteMany: [
+                {
+                  id: {
+                    in: schoolPostId || [],
+                  },
+                },
+              ],
+            },
+            athletes: {
+              deleteMany: [
+                {
+                  id: {
+                    in: athletesId || [],
+                  },
+                },
+              ],
+            },
+            coaches: {
+              deleteMany: [
+                {
+                  id: {
+                    in: coachesId || [],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      });
+      await deleteSchool({
+        variables: {
+          where: {
+            id: schoolData?.school?.id,
+          },
+        },
+      });
+      refetch();
     } catch (error) {
       toast({
         title: "Something went wrong.",
         description: `${
-          error || "Could not successfully created a coach. Please try again."
+          error || "Could not successfully update Athlete. Please try again."
         }`,
         variant: "destructive",
       });
+    } finally {
+      setActiveSchool({});
+      setIsDeletingSchool(false);
+      setOpenDeleteSchoolPrompt(false);
     }
   };
 
   const handleEditSchool = (item: any) => {
-    // if (item?.schoolType?.name === "College") {
-    //   router.push(`/schools/edit?school=${item?.id}`);
-    // }
     router.push(`/schools/edit?school=${item?.id}`);
   };
 
@@ -213,11 +294,12 @@ const HighSchool: FC<SchoolsProps> = ({}) => {
         name: `Edit School`,
         onClick: () => handleEditSchool(item),
       },
-      // {
-      //   name: "Delete School",
-      //   onclick: async () => await handleDeleteSchool(item),
-      // },
+      {
+        name: "Delete School",
+        onClick: () => handleDeleteSchoolPrompt(item),
+      },
     ];
+
     return (
       <TableRow key={item?.id}>
         <TableCell>
@@ -233,7 +315,12 @@ const HighSchool: FC<SchoolsProps> = ({}) => {
               avatar={item?.logo as string}
               fallback={`${item?.name?.charAt(0)}`}
             />
-            <div className="ml-4 cursor-pointer text-base">{item?.name}</div>
+            <div className="ml-4 cursor-pointer text-base">
+              <div className="text-base">{item?.name}</div>
+              <div className="text-sm text-primary">
+                {item?.city ? `${item?.city},` : ""} {item?.state}
+              </div>
+            </div>
           </div>
         </TableCell>
         <TableCell className="text-center text-sm">
@@ -242,10 +329,21 @@ const HighSchool: FC<SchoolsProps> = ({}) => {
         <TableCell className="text-center text-sm">
           <div>{item?.email}</div>
         </TableCell>
+        <TableCell className="text-center cursor-pointer text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {item?.createdAt
+              ? formatDate(new Date(item?.createdAt), "MMMM dd yyyy")
+              : ""}
+          </div>
+        </TableCell>
         <TableCell className="text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
-              trigger={<MoreHorizontal className="cursor-pointer" />}
+              trigger={
+                <Button size="icon" variant="outline">
+                  <MoreHorizontal className="cursor-pointer" />
+                </Button>
+              }
               items={userItems}
             />
           </div>
@@ -271,23 +369,25 @@ const HighSchool: FC<SchoolsProps> = ({}) => {
       </div>
       <Separator className="my-6" />
       <Grid numItemsMd={2} numItemsLg={3} className="mt-6 gap-6">
-        <SchoolStatCard whereClause={whereClause} title={"High School"} />
-      </Grid>
-      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-        <SearchInput
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Type to search..."
-        />
-        {/* <SelectCard
-          className="bg-background dark:bg-dark-background"
-          defaultValue="College"
-          items={filterItems}
-          selectedItem={status}
-          onValueChange={(e) => {
-            setStatus(e);
+        <SchoolStatCard
+          whereClause={{
+            schoolType: {
+              is: {
+                name: { equals: "High School" },
+              },
+            },
           }}
-        /> */}
+          title="High School"
+        />
       </Grid>
+      <div className="flex mt-6 gap-6 w-full justify-end">
+        <div className="w-full md:w-1/2 order-2">
+          <SearchInput
+            onChange={(e) => setValue(e.target.value)}
+            placeholder="Type to search..."
+          />
+        </div>
+      </div>
       <UniversalTable
         title="School List"
         headerItems={headerItems}
@@ -298,8 +398,18 @@ const HighSchool: FC<SchoolsProps> = ({}) => {
       {loading || !schools?.schools?.length ? null : (
         <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
       )}
+      <PromptAlert
+        loading={isDeletingSchool}
+        content={`This action cannot be undone. This will permanently delete this data from our servers.`}
+        showPrompt={openDeleteSchoolPrompt}
+        handleHidePrompt={() => {
+          setActiveSchool({});
+          setOpenDeleteSchoolPrompt(false);
+        }}
+        handleConfirmPrompt={() => handleConfirmPrompt(activeSchool)}
+      />
     </main>
   );
 };
 
-export default observer(HighSchool);
+export default observer(Schools);

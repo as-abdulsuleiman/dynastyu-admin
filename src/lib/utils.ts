@@ -43,15 +43,14 @@ export const coachTitleOptions = [
 ];
 
 export const classificationOptions = [
-  { label: "1A", value: "1A" },
-  { label: "2A", value: "2A" },
-  { label: "3A", value: "3A" },
-  { label: "4A", value: "4A" },
-  { label: "5A", value: "5A" },
-  { label: "6A", value: "6A" },
-  { label: "7A", value: "7A" },
+  { id: 1, label: "1A", value: "1A" },
+  { id: 2, label: "2A", value: "2A" },
+  { id: 3, label: "3A", value: "3A" },
+  { id: 4, label: "4A", value: "4A" },
+  { id: 5, label: "5A", value: "5A" },
+  { id: 6, label: "6A", value: "6A" },
+  { id: 7, label: "7A", value: "7A" },
 ];
-
 
 export const formatDate = (
   date: Date | number | string,
