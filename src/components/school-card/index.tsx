@@ -120,7 +120,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           },
         },
       });
-      router.push(`/schools`);
+      router.push(`/schools/college`);
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -165,7 +165,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           {loading ? (
             <Skeleton className="w-[120px] h-[25px] mt-2" />
           ) : (
-            <Text className="text-xl mt-2">{school?.schoolType?.name}</Text>
+            <Text className="text-sm mt-2">{school?.schoolType?.name}</Text>
           )}
 
           <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
