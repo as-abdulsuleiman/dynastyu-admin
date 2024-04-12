@@ -26277,6 +26277,7 @@ export type GetFindManySkillsQueryVariables = Exact<{
 export type GetFindManySkillsQuery = { __typename?: 'Query', findManySkills: Array<{ __typename?: 'Skills', id: any, skillId: any, videos: Array<string>, athleteId?: any | null, secondValue?: string | null, createdAt: any, value: string, verified: boolean, verifiedAt?: any | null, skillType: { __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string> }, athlete?: { __typename?: 'AthleteProfile', id: any } | null }> };
 
 export type GetAthleteSkillTypesQueryVariables = Exact<{
+  whereSkillType?: InputMaybe<SkillTypeWhereInput>;
   where?: InputMaybe<SkillsWhereInput>;
   orderBy?: InputMaybe<Array<SkillTypeOrderByWithRelationInput> | SkillTypeOrderByWithRelationInput>;
   cursor?: InputMaybe<SkillTypeWhereUniqueInput>;
@@ -29920,8 +29921,9 @@ export type GetFindManySkillsLazyQueryHookResult = ReturnType<typeof useGetFindM
 export type GetFindManySkillsSuspenseQueryHookResult = ReturnType<typeof useGetFindManySkillsSuspenseQuery>;
 export type GetFindManySkillsQueryResult = Apollo.QueryResult<GetFindManySkillsQuery, GetFindManySkillsQueryVariables>;
 export const GetAthleteSkillTypesDocument = gql`
-    query getAthleteSkillTypes($where: SkillsWhereInput, $orderBy: [SkillTypeOrderByWithRelationInput!], $cursor: SkillTypeWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SkillTypeScalarFieldEnum!]) {
+    query getAthleteSkillTypes($whereSkillType: SkillTypeWhereInput, $where: SkillsWhereInput, $orderBy: [SkillTypeOrderByWithRelationInput!], $cursor: SkillTypeWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SkillTypeScalarFieldEnum!]) {
   skillTypes(
+    where: $whereSkillType
     orderBy: $orderBy
     take: $take
     skip: $skip
@@ -29996,6 +29998,7 @@ export const GetAthleteSkillTypesDocument = gql`
  * @example
  * const { data, loading, error } = useGetAthleteSkillTypesQuery({
  *   variables: {
+ *      whereSkillType: // value for 'whereSkillType'
  *      where: // value for 'where'
  *      orderBy: // value for 'orderBy'
  *      cursor: // value for 'cursor'

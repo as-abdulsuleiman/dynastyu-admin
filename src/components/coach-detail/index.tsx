@@ -205,7 +205,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       onClick: () => setViewPlayerCardUrl(true),
     },
     {
-      name: "View User Analytics",
+      name: "View Analytics",
       onClick: () => setViewAnalytics(true),
     },
     // {

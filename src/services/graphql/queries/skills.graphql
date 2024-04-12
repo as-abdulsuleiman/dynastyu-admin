@@ -107,6 +107,7 @@ query getFindManySkills(
 # }
 
 query getAthleteSkillTypes(
+  $whereSkillType: SkillTypeWhereInput
   $where: SkillsWhereInput
   $orderBy: [SkillTypeOrderByWithRelationInput!]
   $cursor: SkillTypeWhereUniqueInput
@@ -115,6 +116,7 @@ query getAthleteSkillTypes(
   $distinct: [SkillTypeScalarFieldEnum!]
 ) {
   skillTypes(
+    where: $whereSkillType
     orderBy: $orderBy
     take: $take
     skip: $skip

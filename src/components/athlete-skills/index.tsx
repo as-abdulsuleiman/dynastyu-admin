@@ -30,7 +30,7 @@ import { Separator } from "../ui/separator";
 import SkillIcon from "@/components/Icons/skill";
 import { SearchInput } from "../search-input";
 import SelectCard from "@/components/select";
-import { Grid } from "@tremor/react";
+import { Title, Text, Grid } from "@tremor/react";
 import UniversalTable from "../universal-table";
 import Pagination from "../pagination";
 import { TableCell, TableRow } from "../ui/table";
@@ -53,6 +53,7 @@ import { useRootStore } from "@/mobx";
 import { Icons } from "../Icons";
 import { useDebouncedValue } from "@mantine/hooks";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "../ui/skeleton";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -60,10 +61,6 @@ const filterItems = [
   { name: "Verified", value: "Verified" },
   { name: "Not Verified", value: "Not Verified" },
 ];
-
-enum ModalEnum {
-  OPTIONS = "Options",
-}
 
 const headerItems = [
   { name: "Skill Type" },
@@ -73,28 +70,13 @@ const headerItems = [
   { name: "Created At" },
   { name: "Videos" },
   { name: "Actions" },
-
-  // { name: "Position" },
-  // { name: "Status" },
-  // { name: "Verified" },
-  // { name: "Featured" },
 ];
 
 const historyHeaderItems = [
-  { name: "Skill Type" },
+  { name: "Skill" },
   { name: "Value" },
   { name: "Second Value" },
   { name: "Created At" },
-
-  // { name: "Value" },
-  // { name: "Second Field Value" },
-  // { name: "Videos" },
-  // { name: "Actions" },
-
-  // { name: "Position" },
-  // { name: "Status" },
-  // { name: "Verified" },
-  // { name: "Featured" },
 ];
 
 interface AthleteSkillProps {
@@ -164,6 +146,7 @@ const RenderSkillHistory = ({
   return (
     <div className="grid grid-cols-12 gap-6 py-2">
       <div className="col-span-12">
+        <div className="text-base font-TTHovesDemiBold">Skill History</div>
         <UniversalTable
           title="Athlete List"
           headerItems={historyHeaderItems}
@@ -171,13 +154,6 @@ const RenderSkillHistory = ({
           loading={loading}
           renderItems={renderItems}
         />
-        {/* {historyData?.skillHistories.map((history) => {
-            return (
-              <div key={history.id} className="p-2">
-                <div>{history?.skill?.skillType?.name}</div>
-              </div>
-            );
-          })} */}
       </div>
     </div>
   );
@@ -629,7 +605,7 @@ const RenderEditSkillModal = ({
 };
 
 const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
-  const [status, setStatus] = useState<string>("");
+  // const [status, setStatus] = useState<string>("");
   const [value, setValue] = useState<string>("");
   const [videos, setVideos] = useState<string[]>();
   const [skillId, setSkillId] = useState<string | null>("");
@@ -640,39 +616,51 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
   const themeColor = UseThemeColor();
   const athleteId = searchParams?.athlete;
 
-  const { data: athleteData } = useGetAthleteProfileQuery({
-    variables: {
-      where: {
-        id: athleteId,
+  const { data: athleteData, loading: loadingAthlete } =
+    useGetAthleteProfileQuery({
+      variables: {
+        where: {
+          id: athleteId,
+        },
       },
-    },
-  });
+    });
+
+  const athleteProfile = athleteData?.athleteProfile;
 
   const { data, loading, fetchMore, refetch } = useGetAthleteSkillTypesQuery({
     variables: {
       where: {
-        athleteId: { equals: athleteId },
+        athleteId: { equals: athleteProfile?.id },
       },
       take: 10,
       orderBy: {
         createdAt: SortOrder.Desc,
       },
     },
-    skip: !athleteId,
   });
 
-  // useEffect(() => {
-  //   refetch({
-  //     where: {
-  //       // ...whereClause,
-  //       OR: [
-  //         { name: { contains: debounced, mode: QueryMode.Insensitive } },
-  //         { secondFieldName: { contains: debounced, mode: QueryMode.Insensitive } },
-  //         { username: { contains: debounced, mode: QueryMode.Insensitive } },
-  //       ],
-  //     },
-  //   });
-  // }, [status, whereClause, debounced, refetch]);
+  useEffect(() => {
+    refetch({
+      where: {
+        athleteId: { equals: athleteProfile?.id },
+      },
+      whereSkillType: {
+        OR: [
+          { name: { contains: debounced, mode: QueryMode.Insensitive } },
+          {
+            secondFieldName: {
+              contains: debounced,
+              mode: QueryMode.Insensitive,
+            },
+          },
+        ],
+      },
+      take: 10,
+      orderBy: {
+        createdAt: SortOrder.Desc,
+      },
+    });
+  }, [debounced, refetch, athleteProfile?.id]);
 
   const lastSkillTypeId = useMemo(() => {
     const lastPostInResults = data?.skillTypes[data?.skillTypes?.length - 1];
@@ -824,13 +812,7 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
             setOpenSkillHistory(null);
           }}
         >
-          <RenderSkillHistory
-            skillId={fieldValues?.id}
-            athleteId={athleteId}
-            // onClose={() => setSkillId(null)}
-            // userId={athleteData?.athleteProfile?.userId}
-            // handleRefetch={() => refetch()}
-          />
+          <RenderSkillHistory skillId={fieldValues?.id} athleteId={athleteId} />
         </ModalCard>
         <ModalCard
           isModal={true}
@@ -853,24 +835,49 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
 
   return (
     <main className="w-full h-full">
-      <div className="flex flex-row items-center">
-        <ContentHeader title="Athlete Skills" subHeader="Skills Overview" />
+      <div className="flex flex-col items-start">
+        {loadingAthlete ? (
+          <>
+            <Skeleton className="w-[100px] h-[20px]" />
+            <Skeleton className="w-[100px] h-[20px] mt-4" />
+          </>
+        ) : (
+          <div className="flex flex-col">
+            <div className="flex flex-row items-center">
+              <Title>
+                {athleteProfile?.user?.firstname}{" "}
+                {athleteProfile?.user?.surname}
+              </Title>
+            </div>
+            <Text>@{athleteProfile?.user?.username}</Text>
+            <Text>
+              Class of:{" "}
+              {athleteData?.athleteProfile?.graduationYear
+                ? athleteData?.athleteProfile?.graduationYear
+                : "N/A"}
+            </Text>
+            <Text>
+              {athleteData?.athleteProfile?.position?.name} at{" "}
+              {athleteData?.athleteProfile?.school?.name}
+            </Text>
+          </div>
+        )}
       </div>
       <Separator className="my-6" />
-      {/* <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
+      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
         <SearchInput
           onChange={(e) => setValue(e.target.value)}
           placeholder="Type to search..."
         />
-        <SelectCard
+        {/* <SelectCard
           className="ring-0 bg-background dark:bg-dark-background"
           items={filterItems}
           selectedItem={status}
           onValueChange={(e) => {
             setStatus(e);
           }}
-        />
-      </Grid> */}
+        /> */}
+      </Grid>
       <UniversalTable
         title="Athlete List"
         headerItems={headerItems}

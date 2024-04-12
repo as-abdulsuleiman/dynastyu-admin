@@ -53,7 +53,6 @@ const AvatarUploader: FC<AvatarUploaderProps> = ({
     fileName,
     folder: folder,
     userId: userId,
-    type: "image",
   });
 
   useEffect(() => {

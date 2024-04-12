@@ -405,7 +405,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
         }),
     },
     {
-      name: "View User Analytics",
+      name: "View Analytics",
       onClick: () => setViewAnalytics(true),
     },
     // {
@@ -534,14 +534,14 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
           </div>
           <Text>@{athleteData?.username}</Text>
           <Text>
-            {athleteData?.athleteProfile?.position?.name} at{" "}
-            {athleteData?.athleteProfile?.school?.name}
-          </Text>
-          <Text>
             Class of:{" "}
             {athleteData?.athleteProfile?.graduationYear
               ? athleteData?.athleteProfile?.graduationYear
               : "N/A"}
+          </Text>
+          <Text>
+            {athleteData?.athleteProfile?.position?.name} at{" "}
+            {athleteData?.athleteProfile?.school?.name}
           </Text>
         </div>
       )}
