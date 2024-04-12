@@ -2,12 +2,12 @@
 
 "use client";
 
+import { FC, useEffect, useMemo } from "react";
 import {
   QueryMode,
   SchoolWhereInput,
   useGetSchoolsQuery,
 } from "@/services/graphql";
-import { FC, useMemo } from "react";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -82,16 +82,17 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
   const schools = useMemo(
     () =>
       schooldata?.schools?.map((school) => ({
-        label: school?.name,
+        label: `${school?.name}, ${school?.city}`,
         value: school?.name,
         id: school?.id,
         logo: school?.logo,
         city: school?.city,
+        state: school?.state,
       })) || [],
     [schooldata?.schools]
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     refetch({
       where: {
         ...whereClause,
@@ -101,7 +102,7 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
   }, [search, debounced, refetch, whereClause]);
 
   return (
-    <div className="w-full relative" onBlur={onBlur}>
+    <div className="w-full relative" onBlur={onBlur} tabIndex={0}>
       {label ? (
         <label
           htmlFor={id}
@@ -119,12 +120,14 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
             aria-expanded={isOpen}
             className={`${buttonClass} w-[200px]w-[100%] max-w-[100%] min-w-[100%] justify-between mt-1.5 h-[40px]`}
           >
-            {selectedValue?.value ? (
-              schools?.find((school) => school?.value === selectedValue?.value)
-                ?.label
-            ) : (
-              <>{placeholder || "Select school..."}</>
-            )}
+            <div className="truncate">
+              {selectedValue?.id ? (
+                schools?.find((school) => school?.id === selectedValue?.id)
+                  ?.label
+              ) : (
+                <>{placeholder || "Select school..."}</>
+              )}
+            </div>
             <Icons.chevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -141,7 +144,7 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
                 />
               ) : null}
               {!loading && <CommandEmpty>No result found.</CommandEmpty>}
-              <CommandGroup>
+              <CommandGroup className="cursor-pointer">
                 {loading ? (
                   <div className="flex items-center justify-center py-3">
                     <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -149,16 +152,16 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
                   </div>
                 ) : (
                   <>
-                    {schools?.map((school, id) => {
+                    {schools?.map((school) => {
                       return (
                         <CommandItem
                           className="cusor-pointer"
-                          key={id}
-                          value={school?.value}
+                          key={school?.id}
+                          value={school?.label}
                           onSelect={(currentValue) => {
                             onSelectValue(
                               currentValue ===
-                                selectedValue?.value?.toLowerCase()
+                                selectedValue?.label?.toLowerCase()
                                 ? ""
                                 : school
                             );
@@ -170,19 +173,22 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
                               <UserAvatar
                                 className="h-[55px] w-[55px] shadow"
                                 fallbackType="icon"
-                                avatar={school.logo as string}
+                                avatar={school?.logo as string}
                                 icon={<Icons.school className="h-5 w-5" />}
                                 fallback={`${school?.label?.charAt(0)}`}
                               />
                               <div className="ml-3 mb-1">
                                 <div>{school?.label}</div>
-                                <div>{school?.city}</div>
+                                <div className="text-sm text-primary">
+                                  {school?.city ? `${school?.city},` : ""}
+                                  {school?.state}
+                                </div>
                               </div>
                               <div className="ml-auto">
                                 <Icons.check
                                   className={cn(
                                     "mr-2 h-4 w-4",
-                                    selectedValue?.value === school?.value
+                                    selectedValue?.id === school?.id
                                       ? "opacity-100"
                                       : "opacity-0"
                                   )}

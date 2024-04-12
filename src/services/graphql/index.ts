@@ -3374,8 +3374,8 @@ export type CoachProfile = {
   countryId?: Maybe<Scalars['BigInt']['output']>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['BigInt']['output'];
-  school: School;
-  schoolId: Scalars['BigInt']['output'];
+  school?: Maybe<School>;
+  schoolId?: Maybe<Scalars['BigInt']['output']>;
   state?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
@@ -3454,7 +3454,7 @@ export type CoachProfileCreateInput = {
   country?: InputMaybe<CountryCreateNestedOneWithoutCoachProfilesInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  school: SchoolCreateNestedOneWithoutCoachesInput;
+  school?: InputMaybe<SchoolCreateNestedOneWithoutCoachesInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
@@ -3469,7 +3469,7 @@ export type CoachProfileCreateManyCountryInput = {
   city?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  schoolId: Scalars['BigInt']['input'];
+  schoolId?: InputMaybe<Scalars['BigInt']['input']>;
   state?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
@@ -3489,7 +3489,7 @@ export type CoachProfileCreateManyInput = {
   countryId?: InputMaybe<Scalars['BigInt']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  schoolId: Scalars['BigInt']['input'];
+  schoolId?: InputMaybe<Scalars['BigInt']['input']>;
   state?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
@@ -3568,7 +3568,7 @@ export type CoachProfileCreateWithoutCountryInput = {
   city?: InputMaybe<Scalars['String']['input']>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  school: SchoolCreateNestedOneWithoutCoachesInput;
+  school?: InputMaybe<SchoolCreateNestedOneWithoutCoachesInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
@@ -3599,7 +3599,7 @@ export type CoachProfileCreateWithoutUserInput = {
   country?: InputMaybe<CountryCreateNestedOneWithoutCoachProfilesInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  school: SchoolCreateNestedOneWithoutCoachesInput;
+  school?: InputMaybe<SchoolCreateNestedOneWithoutCoachesInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
@@ -3614,7 +3614,7 @@ export type CoachProfileCreateWithoutVerifiedAthletesInput = {
   country?: InputMaybe<CountryCreateNestedOneWithoutCoachProfilesInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
-  school: SchoolCreateNestedOneWithoutCoachesInput;
+  school?: InputMaybe<SchoolCreateNestedOneWithoutCoachesInput>;
   state?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
@@ -3635,7 +3635,7 @@ export type CoachProfileGroupBy = {
   countryId?: Maybe<Scalars['BigInt']['output']>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['BigInt']['output'];
-  schoolId: Scalars['BigInt']['output'];
+  schoolId?: Maybe<Scalars['BigInt']['output']>;
   state?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;
   updatedAt: Scalars['DateTime']['output'];
@@ -3784,7 +3784,7 @@ export type CoachProfileScalarWhereInput = {
   countryId?: InputMaybe<BigIntNullableFilter>;
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<BigIntFilter>;
-  schoolId?: InputMaybe<BigIntFilter>;
+  schoolId?: InputMaybe<BigIntNullableFilter>;
   state?: InputMaybe<StringNullableFilter>;
   title?: InputMaybe<StringNullableFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
@@ -3802,7 +3802,7 @@ export type CoachProfileScalarWhereWithAggregatesInput = {
   countryId?: InputMaybe<BigIntNullableWithAggregatesFilter>;
   createdAt?: InputMaybe<DateTimeWithAggregatesFilter>;
   id?: InputMaybe<BigIntWithAggregatesFilter>;
-  schoolId?: InputMaybe<BigIntWithAggregatesFilter>;
+  schoolId?: InputMaybe<BigIntNullableWithAggregatesFilter>;
   state?: InputMaybe<StringNullableWithAggregatesFilter>;
   title?: InputMaybe<StringNullableWithAggregatesFilter>;
   updatedAt?: InputMaybe<DateTimeWithAggregatesFilter>;
@@ -3837,7 +3837,7 @@ export type CoachProfileUpdateInput = {
   country?: InputMaybe<CountryUpdateOneWithoutCoachProfilesNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
-  school?: InputMaybe<SchoolUpdateOneRequiredWithoutCoachesNestedInput>;
+  school?: InputMaybe<SchoolUpdateOneWithoutCoachesNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   title?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
@@ -3932,7 +3932,7 @@ export type CoachProfileUpdateWithoutCountryInput = {
   city?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
-  school?: InputMaybe<SchoolUpdateOneRequiredWithoutCoachesNestedInput>;
+  school?: InputMaybe<SchoolUpdateOneWithoutCoachesNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   title?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
@@ -3963,7 +3963,7 @@ export type CoachProfileUpdateWithoutUserInput = {
   country?: InputMaybe<CountryUpdateOneWithoutCoachProfilesNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
-  school?: InputMaybe<SchoolUpdateOneRequiredWithoutCoachesNestedInput>;
+  school?: InputMaybe<SchoolUpdateOneWithoutCoachesNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   title?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
@@ -3978,7 +3978,7 @@ export type CoachProfileUpdateWithoutVerifiedAthletesInput = {
   country?: InputMaybe<CountryUpdateOneWithoutCoachProfilesNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
-  school?: InputMaybe<SchoolUpdateOneRequiredWithoutCoachesNestedInput>;
+  school?: InputMaybe<SchoolUpdateOneWithoutCoachesNestedInput>;
   state?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   title?: InputMaybe<NullableStringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
@@ -4020,7 +4020,7 @@ export type CoachProfileWhereInput = {
   createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<BigIntFilter>;
   school?: InputMaybe<SchoolRelationFilter>;
-  schoolId?: InputMaybe<BigIntFilter>;
+  schoolId?: InputMaybe<BigIntNullableFilter>;
   state?: InputMaybe<StringNullableFilter>;
   title?: InputMaybe<StringNullableFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
@@ -6105,7 +6105,7 @@ export type Evaluation = {
   athlete: AthleteProfile;
   athleteId: Scalars['BigInt']['output'];
   createdAt: Scalars['DateTime']['output'];
-  createdBy: User;
+  createdBy?: Maybe<User>;
   createdById: Scalars['BigInt']['output'];
   evaluationType: EvaluationType;
   id: Scalars['BigInt']['output'];
@@ -6166,7 +6166,7 @@ export type EvaluationCountOrderByAggregateInput = {
 export type EvaluationCreateInput = {
   athlete: AthleteProfileCreateNestedOneWithoutEvaluationsInput;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  createdBy: UserCreateNestedOneWithoutEvaluationsCreatedInput;
+  createdBy?: InputMaybe<UserCreateNestedOneWithoutEvaluationsCreatedInput>;
   evaluationType?: InputMaybe<EvaluationType>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   images?: InputMaybe<EvaluationCreateimagesInput>;
@@ -6283,7 +6283,7 @@ export type EvaluationCreateOrConnectWithoutSchoolInput = {
 
 export type EvaluationCreateWithoutAthleteInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  createdBy: UserCreateNestedOneWithoutEvaluationsCreatedInput;
+  createdBy?: InputMaybe<UserCreateNestedOneWithoutEvaluationsCreatedInput>;
   evaluationType?: InputMaybe<EvaluationType>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   images?: InputMaybe<EvaluationCreateimagesInput>;
@@ -6310,7 +6310,7 @@ export type EvaluationCreateWithoutCreatedByInput = {
 export type EvaluationCreateWithoutSchoolInput = {
   athlete: AthleteProfileCreateNestedOneWithoutEvaluationsInput;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
-  createdBy: UserCreateNestedOneWithoutEvaluationsCreatedInput;
+  createdBy?: InputMaybe<UserCreateNestedOneWithoutEvaluationsCreatedInput>;
   evaluationType?: InputMaybe<EvaluationType>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   images?: InputMaybe<EvaluationCreateimagesInput>;
@@ -6518,7 +6518,7 @@ export enum EvaluationType {
 export type EvaluationUpdateInput = {
   athlete?: InputMaybe<AthleteProfileUpdateOneRequiredWithoutEvaluationsNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  createdBy?: InputMaybe<UserUpdateOneRequiredWithoutEvaluationsCreatedNestedInput>;
+  createdBy?: InputMaybe<UserUpdateOneWithoutEvaluationsCreatedNestedInput>;
   evaluationType?: InputMaybe<EnumEvaluationTypeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
   images?: InputMaybe<EvaluationUpdateimagesInput>;
@@ -6614,7 +6614,7 @@ export type EvaluationUpdateWithWhereUniqueWithoutSchoolInput = {
 
 export type EvaluationUpdateWithoutAthleteInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  createdBy?: InputMaybe<UserUpdateOneRequiredWithoutEvaluationsCreatedNestedInput>;
+  createdBy?: InputMaybe<UserUpdateOneWithoutEvaluationsCreatedNestedInput>;
   evaluationType?: InputMaybe<EnumEvaluationTypeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
   images?: InputMaybe<EvaluationUpdateimagesInput>;
@@ -6641,7 +6641,7 @@ export type EvaluationUpdateWithoutCreatedByInput = {
 export type EvaluationUpdateWithoutSchoolInput = {
   athlete?: InputMaybe<AthleteProfileUpdateOneRequiredWithoutEvaluationsNestedInput>;
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
-  createdBy?: InputMaybe<UserUpdateOneRequiredWithoutEvaluationsCreatedNestedInput>;
+  createdBy?: InputMaybe<UserUpdateOneWithoutEvaluationsCreatedNestedInput>;
   evaluationType?: InputMaybe<EnumEvaluationTypeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
   images?: InputMaybe<EvaluationUpdateimagesInput>;
@@ -18326,20 +18326,22 @@ export type SchoolUpdateOneRequiredWithoutAthletesRecruitedNestedInput = {
   upsert?: InputMaybe<SchoolUpsertWithoutAthletesRecruitedInput>;
 };
 
-export type SchoolUpdateOneRequiredWithoutCoachesNestedInput = {
-  connect?: InputMaybe<SchoolWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<SchoolCreateOrConnectWithoutCoachesInput>;
-  create?: InputMaybe<SchoolCreateWithoutCoachesInput>;
-  update?: InputMaybe<SchoolUpdateWithoutCoachesInput>;
-  upsert?: InputMaybe<SchoolUpsertWithoutCoachesInput>;
-};
-
 export type SchoolUpdateOneRequiredWithoutEvaluationsNestedInput = {
   connect?: InputMaybe<SchoolWhereUniqueInput>;
   connectOrCreate?: InputMaybe<SchoolCreateOrConnectWithoutEvaluationsInput>;
   create?: InputMaybe<SchoolCreateWithoutEvaluationsInput>;
   update?: InputMaybe<SchoolUpdateWithoutEvaluationsInput>;
   upsert?: InputMaybe<SchoolUpsertWithoutEvaluationsInput>;
+};
+
+export type SchoolUpdateOneWithoutCoachesNestedInput = {
+  connect?: InputMaybe<SchoolWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<SchoolCreateOrConnectWithoutCoachesInput>;
+  create?: InputMaybe<SchoolCreateWithoutCoachesInput>;
+  delete?: InputMaybe<Scalars['Boolean']['input']>;
+  disconnect?: InputMaybe<Scalars['Boolean']['input']>;
+  update?: InputMaybe<SchoolUpdateWithoutCoachesInput>;
+  upsert?: InputMaybe<SchoolUpsertWithoutCoachesInput>;
 };
 
 export type SchoolUpdateOneWithoutPostsNestedInput = {
@@ -24223,14 +24225,6 @@ export type UserUpdateOneRequiredWithoutConversationsUser2NestedInput = {
   upsert?: InputMaybe<UserUpsertWithoutConversationsUser2Input>;
 };
 
-export type UserUpdateOneRequiredWithoutEvaluationsCreatedNestedInput = {
-  connect?: InputMaybe<UserWhereUniqueInput>;
-  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutEvaluationsCreatedInput>;
-  create?: InputMaybe<UserCreateWithoutEvaluationsCreatedInput>;
-  update?: InputMaybe<UserUpdateWithoutEvaluationsCreatedInput>;
-  upsert?: InputMaybe<UserUpsertWithoutEvaluationsCreatedInput>;
-};
-
 export type UserUpdateOneRequiredWithoutFollowedByNestedInput = {
   connect?: InputMaybe<UserWhereUniqueInput>;
   connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutFollowedByInput>;
@@ -24319,6 +24313,16 @@ export type UserUpdateOneWithoutByUserNotificationsNestedInput = {
   disconnect?: InputMaybe<Scalars['Boolean']['input']>;
   update?: InputMaybe<UserUpdateWithoutByUserNotificationsInput>;
   upsert?: InputMaybe<UserUpsertWithoutByUserNotificationsInput>;
+};
+
+export type UserUpdateOneWithoutEvaluationsCreatedNestedInput = {
+  connect?: InputMaybe<UserWhereUniqueInput>;
+  connectOrCreate?: InputMaybe<UserCreateOrConnectWithoutEvaluationsCreatedInput>;
+  create?: InputMaybe<UserCreateWithoutEvaluationsCreatedInput>;
+  delete?: InputMaybe<Scalars['Boolean']['input']>;
+  disconnect?: InputMaybe<Scalars['Boolean']['input']>;
+  update?: InputMaybe<UserUpdateWithoutEvaluationsCreatedInput>;
+  upsert?: InputMaybe<UserUpsertWithoutEvaluationsCreatedInput>;
 };
 
 export type UserUpdateOneWithoutInterestedSchoolsNestedInput = {
@@ -25871,7 +25875,7 @@ export type GetAthleteProfileQueryVariables = Exact<{
 }>;
 
 
-export type GetAthleteProfileQuery = { __typename?: 'Query', athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, createdAt: any, verified: boolean, playerCardUrl?: string | null, hudlLink?: string | null, graduationYear?: string | null, gpa?: string | null, featured: boolean, schoolId: any, userId: any, socialAccounts: Array<{ __typename?: 'SocialAccount', id: any, uuid: string, name: string, link: string, type: SocialAccountType, athleteProfileId?: any | null }>, evaluations: Array<{ __typename?: 'Evaluation', id: any, note: string, images: Array<string>, videos: Array<string>, videosAspectRatio: Array<string>, createdById: any }>, transcripts: Array<{ __typename?: 'Transcripts', id: any, uuid: string, name: string, url: string, athleteProfileId?: any | null, createdAt: any, updatedAt: any }>, recruitedSchools: Array<{ __typename?: 'RecruitedAthlete', athleteId: any, schoolId: any, userId?: any | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null } }>, interestedSchools: Array<{ __typename?: 'InterestedSchools', school: { __typename?: 'School', name: string, id: any, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } } }>, skills: Array<{ __typename?: 'Skills', id: any, skillId: any, athleteId?: any | null, value: string, secondValue?: string | null, videos: Array<string>, verified: boolean, verifiedAt?: any | null, skillType: { __typename?: 'SkillType', id: any, name: string } }>, _count?: { __typename?: 'AthleteProfileCount', transcripts: number, skills: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluations: number } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, username?: string | null, city?: string | null, state?: string | null, isActive: boolean, dob?: any | null, comments: Array<{ __typename?: 'Comment', id: any, userId: any, postId: any }>, followedBy: Array<{ __typename?: 'Follows', followerId: any, followingId: any }>, following: Array<{ __typename?: 'Follows', followerId: any, followingId: any }>, accountType: { __typename?: 'AccountType', id: any, title: string, roleId?: any | null }, _count?: { __typename?: 'UserCount', posts: number, postFlag: number } | null }, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, position?: { __typename?: 'Position', name: string, id: any, uuid: string, shortName: string } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, title?: string | null, city?: string | null, state?: string | null, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } } | null } | null };
+export type GetAthleteProfileQuery = { __typename?: 'Query', athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, createdAt: any, verified: boolean, playerCardUrl?: string | null, hudlLink?: string | null, graduationYear?: string | null, gpa?: string | null, featured: boolean, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, schoolId: any, userId: any, socialAccounts: Array<{ __typename?: 'SocialAccount', id: any, uuid: string, name: string, link: string, type: SocialAccountType, athleteProfileId?: any | null }>, evaluations: Array<{ __typename?: 'Evaluation', id: any, note: string, images: Array<string>, videos: Array<string>, videosAspectRatio: Array<string>, createdById: any }>, transcripts: Array<{ __typename?: 'Transcripts', id: any, uuid: string, name: string, url: string, athleteProfileId?: any | null, createdAt: any, updatedAt: any }>, recruitedSchools: Array<{ __typename?: 'RecruitedAthlete', athleteId: any, schoolId: any, userId?: any | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null } }>, interestedSchools: Array<{ __typename?: 'InterestedSchools', school: { __typename?: 'School', name: string, id: any, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } } }>, skills: Array<{ __typename?: 'Skills', id: any, skillId: any, athleteId?: any | null, value: string, secondValue?: string | null, videos: Array<string>, verified: boolean, verifiedAt?: any | null, skillType: { __typename?: 'SkillType', id: any, name: string } }>, _count?: { __typename?: 'AthleteProfileCount', transcripts: number, skills: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluations: number } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, username?: string | null, city?: string | null, state?: string | null, isActive: boolean, dob?: any | null, comments: Array<{ __typename?: 'Comment', id: any, userId: any, postId: any }>, followedBy: Array<{ __typename?: 'Follows', followerId: any, followingId: any }>, following: Array<{ __typename?: 'Follows', followerId: any, followingId: any }>, accountType: { __typename?: 'AccountType', id: any, title: string, roleId?: any | null }, _count?: { __typename?: 'UserCount', posts: number, postFlag: number } | null }, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, position?: { __typename?: 'Position', name: string, id: any, uuid: string, shortName: string } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, title?: string | null, city?: string | null, state?: string | null, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } } | null } | null };
 
 export type CreateAthleteProfileMutationVariables = Exact<{
   data: AthleteProfileCreateInput;
@@ -25890,21 +25894,21 @@ export type GetCoachesQueryVariables = Exact<{
 }>;
 
 
-export type GetCoachesQuery = { __typename?: 'Query', coachProfiles: Array<{ __typename?: 'CoachProfile', id: any, title?: string | null, schoolId: any, verified: boolean, createdAt: any, city?: string | null, state?: string | null, canReceiveMessages?: boolean | null, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null }, user: { __typename?: 'User', firstname: string, surname: string, id: any, username?: string | null, avatar?: string | null, isActive: boolean, roleId?: any | null, email: string, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null } } }> };
+export type GetCoachesQuery = { __typename?: 'Query', coachProfiles: Array<{ __typename?: 'CoachProfile', id: any, title?: string | null, schoolId?: any | null, verified: boolean, createdAt: any, userId: any, city?: string | null, state?: string | null, canReceiveMessages?: boolean | null, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, school?: { __typename?: 'School', name: string, logo?: string | null, address?: string | null } | null, user: { __typename?: 'User', firstname: string, surname: string, id: any, username?: string | null, avatar?: string | null, isActive: boolean, roleId?: any | null, email: string, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null } } }> };
 
 export type RegisterCoachMutationVariables = Exact<{
   data: UserCreateInput;
 }>;
 
 
-export type RegisterCoachMutation = { __typename?: 'Mutation', registerCoach: { __typename?: 'RegisterCoachReturn', coach: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null, email: string, coachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, school: { __typename?: 'School', id: any, name: string } } | null } } };
+export type RegisterCoachMutation = { __typename?: 'Mutation', registerCoach: { __typename?: 'RegisterCoachReturn', coach: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null, email: string, coachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, school?: { __typename?: 'School', id: any, name: string } | null } | null } } };
 
 export type GetCoachQueryVariables = Exact<{
   where: CoachProfileWhereUniqueInput;
 }>;
 
 
-export type GetCoachQuery = { __typename?: 'Query', coachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, schoolId: any, verified: boolean, city?: string | null, state?: string | null, createdAt: any, canReceiveMessages?: boolean | null, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } }, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, user: { __typename?: 'User', firstname: string, surname: string, id: any, username?: string | null, avatar?: string | null, isActive: boolean, email: string, dob?: any | null, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null }, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, reposts: number, comments: number, interestedSchools: number, evaluationsCreated: number, prospectedSchools: number } | null } } | null };
+export type GetCoachQuery = { __typename?: 'Query', coachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, schoolId?: any | null, verified: boolean, city?: string | null, state?: string | null, userId: any, createdAt: any, canReceiveMessages?: boolean | null, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, school?: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } } | null, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, user: { __typename?: 'User', firstname: string, surname: string, id: any, username?: string | null, avatar?: string | null, isActive: boolean, email: string, dob?: any | null, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null }, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, reposts: number, comments: number, interestedSchools: number, evaluationsCreated: number, prospectedSchools: number } | null } } | null };
 
 export type UpdateCoachMutationVariables = Exact<{
   data: CoachProfileUpdateInput;
@@ -25912,7 +25916,7 @@ export type UpdateCoachMutationVariables = Exact<{
 }>;
 
 
-export type UpdateCoachMutation = { __typename?: 'Mutation', updateOneCoachProfile?: { __typename?: 'CoachProfile', id: any, uuid: string, schoolId: any, countryId?: any | null, userId: any, title?: string | null, city?: string | null, canReceiveMessages?: boolean | null, verified: boolean, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null }, user: { __typename?: 'User', firstname: string, surname: string, id: any, avatar?: string | null, isActive: boolean, email: string }, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null } | null };
+export type UpdateCoachMutation = { __typename?: 'Mutation', updateOneCoachProfile?: { __typename?: 'CoachProfile', id: any, uuid: string, schoolId?: any | null, countryId?: any | null, userId: any, title?: string | null, city?: string | null, canReceiveMessages?: boolean | null, verified: boolean, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, school?: { __typename?: 'School', name: string, logo?: string | null, address?: string | null } | null, user: { __typename?: 'User', firstname: string, surname: string, id: any, avatar?: string | null, isActive: boolean, email: string }, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null } | null };
 
 export type DeleteCoachMutationVariables = Exact<{
   where: CoachProfileWhereUniqueInput;
@@ -26079,9 +26083,9 @@ export type GetPostFlagQueryVariables = Exact<{
 
 export type GetPostFlagQuery = { __typename?: 'Query', postFlag?: { __typename?: 'PostFlag', id: any, uuid: string, createdAt: any, updatedAt: any, userId: any, postId: any, reason: string, user: { __typename?: 'User', id: any, uuid: string, username?: string | null, firstname: string, surname: string, avatar?: string | null, email: string }, post: { __typename?: 'Post', id: any, uuid: string, videos: Array<string>, images: Array<string>, caption: string, visibility: Visibility, createdAt: any, videosAspectRatio: Array<string>, user: { __typename?: 'User', id: any, uuid: string, username?: string | null, firstname: string, surname: string, avatar?: string | null, email: string } } } | null };
 
-export type SchoolCommonPartsFragment = { __typename?: 'School', id: any, uuid: string, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, state?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', id: any, name: string } };
+export type SchoolCommonPartsFragment = { __typename?: 'School', id: any, uuid: string, name: string, email: string, createdAt: any, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, state?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', id: any, name: string } };
 
-export type SkillCommonPartsFragment = { __typename?: 'Skills', id: any, value: string, verified: boolean, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, unit: string, isPrimaryForRecruitment: boolean, icon?: string | null } };
+export type SkillCommonPartsFragment = { __typename?: 'Skills', id: any, value: string, verified: boolean, createdAt: any, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, unit: string, isPrimaryForRecruitment: boolean, icon?: string | null } };
 
 export type GetSchoolsQueryVariables = Exact<{
   where?: InputMaybe<SchoolWhereInput>;
@@ -26092,14 +26096,14 @@ export type GetSchoolsQueryVariables = Exact<{
 }>;
 
 
-export type GetSchoolsQuery = { __typename?: 'Query', schools: Array<{ __typename?: 'School', id: any, uuid: string, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, state?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', id: any, name: string } }> };
+export type GetSchoolsQuery = { __typename?: 'Query', schools: Array<{ __typename?: 'School', id: any, uuid: string, name: string, email: string, createdAt: any, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, state?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', id: any, name: string } }> };
 
 export type GetSchoolQueryVariables = Exact<{
   where: SchoolWhereUniqueInput;
 }>;
 
 
-export type GetSchoolQuery = { __typename?: 'Query', school?: { __typename?: 'School', id: any, uuid: string, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, state?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, _count?: { __typename?: 'SchoolCount', athletesInterested: number, coaches: number, athletesRecruited: number, athletesProspected: number, evaluations: number, posts: number } | null, athletesInterested: Array<{ __typename?: 'InterestedSchools', athleteId: any, AthleteCommitment: number, createdAt: any, userId?: any | null, athlete: { __typename?: 'AthleteProfile', verified: boolean, verifiedById?: any | null, position?: { __typename?: 'Position', id: any, name: string, shortName: string } | null }, User?: { __typename?: 'User', username?: string | null, id: any, firstname: string, surname: string, avatar?: string | null } | null }>, coaches: Array<{ __typename?: 'CoachProfile', id: any, title?: string | null, user: { __typename?: 'User', username?: string | null, id: any, firstname: string, surname: string, avatar?: string | null } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, athletesRecruited: Array<{ __typename?: 'RecruitedAthlete', athleteId: any, User?: { __typename?: 'User', username?: string | null, id: any, firstname: string, surname: string, avatar?: string | null } | null }>, athletesProspected: Array<{ __typename?: 'ProspectedAthlete', athleteId: any, User?: { __typename?: 'User', username?: string | null, id: any, firstname: string, surname: string, avatar?: string | null } | null }>, evaluations: Array<{ __typename?: 'Evaluation', id: any, note: string, images: Array<string>, videos: Array<string>, videosAspectRatio: Array<string>, createdBy: { __typename?: 'User', username?: string | null, id: any, firstname: string, surname: string, avatar?: string | null } }>, schoolType: { __typename?: 'SchoolType', id: any, name: string } } | null };
+export type GetSchoolQuery = { __typename?: 'Query', school?: { __typename?: 'School', id: any, uuid: string, name: string, email: string, createdAt: any, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, state?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, _count?: { __typename?: 'SchoolCount', athletesInterested: number, coaches: number, athletesRecruited: number, athletesProspected: number, evaluations: number, posts: number } | null, athletesInterested: Array<{ __typename?: 'InterestedSchools', athleteId: any, AthleteCommitment: number, createdAt: any, userId?: any | null, athlete: { __typename?: 'AthleteProfile', verified: boolean, verifiedById?: any | null, position?: { __typename?: 'Position', id: any, name: string, shortName: string } | null }, User?: { __typename?: 'User', username?: string | null, id: any, firstname: string, surname: string, avatar?: string | null } | null }>, coaches: Array<{ __typename?: 'CoachProfile', id: any, title?: string | null, user: { __typename?: 'User', username?: string | null, id: any, firstname: string, surname: string, avatar?: string | null } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, athletesRecruited: Array<{ __typename?: 'RecruitedAthlete', athleteId: any, User?: { __typename?: 'User', username?: string | null, id: any, firstname: string, surname: string, avatar?: string | null } | null }>, athletesProspected: Array<{ __typename?: 'ProspectedAthlete', athleteId: any, User?: { __typename?: 'User', username?: string | null, id: any, firstname: string, surname: string, avatar?: string | null } | null }>, evaluations: Array<{ __typename?: 'Evaluation', id: any, note: string, images: Array<string>, videos: Array<string>, videosAspectRatio: Array<string>, createdBy?: { __typename?: 'User', username?: string | null, id: any, firstname: string, surname: string, avatar?: string | null } | null }>, posts: Array<{ __typename?: 'Post', id: any, uuid: string, userId: any }>, athletes: Array<{ __typename?: 'AthleteProfile', id: any, uuid: string, userId: any }>, schoolType: { __typename?: 'SchoolType', id: any, name: string } } | null };
 
 export type CreateInterestMutationVariables = Exact<{
   data: InterestedSchoolsCreateInput;
@@ -26118,7 +26122,7 @@ export type InterestedSchoolsQueryVariables = Exact<{
 }>;
 
 
-export type InterestedSchoolsQuery = { __typename?: 'Query', findManyInterestedSchools: Array<{ __typename?: 'InterestedSchools', userId?: any | null, schoolId: any, AthleteCommitment: number, athleteId: any, school: { __typename?: 'School', id: any, name: string, logo?: string | null }, athlete: { __typename?: 'AthleteProfile', id: any, position?: { __typename?: 'Position', id: any, name: string } | null, skills: Array<{ __typename?: 'Skills', id: any, value: string, verified: boolean, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, unit: string, isPrimaryForRecruitment: boolean, icon?: string | null } }> }, User?: { __typename?: 'User', id: any, firstname: string, surname: string, uuid: string, username?: string | null, avatar?: string | null } | null }> };
+export type InterestedSchoolsQuery = { __typename?: 'Query', findManyInterestedSchools: Array<{ __typename?: 'InterestedSchools', userId?: any | null, schoolId: any, AthleteCommitment: number, athleteId: any, school: { __typename?: 'School', id: any, name: string, logo?: string | null }, athlete: { __typename?: 'AthleteProfile', id: any, position?: { __typename?: 'Position', id: any, name: string } | null, skills: Array<{ __typename?: 'Skills', id: any, value: string, verified: boolean, createdAt: any, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, unit: string, isPrimaryForRecruitment: boolean, icon?: string | null } }> }, User?: { __typename?: 'User', id: any, firstname: string, surname: string, uuid: string, username?: string | null, avatar?: string | null } | null }> };
 
 export type UpdateInterestMutationVariables = Exact<{
   data: InterestedSchoolsUpdateInput;
@@ -26142,7 +26146,7 @@ export type UpdateSchoolMutationVariables = Exact<{
 }>;
 
 
-export type UpdateSchoolMutation = { __typename?: 'Mutation', updateOneSchool?: { __typename?: 'School', id: any, uuid: string, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, state?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', id: any, name: string } } | null };
+export type UpdateSchoolMutation = { __typename?: 'Mutation', updateOneSchool?: { __typename?: 'School', id: any, uuid: string, name: string, email: string, createdAt: any, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, state?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', id: any, name: string } } | null };
 
 export type RecruitedAthletesQueryVariables = Exact<{
   where?: InputMaybe<RecruitedAthleteWhereInput>;
@@ -26154,7 +26158,7 @@ export type RecruitedAthletesQueryVariables = Exact<{
 }>;
 
 
-export type RecruitedAthletesQuery = { __typename?: 'Query', recruitedAthletes: Array<{ __typename?: 'RecruitedAthlete', athlete: { __typename?: 'AthleteProfile', id: any, graduationYear?: string | null, position?: { __typename?: 'Position', name: string, category?: { __typename?: 'PositionCategory', name: string } | null } | null, skills: Array<{ __typename?: 'Skills', id: any, value: string, verified: boolean, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, unit: string, isPrimaryForRecruitment: boolean, icon?: string | null } }> }, User?: { __typename?: 'User', id: any, firstname: string, surname: string, avatar?: string | null } | null, school: { __typename?: 'School', id: any, name: string, logo?: string | null } }> };
+export type RecruitedAthletesQuery = { __typename?: 'Query', recruitedAthletes: Array<{ __typename?: 'RecruitedAthlete', athlete: { __typename?: 'AthleteProfile', id: any, graduationYear?: string | null, position?: { __typename?: 'Position', name: string, category?: { __typename?: 'PositionCategory', name: string } | null } | null, skills: Array<{ __typename?: 'Skills', id: any, value: string, verified: boolean, createdAt: any, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, unit: string, isPrimaryForRecruitment: boolean, icon?: string | null } }> }, User?: { __typename?: 'User', id: any, firstname: string, surname: string, avatar?: string | null } | null, school: { __typename?: 'School', id: any, name: string, logo?: string | null } }> };
 
 export type ProspectAthletesQueryVariables = Exact<{
   where?: InputMaybe<ProspectedAthleteWhereInput>;
@@ -26166,7 +26170,7 @@ export type ProspectAthletesQueryVariables = Exact<{
 }>;
 
 
-export type ProspectAthletesQuery = { __typename?: 'Query', prospectedAthletes: Array<{ __typename?: 'ProspectedAthlete', athlete: { __typename?: 'AthleteProfile', id: any, graduationYear?: string | null, position?: { __typename?: 'Position', name: string, category?: { __typename?: 'PositionCategory', name: string } | null } | null, skills: Array<{ __typename?: 'Skills', id: any, value: string, verified: boolean, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, unit: string, isPrimaryForRecruitment: boolean, icon?: string | null } }> }, User?: { __typename?: 'User', id: any, firstname: string, surname: string, avatar?: string | null } | null, school: { __typename?: 'School', id: any, name: string, logo?: string | null } }> };
+export type ProspectAthletesQuery = { __typename?: 'Query', prospectedAthletes: Array<{ __typename?: 'ProspectedAthlete', athlete: { __typename?: 'AthleteProfile', id: any, graduationYear?: string | null, position?: { __typename?: 'Position', name: string, category?: { __typename?: 'PositionCategory', name: string } | null } | null, skills: Array<{ __typename?: 'Skills', id: any, value: string, verified: boolean, createdAt: any, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, unit: string, isPrimaryForRecruitment: boolean, icon?: string | null } }> }, User?: { __typename?: 'User', id: any, firstname: string, surname: string, avatar?: string | null } | null, school: { __typename?: 'School', id: any, name: string, logo?: string | null } }> };
 
 export type CreateRecruitMutationVariables = Exact<{
   data: RecruitedAthleteCreateInput;
@@ -26213,7 +26217,7 @@ export type EvaluationsQueryVariables = Exact<{
 }>;
 
 
-export type EvaluationsQuery = { __typename?: 'Query', evaluations: Array<{ __typename?: 'Evaluation', evaluationType: EvaluationType, createdAt: any, note: string, images: Array<string>, videos: Array<string>, athleteId: any, schoolId: any, athlete: { __typename?: 'AthleteProfile', user: { __typename?: 'User', id: any, firstname: string, surname: string, avatar?: string | null } }, createdBy: { __typename?: 'User', id: any, firstname: string, surname: string, avatar?: string | null, coachProfile?: { __typename?: 'CoachProfile', title?: string | null } | null } }> };
+export type EvaluationsQuery = { __typename?: 'Query', evaluations: Array<{ __typename?: 'Evaluation', evaluationType: EvaluationType, createdAt: any, note: string, images: Array<string>, videos: Array<string>, athleteId: any, schoolId: any, athlete: { __typename?: 'AthleteProfile', user: { __typename?: 'User', id: any, firstname: string, surname: string, avatar?: string | null } }, createdBy?: { __typename?: 'User', id: any, firstname: string, surname: string, avatar?: string | null, coachProfile?: { __typename?: 'CoachProfile', title?: string | null } | null } | null }> };
 
 export type CreateEvaluationMutationVariables = Exact<{
   data: EvaluationCreateInput;
@@ -26258,7 +26262,32 @@ export type GetManySkillsQueryVariables = Exact<{
 }>;
 
 
-export type GetManySkillsQuery = { __typename?: 'Query', findFirstSkills?: { __typename?: 'Skills', id: any, skillId: any, videos: Array<string>, athleteId?: any | null, secondValue?: string | null, value: string, skillType: { __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string> }, athlete?: { __typename?: 'AthleteProfile', id: any } | null } | null };
+export type GetManySkillsQuery = { __typename?: 'Query', findFirstSkills?: { __typename?: 'Skills', id: any, skillId: any, videos: Array<string>, athleteId?: any | null, secondValue?: string | null, value: string, verified: boolean, verifiedAt?: any | null, createdAt: any, skillType: { __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string> }, athlete?: { __typename?: 'AthleteProfile', id: any } | null } | null };
+
+export type GetFindManySkillsQueryVariables = Exact<{
+  where?: InputMaybe<SkillsWhereInput>;
+  orderBy?: InputMaybe<Array<SkillsOrderByWithRelationInput> | SkillsOrderByWithRelationInput>;
+  cursor?: InputMaybe<SkillsWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  distinct?: InputMaybe<Array<SkillsScalarFieldEnum> | SkillsScalarFieldEnum>;
+}>;
+
+
+export type GetFindManySkillsQuery = { __typename?: 'Query', findManySkills: Array<{ __typename?: 'Skills', id: any, skillId: any, videos: Array<string>, athleteId?: any | null, secondValue?: string | null, createdAt: any, value: string, verified: boolean, verifiedAt?: any | null, skillType: { __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string> }, athlete?: { __typename?: 'AthleteProfile', id: any } | null }> };
+
+export type GetAthleteSkillTypesQueryVariables = Exact<{
+  whereSkillType?: InputMaybe<SkillTypeWhereInput>;
+  where?: InputMaybe<SkillsWhereInput>;
+  orderBy?: InputMaybe<Array<SkillTypeOrderByWithRelationInput> | SkillTypeOrderByWithRelationInput>;
+  cursor?: InputMaybe<SkillTypeWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  distinct?: InputMaybe<Array<SkillTypeScalarFieldEnum> | SkillTypeScalarFieldEnum>;
+}>;
+
+
+export type GetAthleteSkillTypesQuery = { __typename?: 'Query', skillTypes: Array<{ __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, description?: string | null, position?: number | null, isPrimaryForRecruitment: boolean, unit: string, createdAt: any, _count?: { __typename?: 'SkillTypeCount', skills: number } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, skillId: any, secondValue?: string | null, value: string, athleteId?: any | null, verified: boolean, createdAt: any, athlete?: { __typename?: 'AthleteProfile', id: any, userId: any } | null, skillHistory: Array<{ __typename?: 'SkillHistory', id: any, value: string, secondValue?: string | null, videos: Array<string>, skillId: any, athleteId: any }>, skillVerificationRequests: Array<{ __typename?: 'SkillVerificationRequest', id: any, uuid: string, verified: boolean, campId?: any | null, userId: any, skillId: any, createdAt: any, updatedAt: any, dateOfVerfication?: any | null, camp?: { __typename?: 'Camp', id: any, name: string } | null }> }> }> };
 
 export type GetSkillTypesQueryVariables = Exact<{
   where?: InputMaybe<SkillTypeWhereInput>;
@@ -26270,21 +26299,33 @@ export type GetSkillTypesQueryVariables = Exact<{
 }>;
 
 
-export type GetSkillTypesQuery = { __typename?: 'Query', skillTypes: Array<{ __typename?: 'SkillType', name: string, id: any, uuid: string, mask: Array<string>, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, _count?: { __typename?: 'SkillTypeCount', skills: number } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, skillId: any, secondValue?: string | null, value: string, athleteId?: any | null, verified: boolean, createdAt: any, skillHistory: Array<{ __typename?: 'SkillHistory', id: any, uuid: string, skillId: any, value: string, secondValue?: string | null, athleteId: any }>, skillVerificationRequests: Array<{ __typename?: 'SkillVerificationRequest', id: any, uuid: string, userId: any, skillId: any }> }> }> };
+export type GetSkillTypesQuery = { __typename?: 'Query', skillTypes: Array<{ __typename?: 'SkillType', name: string, id: any, uuid: string, mask: Array<string>, unit: string, options: Array<string>, createdAt: any, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, _count?: { __typename?: 'SkillTypeCount', skills: number } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, skillId: any, secondValue?: string | null, value: string, athleteId?: any | null, verified: boolean, createdAt: any, skillHistory: Array<{ __typename?: 'SkillHistory', id: any, uuid: string, skillId: any, value: string, secondValue?: string | null, athleteId: any }>, skillVerificationRequests: Array<{ __typename?: 'SkillVerificationRequest', id: any, uuid: string, userId: any, skillId: any, campId?: any | null }> }> }> };
 
 export type GetSkillTypeQueryVariables = Exact<{
   where: SkillTypeWhereUniqueInput;
 }>;
 
 
-export type GetSkillTypeQuery = { __typename?: 'Query', skillType?: { __typename?: 'SkillType', id: any, uuid: string, name: string, mask: Array<string>, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, position?: number | null, icon?: string | null, isPrimaryForRecruitment: boolean, _count?: { __typename?: 'SkillTypeCount', skills: number } | null } | null };
+export type GetSkillTypeQuery = { __typename?: 'Query', skillType?: { __typename?: 'SkillType', id: any, uuid: string, name: string, mask: Array<string>, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, createdAt: any, position?: number | null, icon?: string | null, isPrimaryForRecruitment: boolean, _count?: { __typename?: 'SkillTypeCount', skills: number } | null } | null };
+
+export type GetSkillHistoriesQueryVariables = Exact<{
+  where?: InputMaybe<SkillHistoryWhereInput>;
+  orderBy?: InputMaybe<Array<SkillHistoryOrderByWithRelationInput> | SkillHistoryOrderByWithRelationInput>;
+  cursor?: InputMaybe<SkillHistoryWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  distinct?: InputMaybe<Array<SkillHistoryScalarFieldEnum> | SkillHistoryScalarFieldEnum>;
+}>;
+
+
+export type GetSkillHistoriesQuery = { __typename?: 'Query', skillHistories: Array<{ __typename?: 'SkillHistory', id: any, uuid: string, createdAt: any, updatedAt: any, skillId: any, value: string, videos: Array<string>, secondValue?: string | null, verified: boolean, verifiedAt?: any | null, athleteId: any, skill: { __typename?: 'Skills', id: any, value: string, secondValue?: string | null, videos: Array<string>, verified: boolean, createdAt: any, updatedAt: any, skillType: { __typename?: 'SkillType', id: any, uuid: string, name: string, secondFieldName?: string | null, description?: string | null } } }> };
 
 export type CreateSkillMutationVariables = Exact<{
   data: SkillsCreateInput;
 }>;
 
 
-export type CreateSkillMutation = { __typename?: 'Mutation', createOneSkills: { __typename?: 'Skills', id: any, videos: Array<string>, secondValue?: string | null, value: string, skillType: { __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string> } } };
+export type CreateSkillMutation = { __typename?: 'Mutation', createOneSkills: { __typename?: 'Skills', id: any, videos: Array<string>, secondValue?: string | null, value: string, createdAt: any, verified: boolean, verifiedAt?: any | null, athleteId?: any | null, updatedAt: any, skillId: any, skillType: { __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string> } } };
 
 export type UpsertOneSkillMutationVariables = Exact<{
   where: SkillsWhereUniqueInput;
@@ -26301,14 +26342,14 @@ export type UpdateOneSkillMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneSkillMutation = { __typename?: 'Mutation', updateOneSkills?: { __typename?: 'Skills', id: any, videos: Array<string> } | null };
+export type UpdateOneSkillMutation = { __typename?: 'Mutation', updateOneSkills?: { __typename?: 'Skills', id: any, videos: Array<string>, secondValue?: string | null, value: string, createdAt: any, verified: boolean, verifiedAt?: any | null, athleteId?: any | null, updatedAt: any, skillId: any, skillType: { __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string> } } | null };
 
 export type CreateOneSkillVerificationMutationVariables = Exact<{
   data: SkillVerificationRequestCreateInput;
 }>;
 
 
-export type CreateOneSkillVerificationMutation = { __typename?: 'Mutation', createOneSkillVerificationRequest: { __typename?: 'SkillVerificationRequest', id: any, uuid: string, skillId: any, userId: any, campId?: any | null } };
+export type CreateOneSkillVerificationMutation = { __typename?: 'Mutation', createOneSkillVerificationRequest: { __typename?: 'SkillVerificationRequest', id: any, uuid: string, skillId: any, userId: any, campId?: any | null, dateOfVerfication?: any | null, verified: boolean, createdAt: any, camp?: { __typename?: 'Camp', name: string, id: any, uuid: string, address: string, description?: string | null } | null } };
 
 export type UpdateSkillVerificationRequestMutationVariables = Exact<{
   data: SkillVerificationRequestUpdateInput;
@@ -26336,6 +26377,18 @@ export type GetSkillVerificationRequestQueryVariables = Exact<{
 
 
 export type GetSkillVerificationRequestQuery = { __typename?: 'Query', skillVerificationRequest?: { __typename?: 'SkillVerificationRequest', id: any, uuid: string, dateOfVerfication?: any | null, verified: boolean, createdAt: any, updatedAt: any, skillId: any, userId: any, skill: { __typename?: 'Skills', id: any, athleteId?: any | null, videos: Array<string>, secondValue?: string | null, value: string, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, skills: Array<{ __typename?: 'Skills', value: string }> } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null, avatar?: string | null, email: string, athleteProfile?: { __typename?: 'AthleteProfile', id: any, verified: boolean, userId: any, verifiedBy?: { __typename?: 'CoachProfile', title?: string | null, user: { __typename?: 'User', username?: string | null, firstname: string, surname: string } } | null } | null }, camp?: { __typename?: 'Camp', name: string, id: any, uuid: string, address: string, description?: string | null } | null } | null };
+
+export type GetCampsQueryVariables = Exact<{
+  where?: InputMaybe<CampWhereInput>;
+  orderBy?: InputMaybe<Array<CampOrderByWithRelationInput> | CampOrderByWithRelationInput>;
+  cursor?: InputMaybe<CampWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  distinct?: InputMaybe<Array<CampScalarFieldEnum> | CampScalarFieldEnum>;
+}>;
+
+
+export type GetCampsQuery = { __typename?: 'Query', camps: Array<{ __typename?: 'Camp', id: any, name: string, description?: string | null, address: string, dateOfEvent?: any | null, createdAt: any, updatedAt: any }> };
 
 export type CreateSkillTypeMutationVariables = Exact<{
   data: SkillTypeCreateInput;
@@ -26380,7 +26433,14 @@ export type DeleteManySkillHistoryMutationVariables = Exact<{
 
 export type DeleteManySkillHistoryMutation = { __typename?: 'Mutation', deleteManySkillHistory: { __typename?: 'AffectedRowsOutput', count: number } };
 
-export type UserCommonPartsFragment = { __typename?: 'User', id: any, firstname: string, surname: string, email: string, isActive: boolean, avatar?: string | null, dob?: any | null, username?: string | null, address?: string | null, firebaseUid: string, city?: string | null, state?: string | null, createdAt: any, accountTypeId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, comments: number, postLikes: number, commentLikes: number, postReports: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluationsCreated: number, postFlag: number, blockedByUsers: number, blockedUsers: number, reposts: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, schoolId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } };
+export type CreateHistoryMutationVariables = Exact<{
+  data: SkillHistoryCreateInput;
+}>;
+
+
+export type CreateHistoryMutation = { __typename?: 'Mutation', createOneSkillHistory: { __typename?: 'SkillHistory', id: any } };
+
+export type UserCommonPartsFragment = { __typename?: 'User', id: any, firstname: string, surname: string, email: string, isActive: boolean, avatar?: string | null, dob?: any | null, username?: string | null, address?: string | null, firebaseUid: string, city?: string | null, state?: string | null, createdAt: any, accountTypeId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, comments: number, postLikes: number, commentLikes: number, postReports: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluationsCreated: number, postFlag: number, blockedByUsers: number, blockedUsers: number, reposts: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, featured: boolean, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, _count?: { __typename?: 'AthleteProfileCount', transcripts: number, skills: number, evaluations: number, SkillHistory: number, socialAccounts: number } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, title?: string | null, city?: string | null, state?: string | null, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } } | null, socialAccounts: Array<{ __typename?: 'SocialAccount', id: any, uuid: string, name: string, link: string, type: SocialAccountType, athleteProfileId?: any | null }>, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, verified: boolean, schoolId?: any | null, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school?: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } | null } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } };
 
 export type GetFollowersQueryVariables = Exact<{
   where?: InputMaybe<FollowsWhereInput>;
@@ -26400,7 +26460,7 @@ export type GetUserQueryVariables = Exact<{
 }>;
 
 
-export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, isActive: boolean, avatar?: string | null, dob?: any | null, username?: string | null, address?: string | null, firebaseUid: string, city?: string | null, state?: string | null, createdAt: any, accountTypeId: any, followedBy: Array<{ __typename?: 'Follows', followerId: any, follower: { __typename?: 'User', id: any, firstname: string, surname: string } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, comments: number, postLikes: number, commentLikes: number, postReports: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluationsCreated: number, postFlag: number, blockedByUsers: number, blockedUsers: number, reposts: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, schoolId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } } | null };
+export type GetUserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, isActive: boolean, avatar?: string | null, dob?: any | null, username?: string | null, address?: string | null, firebaseUid: string, city?: string | null, state?: string | null, createdAt: any, accountTypeId: any, followedBy: Array<{ __typename?: 'Follows', followerId: any, follower: { __typename?: 'User', id: any, firstname: string, surname: string } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, comments: number, postLikes: number, commentLikes: number, postReports: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluationsCreated: number, postFlag: number, blockedByUsers: number, blockedUsers: number, reposts: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, featured: boolean, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, _count?: { __typename?: 'AthleteProfileCount', transcripts: number, skills: number, evaluations: number, SkillHistory: number, socialAccounts: number } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, title?: string | null, city?: string | null, state?: string | null, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } } | null, socialAccounts: Array<{ __typename?: 'SocialAccount', id: any, uuid: string, name: string, link: string, type: SocialAccountType, athleteProfileId?: any | null }>, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, verified: boolean, schoolId?: any | null, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school?: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } | null } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } } | null };
 
 export type GetUsersQueryVariables = Exact<{
   where?: InputMaybe<UserWhereInput>;
@@ -26412,7 +26472,7 @@ export type GetUsersQueryVariables = Exact<{
 }>;
 
 
-export type GetUsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, username?: string | null, city?: string | null, state?: string | null, isActive: boolean, dob?: any | null, address?: string | null, firebaseUid: string, createdAt: any, accountTypeId: any, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }> } | null, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, comments: number, postLikes: number, commentLikes: number, postReports: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluationsCreated: number, postFlag: number, blockedByUsers: number, blockedUsers: number, reposts: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, schoolId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } }> };
+export type GetUsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, username?: string | null, city?: string | null, state?: string | null, isActive: boolean, dob?: any | null, address?: string | null, firebaseUid: string, createdAt: any, accountTypeId: any, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, featured: boolean, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, _count?: { __typename?: 'AthleteProfileCount', transcripts: number, skills: number, evaluations: number, SkillHistory: number, socialAccounts: number } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, title?: string | null, city?: string | null, state?: string | null, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } } | null, socialAccounts: Array<{ __typename?: 'SocialAccount', id: any, uuid: string, name: string, link: string, type: SocialAccountType, athleteProfileId?: any | null }>, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }> } | null, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, comments: number, postLikes: number, commentLikes: number, postReports: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluationsCreated: number, postFlag: number, blockedByUsers: number, blockedUsers: number, reposts: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, verified: boolean, schoolId?: any | null, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school?: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } | null } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } }> };
 
 export type GetBlockedUsersQueryVariables = Exact<{
   where?: InputMaybe<BlocksWhereInput>;
@@ -26431,7 +26491,7 @@ export type CreateOneUserMutationVariables = Exact<{
 }>;
 
 
-export type CreateOneUserMutation = { __typename?: 'Mutation', createOneUser: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, isActive: boolean, avatar?: string | null, dob?: any | null, username?: string | null, address?: string | null, firebaseUid: string, city?: string | null, state?: string | null, createdAt: any, accountTypeId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, comments: number, postLikes: number, commentLikes: number, postReports: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluationsCreated: number, postFlag: number, blockedByUsers: number, blockedUsers: number, reposts: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, schoolId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } } };
+export type CreateOneUserMutation = { __typename?: 'Mutation', createOneUser: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, isActive: boolean, avatar?: string | null, dob?: any | null, username?: string | null, address?: string | null, firebaseUid: string, city?: string | null, state?: string | null, createdAt: any, accountTypeId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, comments: number, postLikes: number, commentLikes: number, postReports: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluationsCreated: number, postFlag: number, blockedByUsers: number, blockedUsers: number, reposts: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, featured: boolean, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, _count?: { __typename?: 'AthleteProfileCount', transcripts: number, skills: number, evaluations: number, SkillHistory: number, socialAccounts: number } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, title?: string | null, city?: string | null, state?: string | null, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } } | null, socialAccounts: Array<{ __typename?: 'SocialAccount', id: any, uuid: string, name: string, link: string, type: SocialAccountType, athleteProfileId?: any | null }>, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, verified: boolean, schoolId?: any | null, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school?: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } | null } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } } };
 
 export type UpdateUserMutationVariables = Exact<{
   data: UserUpdateInput;
@@ -26482,6 +26542,7 @@ export const SchoolCommonPartsFragmentDoc = gql`
   uuid
   name
   email
+  createdAt
   schoolType {
     id
     name
@@ -26509,6 +26570,7 @@ export const SkillCommonPartsFragmentDoc = gql`
   id
   value
   verified
+  createdAt
   skillType {
     id
     name
@@ -26573,6 +26635,7 @@ export const UserCommonPartsFragmentDoc = gql`
     uuid
     graduationYear
     hudlLink
+    featured
     recruitingContactName
     recruitingPhoneNumber
     recruitingRelationship
@@ -26583,6 +26646,33 @@ export const UserCommonPartsFragmentDoc = gql`
     playerCardUrl
     verified
     gpa
+    _count {
+      transcripts
+      skills
+      evaluations
+      SkillHistory
+      socialAccounts
+    }
+    verifiedBy {
+      id
+      title
+      city
+      state
+      user {
+        id
+        firstname
+        surname
+        username
+      }
+    }
+    socialAccounts {
+      id
+      uuid
+      name
+      link
+      type
+      athleteProfileId
+    }
     school {
       id
       name
@@ -26633,6 +26723,10 @@ export const UserCommonPartsFragmentDoc = gql`
     title
     city
     state
+    verified
+    _count {
+      verifiedAthletes
+    }
     country {
       name
       id
@@ -27163,6 +27257,12 @@ export const GetAthleteProfileDocument = gql`
     graduationYear
     gpa
     featured
+    recruitingContactName
+    recruitingPhoneNumber
+    recruitingRelationship
+    coachContactName
+    coachContactPhoneNumber
+    coachContactTitle
     socialAccounts {
       id
       uuid
@@ -27412,6 +27512,7 @@ export const GetCoachesDocument = gql`
     schoolId
     verified
     createdAt
+    userId
     country {
       name
       flag
@@ -27541,6 +27642,7 @@ export const GetCoachDocument = gql`
     verified
     city
     state
+    userId
     createdAt
     _count {
       verifiedAthletes
@@ -28828,6 +28930,16 @@ export const GetSchoolDocument = gql`
         avatar
       }
     }
+    posts {
+      id
+      uuid
+      userId
+    }
+    athletes {
+      id
+      uuid
+      userId
+    }
   }
 }
     ${SchoolCommonPartsFragmentDoc}`;
@@ -29680,6 +29792,9 @@ export const GetManySkillsDocument = gql`
     athleteId
     secondValue
     value
+    verified
+    verifiedAt
+    createdAt
     skillType {
       id
       name
@@ -29733,6 +29848,182 @@ export type GetManySkillsQueryHookResult = ReturnType<typeof useGetManySkillsQue
 export type GetManySkillsLazyQueryHookResult = ReturnType<typeof useGetManySkillsLazyQuery>;
 export type GetManySkillsSuspenseQueryHookResult = ReturnType<typeof useGetManySkillsSuspenseQuery>;
 export type GetManySkillsQueryResult = Apollo.QueryResult<GetManySkillsQuery, GetManySkillsQueryVariables>;
+export const GetFindManySkillsDocument = gql`
+    query getFindManySkills($where: SkillsWhereInput, $orderBy: [SkillsOrderByWithRelationInput!], $cursor: SkillsWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SkillsScalarFieldEnum!]) {
+  findManySkills(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    id
+    skillId
+    videos
+    athleteId
+    secondValue
+    createdAt
+    value
+    verified
+    verifiedAt
+    skillType {
+      id
+      name
+      options
+      numberOfVideos
+      secondFieldName
+      secondValueOptions
+      videosLabels
+    }
+    athlete {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetFindManySkillsQuery__
+ *
+ * To run a query within a React component, call `useGetFindManySkillsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFindManySkillsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFindManySkillsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      distinct: // value for 'distinct'
+ *   },
+ * });
+ */
+export function useGetFindManySkillsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetFindManySkillsQuery, GetFindManySkillsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetFindManySkillsQuery, GetFindManySkillsQueryVariables>(GetFindManySkillsDocument, options);
+      }
+export function useGetFindManySkillsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetFindManySkillsQuery, GetFindManySkillsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetFindManySkillsQuery, GetFindManySkillsQueryVariables>(GetFindManySkillsDocument, options);
+        }
+export function useGetFindManySkillsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetFindManySkillsQuery, GetFindManySkillsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetFindManySkillsQuery, GetFindManySkillsQueryVariables>(GetFindManySkillsDocument, options);
+        }
+export type GetFindManySkillsQueryHookResult = ReturnType<typeof useGetFindManySkillsQuery>;
+export type GetFindManySkillsLazyQueryHookResult = ReturnType<typeof useGetFindManySkillsLazyQuery>;
+export type GetFindManySkillsSuspenseQueryHookResult = ReturnType<typeof useGetFindManySkillsSuspenseQuery>;
+export type GetFindManySkillsQueryResult = Apollo.QueryResult<GetFindManySkillsQuery, GetFindManySkillsQueryVariables>;
+export const GetAthleteSkillTypesDocument = gql`
+    query getAthleteSkillTypes($whereSkillType: SkillTypeWhereInput, $where: SkillsWhereInput, $orderBy: [SkillTypeOrderByWithRelationInput!], $cursor: SkillTypeWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SkillTypeScalarFieldEnum!]) {
+  skillTypes(
+    where: $whereSkillType
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    id
+    name
+    options
+    numberOfVideos
+    secondFieldName
+    secondValueOptions
+    videosLabels
+    description
+    position
+    isPrimaryForRecruitment
+    unit
+    createdAt
+    _count {
+      skills
+    }
+    skills(where: $where) {
+      id
+      videos
+      skillId
+      secondValue
+      value
+      athleteId
+      athlete {
+        id
+        userId
+      }
+      verified
+      createdAt
+      skillHistory {
+        id
+        value
+        secondValue
+        videos
+        skillId
+        athleteId
+      }
+      skillVerificationRequests(take: 3, orderBy: {createdAt: desc}) {
+        id
+        uuid
+        verified
+        campId
+        userId
+        skillId
+        createdAt
+        updatedAt
+        dateOfVerfication
+        camp {
+          id
+          name
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAthleteSkillTypesQuery__
+ *
+ * To run a query within a React component, call `useGetAthleteSkillTypesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAthleteSkillTypesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAthleteSkillTypesQuery({
+ *   variables: {
+ *      whereSkillType: // value for 'whereSkillType'
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      distinct: // value for 'distinct'
+ *   },
+ * });
+ */
+export function useGetAthleteSkillTypesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAthleteSkillTypesQuery, GetAthleteSkillTypesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAthleteSkillTypesQuery, GetAthleteSkillTypesQueryVariables>(GetAthleteSkillTypesDocument, options);
+      }
+export function useGetAthleteSkillTypesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAthleteSkillTypesQuery, GetAthleteSkillTypesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAthleteSkillTypesQuery, GetAthleteSkillTypesQueryVariables>(GetAthleteSkillTypesDocument, options);
+        }
+export function useGetAthleteSkillTypesSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetAthleteSkillTypesQuery, GetAthleteSkillTypesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAthleteSkillTypesQuery, GetAthleteSkillTypesQueryVariables>(GetAthleteSkillTypesDocument, options);
+        }
+export type GetAthleteSkillTypesQueryHookResult = ReturnType<typeof useGetAthleteSkillTypesQuery>;
+export type GetAthleteSkillTypesLazyQueryHookResult = ReturnType<typeof useGetAthleteSkillTypesLazyQuery>;
+export type GetAthleteSkillTypesSuspenseQueryHookResult = ReturnType<typeof useGetAthleteSkillTypesSuspenseQuery>;
+export type GetAthleteSkillTypesQueryResult = Apollo.QueryResult<GetAthleteSkillTypesQuery, GetAthleteSkillTypesQueryVariables>;
 export const GetSkillTypesDocument = gql`
     query getSkillTypes($where: SkillTypeWhereInput, $orderBy: [SkillTypeOrderByWithRelationInput!], $cursor: SkillTypeWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SkillTypeScalarFieldEnum!]) {
   skillTypes(
@@ -29749,6 +30040,7 @@ export const GetSkillTypesDocument = gql`
     mask
     unit
     options
+    createdAt
     numberOfVideos
     secondFieldName
     description
@@ -29780,6 +30072,7 @@ export const GetSkillTypesDocument = gql`
         uuid
         userId
         skillId
+        campId
       }
     }
   }
@@ -29837,6 +30130,7 @@ export const GetSkillTypeDocument = gql`
     description
     secondValueOptions
     videosLabels
+    createdAt
     position
     icon
     isPrimaryForRecruitment
@@ -29879,6 +30173,84 @@ export type GetSkillTypeQueryHookResult = ReturnType<typeof useGetSkillTypeQuery
 export type GetSkillTypeLazyQueryHookResult = ReturnType<typeof useGetSkillTypeLazyQuery>;
 export type GetSkillTypeSuspenseQueryHookResult = ReturnType<typeof useGetSkillTypeSuspenseQuery>;
 export type GetSkillTypeQueryResult = Apollo.QueryResult<GetSkillTypeQuery, GetSkillTypeQueryVariables>;
+export const GetSkillHistoriesDocument = gql`
+    query getSkillHistories($where: SkillHistoryWhereInput, $orderBy: [SkillHistoryOrderByWithRelationInput!], $cursor: SkillHistoryWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SkillHistoryScalarFieldEnum!]) {
+  skillHistories(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    id
+    uuid
+    createdAt
+    updatedAt
+    skillId
+    value
+    videos
+    secondValue
+    verified
+    verifiedAt
+    athleteId
+    skill {
+      id
+      value
+      secondValue
+      videos
+      verified
+      createdAt
+      updatedAt
+      skillType {
+        id
+        uuid
+        name
+        secondFieldName
+        description
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetSkillHistoriesQuery__
+ *
+ * To run a query within a React component, call `useGetSkillHistoriesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSkillHistoriesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSkillHistoriesQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      distinct: // value for 'distinct'
+ *   },
+ * });
+ */
+export function useGetSkillHistoriesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetSkillHistoriesQuery, GetSkillHistoriesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetSkillHistoriesQuery, GetSkillHistoriesQueryVariables>(GetSkillHistoriesDocument, options);
+      }
+export function useGetSkillHistoriesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetSkillHistoriesQuery, GetSkillHistoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetSkillHistoriesQuery, GetSkillHistoriesQueryVariables>(GetSkillHistoriesDocument, options);
+        }
+export function useGetSkillHistoriesSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetSkillHistoriesQuery, GetSkillHistoriesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetSkillHistoriesQuery, GetSkillHistoriesQueryVariables>(GetSkillHistoriesDocument, options);
+        }
+export type GetSkillHistoriesQueryHookResult = ReturnType<typeof useGetSkillHistoriesQuery>;
+export type GetSkillHistoriesLazyQueryHookResult = ReturnType<typeof useGetSkillHistoriesLazyQuery>;
+export type GetSkillHistoriesSuspenseQueryHookResult = ReturnType<typeof useGetSkillHistoriesSuspenseQuery>;
+export type GetSkillHistoriesQueryResult = Apollo.QueryResult<GetSkillHistoriesQuery, GetSkillHistoriesQueryVariables>;
 export const CreateSkillDocument = gql`
     mutation createSkill($data: SkillsCreateInput!) {
   createOneSkills(data: $data) {
@@ -29886,6 +30258,12 @@ export const CreateSkillDocument = gql`
     videos
     secondValue
     value
+    createdAt
+    verified
+    verifiedAt
+    athleteId
+    updatedAt
+    skillId
     skillType {
       id
       name
@@ -29965,6 +30343,23 @@ export const UpdateOneSkillDocument = gql`
   updateOneSkills(data: $data, where: $where) {
     id
     videos
+    secondValue
+    value
+    createdAt
+    verified
+    verifiedAt
+    athleteId
+    updatedAt
+    skillId
+    skillType {
+      id
+      name
+      options
+      numberOfVideos
+      secondFieldName
+      secondValueOptions
+      videosLabels
+    }
   }
 }
     `;
@@ -30003,6 +30398,16 @@ export const CreateOneSkillVerificationDocument = gql`
     skillId
     userId
     campId
+    dateOfVerfication
+    verified
+    createdAt
+    camp {
+      name
+      id
+      uuid
+      address
+      description
+    }
   }
 }
     `;
@@ -30255,6 +30660,64 @@ export type GetSkillVerificationRequestQueryHookResult = ReturnType<typeof useGe
 export type GetSkillVerificationRequestLazyQueryHookResult = ReturnType<typeof useGetSkillVerificationRequestLazyQuery>;
 export type GetSkillVerificationRequestSuspenseQueryHookResult = ReturnType<typeof useGetSkillVerificationRequestSuspenseQuery>;
 export type GetSkillVerificationRequestQueryResult = Apollo.QueryResult<GetSkillVerificationRequestQuery, GetSkillVerificationRequestQueryVariables>;
+export const GetCampsDocument = gql`
+    query getCamps($where: CampWhereInput, $orderBy: [CampOrderByWithRelationInput!], $cursor: CampWhereUniqueInput, $take: Int, $skip: Int, $distinct: [CampScalarFieldEnum!]) {
+  camps(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    id
+    name
+    description
+    address
+    dateOfEvent
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useGetCampsQuery__
+ *
+ * To run a query within a React component, call `useGetCampsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCampsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCampsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      distinct: // value for 'distinct'
+ *   },
+ * });
+ */
+export function useGetCampsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetCampsQuery, GetCampsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCampsQuery, GetCampsQueryVariables>(GetCampsDocument, options);
+      }
+export function useGetCampsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCampsQuery, GetCampsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCampsQuery, GetCampsQueryVariables>(GetCampsDocument, options);
+        }
+export function useGetCampsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetCampsQuery, GetCampsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCampsQuery, GetCampsQueryVariables>(GetCampsDocument, options);
+        }
+export type GetCampsQueryHookResult = ReturnType<typeof useGetCampsQuery>;
+export type GetCampsLazyQueryHookResult = ReturnType<typeof useGetCampsLazyQuery>;
+export type GetCampsSuspenseQueryHookResult = ReturnType<typeof useGetCampsSuspenseQuery>;
+export type GetCampsQueryResult = Apollo.QueryResult<GetCampsQuery, GetCampsQueryVariables>;
 export const CreateSkillTypeDocument = gql`
     mutation createSkillType($data: SkillTypeCreateInput!) {
   createOneSkillType(data: $data) {
@@ -30476,6 +30939,39 @@ export function useDeleteManySkillHistoryMutation(baseOptions?: ApolloReactHooks
 export type DeleteManySkillHistoryMutationHookResult = ReturnType<typeof useDeleteManySkillHistoryMutation>;
 export type DeleteManySkillHistoryMutationResult = Apollo.MutationResult<DeleteManySkillHistoryMutation>;
 export type DeleteManySkillHistoryMutationOptions = Apollo.BaseMutationOptions<DeleteManySkillHistoryMutation, DeleteManySkillHistoryMutationVariables>;
+export const CreateHistoryDocument = gql`
+    mutation createHistory($data: SkillHistoryCreateInput!) {
+  createOneSkillHistory(data: $data) {
+    id
+  }
+}
+    `;
+export type CreateHistoryMutationFn = Apollo.MutationFunction<CreateHistoryMutation, CreateHistoryMutationVariables>;
+
+/**
+ * __useCreateHistoryMutation__
+ *
+ * To run a mutation, you first call `useCreateHistoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateHistoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createHistoryMutation, { data, loading, error }] = useCreateHistoryMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateHistoryMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateHistoryMutation, CreateHistoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateHistoryMutation, CreateHistoryMutationVariables>(CreateHistoryDocument, options);
+      }
+export type CreateHistoryMutationHookResult = ReturnType<typeof useCreateHistoryMutation>;
+export type CreateHistoryMutationResult = Apollo.MutationResult<CreateHistoryMutation>;
+export type CreateHistoryMutationOptions = Apollo.BaseMutationOptions<CreateHistoryMutation, CreateHistoryMutationVariables>;
 export const GetFollowersDocument = gql`
     query getFollowers($where: FollowsWhereInput, $orderBy: [FollowsOrderByWithRelationInput!], $cursor: FollowsWhereUniqueInput, $take: Int, $skip: Int, $distinct: [FollowsScalarFieldEnum!]) {
   findManyFollows(

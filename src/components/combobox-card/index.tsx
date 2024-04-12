@@ -19,7 +19,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "../ui/scroll-area";
-import { observer } from "mobx-react-lite";
 import { Icons } from "../Icons";
 
 interface ComboBoxCardProps {
@@ -73,7 +72,7 @@ const ComboBoxCard: FC<ComboBoxCardProps> = ({
       {label ? (
         <label
           htmlFor={id}
-          className="font-semibold text-left text-[14px] mb-11 d-flex"
+          className="text-left font-TTHovesDemiBold text-[14px] mb-11 d-flex"
           id={id}
         >
           {label}
@@ -175,4 +174,4 @@ const ComboBoxCard: FC<ComboBoxCardProps> = ({
   );
 };
 
-export default observer(ComboBoxCard);
+export default ComboBoxCard;

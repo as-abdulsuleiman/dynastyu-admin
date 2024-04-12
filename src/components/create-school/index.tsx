@@ -34,6 +34,7 @@ import { useRouter } from "next/navigation";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/services/firebase/config";
 import { Separator } from "../ui/separator";
+import { useRootStore } from "@/mobx";
 
 type FormData = yup.InferType<typeof SchoolValidator>;
 
@@ -56,6 +57,9 @@ type DivisionProps = {
 const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
   const { toast } = useToast();
   const router = useRouter();
+  const {
+    authStore: { user },
+  } = useRootStore();
   const { action } = params;
   const editType = action === "edit" ?? false;
   const fetchSchool = editType && searchParams?.school;
@@ -381,7 +385,8 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
               id="school_log"
               imgUrl={logo}
               onUploadSuccess={handleAvatarUploadSuccess}
-              storageLocation="schools"
+              folder="school_profile_files"
+              userId={fetchSchool ? schoolData?.school?.id : user?.id}
             />
           </div>
         </div>

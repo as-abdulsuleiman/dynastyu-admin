@@ -198,6 +198,12 @@ query getAthleteProfile($where: AthleteProfileWhereUniqueInput!) {
     graduationYear
     gpa
     featured
+    recruitingContactName
+    recruitingPhoneNumber
+    recruitingRelationship
+    coachContactName
+    coachContactPhoneNumber
+    coachContactTitle
     socialAccounts{
       id
       uuid

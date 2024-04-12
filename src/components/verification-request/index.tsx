@@ -22,6 +22,7 @@ import MenubarCard from "../menubar";
 import { useRootStore } from "@/mobx";
 import MediaCard from "../media-card";
 import { Separator } from "../ui/separator";
+import MoreHorizontal from "../Icons/more-horizontal";
 
 interface VerificationRequestProps {
   params: {
@@ -227,7 +228,9 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
           <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
             <MenubarCard
               trigger={
-                <Icons.moreHorizontal className="cursor-pointer md:mr-6" />
+                <Button size="icon" variant="outline">
+                  <MoreHorizontal className="cursor-pointer" />
+                </Button>
               }
               items={dropdownItems}
             />

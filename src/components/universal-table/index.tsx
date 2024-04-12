@@ -15,6 +15,7 @@ import {
 import { observer } from "mobx-react-lite";
 import { Icons } from "../Icons";
 import { Card, CardContent } from "../ui/card";
+import { ScrollArea } from "../ui/scroll-area";
 
 interface UniversalTableProps {
   items: any[];
@@ -68,7 +69,7 @@ const UniversalTable: FC<UniversalTableProps> = ({
               })}
             </TableRow>
           </TableHeader>
-          <TableBody className="text-base">
+          <TableBody className="text-base w-full">
             {loading ? (
               <TableRow className="py-4">
                 <TableCell colSpan={headerItems?.length || 0}>
@@ -81,7 +82,7 @@ const UniversalTable: FC<UniversalTableProps> = ({
             ) : items?.length ? (
               <>
                 {items?.map((item, id) => {
-                  return renderItems({ item, id });
+                  return <>{renderItems({ item, id })}</>;
                 })}
               </>
             ) : (
