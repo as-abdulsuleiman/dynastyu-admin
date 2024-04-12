@@ -8,7 +8,7 @@ import {
   useGetUserQuery,
   useUpdateUserMutation,
 } from "@/services/graphql";
-import { Title, Text, Callout } from "@tremor/react";
+import { Title, Text, Callout, Badge } from "@tremor/react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "../ui/skeleton";
@@ -24,6 +24,9 @@ import Image from "next/image";
 import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
 import MoreHorizontal from "../Icons/more-horizontal";
+import { StatusEnum } from "@/lib/enums/updating-profile.enum";
+import StatusOnlineIcon from "@heroicons/react/outline/StatusOnlineIcon";
+import StatusOfflineIcon from "@heroicons/react/outline/StatusOfflineIcon";
 
 interface FanDetailProps {
   params: {
@@ -36,6 +39,8 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
   const { toast } = useToast();
   const [showimage, setShowImage] = useState(true);
   const [viewPlayerCardUrl, setViewPlayerCardUrl] = useState(false);
+  const [viewAnalytics, setViewAnalytics] = useState(false);
+  const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
 
@@ -80,6 +85,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
   };
 
   const handleActivateProfile = async (item: any) => {
+    setUpdatingProfile(StatusEnum.ACTIVATING);
     try {
       const isFanActive = item?.isActive;
       await updateUser({
@@ -107,6 +113,8 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
         }`,
         variant: "destructive",
       });
+    } finally {
+      setUpdatingProfile(null);
     }
   };
 
@@ -125,6 +133,10 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
     {
       name: "View Profile Picture",
       onClick: () => setViewPlayerCardUrl(true),
+    },
+    {
+      name: "View User Analytics",
+      onClick: () => setViewAnalytics(true),
     },
     // {
     //   name: "Delete Profile",
@@ -180,6 +192,49 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
       ),
     },
   ];
+
+  const renderBadges = () => {
+    return (
+      <>
+        {loading ? (
+          <>
+            {Array.from([1, 2, 3]).map((a, i) => {
+              return (
+                <Skeleton
+                  key={i}
+                  className={`w-[80px] h-[20px] flex flex-row ml-3 rounded-xl ${
+                    i === 2 ? "mr-3" : ""
+                  }`}
+                />
+              );
+            })}
+          </>
+        ) : (
+          <div className="hidden lg:flex lg:flex-row lg:items-center mr-3">
+            <Badge
+              datatype={fanData?.user?.isActive ? "increase" : "decrease"}
+              className="flex flex-row  text-sm font-TTHovesRegular pl-3"
+              color={fanData?.user?.isActive ? "teal" : "rose"}
+              icon={
+                updatingProfile === StatusEnum.ACTIVATING
+                  ? undefined
+                  : fanData?.user?.isActive
+                  ? StatusOnlineIcon
+                  : StatusOfflineIcon
+              }
+            >
+              {updatingProfile === StatusEnum.ACTIVATING
+                ? "Updating..."
+                : fanData?.user?.isActive
+                ? "Active"
+                : "Deactivated"}
+            </Badge>
+          </div>
+        )}
+      </>
+    );
+  };
+
   return (
     <main className="w-full h-full relative">
       <Button
@@ -206,15 +261,6 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
         </div>
       )}
       <Separator className="my-6" />
-      <UsersAnalytics
-        loading={loading}
-        data={dataList}
-        showStatus={true}
-        isActive={fanData?.user?.isActive || false}
-        title={`${fanData?.user?.firstname} 
-        ${fanData?.user?.surname} Analytics`}
-      />
-
       <Card className="mt-6 gap-6">
         <CardContent className="p-6">
           <div className="flex flex-col items-center justify-center relative">
@@ -227,6 +273,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
                   className="h-[120px] w-[120px] shadow cursor-pointer"
                   height={120}
                   width={120}
+                  type="image"
                   fallbackType="icon"
                   fallbackClassName={"h-[120px] w-[120px]"}
                   avatar={fanData?.user?.avatar as string}
@@ -265,18 +312,21 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
               </div>
             )}
             <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
-              {loading ? (
-                <Skeleton className="w-[40px] h-[20px]" />
-              ) : (
-                <MenubarCard
-                  trigger={
-                    <Button size="icon" variant="outline">
-                      <MoreHorizontal className="cursor-pointer" />
-                    </Button>
-                  }
-                  items={dropdownItems}
-                />
-              )}
+              <div className="flex flex-row items-center">
+                {renderBadges()}
+                {loading ? (
+                  <Skeleton className="w-[40px] h-[20px]" />
+                ) : (
+                  <MenubarCard
+                    trigger={
+                      <Button size="icon" variant="outline">
+                        <MoreHorizontal className="cursor-pointer" />
+                      </Button>
+                    }
+                    items={dropdownItems}
+                  />
+                )}
+              </div>
             </div>
           </div>
           <Separator className="my-6" />
@@ -345,6 +395,24 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
           </Callout>
         </CardContent>
       </Card>
+      <ModalCard
+        isModal={true}
+        isOpen={viewAnalytics}
+        onOpenChange={() => setViewAnalytics(!viewAnalytics)}
+      >
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12">
+            <UsersAnalytics
+              loading={loading}
+              data={dataList}
+              showStatus={true}
+              isActive={fanData?.user?.isActive || false}
+              title={`${fanData?.user?.firstname} 
+        ${fanData?.user?.surname} Analytics`}
+            />
+          </div>
+        </div>
+      </ModalCard>
     </main>
   );
 };

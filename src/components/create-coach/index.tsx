@@ -47,6 +47,9 @@ interface CreateCoachProps {
 const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
   const { toast } = useToast();
   const router = useRouter();
+  const {
+    authStore: { user },
+  } = useRootStore();
   const [openTitle, setOpenTitle] = useState<boolean>(false);
   const [openAccountType, setOpenAccountType] = useState<boolean>(false);
   const [openSchool, setOpenSchool] = useState<boolean>(false);
@@ -117,7 +120,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
       school:
         {
           id: coachData?.coachProfile?.schoolId,
-          name: coachData?.coachProfile?.school.name,
+          name: coachData?.coachProfile?.school?.name,
         } || {},
       accountType:
         {
@@ -307,7 +310,8 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               imgUrl={avatar}
               id="coaches_profile"
               onUploadSuccess={handleAvatarUploadSuccess}
-              storageLocation="coaches"
+              folder="profile_files"
+              userId={fetchCoach ? coachData?.coachProfile?.userId : user?.id}
             />
           </div>
         </div>

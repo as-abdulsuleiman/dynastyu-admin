@@ -3,13 +3,13 @@
 "use client";
 
 import { FC, useMemo, useState } from "react";
-import { Title, Text, Grid, Callout } from "@tremor/react";
+import { Title, Text, Grid, Callout, Badge } from "@tremor/react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import {
   useDeleteAthleteMutation,
   useDeleteUserMutation,
-  useGetAthleteProfileQuery,
+  useGetUserQuery,
   useUpdateAthleteMutation,
   useUpdateUserMutation,
 } from "@/services/graphql";
@@ -36,6 +36,11 @@ import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
 import VerifiedIcon from "@/components/Icons/verified";
 import MoreHorizontal from "../Icons/more-horizontal";
+import AthleteRecruitingContact from "../athlete-recruiting-contact";
+import StatusOnlineIcon from "@heroicons/react/outline/StatusOnlineIcon";
+import StatusOfflineIcon from "@heroicons/react/outline/StatusOfflineIcon";
+import StarIcon from "../Icons/starIcon";
+import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 interface AthleteDetailProps {
   params: {
     id: number;
@@ -50,12 +55,14 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
   const { toast } = useToast();
   const [loadingImage, setLoadingImage] = useState(true);
   const [viewPlayerCardUrl, setViewPlayerCardUrl] = useState(false);
+  const [viewAnalytics, setViewAnalytics] = useState(false);
+  const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
   const [updateAthlete] = useUpdateAthleteMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [deleteAthlete] = useDeleteAthleteMutation();
   const [updateUser] = useUpdateUserMutation();
 
-  const { data, loading, refetch } = useGetAthleteProfileQuery({
+  const { data, loading, refetch } = useGetUserQuery({
     variables: {
       where: {
         id: params?.id,
@@ -63,8 +70,10 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     },
   });
 
+  const athleteData = data?.user;
+
   const socialAccounts = useMemo(() => {
-    return data?.athleteProfile?.socialAccounts?.map((val: any) => {
+    return athleteData?.athleteProfile?.socialAccounts?.map((val: any) => {
       if (val?.type === "INSTAGRAM") {
         return {
           ...val,
@@ -86,12 +95,12 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
           icon: <TiktokIcon className="h-[19px] w-[19px] mr-2" color="teal" />,
         };
     });
-  }, [data?.athleteProfile?.socialAccounts]);
+  }, [athleteData?.athleteProfile?.socialAccounts]);
 
   const dataList: any = [
     {
       name: "Evaluations",
-      value: data?.athleteProfile?._count?.evaluations || 0,
+      value: athleteData?.athleteProfile?._count?.evaluations || 0,
       color: "teal",
       icon: () => (
         <Icons.clipboardEdit className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
@@ -100,7 +109,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
 
     {
       name: "Interested Schools",
-      value: data?.athleteProfile?._count?.interestedSchools || 0,
+      value: athleteData?._count?.interestedSchools || 0,
       color: "teal",
       icon: () => (
         <Icons.school className="mr-2.5 mb-[-6px] h-5 w-5 lucide lucide-school  stroke-teal-600" />
@@ -108,7 +117,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     },
     {
       name: "Prospected Schools",
-      value: data?.athleteProfile?._count?.prospectedSchools || 0,
+      value: athleteData?._count?.prospectedSchools || 0,
       color: "teal",
       icon: () => (
         <Icons.school2 className="mr-2.5 mb-[-6px] h-5 w-5 lucide lucide-school-2 stroke-teal-600" />
@@ -116,7 +125,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     },
     {
       name: "Recruited Schools",
-      value: data?.athleteProfile?._count?.recruitedSchools || 0,
+      value: athleteData?._count?.recruitedSchools || 0,
       color: "teal",
       icon: () => (
         <Icons.warehouse className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
@@ -124,7 +133,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     },
     {
       name: "Skills",
-      value: data?.athleteProfile?._count?.skills || 0,
+      value: athleteData?.athleteProfile?._count?.skills || 0,
       color: "teal",
       icon: () => (
         <Icons.fileLineChart className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
@@ -132,7 +141,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     },
     {
       name: "Transcripts",
-      value: data?.athleteProfile?._count?.transcripts || 0,
+      value: athleteData?.athleteProfile?._count?.transcripts || 0,
       color: "teal",
       icon: () => (
         <Icons.scrollText className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
@@ -155,12 +164,13 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
   };
 
   const handleActivateAthlete = async (item: any) => {
+    setUpdatingProfile(StatusEnum.ACTIVATING);
     try {
-      const isAthleteActive = item?.user?.isActive;
-      const resp = await updateAthlete({
+      const isAthleteActive = item?.isActive;
+      await updateAthlete({
         variables: {
           where: {
-            id: params?.id,
+            id: item?.athleteProfile?.id,
           },
           data: {
             user: {
@@ -171,16 +181,14 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
           },
         },
       });
-      if (resp?.data?.updateOneAthleteProfile) {
-        // await refetch();
-        toast({
-          title: "Profile successfully updated.",
-          description: `@${item?.user?.username} profile has been ${
-            isAthleteActive ? "Deactivated" : "Activated"
-          } `,
-          variant: "successfull",
-        });
-      }
+      // await refetch();
+      toast({
+        title: "Profile successfully updated.",
+        description: `@${item?.user?.username} profile has been ${
+          isAthleteActive ? "Deactivated" : "Activated"
+        } `,
+        variant: "successfull",
+      });
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -189,9 +197,11 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
         }`,
         variant: "destructive",
       });
+    } finally {
+      setUpdatingProfile(null);
     }
   };
-  const followingId = data?.athleteProfile?.user?.following?.map((val: any) => {
+  const followingId = athleteData?.following?.map((val: any) => {
     return {
       followerId_followingId: {
         followerId: val?.followerId,
@@ -199,7 +209,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
       },
     };
   });
-  const followById = data?.athleteProfile?.user?.followedBy?.map((val: any) => {
+  const followById = athleteData?.followedBy?.map((val: any) => {
     return {
       followerId_followingId: {
         followerId: val?.followerId,
@@ -207,6 +217,17 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
       },
     };
   });
+
+  const recruitingContact = useMemo(() => {
+    let newecruitingContact = [];
+    newecruitingContact?.push({
+      recruitingContactName: athleteData?.athleteProfile?.recruitingContactName,
+      recruitingPhoneNumber: athleteData?.athleteProfile?.recruitingPhoneNumber,
+      recruitingRelationship:
+        athleteData?.athleteProfile?.recruitingRelationship,
+    });
+    return loading ? [] : newecruitingContact;
+  }, [athleteData?.athleteProfile, loading]);
 
   const handleDeleteAthlete = async (item: any) => {
     try {
@@ -262,11 +283,13 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
   };
 
   const handleVerifyAthlete = async (item: any) => {
+    setUpdatingProfile(StatusEnum.VERIFYING);
+
     try {
-      const isVerified = item?.verified;
-      const resp = await updateAthlete({
+      const isVerified = item?.athleteProfile?.verified;
+      await updateAthlete({
         variables: {
-          where: { id: params?.id },
+          where: { id: item?.athleteProfile?.id },
           data: {
             verified: { set: !isVerified },
             verifiedBy: { connect: { id: user?.coachProfile?.id } },
@@ -275,9 +298,9 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
       });
       toast({
         title: "Athlete profile successfully updated.",
-        description: `${
-          data?.athleteProfile?.user?.username
-        } profile has been ${isVerified ? "Unverified" : "Verified"} `,
+        description: `${athleteData?.username} profile has been ${
+          isVerified ? "Unverified" : "Verified"
+        } `,
         variant: "successfull",
       });
       // if (resp?.data?.updateOneAthleteProfile) {
@@ -292,16 +315,20 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
         }`,
         variant: "destructive",
       });
+    } finally {
+      setUpdatingProfile(null);
     }
   };
 
   const handleFeaturedAthlete = async (item: any) => {
+    setUpdatingProfile(StatusEnum.FEATURING);
+
     try {
-      const isAthleteFeatured = item?.featured;
+      const isAthleteFeatured = item?.athleteProfile?.featured;
       const resp = await updateAthlete({
         variables: {
           where: {
-            id: params?.id,
+            id: item?.athleteProfile?.id,
           },
           data: {
             featured: { set: !isAthleteFeatured },
@@ -312,7 +339,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
         // await refetch();
         toast({
           title: "Profile successfully updated.",
-          description: `@${item?.user?.username} profile has been ${
+          description: `@${item?.username} profile has been ${
             !isAthleteFeatured ? "added to featured" : "removed from featured"
           } `,
           variant: "successfull",
@@ -326,6 +353,8 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
         }`,
         variant: "destructive",
       });
+    } finally {
+      setUpdatingProfile(null);
     }
   };
 
@@ -333,44 +362,51 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     {
       name: `Edit Profile`,
       onClick: () =>
-        router.push(`/athletes/edit?athlete=${params?.id}`, {
-          scroll: true,
-        }),
+        router.push(
+          `/athletes/edit?athlete=${athleteData?.athleteProfile?.id}`,
+          {
+            scroll: true,
+          }
+        ),
     },
     {
       name: "View Skills",
       onClick: () => {
-        router.push(`/skills?athlete=${data?.athleteProfile?.id}`, {
+        router.push(`/skills?athlete=${athleteData?.athleteProfile?.id}`, {
           scroll: true,
         });
       },
     },
     {
       name: `${
-        data?.athleteProfile?.verified ? "Unverify Profile" : "Verify Profile"
+        athleteData?.athleteProfile?.verified
+          ? "Unverify Profile"
+          : "Verify Profile"
       }`,
-      onClick: () => handleVerifyAthlete(data?.athleteProfile),
+      onClick: () => handleVerifyAthlete(athleteData),
+    },
+    {
+      name: `${athleteData?.isActive ? "Deactivate" : "Activate"} Profile`,
+      onClick: () => handleActivateAthlete(athleteData),
     },
     {
       name: `${
-        data?.athleteProfile?.user?.isActive ? "Deactivate" : "Activate"
-      } Profile`,
-      onClick: () => handleActivateAthlete(data?.athleteProfile),
-    },
-    {
-      name: `${
-        data?.athleteProfile?.featured
+        athleteData?.athleteProfile?.featured
           ? "Remove from featured"
           : "Add to featured"
       }`,
-      onClick: () => handleFeaturedAthlete(data?.athleteProfile),
+      onClick: () => handleFeaturedAthlete(athleteData),
     },
     {
       name: "View School",
       onClick: () =>
-        router.push(`/school/${data?.athleteProfile?.schoolId}`, {
+        router.push(`/school/${athleteData?.athleteProfile?.schoolId}`, {
           scroll: true,
         }),
+    },
+    {
+      name: "View User Analytics",
+      onClick: () => setViewAnalytics(true),
     },
     // {
     //   name: "Delete Profile",
@@ -381,6 +417,98 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
       onClick: () => setViewPlayerCardUrl(true),
     },
   ];
+
+  const renderBadges = () => {
+    return (
+      <>
+        {loading ? (
+          <>
+            {Array.from([1, 2, 3]).map((a, i) => {
+              return (
+                <Skeleton
+                  key={i}
+                  className={`w-[80px] h-[20px] flex flex-row ml-3 rounded-xl ${
+                    i === 2 ? "mr-3" : ""
+                  }`}
+                />
+              );
+            })}
+          </>
+        ) : (
+          <div className="hidden lg:flex lg:flex-row lg:items-center">
+            <Badge
+              datatype={athleteData?.isActive ? "increase" : "decrease"}
+              className="flex flex-row  text-sm font-TTHovesRegular pl-3"
+              color={athleteData?.isActive ? "teal" : "rose"}
+              icon={
+                updatingProfile === StatusEnum.ACTIVATING
+                  ? undefined
+                  : athleteData?.isActive
+                  ? StatusOnlineIcon
+                  : StatusOfflineIcon
+              }
+            >
+              {updatingProfile === StatusEnum.ACTIVATING
+                ? "Updating..."
+                : athleteData?.isActive
+                ? "Active"
+                : "Deactivated"}
+            </Badge>
+            <Badge
+              datatype={
+                updatingProfile === StatusEnum.VERIFYING
+                  ? undefined
+                  : athleteData?.athleteProfile?.verified
+                  ? "increase"
+                  : "decrease"
+              }
+              className="flex flex-row ml-3"
+              color={athleteData?.athleteProfile?.verified ? "sky" : "rose"}
+              icon={() => {
+                if (updatingProfile === StatusEnum.VERIFYING) {
+                  return undefined;
+                } else if (athleteData?.athleteProfile?.verified) {
+                  return (
+                    <Icons.badgeCheck className="h-4 w-4 mr-2" color="sky" />
+                  );
+                } else {
+                  return (
+                    <Icons.badgeAlert className="h-4 w-4 mr-2" color="rose" />
+                  );
+                }
+              }}
+            >
+              {updatingProfile === StatusEnum.VERIFYING
+                ? "Updating..."
+                : athleteData?.athleteProfile?.verified
+                ? "Verified"
+                : "Not Verified"}
+            </Badge>
+            <Badge
+              datatype={
+                athleteData?.athleteProfile?.featured ? "increase" : "decrease"
+              }
+              className="flex flex-row ml-3 mr-3"
+              color={athleteData?.athleteProfile?.featured ? "yellow" : "rose"}
+              icon={() => {
+                if (updatingProfile === StatusEnum.FEATURING) {
+                  return undefined;
+                } else {
+                  return <StarIcon className="h-4 w-4 mr-1" />;
+                }
+              }}
+            >
+              {updatingProfile === StatusEnum.FEATURING
+                ? "Updating..."
+                : athleteData?.athleteProfile?.featured
+                ? "Featured"
+                : "Not Featured"}
+            </Badge>
+          </div>
+        )}
+      </>
+    );
+  };
 
   return (
     <main className="w-full h-full relative">
@@ -400,61 +528,53 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
         <div className="flex flex-col">
           <div className="flex flex-row items-center">
             <Title>
-              {data?.athleteProfile?.user?.firstname}{" "}
-              {data?.athleteProfile?.user?.surname}
+              {athleteData?.firstname} {athleteData?.surname}
             </Title>
             <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
           </div>
-          <Text>@{data?.athleteProfile?.user?.username}</Text>
+          <Text>@{athleteData?.username}</Text>
           <Text>
-            {data?.athleteProfile?.position?.name} at{" "}
-            {data?.athleteProfile?.school?.name}
+            {athleteData?.athleteProfile?.position?.name} at{" "}
+            {athleteData?.athleteProfile?.school?.name}
           </Text>
           <Text>
             Class of:{" "}
-            {data?.athleteProfile?.graduationYear
-              ? data?.athleteProfile?.graduationYear
+            {athleteData?.athleteProfile?.graduationYear
+              ? athleteData?.athleteProfile?.graduationYear
               : "N/A"}
           </Text>
         </div>
       )}
       <Separator className="my-6" />
-      <UsersAnalytics
-        loading={loading}
-        data={dataList}
-        showStatus={true}
-        showFeatured={true}
-        showVerified
-        isVerified={data?.athleteProfile?.verified || false}
-        featured={data?.athleteProfile?.featured || false}
-        isActive={data?.athleteProfile?.user?.isActive || false}
-        title={`${data?.athleteProfile?.user?.firstname} 
-            ${data?.athleteProfile?.user?.surname} Analytics`}
-      />
+
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
         <InterestedSchoolCard
           loading={loading}
           interestedSchools={
-            (data?.athleteProfile?.interestedSchools as any) || []
+            (athleteData?._count?.interestedSchools as any) || []
           }
         />
         <RecruitedSchoolCard
           loading={loading}
           recruitedSchools={
-            (data?.athleteProfile?.recruitedSchools as any) || []
+            (athleteData?._count?.recruitedSchools as any) || []
           }
         />
       </Grid>
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
         <TranscriptCard
           loading={loading}
-          transcripts={(data?.athleteProfile?.transcripts as any) || []}
+          transcripts={(athleteData?.athleteProfile?.transcripts as any) || []}
         />
-        <AthleteSkillCard
+        <AthleteRecruitingContact
+          loading={false}
+          recruitingContact={recruitingContact}
+        />
+        {/* <AthleteSkillCard
           athleteId={params?.id}
           loading={loading}
           athleteSkills={(data?.athleteProfile?.skills as any) || []}
-        />
+        /> */}
       </Grid>
       <Grid numItemsMd={1} numItemsLg={1} className="mt-6 gap-6">
         <Card>
@@ -469,24 +589,28 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                     className="h-[120px] w-[120px] shadow cursor-pointer"
                     height={120}
                     width={120}
+                    type="image"
                     fallbackType="icon"
                     fallbackClassName={"h-[120px] w-[120px]"}
-                    avatar={data?.athleteProfile?.user.avatar as string}
-                    fallback={`${data?.athleteProfile?.user?.firstname?.charAt(
+                    avatar={athleteData?.avatar as string}
+                    fallback={`${athleteData?.firstname?.charAt(
                       0
-                    )} ${data?.athleteProfile?.user?.surname?.charAt(0)}`}
+                    )} ${athleteData?.surname?.charAt(0)}`}
                     icon={<Icons.user className="h-8 w-8" />}
                   />
                 }
               >
-                <AspectRatio ratio={16 / 16} className="cursor-pointer">
+                <AspectRatio
+                  ratio={16 / 16}
+                  className="cursor-pointer bg-muted"
+                >
                   <Image
                     onLoadingComplete={() => setLoadingImage(false)}
                     priority
                     fill
                     sizes="100vw"
                     quality={80}
-                    src={data?.athleteProfile?.user?.avatar as string}
+                    src={athleteData?.avatar as string}
                     alt="profile_picture"
                     className={`rounded-2xl object-cover relative ${
                       loadingImage ? "blur-sm " : "blur-none"
@@ -502,12 +626,12 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               ) : (
                 <div className="flex flex-row items-center justify-center mt-1">
                   <Text className="text-base relative mr-1">
-                    @{data?.athleteProfile?.user?.username}
+                    @{athleteData?.username}
                   </Text>
-                  {data?.athleteProfile?.verified ? (
+                  {athleteData?.athleteProfile?.verified ? (
                     <HoverCard
                       content={renderVerifiedBy(
-                        data?.athleteProfile?.verifiedBy
+                        athleteData?.athleteProfile?.verifiedBy
                       )}
                       trigger={<VerifiedIcon className="cursor-pointer" />}
                     />
@@ -515,18 +639,21 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                 </div>
               )}
               <div className="ml-auto absolute right-0 top-0">
-                {loading ? (
-                  <Skeleton className="w-[40px] h-[20px]" />
-                ) : (
-                  <MenubarCard
-                    trigger={
-                      <Button size="icon" variant="outline">
-                        <MoreHorizontal className="cursor-pointer" />
-                      </Button>
-                    }
-                    items={dropdownItems}
-                  />
-                )}
+                <div className="flex flex-row items-center">
+                  <>{renderBadges()}</>
+                  {loading ? (
+                    <Skeleton className="w-[40px] h-[35px]" />
+                  ) : (
+                    <MenubarCard
+                      trigger={
+                        <Button size="icon" variant="outline">
+                          <MoreHorizontal className="cursor-pointer" />
+                        </Button>
+                      }
+                      items={dropdownItems}
+                    />
+                  )}
+                </div>
               </div>
             </div>
             <Separator className="my-6" />
@@ -540,8 +667,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               }}
               color="teal"
             >
-              {data?.athleteProfile?.user?.firstname}{" "}
-              {data?.athleteProfile?.user?.surname}
+              {athleteData?.firstname} {athleteData?.surname}
             </Callout>
             <Callout
               className="mt-4 min-h-[75px]"
@@ -553,7 +679,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               }}
               color="teal"
             >
-              {data?.athleteProfile?.user?.email}
+              {athleteData?.email}
             </Callout>
             <Callout
               className="mt-4"
@@ -568,7 +694,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               }}
               color="teal"
             >
-              {data?.athleteProfile?.school?.name}
+              {athleteData?.athleteProfile?.school?.name}
             </Callout>
             <Callout
               className="mt-4"
@@ -583,8 +709,8 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               }}
               color="teal"
             >
-              {data?.athleteProfile?.position?.name} (
-              {data?.athleteProfile?.position?.shortName})
+              {athleteData?.athleteProfile?.position?.name} (
+              {athleteData?.athleteProfile?.position?.shortName})
             </Callout>
             <Callout
               className="mt-4 min-h-[75px]"
@@ -599,7 +725,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               }}
               color="teal"
             >
-              {data?.athleteProfile?.graduationYear}
+              {athleteData?.athleteProfile?.graduationYear}
             </Callout>
             <Callout
               className="mt-4 min-h-[75px]"
@@ -614,9 +740,9 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               }}
               color="teal"
             >
-              {data?.athleteProfile?.gpa}
+              {athleteData?.athleteProfile?.gpa}
             </Callout>
-            {data?.athleteProfile?.hudlLink ? (
+            {athleteData?.athleteProfile?.hudlLink ? (
               <Callout
                 className="mt-4 min-h-[75px]"
                 title="Huddle"
@@ -632,9 +758,9 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               >
                 <input
                   onClick={() => {
-                    if (data?.athleteProfile?.hudlLink as string) {
+                    if (athleteData?.athleteProfile?.hudlLink as string) {
                       window.open(
-                        data?.athleteProfile?.hudlLink as string,
+                        athleteData?.athleteProfile?.hudlLink as string,
                         "_blank"
                       );
                     }
@@ -642,7 +768,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                   className="border-none right-0 rounded-none bg-transparent w-full focus-visible:outline-none cursor-pointer focus-visible:ring-0"
                   readOnly
                   type="url"
-                  defaultValue={data?.athleteProfile?.hudlLink as string}
+                  defaultValue={athleteData?.athleteProfile?.hudlLink as string}
                 />
               </Callout>
             ) : null}
@@ -679,8 +805,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               }}
               color="teal"
             >
-              {data?.athleteProfile?.user?.dob &&
-                formatDate(data?.athleteProfile?.user?.dob)}
+              {athleteData?.dob && formatDate(athleteData?.dob)}
             </Callout>
             <Callout
               className="mt-4"
@@ -696,8 +821,8 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               color="teal"
             >
               <span className="flex flex-row items-center">
-                <>{data?.athleteProfile?.country?.name}</>
-                {data?.athleteProfile?.country?.flag ? (
+                <>{athleteData?.athleteProfile?.country?.name}</>
+                {athleteData?.athleteProfile?.country?.flag ? (
                   <Image
                     alt="country_flag"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
@@ -705,7 +830,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                     priority
                     width={30}
                     height={30}
-                    src={data?.athleteProfile?.country?.flag}
+                    src={athleteData?.athleteProfile?.country?.flag}
                     className="h-[30px] w-[30px] rounded-full ml-auto object-cover"
                   />
                 ) : null}
@@ -714,6 +839,28 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
           </CardContent>
         </Card>
       </Grid>
+      <ModalCard
+        isModal={true}
+        isOpen={viewAnalytics}
+        onOpenChange={() => setViewAnalytics(!viewAnalytics)}
+      >
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12">
+            <UsersAnalytics
+              loading={loading}
+              data={dataList}
+              showStatus={true}
+              showFeatured={true}
+              showVerified
+              isVerified={athleteData?.athleteProfile?.verified || false}
+              featured={athleteData?.athleteProfile?.featured || false}
+              isActive={athleteData?.isActive || false}
+              title={`${athleteData?.firstname} 
+            ${athleteData?.surname} Analytics`}
+            />
+          </div>
+        </div>
+      </ModalCard>
     </main>
   );
 };

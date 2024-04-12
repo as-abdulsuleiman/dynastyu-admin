@@ -26,6 +26,7 @@ import { SelectCountry } from "../select-country";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/utils";
 import { Separator } from "../ui/separator";
+import { useRootStore } from "@/mobx";
 
 type FormData = yup.InferType<typeof FanValidator>;
 
@@ -41,6 +42,9 @@ interface CreateFanProps {
 const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
   const router = useRouter();
   const { toast } = useToast();
+  const {
+    authStore: { user },
+  } = useRootStore();
   const [openAccountType, setOpenAccountType] = useState<boolean>(false);
   const [selectedCountryId, setSelectedCountryId] = useState<number | null>(0);
   const [selectedStateId, setSelectedStateId] = useState<number | null>(0);
@@ -211,7 +215,8 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
               imgUrl={avatar}
               id="fans_profile"
               onUploadSuccess={handleAvatarUploadSuccess}
-              storageLocation="fans"
+              folder="profile_files"
+              userId={fetchFan ? fanData?.user?.id : user?.id}
             />
           </div>
         </div>

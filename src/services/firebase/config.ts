@@ -23,8 +23,8 @@ if (apps?.length === 0) {
 } else {
   app = apps[0];
 }
-
+const firebaseApp = app;
 const projectAuth = getAuth(app);
 const db = getFirestore(app);
 const projectStorage = getStorage(app);
-export { projectStorage, db, projectAuth, ref };
+export { projectStorage, db, projectAuth, ref, firebaseApp,};

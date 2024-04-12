@@ -9,15 +9,15 @@ import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 import CoacheStatCard from "@/components/stat-cards/coache";
 import SelectCard from "@/components/select";
 import {
-  CoachProfileWhereInput,
-  GetCoachesQuery,
+  GetUsersQuery,
   QueryMode,
   SortOrder,
+  UserWhereInput,
   useDeleteCoachMutation,
   useDeleteUserMutation,
   useGetCoachesLazyQuery,
-  useGetCoachesQuery,
   useGetUsersLazyQuery,
+  useGetUsersQuery,
   useUpdateCoachMutation,
 } from "@/services/graphql";
 import Pagination from "@/components/pagination";
@@ -34,6 +34,8 @@ import MenubarCard from "../menubar";
 import { observer } from "mobx-react-lite";
 import { Separator } from "../ui/separator";
 import MoreHorizontal from "../Icons/more-horizontal";
+import { formatDate } from "@/lib/utils";
+import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 
 enum FilterEnum {
   ACTIVE = "Active",
@@ -59,6 +61,7 @@ const headerItems = [
   { name: "Coach Title" },
   { name: "Status" },
   { name: "Verified" },
+  { name: "Created At" },
   { name: "Actions" },
 ];
 
@@ -77,8 +80,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
   const [debounced] = useDebouncedValue(value, 300);
-  const [isActivating, setIsactivating] = useState<boolean>(false);
-  const [isVerifying, setIsVerifying] = useState<boolean>();
+  const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [deleteCoach] = useDeleteCoachMutation();
   const [updateCoach] = useUpdateCoachMutation();
@@ -87,53 +89,59 @@ const Coaches: FC<CoachesProps> = ({}) => {
   const [getCoaches] = useGetCoachesLazyQuery();
 
   const {
-    loading,
     data: coachesData,
     refetch,
     fetchMore,
-  } = useGetCoachesQuery({
+    loading,
+  } = useGetUsersQuery({
     variables: {
+      where: {
+        accountType: {
+          is: {
+            title: {
+              equals: "Coach",
+            },
+          },
+        },
+      },
       take: 10,
       orderBy: {
         createdAt: SortOrder.Desc,
       },
     },
-    returnPartialData: true,
-    fetchPolicy: "cache-first",
-    // pollInterval: 30 * 1000,
   });
 
-  const whereClause: CoachProfileWhereInput = useMemo(() => {
+  const whereClause: UserWhereInput = useMemo(() => {
     if (status === FilterEnum.INACTIVE) {
       return {
-        user: {
-          is: {
-            isActive: {
-              equals: false,
-            },
-          },
+        isActive: {
+          equals: false,
         },
       };
     } else if (status === FilterEnum.ACTIVE) {
       return {
-        user: {
+        isActive: {
+          equals: true,
+        },
+      };
+    } else if (status === FilterEnum.VERIFIED) {
+      return {
+        coachProfile: {
           is: {
-            isActive: {
+            verified: {
               equals: true,
             },
           },
         },
       };
-    } else if (status === FilterEnum.VERIFIED) {
-      return {
-        verified: {
-          equals: true,
-        },
-      };
     } else if (status === FilterEnum.NOTVERIFIED) {
       return {
-        verified: {
-          equals: false,
+        coachProfile: {
+          is: {
+            verified: {
+              equals: false,
+            },
+          },
         },
       };
     } else {
@@ -144,46 +152,37 @@ const Coaches: FC<CoachesProps> = ({}) => {
   useEffect(() => {
     refetch({
       where: {
+        accountType: {
+          is: {
+            title: {
+              equals: "Coach",
+            },
+          },
+        },
         ...whereClause,
         OR: [
           {
-            user: {
-              is: {
-                username: {
-                  contains: debounced,
-                  mode: QueryMode.Insensitive,
-                },
-              },
+            username: {
+              contains: debounced,
+              mode: QueryMode.Insensitive,
             },
           },
           {
-            user: {
-              is: {
-                firstname: {
-                  contains: debounced,
-                  mode: QueryMode.Insensitive,
-                },
-              },
+            firstname: {
+              contains: debounced,
+              mode: QueryMode.Insensitive,
             },
           },
           {
-            user: {
-              is: {
-                surname: {
-                  contains: debounced,
-                  mode: QueryMode.Insensitive,
-                },
-              },
+            surname: {
+              contains: debounced,
+              mode: QueryMode.Insensitive,
             },
           },
           {
-            user: {
-              is: {
-                email: {
-                  contains: debounced,
-                  mode: QueryMode.Insensitive,
-                },
-              },
+            email: {
+              contains: debounced,
+              mode: QueryMode.Insensitive,
             },
           },
         ],
@@ -193,16 +192,16 @@ const Coaches: FC<CoachesProps> = ({}) => {
 
   const lastUserId = useMemo(() => {
     const lastPostInResults =
-      coachesData?.coachProfiles[coachesData?.coachProfiles?.length - 1];
+      coachesData?.users[coachesData?.users?.length - 1];
     return lastPostInResults?.id;
-  }, [coachesData?.coachProfiles]);
+  }, [coachesData?.users]);
 
   const handleDeleteCoach = async (item: any) => {
     try {
       const response = await deleteCoach({
         variables: {
           where: {
-            id: Number(item.id),
+            id: item?.coachProfile?.id,
           },
         },
       });
@@ -210,7 +209,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
         await deleteUser({
           variables: {
             where: {
-              id: Number(item?.user?.id),
+              id: item?.id,
             },
           },
         });
@@ -221,7 +220,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
         setCoaches(caochesResponse.data?.coachProfiles as any);
         toast({
           title: "Coach successfully deleted.",
-          description: `@${item?.user?.username} account has been deleted.`,
+          description: `@${item?.username} account has been deleted.`,
           variant: "default",
         });
       }
@@ -238,13 +237,13 @@ const Coaches: FC<CoachesProps> = ({}) => {
 
   const handleActivateCoach = async (item: any) => {
     setSelectedUser(item?.id);
-    setIsactivating(true);
+    setUpdatingProfile(StatusEnum.ACTIVATING);
     try {
-      const isCoachActive = item?.user?.isActive;
+      const isCoachActive = item?.isActive;
       await updateCoach({
         variables: {
           where: {
-            id: Number(item?.id),
+            id: item?.coachProfile?.id,
           },
           data: {
             user: {
@@ -257,7 +256,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
       });
       toast({
         title: "Profile successfully updated.",
-        description: `@${item?.user?.username} profile has been ${
+        description: `@${item?.username} profile has been ${
           isCoachActive ? "deactivated" : "activated"
         } `,
         variant: "successfull",
@@ -281,20 +280,20 @@ const Coaches: FC<CoachesProps> = ({}) => {
         variant: "destructive",
       });
     } finally {
-      setIsactivating(false);
+      setUpdatingProfile(null);
       setSelectedUser(null);
     }
   };
 
   const handleVerifyCoach = async (item: any) => {
     setSelectedUser(item?.id);
-    setIsVerifying(true);
+    setUpdatingProfile(StatusEnum.VERIFYING);
     try {
-      const isVerified = item?.verified;
+      const isVerified = item?.coachProfile?.verified;
       await updateCoach({
         variables: {
           where: {
-            id: item?.id,
+            id: item?.coachProfile?.id,
           },
           data: {
             verified: {
@@ -305,21 +304,11 @@ const Coaches: FC<CoachesProps> = ({}) => {
       });
       toast({
         title: "Profile successfully updated.",
-        description: `@${item?.user?.username} profile has been ${
+        description: `@${item?.username} profile has been ${
           !isVerified ? "verified" : "unverified"
         } `,
         variant: "successfull",
       });
-      // if (resp.data?.updateOneCoachProfile) {
-      // await refetch();
-      // toast({
-      //   title: "Coach successfully updated.",
-      //   description: `${coach?.user?.username} has been ${
-      //     coach?.user?.isActive ? "Deactivated" : "Activated"
-      //   } `,
-      //   variant: "default",
-      // });
-      // }
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -329,13 +318,13 @@ const Coaches: FC<CoachesProps> = ({}) => {
         variant: "destructive",
       });
     } finally {
-      setIsVerifying(false);
+      setUpdatingProfile(null);
       setSelectedUser(null);
     }
   };
 
   const handleEditCoach = (item: any) => {
-    router.push(`/coaches/edit?coach=${item?.id}`);
+    router.push(`/coaches/edit?coach=${item?.coachProfile?.id}`);
   };
 
   const fetchNext = () => {
@@ -351,15 +340,15 @@ const Coaches: FC<CoachesProps> = ({}) => {
         },
       },
       updateQuery: (
-        previousResult: GetCoachesQuery,
+        previousResult: GetUsersQuery,
         { fetchMoreResult }
-      ): GetCoachesQuery => {
-        if (!fetchMoreResult || fetchMoreResult?.coachProfiles?.length === 0) {
+      ): GetUsersQuery => {
+        if (!fetchMoreResult || fetchMoreResult?.users?.length === 0) {
           return previousResult;
         } else {
-          const previousPosts = previousResult?.coachProfiles;
-          const fetchMorePosts = fetchMoreResult?.coachProfiles;
-          fetchMoreResult.coachProfiles = [...fetchMorePosts];
+          const previousPosts = previousResult?.users;
+          const fetchMorePosts = fetchMoreResult?.users;
+          fetchMoreResult.users = [...fetchMorePosts];
           return { ...fetchMoreResult };
         }
       },
@@ -370,7 +359,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
     fetchMore({
       variables: {
         take: -10,
-        skip: coachesData?.coachProfiles?.length,
+        skip: coachesData?.users?.length,
         cursor: {
           id: lastUserId,
         },
@@ -379,15 +368,15 @@ const Coaches: FC<CoachesProps> = ({}) => {
         },
       },
       updateQuery: (
-        previousResult: GetCoachesQuery,
+        previousResult: GetUsersQuery,
         { fetchMoreResult }
-      ): GetCoachesQuery => {
-        if (!fetchMoreResult || fetchMoreResult?.coachProfiles?.length === 0) {
+      ): GetUsersQuery => {
+        if (!fetchMoreResult || fetchMoreResult?.users?.length === 0) {
           return previousResult;
         } else {
-          const previousPosts = previousResult?.coachProfiles;
-          const fetchMorePosts = fetchMoreResult?.coachProfiles;
-          fetchMoreResult.coachProfiles = [...fetchMorePosts];
+          const previousPosts = previousResult?.users;
+          const fetchMorePosts = fetchMoreResult?.users;
+          fetchMoreResult.users = [...fetchMorePosts];
           return { ...fetchMoreResult };
         }
       },
@@ -399,7 +388,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
       {
         name: "View Details",
         onClick: () => {
-          router.push(`/coach/${Number(item?.id)}`, { scroll: true });
+          router.push(`/coach/${item?.id}`, { scroll: true });
         },
       },
       {
@@ -407,11 +396,11 @@ const Coaches: FC<CoachesProps> = ({}) => {
         onClick: () => handleEditCoach(item),
       },
       {
-        name: `${item.verified ? "Unverify" : "Verify"} Profile`,
+        name: `${item?.coachProfile?.verified ? "Unverify" : "Verify"} Profile`,
         onClick: async () => await handleVerifyCoach(item),
       },
       {
-        name: `${item?.user?.isActive ? "Deactivate" : "Activate"} Profile`,
+        name: `${item?.isActive ? "Deactivate" : "Activate"} Profile`,
         onClick: async () => await handleActivateCoach(item),
       },
       // {
@@ -424,65 +413,65 @@ const Coaches: FC<CoachesProps> = ({}) => {
         <TableCell>
           <div
             className="flex flex-row justify-start items-center"
-            onClick={() =>
-              router.push(`/coach/${Number(item?.id)}`, { scroll: true })
-            }
+            onClick={() => router.push(`/coach/${item?.id}`, { scroll: true })}
           >
             <UserAvatar
               className="h-[79px] w-[79px] shadow cursor-pointer"
               fallbackType="name"
-              avatar={item?.user?.avatar as string}
-              fallback={`${item?.user?.username?.charAt(
+              avatar={item?.avatar as string}
+              fallback={`${item?.username?.charAt(0)} ${item?.firstname?.charAt(
                 0
-              )} ${item?.user?.firstname?.charAt(0)}`}
+              )}`}
             />
             <div className="ml-4 cursor-pointer text-base">
-              {item?.user?.firstname} {item?.user?.surname}
+              {item?.firstname} {item?.surname}
             </div>
           </div>
         </TableCell>
         <TableCell className="text-center text-sm">
-          <div>{item?.user?.username ? `@${item?.user?.username}` : ""}</div>
+          <div>{item?.username ? `@${item?.username}` : ""}</div>
         </TableCell>
         <TableCell className="text-center text-sm">
-          <div>{item?.user?.email}</div>
+          <div>{item?.email}</div>
         </TableCell>
         <TableCell className="text-center text-sm">
-          <div>{item?.title}</div>
+          <div>{item?.coachProfile?.title}</div>
         </TableCell>
         <TableCell className="text-center text-sm">
-          {item?.id === selectedUser && isActivating ? (
+          {item?.id === selectedUser &&
+          updatingProfile === StatusEnum.ACTIVATING ? (
             <div className="text-center flex flex-row justify-center items-center">
               <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin " />
-              {item?.user?.isActive ? "Deactivating..." : "Activating..."}
+              {item?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (
             <Badge
               size="xs"
               className="cursor-pointer text-sm"
-              color={item?.user?.isActive ? "teal" : "rose"}
+              color={item?.isActive ? "teal" : "rose"}
               // tooltip={item?.user?.isActive ? "Active" : "Deactivated"}
-              icon={item?.user?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
+              icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
               datatype="moderateDecrease"
             >
-              {item?.user?.isActive ? "Active" : "Deactivated"}
+              {item?.isActive ? "Active" : "Deactivated"}
             </Badge>
           )}
         </TableCell>
         <TableCell className="text-center text-sm">
-          {item?.id === selectedUser && isVerifying ? (
+          {item?.id === selectedUser &&
+          updatingProfile === StatusEnum.VERIFYING ? (
             <div className="text-center flex flex-row justify-center items-center">
               <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin " />
-              {item?.verified ? "Unverifying..." : "Verifying..."}
+              {item?.coachProfile?.verified ? "Unverifying..." : "Verifying..."}
             </div>
           ) : (
             <Badge
               size="xs"
               className="cursor-pointer px-[8px text-sm"
-              color={item?.verified ? "sky" : "rose"}
+              color={item?.coachProfile?.verified ? "sky" : "rose"}
               // tooltip={item?.verified ? "Verified" : "Not Verified"}
               icon={() => {
-                return item.verified ? (
+                return item?.coachProfile?.verified ? (
                   <Icons.badgeCheck className="h-4 w-4 mr-1" color="sky" />
                 ) : (
                   <Icons.badgeAlert className="h-4 w-4 mr-1" color="rose" />
@@ -490,9 +479,14 @@ const Coaches: FC<CoachesProps> = ({}) => {
               }}
               datatype="moderateDecrease"
             >
-              {item?.verified ? "Verified" : "Not Verified"}
+              {item?.coachProfile?.verified ? "Verified" : "Not Verified"}
             </Badge>
           )}
+        </TableCell>
+        <TableCell className="text-center cursor-pointer text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {formatDate(new Date(item?.createdAt), "MMMM dd yyyy")}
+          </div>
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
@@ -542,11 +536,11 @@ const Coaches: FC<CoachesProps> = ({}) => {
       <UniversalTable
         title="Coach List"
         headerItems={headerItems}
-        items={coachesData?.coachProfiles as any[]}
+        items={coachesData?.users as any[]}
         loading={loading}
         renderItems={renderItems}
       />
-      {loading || !coachesData?.coachProfiles?.length ? null : (
+      {loading || !coachesData?.users?.length ? null : (
         <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
       )}
     </main>

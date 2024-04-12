@@ -21,6 +21,7 @@ query getCoaches(
     schoolId
     verified
     createdAt
+    userId
     country {
       name
       flag
@@ -84,6 +85,7 @@ query getCoach($where: CoachProfileWhereUniqueInput!) {
     verified
     city
     state
+    userId
     createdAt
     _count {
       verifiedAthletes

@@ -22,7 +22,7 @@ import UniversalTable from "@/components/universal-table";
 import { useDebouncedValue } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { Icons } from "@/components/Icons";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import Link from "next/link";
 import MenubarCard from "@/components/menubar";
 import { useToast } from "@/hooks/use-toast";
@@ -36,6 +36,7 @@ const headerItems = [
   { name: "Second Field Name" },
   { name: "Unit" },
   { name: "Number Of Videos" },
+  { name: "Created At" },
   { name: "Action" },
 ];
 
@@ -160,8 +161,8 @@ const Page: FC<pageProps> = ({}) => {
   };
 
   const handleDeleteSkillType = async (item: any) => {
-    setDeleteSkillTypePrompt(true);
     setActiveSkillType(item);
+    setDeleteSkillTypePrompt(true);
   };
 
   const handleConfirmPrompt = async (item: any) => {
@@ -261,6 +262,11 @@ const Page: FC<pageProps> = ({}) => {
         <TableCell className="text-center text-sm">{item?.unit}</TableCell>
         <TableCell className="text-center text-sm">
           {item?.numberOfVideos}
+        </TableCell>
+        <TableCell className="text-center cursor-pointer text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {formatDate(new Date(item?.createdAt), "MMMM dd yyyy")}
+          </div>
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">

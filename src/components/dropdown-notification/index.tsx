@@ -19,6 +19,7 @@ import { useRootStore } from "@/mobx";
 import Notification from "../Icons/notification";
 import {
   SortOrder,
+  useGetPostFlagsQuery,
   useGetSkillVerificationRequestsQuery,
 } from "@/services/graphql";
 import { useRouter } from "next/navigation";
@@ -30,6 +31,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import UserAvatar from "../user-avatar";
 import { buttonVariants } from "../ui/button";
+import FlagOffIcon from "@/components/Icons/flag-off";
 
 interface DropdownProps {}
 
@@ -38,6 +40,7 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
 
   const [open, setOpen] = useState(false);
   const {
+    flaggedPostStore: { setFlaggedPost, flaggedPost },
     skillVerificationRequestStore: {
       setSkillVerificationRequest,
       setLoading,
@@ -63,12 +66,29 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
       setLoading(loading);
     },
   });
+  const {
+    data: flaggedPostData,
+    refetch,
+    fetchMore,
+  } = useGetPostFlagsQuery({
+    variables: {
+      take: 10,
+      orderBy: {
+        createdAt: SortOrder.Desc,
+      },
+    },
+    pollInterval: 10 * 1000,
+    onCompleted: (data) => {
+      setFlaggedPost(data?.postFlags as any);
+      // setLoading(loading);
+    },
+  });
 
   const showNotificationBadge = skillVerificationRequest?.length;
 
   const renderNotificationSection = () => {
     return (
-      <div className="relative flex h-[31px] w-[31px] items-center justify-center rounded-full border-[0.5px] bg-[#14b8a6] mr-3">
+      <div className="relative flex h-[31px] w-[31px] cursor-pointer items-center justify-center rounded-full border-[0.5px] bg-[#14b8a6] mr-3">
         <span
           className={`absolute top-0 right-0 z-1 h-[10px] w-[10px] rounded-full bg-[#DC3545] ${
             !showNotificationBadge ? "hidden" : "inline"
@@ -164,15 +184,12 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
           <DropdownMenuLabel className="flex flex-row items-center sticky z-50 top-0 bg-secondary backdrop-blur-sm">
             <div className="">Flagged Posts</div>
             <div className="ml-auto bg-destructive py-1 px-2 rounded-md cursor-pointer font-TTHovesDemiBold text-xs">
-              <Link
-                onClick={() => setOpen(false)}
-                href="/skill-types/verification-request"
-              >
+              <Link onClick={() => setOpen(false)} href={`/flagged-posts`}>
                 View All
               </Link>
             </div>
           </DropdownMenuLabel>
-          {/* {data?.skillVerificationRequests?.map((value: any, index: any) => {
+          {flaggedPostData?.postFlags?.map((value: any, index: any) => {
             return (
               <DropdownMenuGroup
                 key={index}
@@ -182,23 +199,28 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
                   <div className="flex flex-row items-center p-2 py-2 flex-1">
                     <div className="relative self-start">
                       <UserAvatar
-                        className="h-[59px] w-[59px] shadow"
+                        className="h-[59px] w-[59px] shadow relative"
                         fallbackType="name"
-                        avatar={value?.user?.avatar as string}
-                        fallback={`${value?.user?.firstname?.charAt(
+                        type={
+                          value?.post?.videos?.length > 0 ? "video" : "image"
+                        }
+                        avatar={
+                          value?.post?.videos?.length > 0
+                            ? value?.post?.videos[0]
+                            : (value?.post?.images[0] as string)
+                        }
+                        fallback={`${value?.post?.user?.firstname?.charAt(
                           0
-                        )} ${value?.user?.surname?.charAt(0)}`}
+                        )} ${value?.post?.user?.surname?.charAt(0)}`}
                       />
+                      <div className="absolute right-[-2px] bottom-1.5 z-10 bg-[#FF4747] h-6 w-6 rounded-full flex flex-row items-center justify-center">
+                        <FlagOffIcon className="h-4 w-4" color="#fff" />
+                      </div>
                       <div className="absolute h-[15px] rounded-full w-[15px] bg-primary top-1 border border-1 left-0"></div>
                     </div>
                     <div className="flex flex-col ml-3 justify-center w-full">
                       <div key={value?.id} className="cursor-pointer">
-                        <span>@{value?.user?.username}</span> {""}
-                        <span className="ml-1">
-                          is requesting for{" "}
-                          <strong>{value?.skill?.skillType?.name}</strong> {""}
-                          verification
-                        </span>
+                        <span>@{value?.user?.username}</span> has flagged a post
                       </div>
                       <div className="mt-0 text-[12px] py-0">
                         {formatDistanceToNow(new Date(value?.createdAt), {
@@ -207,7 +229,7 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
                       </div>
                       <Link
                         onClick={() => setOpen(false)}
-                        href={`/skill-types/verification-request/${value?.id}`}
+                        href={`/flagged-post/${value?.id}`}
                         className={cn(
                           buttonVariants({
                             variant: "destructive",
@@ -224,7 +246,7 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
                 <Separator />
               </DropdownMenuGroup>
             );
-          })} */}
+          })}
         </ScrollArea>
       </div>
     );
@@ -236,12 +258,12 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
         {renderNotificationSection()}
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className=" w-full max-w-[440px]"
+        className=" w-full max-w-[540px]"
         align="end"
         sideOffset={20}
       >
         <DropdownMenuLabel className="flex flex-row items-center text-lg">
-          Notification
+          Notifications
           {/* <div className="ml-auto bg-secondary py-1 px-2 rounded-md cursor-pointer font-TTHovesDemiBold text-xs">
             <Link href="/notifications">View All</Link>
           </div> */}

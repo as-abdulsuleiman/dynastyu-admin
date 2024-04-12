@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import Image from "next/image";
 import { AvatarProps } from "@radix-ui/react-avatar";
 import { observer } from "mobx-react-lite";
+import ReactPlayer from "react-player";
 
 interface UserAvatarProps extends AvatarProps {
   avatar?: string;
@@ -16,45 +17,92 @@ interface UserAvatarProps extends AvatarProps {
   width?: number;
   height?: number;
   fallbackClassName?: string;
+  type?: "image" | "video";
 }
 
 const UserAvatar: FC<UserAvatarProps> = ({
   icon,
+  width,
   avatar,
+  height,
+  type = "image",
   fallback,
   fallbackType = "name",
-  height,
-  width,
   fallbackClassName,
   ...props
 }) => {
   const [loading, setLoading] = useState(true);
 
+  const renderVideoThumbnail = (url: string) => {
+    return (
+      <>
+        {url ? (
+          <div className=" absolute inset-0 w-full h-full">
+            <ReactPlayer
+              muted
+              playing={false}
+              controls={false}
+              url={avatar}
+              width="100%"
+              height="100%"
+              wrapper={(props) => (
+                <div
+                  {...props}
+                  className="h-[100%] w-[100%]"
+                  style={{ width: "auto", height: "auto" }}
+                ></div>
+              )}
+            />
+          </div>
+        ) : (
+          <>{renderEmptyMedia()}</>
+        )}
+      </>
+    );
+  };
+
+  const renderEmptyMedia = () => {
+    return (
+      <AvatarFallback
+        className={`capitalize text-xs h-[79px] w-[79px] ${fallbackClassName}`}
+      >
+        {fallbackType === "icon" ? (
+          <div className="flex h-full w-full flex-row items-center justify-center m-auto absolute inset-0">
+            {icon}
+          </div>
+        ) : (
+          <>{fallback}</>
+        )}
+      </AvatarFallback>
+    );
+  };
+  const renderImageThumbnail = (url: string) => {
+    return (
+      <>
+        {url ? (
+          <Image
+            onLoad={() => setLoading(false)}
+            width={width || 110}
+            height={height || 110}
+            src={url}
+            alt="profile"
+            className={`${loading ? "blur-sm " : "blur-none"} object-cover `}
+            referrerPolicy="no-referrer"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
+          />
+        ) : (
+          <>{renderEmptyMedia()}</>
+        )}
+      </>
+    );
+  };
+
   return (
     <Avatar {...props}>
-      {avatar ? (
-        <Image
-          onLoad={() => setLoading(false)}
-          width={width || 110}
-          height={height || 110}
-          src={avatar}
-          alt="profile"
-          className={`${loading ? "blur-sm " : "blur-none"} object-cover `}
-          referrerPolicy="no-referrer"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
-        />
+      {type === "image" ? (
+        <>{renderImageThumbnail(avatar as string)}</>
       ) : (
-        <AvatarFallback
-          className={`capitalize text-xs h-[79px] w-[79px] ${fallbackClassName}`}
-        >
-          {fallbackType === "icon" ? (
-            <div className="flex h-full w-full flex-row items-center justify-center m-auto absolute inset-0">
-              {icon}
-            </div>
-          ) : (
-            <>{fallback}</>
-          )}
-        </AvatarFallback>
+        <>{renderVideoThumbnail(avatar as string)}</>
       )}
     </Avatar>
   );

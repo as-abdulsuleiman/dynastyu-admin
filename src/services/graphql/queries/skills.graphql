@@ -23,6 +23,7 @@ query getManySkills(
     value
     verified
     verifiedAt
+    createdAt
     skillType {
       id
       name
@@ -59,6 +60,7 @@ query getFindManySkills(
     videos
     athleteId
     secondValue
+    createdAt
     value
     verified
     verifiedAt
@@ -130,6 +132,7 @@ query getAthleteSkillTypes(
     position
     isPrimaryForRecruitment
     unit
+    createdAt
     _count {
       skills
     }
@@ -140,16 +143,38 @@ query getAthleteSkillTypes(
       secondValue
       value
       athleteId
+       athlete {
+        id
+        userId
+      }
       verified
       createdAt
+      skillHistory{
+        id
+        value
+        secondValue
+        videos
+        skillId
+        athleteId
+      }
       skillVerificationRequests(
-        where: { verified: { equals: true } }
-        take: 1
+        # where: { verified: { equals: true } }
+        take: 3
         orderBy: { createdAt: desc }
       ) {
         id
         uuid
         verified
+        campId
+        userId
+        skillId
+        createdAt
+        updatedAt
+        dateOfVerfication
+        camp{
+          id
+          name
+        }
       }
     }
   }
@@ -177,6 +202,7 @@ query getSkillTypes(
     mask
     unit
     options
+    createdAt
     numberOfVideos
     secondFieldName
     description
@@ -208,6 +234,7 @@ query getSkillTypes(
         uuid
         userId
         skillId
+        campId
       }
     }
   }
@@ -226,11 +253,58 @@ query getSkillType($where: SkillTypeWhereUniqueInput!) {
     description
     secondValueOptions
     videosLabels
+    createdAt
     position
     icon
     isPrimaryForRecruitment
     _count {
       skills
+    }
+  }
+}
+
+query getSkillHistories(
+  $where: SkillHistoryWhereInput
+  $orderBy: [SkillHistoryOrderByWithRelationInput!]
+  $cursor: SkillHistoryWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [SkillHistoryScalarFieldEnum!]
+){
+  skillHistories(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ){
+     id
+    uuid
+    createdAt
+    updatedAt
+    skillId
+    value
+    videos
+    secondValue
+    verified
+    verifiedAt
+    athleteId
+    skill{
+      id
+      value
+      secondValue
+      videos
+      verified
+      createdAt
+      updatedAt
+      skillType{
+        id
+        uuid
+        name
+        secondFieldName
+        description
+      }
     }
   }
 }
@@ -241,6 +315,12 @@ mutation createSkill($data: SkillsCreateInput!) {
     videos
     secondValue
     value
+    createdAt
+    verified
+    verifiedAt
+    athleteId
+    updatedAt
+    skillId
     skillType {
       id
       name
@@ -271,6 +351,23 @@ mutation updateOneSkill(
   updateOneSkills(data: $data, where: $where) {
     id
     videos
+    secondValue
+    value
+    createdAt
+    verified
+    verifiedAt
+    athleteId
+    updatedAt
+    skillId
+    skillType {
+      id
+      name
+      options
+      numberOfVideos
+      secondFieldName
+      secondValueOptions
+      videosLabels
+    }
   }
 }
 
@@ -283,6 +380,16 @@ mutation createOneSkillVerification(
     skillId
     userId
     campId
+    dateOfVerfication
+    verified
+    createdAt
+    camp {
+      name
+      id
+      uuid
+      address
+      description
+    }
   }
 }
 
@@ -420,6 +527,32 @@ query getSkillVerificationRequest(
   }
 }
 
+query getCamps(
+  $where: CampWhereInput
+  $orderBy: [CampOrderByWithRelationInput!]
+  $cursor: CampWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [CampScalarFieldEnum!]
+) {
+  camps(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    id
+    name
+    description
+    address
+    dateOfEvent
+    createdAt
+    updatedAt
+  }
+}
+
 mutation createSkillType($data: SkillTypeCreateInput!) {
   createOneSkillType(data: $data) {
     id
@@ -480,5 +613,11 @@ mutation deleteManySkills($where: SkillsWhereInput) {
 mutation deleteManySkillHistory($where: SkillHistoryWhereInput) {
   deleteManySkillHistory(where: $where) {
     count
+  }
+}
+
+mutation createHistory($data: SkillHistoryCreateInput!) {
+  createOneSkillHistory(data: $data) {
+    id
   }
 }

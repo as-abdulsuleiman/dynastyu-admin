@@ -2,13 +2,15 @@
 
 "use client";
 
-import { FC, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { Title, Text, Flex, Grid, Badge, TextInput } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOfflineIcon, StatusOnlineIcon } from "@heroicons/react/outline";
 import {
   GetUsersQuery,
+  QueryMode,
   SortOrder,
+  UserWhereInput,
   useGetUsersQuery,
   useUpdateUserMutation,
 } from "@/services/graphql";
@@ -27,12 +29,13 @@ import { observer } from "mobx-react-lite";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import MoreHorizontal from "../Icons/more-horizontal";
+import { formatDate } from "@/lib/utils";
 
 const filterItems = [
   { name: "Active", value: "Active" },
   { name: "Inactive", value: "Inactive" },
-  { name: "Verified", value: "Verified" },
-  { name: "Not Verified", value: "Not Verified" },
+  // { name: "Verified", value: "Verified" },
+  // { name: "Not Verified", value: "Not Verified" },
 ];
 
 const headerItems = [
@@ -40,8 +43,18 @@ const headerItems = [
   { name: "Username" },
   { name: "Email" },
   { name: "Status" },
+  { name: "Created At" },
   { name: "Actions" },
 ];
+
+enum FilterEnum {
+  ACTIVE = "Active",
+  INACTIVE = "Inactive",
+  APPROVED = "Approved",
+  VERIFIED = "Verified",
+  NOTVERIFIED = "Not Verified",
+  NOTAPPROVED = "Not Approved",
+}
 
 interface FansProps {}
 
@@ -65,15 +78,79 @@ const Fans: FC<FansProps> = ({}) => {
   } = useGetUsersQuery({
     variables: {
       where: {
-        accountTypeId: { equals: 2 },
+        accountType: {
+          is: {
+            title: {
+              equals: "Fan",
+            },
+          },
+        },
       },
       take: 10,
       orderBy: {
         createdAt: SortOrder.Desc,
       },
     },
-    // pollInterval: 30 * 1000,
   });
+
+  const whereClause: UserWhereInput = useMemo(() => {
+    if (status === FilterEnum.INACTIVE) {
+      return {
+        isActive: {
+          equals: false,
+        },
+      };
+    } else if (status === FilterEnum.ACTIVE) {
+      return {
+        isActive: {
+          equals: true,
+        },
+      };
+    } else {
+      return {};
+    }
+  }, [status]);
+
+  useEffect(() => {
+    refetch({
+      where: {
+        accountType: {
+          is: {
+            title: {
+              equals: "Fan",
+            },
+          },
+        },
+        ...whereClause,
+        OR: [
+          {
+            username: {
+              contains: debounced,
+              mode: QueryMode.Insensitive,
+            },
+          },
+          {
+            firstname: {
+              contains: debounced,
+              mode: QueryMode.Insensitive,
+            },
+          },
+          {
+            surname: {
+              contains: debounced,
+              mode: QueryMode.Insensitive,
+            },
+          },
+          {
+            email: {
+              contains: debounced,
+              mode: QueryMode.Insensitive,
+            },
+          },
+        ],
+      },
+    });
+  }, [status, whereClause, debounced, refetch]);
 
   const handleActiveUser = async (item: any) => {
     setSelectedUser(item?.id);
@@ -237,6 +314,11 @@ const Fans: FC<FansProps> = ({}) => {
               {item?.isActive ? "Active" : "Deactivated"}
             </Badge>
           )}
+        </TableCell>
+        <TableCell className="text-center cursor-pointer text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {formatDate(new Date(item?.createdAt), "MMMM dd yyyy")}
+          </div>
         </TableCell>
         <TableCell className="text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">

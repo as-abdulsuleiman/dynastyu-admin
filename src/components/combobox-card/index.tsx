@@ -72,7 +72,7 @@ const ComboBoxCard: FC<ComboBoxCardProps> = ({
       {label ? (
         <label
           htmlFor={id}
-          className="font-semibold text-left text-[14px] mb-11 d-flex"
+          className="text-left font-TTHovesDemiBold text-[14px] mb-11 d-flex"
           id={id}
         >
           {label}

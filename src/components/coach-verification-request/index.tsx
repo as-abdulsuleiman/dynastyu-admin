@@ -50,7 +50,7 @@ const headerItems = [
   { name: "Username" },
   { name: "Email" },
   { name: "Coach Title" },
-  { name: "Date" },
+  { name: "Created At" },
   { name: "Verified" },
   { name: "Actions" },
 ];

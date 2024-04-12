@@ -36,6 +36,7 @@ import { Separator } from "../ui/separator";
 import { SearchInput } from "../search-input";
 import { Button } from "../ui/button";
 import MoreHorizontal from "../Icons/more-horizontal";
+import { formatDate } from "@/lib/utils";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -50,6 +51,7 @@ const headerItems = [
   { name: "Role" },
   { name: "Email" },
   { name: "Status" },
+  { name: "Created At" },
   { name: "Actions" },
 ];
 enum FilterEnum {
@@ -350,6 +352,11 @@ const Dashboard: FC<DashboardProps> = () => {
               {item?.isActive ? "Active" : "Deactivated"}
             </Badge>
           )}
+        </TableCell>
+        <TableCell className="text-center cursor-pointer text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {formatDate(new Date(item?.createdAt), "MMMM dd yyyy")}
+          </div>
         </TableCell>
         <TableCell className="text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">

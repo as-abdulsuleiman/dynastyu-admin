@@ -37,7 +37,7 @@ const headerItems = [
   { name: "Skill" },
   { name: "Email" },
   { name: "Verified" },
-  { name: "Date" },
+  { name: "Created At" },
   { name: "Actions" },
 ];
 

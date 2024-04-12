@@ -25,16 +25,23 @@ const ModalCard: FC<ModalProps> = ({
   trigger,
   children,
   isOpen,
-  isModal,
+  isModal = true,
   contentClass,
   onOpenChange,
 }) => {
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange} modal={isModal}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={onOpenChange}
+      modal={isModal}
+      defaultOpen={false}
+    >
       {trigger ? <DialogTrigger asChild>{trigger}</DialogTrigger> : null}
       <DialogContent
+        onOpenAutoFocus={(event) => event.preventDefault()}
+        onInteractOutside={(event) => event.preventDefault()}
         className={cn(
-          "w-[95%] max-w-2xl container md:max-w-lg m-auto rounded-2xl z-50 bg-primary-black bg-gradient-to-bl from-primary-black via-primary-black/5 to-primary-black px-[16px] md:px-[2rem] py-[2rem]",
+          "w-[95%] max-w-2xl h-fit container md:max-w-lg m-auto rounded-2xl z-50 bg-background bg-gradient-to-bl from-primary-black via-primary-black/5 to-primary-black px-[16px] md:px-[2rem] py-[2rem]",
           contentClass
         )}
       >
@@ -43,7 +50,7 @@ const ModalCard: FC<ModalProps> = ({
             <DialogTitle>{label}</DialogTitle>
           </DialogHeader>
         ) : null}
-        {children}
+        <div className="p-4">{children}</div>
       </DialogContent>
     </Dialog>
   );

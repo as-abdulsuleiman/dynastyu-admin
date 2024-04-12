@@ -3,11 +3,28 @@
 "use client";
 
 import {
+  ChangeEvent,
+  ElementRef,
+  FC,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import {
   GetAthleteSkillTypesQuery,
+  QueryMode,
   SortOrder,
+  useCreateHistoryMutation,
+  useCreateOneSkillVerificationMutation,
+  useCreateSkillMutation,
+  useGetAthleteProfileQuery,
   useGetAthleteSkillTypesQuery,
+  useGetCampsQuery,
+  useGetSkillHistoriesQuery,
+  useGetSkillVerificationRequestsQuery,
+  useUpdateOneSkillMutation,
 } from "@/services/graphql";
-import { FC, useEffect, useMemo, useState } from "react";
 import ContentHeader from "../content-header";
 import { Separator } from "../ui/separator";
 import SkillIcon from "@/components/Icons/skill";
@@ -28,6 +45,14 @@ import MediaCard from "../media-card";
 import ComboBoxCard from "@/components/combobox-card";
 import { Button } from "../ui/button";
 import { observer } from "mobx-react-lite";
+import { formatDate } from "@/lib/utils";
+import { Input } from "../ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { useStorage } from "@/hooks/use-storage";
+import { useRootStore } from "@/mobx";
+import { Icons } from "../Icons";
+import { useDebouncedValue } from "@mantine/hooks";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -45,8 +70,26 @@ const headerItems = [
   { name: "Unit" },
   { name: "Value" },
   { name: "Second Field Value" },
+  { name: "Created At" },
   { name: "Videos" },
   { name: "Actions" },
+
+  // { name: "Position" },
+  // { name: "Status" },
+  // { name: "Verified" },
+  // { name: "Featured" },
+];
+
+const historyHeaderItems = [
+  { name: "Skill Type" },
+  { name: "Value" },
+  { name: "Second Value" },
+  { name: "Created At" },
+
+  // { name: "Value" },
+  // { name: "Second Field Value" },
+  // { name: "Videos" },
+  // { name: "Actions" },
 
   // { name: "Position" },
   // { name: "Status" },
@@ -62,35 +105,145 @@ interface AthleteSkillProps {
     athlete: number;
   };
 }
+interface CampProps {
+  label: string;
+  value: number;
+}
 
 const getFileName = (url: string) => {
   const splittedUrl = url.split("/");
   return splittedUrl[splittedUrl.length - 2];
 };
 
-const RenderEditSkillModal = ({ item }: { item: any }) => {
+const RenderSkillHistory = ({
+  skillId,
+  athleteId,
+}: {
+  skillId: number;
+  athleteId: number;
+}) => {
+  const fetchHistory = (skillId && athleteId) ?? false;
+
+  const { data: historyData, loading } = useGetSkillHistoriesQuery({
+    variables: {
+      where: {
+        skillId: {
+          equals: skillId,
+        },
+        athleteId: {
+          equals: athleteId,
+        },
+      },
+    },
+    skip: !fetchHistory,
+  });
+
+  const renderItems = ({ item, id }: { item: any; id: any }) => {
+    return (
+      <TableRow key={item?.id} className="w-full">
+        <TableCell>
+          <div className="text-base flex flex-row items-center justify-start">
+            <span>{item?.skill?.skillType?.name}</span>
+          </div>
+        </TableCell>
+        <TableCell className="text-center text-sm">
+          <div className="">{item?.value}</div>
+        </TableCell>
+        <TableCell className="text-center text-sm">
+          <div className="">{item?.secondValue}</div>
+        </TableCell>
+        <TableCell className="text-center cursor-pointer text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {formatDate(new Date(item?.createdAt), "MMMM dd yyyy")}
+          </div>
+        </TableCell>
+      </TableRow>
+    );
+  };
+
+  return (
+    <div className="grid grid-cols-12 gap-6 py-2">
+      <div className="col-span-12">
+        <UniversalTable
+          title="Athlete List"
+          headerItems={historyHeaderItems}
+          items={historyData?.skillHistories as any[]}
+          loading={loading}
+          renderItems={renderItems}
+        />
+        {/* {historyData?.skillHistories.map((history) => {
+            return (
+              <div key={history.id} className="p-2">
+                <div>{history?.skill?.skillType?.name}</div>
+              </div>
+            );
+          })} */}
+      </div>
+    </div>
+  );
+};
+
+const RenderEditSkillModal = ({
+  item,
+  athleteId,
+  userId,
+  handleRefetch,
+  onClose,
+}: {
+  item: any;
+  athleteId: number;
+  userId: number;
+  handleRefetch: () => void;
+  onClose: () => void;
+}) => {
+  const { toast } = useToast();
   const themeColor = UseThemeColor();
+  const { data: campData } = useGetCampsQuery();
+  const [createHistory] = useCreateHistoryMutation();
+  const [createVerificationRequest] = useCreateOneSkillVerificationMutation();
+  const [updateSkill] = useUpdateOneSkillMutation();
+  const [createSkill] = useCreateSkillMutation();
+  const [selectedCamp, setSelectedCamp] = useState<any>({});
+  const [loadingRequest, setLoadingRequest] = useState(false);
   const [openOption, setOpenOption] = useState<boolean>(false);
+  const [openCamp, setOpenCamp] = useState<boolean>(false);
+  const [activeUpload, setActiveUpload] = useState<string>();
+  const [isUploadingNewVideo, setIsUploadingNewVideo] =
+    useState<boolean>(false);
   const [openSecondOption, setOpenSecondOption] = useState<boolean>(false);
-  const [selectedOption, setSelectedOption] = useState({});
-  const [selectedSecondOption, setSelectedSecondOption] = useState({});
+  const [selectedOption, setSelectedOption] = useState<string>();
+  const [selectedSecondOption, setSelectedSecondOption] = useState<string>();
   const [videos, setVideos] = useState<string[]>([]);
-  const [newVideos, setNewVideos] = useState<string[]>([]);
+  const [newVideos, setNewVideos] = useState<File[]>([]);
+  const [isSubmiting, setIsSubmiting] = useState(false);
+
+  const inputRef = useRef<ElementRef<"input">>(null);
+
+  const { uploadFiles } = useStorage({
+    userId: userId,
+    folder: "skills",
+  });
 
   const skillData = item?.skills?.find((a: any) => a);
+
+  const isEmptySkillId = skillData !== undefined;
+  skillData?.id ?? false;
+
+  const { data: verificationData, refetch } =
+    useGetSkillVerificationRequestsQuery({
+      variables: { where: { skillId: { equals: skillData?.id } } },
+      skip: !isEmptySkillId,
+    });
 
   useEffect(() => {
     if (skillData?.videos?.length) {
       setVideos(skillData?.videos);
     }
     if (skillData?.value) {
-      setSelectedOption({ id: skillData?.value, label: skillData?.value });
+      setSelectedOption(skillData?.value);
     }
     if (skillData?.secondValue) {
-      setSelectedSecondOption({
-        id: skillData?.secondValue,
-        label: skillData?.secondValue,
-      });
+      setSelectedSecondOption(skillData?.secondValue);
     }
   }, [skillData]);
 
@@ -113,111 +266,364 @@ const RenderEditSkillModal = ({ item }: { item: any }) => {
       })),
     [item?.secondValueOptions]
   );
+
+  const camps = useMemo(
+    () =>
+      campData?.camps?.map((camp) => ({ label: camp.name, value: camp.id })) ||
+      [],
+    [campData]
+  );
+
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    if (event?.target?.files?.length) {
+      const files: any = event?.target?.files;
+      if (files?.length) {
+        setNewVideos((prev) => [...prev, files[0]]);
+      }
+    }
+  };
+
+  const handleCreateHistory = (skill: any) => {
+    return createHistory({
+      variables: {
+        data: {
+          skill: { connect: { id: skill?.id } },
+          videos: { set: skill?.videos },
+          value: skill?.value,
+          secondValue: skill?.secondValue,
+          athlete: { connect: { id: skill?.athleteId } },
+          verified: skill?.verified,
+          verifiedAt: skill?.verifiedAt,
+          createdAt: skill?.createdAt,
+        },
+      },
+    });
+  };
+
+  const handleSubmit = async () => {
+    try {
+      setIsSubmiting(true);
+      const { videos: newUploadedVideo } = await uploadFiles([], newVideos, []);
+      if (skillData?.id) {
+        const resp = await updateSkill({
+          variables: {
+            where: { id: skillData?.id },
+            data: {
+              value: { set: selectedOption },
+              secondValue: { set: selectedSecondOption || "" },
+              videos: { set: [...videos, ...newUploadedVideo] },
+              verified: { set: false },
+              verifiedAt: { set: null },
+              skillVerificationRequests: {
+                updateMany: [
+                  {
+                    where: { skillId: { equals: skillData?.id } },
+                    data: { verified: { set: false } },
+                  },
+                ],
+              },
+            },
+          },
+        });
+        if (resp.data?.updateOneSkills) {
+          await handleCreateHistory(resp.data?.updateOneSkills);
+        }
+      } else {
+        const resp = await createSkill({
+          variables: {
+            data: {
+              athlete: {
+                connect: { id: athleteId },
+              },
+              skillType: {
+                connect: { id: item?.id },
+              },
+              value: selectedOption as string,
+              secondValue: selectedSecondOption,
+              videos: { set: [...videos, ...newUploadedVideo] },
+              verified: false,
+              verifiedAt: null,
+            },
+          },
+        });
+        if (resp.data?.createOneSkills) {
+          await handleCreateHistory(resp.data?.createOneSkills);
+        }
+      }
+    } catch (error: any) {
+      setIsSubmiting(false);
+      toast({
+        title: "Something went wrong.",
+        description: `${error.message}`,
+        variant: "destructive",
+      });
+      onClose();
+    } finally {
+      handleRefetch();
+      setIsSubmiting(false);
+      onClose();
+    }
+  };
+
   return (
-    <div className="h-full w-full">
-      <div className="grid grid-cols-12 gap-6 py-2">
-        <div
-          className={`col-span-12 sm:col-span-${
-            formattedSecondValueOptions.length > 0 ? "6" : "12"
-          }`}
-        >
+    <div className="grid grid-cols-12 gap-6 py-2">
+      <div
+        className={`col-span-12 sm:col-span-${
+          formattedSecondValueOptions.length > 0 ? "6" : "12"
+        }`}
+      >
+        <ComboBoxCard
+          displayKey="label"
+          IdKey="label"
+          label={item?.name}
+          isOpen={openOption}
+          onClose={() => setOpenOption(!openOption)}
+          items={formattedOptions}
+          selectedValue={{ value: selectedOption }}
+          onSelectValue={(item) => {
+            setSelectedOption(item?.value);
+          }}
+          id="options"
+          valueKey="value"
+        />
+      </div>
+
+      {formattedSecondValueOptions?.length > 0 ? (
+        <div className="col-span-12 sm:col-span-6">
           <ComboBoxCard
             displayKey="label"
             IdKey="label"
-            label={item?.name}
-            isOpen={openOption}
-            onClose={() => setOpenOption(!openOption)}
-            items={formattedOptions}
-            selectedValue={selectedOption}
+            valueKey="value"
+            label={item?.secondFieldName}
+            isOpen={openSecondOption}
+            onClose={() => setOpenSecondOption(!openSecondOption)}
+            items={formattedSecondValueOptions}
+            selectedValue={{ value: selectedSecondOption }}
             onSelectValue={(item) => {
-              setSelectedOption({ id: item?.id, label: item?.label });
+              setSelectedSecondOption(item?.value);
             }}
-            id="options"
-            valueKey="id"
+            id="secondValueOptions"
           />
         </div>
-        {formattedSecondValueOptions?.length > 0 ? (
-          <div className="col-span-12 sm:col-span-6">
-            <ComboBoxCard
-              displayKey="label"
-              IdKey="label"
-              label={item?.secondFieldName}
-              isOpen={openSecondOption}
-              onClose={() => setOpenSecondOption(!openSecondOption)}
-              items={formattedSecondValueOptions}
-              selectedValue={selectedSecondOption}
-              onSelectValue={(item) => {
-                setSelectedSecondOption({ id: item?.id, label: item?.label });
-              }}
-              id="secondValueOptions"
-              valueKey="id"
+      ) : null}
+      {videos?.length ? (
+        <div className="col-span-12 gap-6">
+          {videos?.map((video: string, index: number) => {
+            return (
+              <div key={index} className="mb-2">
+                <div className="flex flex-row items-center">
+                  <PlayIcon
+                    className="h-5 w-5 cursor-pointer"
+                    color={themeColor === "dark" ? "#fafafa" : "#0a0a0a"}
+                  />
+                  <div className="text-sm ml-2">
+                    {item.videosLabels?.length
+                      ? item?.videosLabels[index]
+                      : getFileName(video)}
+                  </div>
+                  <Button
+                    size="icon"
+                    variant="destructive"
+                    className="ml-auto"
+                    onClick={() =>
+                      setVideos((prev) =>
+                        prev?.filter((a: string) => a !== video)
+                      )
+                    }
+                  >
+                    <TrashIcon className="h-4 w-4 cursor-pointer " />
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
+      {newVideos?.length ? (
+        <div className="col-span-12 sm:col-span-12 gap-6">
+          {newVideos?.map((video: any, index: number) => {
+            return (
+              <div key={index} className="mb-2">
+                <div className="flex flex-row items-center">
+                  <PlayIcon
+                    className="h-5 w-5 cursor-pointer"
+                    color={themeColor === "dark" ? "#fafafa" : "#0a0a0a"}
+                  />
+                  <div className="text-sm ml-2">
+                    {item.videosLabels?.length
+                      ? item?.videosLabels[index]
+                      : getFileName(video)}
+                  </div>
+                  <Button
+                    size="icon"
+                    variant="destructive"
+                    className="ml-auto"
+                    onClick={() =>
+                      setNewVideos((prev) =>
+                        prev?.filter((a: any) => a?.name !== video?.name)
+                      )
+                    }
+                  >
+                    <TrashIcon className="h-4 w-4 cursor-pointer " />
+                  </Button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
+      {item?.description ? (
+        <div className="col-span-12 sm:col-span-12">
+          <div className="text-lg font-TTHovesDemiBold">Guidelines:</div>
+          <div className="text-sm font-TTHovesRegular">{item?.description}</div>
+        </div>
+      ) : null}
+      {item?.numberOfVideos > videos?.length + newVideos?.length ? (
+        <div className="col-span-12 sm:col-span-12">
+          <div className="grid grid-cols-12">
+            <Input
+              type="file"
+              accept="video/*"
+              ref={inputRef}
+              className="hidden"
+              multiple={false}
+              onChange={handleFileChange}
             />
+            {item?.numberOfVideos > videos?.length + newVideos?.length
+              ? Array(item?.numberOfVideos)
+                  .fill(1)
+                  ?.map((video, i) =>
+                    [...videos, ...newVideos].length &&
+                    [...videos, ...newVideos][i] ? null : (
+                      <div
+                        key={i}
+                        className="col-span-12 sm:col-span-12 gap-6 mb-3"
+                      >
+                        <Button
+                          variant="destructive"
+                          onClick={() => {
+                            if (inputRef?.current) {
+                              setActiveUpload(item?.videosLabels[i] || "Skill");
+                              inputRef?.current?.click();
+                            }
+                          }}
+                        >
+                          {isUploadingNewVideo &&
+                          (item?.videosLabels[i] || "Skill") ===
+                            activeUpload ? (
+                            <div className="flex flex-row items-center justify-center text-sm font-TTHovesRegular">
+                              <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              Uploading...
+                            </div>
+                          ) : (
+                            `Upload ${
+                              item?.videosLabels?.length
+                                ? item?.videosLabels[i]
+                                : "Skill"
+                            } Video`
+                          )}
+                        </Button>
+                      </div>
+                    )
+                  )
+              : null}
           </div>
-        ) : null}
-      </div>
-      <div className="grid grid-cols-12 gap-6 py-2 mt-3">
-        {videos?.length
-          ? videos?.map((video: string, index: number) => {
-              return (
-                <div key={index} className="col-span-12 sm:col-span-12">
-                  <div className="flex flex-row items-center">
-                    <PlayIcon
-                      className="h-5 w-5 cursor-pointer"
-                      color={themeColor === "dark" ? "#fafafa" : "#0a0a0a"}
-                    />
-                    <div className="text-sm ml-2">
-                      {item.videosLabels?.length
-                        ? item?.videosLabels[index]
-                        : getFileName(video)}
-                    </div>
-                    <Button
-                      size="icon"
-                      variant="destructive"
-                      className="ml-auto"
-                    >
-                      <TrashIcon
-                        className="h-4 w-4 cursor-pointer "
-                        onClick={() =>
-                          setVideos((prev: any) =>
-                            prev?.filter((a: string) => a !== video)
-                          )
-                        }
-                      />
-                    </Button>
+        </div>
+      ) : null}
+      {videos?.length ? (
+        <div className="col-span-12">
+          <div className="text-base font-TTHovesDemiBold">
+            Request Verification
+          </div>
+          <div className="grid grid-cols-12 gap-12 mt-2">
+            <div className="col-span-6 sm:col-span-6">
+              <ComboBoxCard
+                valueKey="value"
+                displayKey="label"
+                IdKey="label"
+                label=""
+                id="camps"
+                placeholder="Select Camp"
+                isOpen={openCamp}
+                scrollAreaClass="h-72"
+                hasSearch
+                onClose={() => setOpenCamp(!openCamp)}
+                items={camps}
+                selectedValue={selectedCamp}
+                onSelectValue={(item) => {
+                  setSelectedCamp({ label: item?.label, value: item?.value });
+                }}
+              />
+            </div>
+            <div className="col-span-4 sm:col-span-6 self-center">
+              <Button
+                size="default"
+                variant="destructive"
+                className="w-full"
+                onClick={async () => {
+                  try {
+                    setLoadingRequest(true);
+                    await createVerificationRequest({
+                      variables: {
+                        data: {
+                          skill: { connect: { id: skillData?.id } },
+                          camp: { connect: { id: selectedCamp?.value } },
+                          user: { connect: { id: userId } },
+                        },
+                      },
+                    });
+                    refetch();
+                    setSelectedCamp({});
+                  } catch (error) {
+                  } finally {
+                    setLoadingRequest(false);
+                  }
+                }}
+              >
+                {loadingRequest ? "Sending Request..." : "Request"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+      {verificationData?.skillVerificationRequests?.length ? (
+        <div className="col-span-12">
+          <div className="text-base font-TTHovesDemiBold mb-2">Requests</div>
+          {verificationData?.skillVerificationRequests?.map((request: any) => {
+            return (
+              <div key={request?.id} className="flex flex-row">
+                <div>
+                  <div className="text-sm font-TTHovesRegular">
+                    {request?.camp?.name}
+                  </div>
+                  <div className="text-sm font-TTHovesRegular">
+                    {request?.verified ? "Verified on " : "Requested on "}
+                    {formatDate(
+                      !request?.verified
+                        ? request?.createdAt
+                        : request?.dateOfVerfication || new Date()
+                    )}
                   </div>
                 </div>
-              );
-            })
-          : null}
+                <div className="flex flex-row items-center text-sm font-TTHovesRegular ml-auto">
+                  <div>{request?.verified ? "Verified" : "Pending"}</div>
+                  {request?.verified ? <VerifiedIcon className="ml-3" /> : null}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
+      <div className="col-span-12">
+        <Button
+          className="mt-5 w-full"
+          size="default"
+          variant="destructive"
+          onClick={handleSubmit}
+        >
+          {isSubmiting ? "Uploading..." : "Save"}
+        </Button>
       </div>
-      <div className="grid grid-cols-12 gap-6 py-2 mt-3">
-        {item?.numberOfVideos > videos?.length + newVideos?.length
-          ? Array(item?.numberOfVideos)
-              .fill(1)
-              ?.map((video, i) =>
-                [...videos, ...newVideos].length &&
-                [...videos, ...newVideos][i] ? null : (
-                  <div key={i} className="col-span-12 sm:col-span-12">
-                    <Button
-                      variant="destructive"
-                      onClick={async () => {
-                        // setNewVideos((prev) => [...prev, video])
-                      }}
-                    >
-                      {`Upload ${
-                        item?.videosLabels?.length
-                          ? item?.videosLabels[i]
-                          : "Skill"
-                      } Video`}
-                    </Button>
-                  </div>
-                )
-              )
-          : null}
-      </div>
-      <Button className="mt-5 w-full" size="default" variant="destructive">
-        Save
-      </Button>
     </div>
   );
 };
@@ -227,10 +633,20 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
   const [value, setValue] = useState<string>("");
   const [videos, setVideos] = useState<string[]>();
   const [skillId, setSkillId] = useState<string | null>("");
+  const [openSkillHistory, setOpenSkillHistory] = useState<string | null>("");
   const [openVideo, setOpenVideo] = useState<boolean>(false);
-  const [openEditSkill, setOpenEditSkill] = useState<boolean>(false);
+  const [debounced] = useDebouncedValue(value, 300);
+
   const themeColor = UseThemeColor();
   const athleteId = searchParams?.athlete;
+
+  const { data: athleteData } = useGetAthleteProfileQuery({
+    variables: {
+      where: {
+        id: athleteId,
+      },
+    },
+  });
 
   const { data, loading, fetchMore, refetch } = useGetAthleteSkillTypesQuery({
     variables: {
@@ -245,7 +661,20 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
     skip: !athleteId,
   });
 
-  const lastUserId = useMemo(() => {
+  // useEffect(() => {
+  //   refetch({
+  //     where: {
+  //       // ...whereClause,
+  //       OR: [
+  //         { name: { contains: debounced, mode: QueryMode.Insensitive } },
+  //         { secondFieldName: { contains: debounced, mode: QueryMode.Insensitive } },
+  //         { username: { contains: debounced, mode: QueryMode.Insensitive } },
+  //       ],
+  //     },
+  //   });
+  // }, [status, whereClause, debounced, refetch]);
+
+  const lastSkillTypeId = useMemo(() => {
     const lastPostInResults = data?.skillTypes[data?.skillTypes?.length - 1];
     return lastPostInResults?.id;
   }, [data?.skillTypes]);
@@ -256,7 +685,7 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
         take: 10,
         skip: 1,
         cursor: {
-          id: lastUserId,
+          id: lastSkillTypeId,
         },
         orderBy: {
           createdAt: SortOrder.Desc,
@@ -284,7 +713,7 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
         take: -10,
         skip: data?.skillTypes?.length,
         cursor: {
-          id: lastUserId,
+          id: lastSkillTypeId,
         },
         orderBy: {
           createdAt: SortOrder.Desc,
@@ -312,9 +741,15 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
 
   const renderItems = ({ item, id }: { item: any; id: any }) => {
     const fieldValues = item?.skills?.find((a: any) => a);
+
     const skillVerification = item?.skills
       .flatMap((skill: any) => skill?.skillVerificationRequests)
       ?.find((a: any) => a?.verified);
+
+    const skillHistory = item?.skills.flatMap(
+      (skill: any) => skill?.skillHistory
+    );
+
     const skillItems = [
       {
         name: "Edit Skill",
@@ -323,8 +758,17 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
         },
       },
     ];
+    if (skillHistory?.length > 0) {
+      skillItems.push({
+        name: "View Skill History",
+        onClick: () => {
+          setOpenSkillHistory(fieldValues?.id);
+        },
+      });
+    }
+
     return (
-      <TableRow key={item?.id}>
+      <TableRow key={item?.id} className="w-full">
         <TableCell>
           <div className="text-base flex flex-row items-center justify-start">
             <span>{item?.name}</span>
@@ -341,6 +785,11 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
         </TableCell>
         <TableCell className="text-center text-sm">
           <div className="">{fieldValues?.secondValue}</div>
+        </TableCell>
+        <TableCell className="text-center cursor-pointer text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {formatDate(new Date(item?.createdAt), "MMMM dd yyyy")}
+          </div>
         </TableCell>
         <TableCell className="text-center text-sm">
           <div className="text-center flex flex-row justify-center items-center">
@@ -370,12 +819,33 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
         </TableCell>
         <ModalCard
           isModal={true}
+          isOpen={openSkillHistory === fieldValues?.id}
+          onOpenChange={() => {
+            setOpenSkillHistory(null);
+          }}
+        >
+          <RenderSkillHistory
+            skillId={fieldValues?.id}
+            athleteId={athleteId}
+            // onClose={() => setSkillId(null)}
+            // userId={athleteData?.athleteProfile?.userId}
+            // handleRefetch={() => refetch()}
+          />
+        </ModalCard>
+        <ModalCard
+          isModal={true}
           isOpen={skillId === item?.id}
           onOpenChange={() => {
             setSkillId(null);
           }}
         >
-          <RenderEditSkillModal item={item} />
+          <RenderEditSkillModal
+            item={item}
+            athleteId={athleteId}
+            onClose={() => setSkillId(null)}
+            userId={athleteData?.athleteProfile?.userId}
+            handleRefetch={() => refetch()}
+          />
         </ModalCard>
       </TableRow>
     );
@@ -384,14 +854,10 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
   return (
     <main className="w-full h-full">
       <div className="flex flex-row items-center">
-        <ContentHeader
-          title="Athlete Skills"
-          subHeader="Skills Overview"
-          icon={<SkillIcon className="h-5 w-5 ml-2 fill-foreground" />}
-        />
+        <ContentHeader title="Athlete Skills" subHeader="Skills Overview" />
       </div>
       <Separator className="my-6" />
-      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
+      {/* <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
         <SearchInput
           onChange={(e) => setValue(e.target.value)}
           placeholder="Type to search..."
@@ -404,7 +870,7 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
             setStatus(e);
           }}
         />
-      </Grid>
+      </Grid> */}
       <UniversalTable
         title="Athlete List"
         headerItems={headerItems}

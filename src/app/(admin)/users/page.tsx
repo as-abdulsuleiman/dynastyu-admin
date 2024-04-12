@@ -311,7 +311,7 @@ const Users: FC<UsersProps> = ({}) => {
             }
           >
             <UserAvatar
-              className="h-[59px] w-[59px] shadow cursor-pointer"
+              className="h-[79px] w-[79px] shadow cursor-pointer"
               fallbackType="name"
               avatar={item?.avatar as string}
               fallback={`${item?.firstname?.charAt(0)} ${item?.surname?.charAt(

@@ -2,7 +2,7 @@
 
 "use client";
 
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Callout, Text } from "@tremor/react";
 import UserAvatar from "../user-avatar";
 import { Icons } from "../Icons";
@@ -19,6 +19,9 @@ import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
 import MoreHorizontal from "../Icons/more-horizontal";
 import { Button } from "../ui/button";
+import { BadgeDollarSign, Calendar } from "lucide-react";
+import PromptAlert from "../prompt-alert";
+
 interface SchoolCardProps {
   loading?: boolean;
   school: any;
@@ -29,17 +32,23 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   const { toast } = useToast();
   const [deleteSchool] = useDeleteSchoolMutation();
   const [updateSchool] = useUpdateSchoolMutation();
+  const [isDeletingSchool, setIsDeletingSchool] = useState(false);
+  const [openDeleteSchoolPrompt, setOpenDeleteSchoolPrompt] = useState(false);
 
-  const handleDeleteSchool = async (school: any) => {
+  const handleConfirmPrompt = async (school: any) => {
+    setIsDeletingSchool(true);
     const athletesInterestedId = school?.athletesInterested?.map(
       (val: any) => val?.athleteId
     );
-    const athletesRecruitedId = school?.athletesInterested?.map(
+    const athletesRecruitedId = school?.athletesRecruited?.map(
       (val: any) => val?.athleteId
     );
     const athletesProspectedId = school?.athletesProspected?.map(
       (val: any) => val?.athleteId
     );
+    const schoolPostId = school?.posts?.map((val: any) => val?.id);
+    const athletesId = school?.athletes?.map((val: any) => val?.id);
+    const coachesId = school?.coaches?.map((val: any) => val?.id);
     try {
       await updateSchool({
         variables: {
@@ -51,7 +60,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
               deleteMany: [
                 {
                   athleteId: {
-                    in: athletesProspectedId,
+                    in: athletesProspectedId || [],
                   },
                 },
               ],
@@ -60,7 +69,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
               deleteMany: [
                 {
                   athleteId: {
-                    in: athletesRecruitedId,
+                    in: athletesRecruitedId || [],
                   },
                 },
               ],
@@ -69,7 +78,34 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
               deleteMany: [
                 {
                   athleteId: {
-                    in: athletesInterestedId,
+                    in: athletesInterestedId || [],
+                  },
+                },
+              ],
+            },
+            posts: {
+              deleteMany: [
+                {
+                  id: {
+                    in: schoolPostId || [],
+                  },
+                },
+              ],
+            },
+            athletes: {
+              deleteMany: [
+                {
+                  id: {
+                    in: athletesId || [],
+                  },
+                },
+              ],
+            },
+            coaches: {
+              deleteMany: [
+                {
+                  id: {
+                    in: coachesId || [],
                   },
                 },
               ],
@@ -93,7 +129,13 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         }`,
         variant: "destructive",
       });
+    } finally {
+      setIsDeletingSchool(false);
+      setOpenDeleteSchoolPrompt(false);
     }
+  };
+  const handleDeleteSchoolPrompt = () => {
+    setOpenDeleteSchoolPrompt(true);
   };
 
   const dropdownItems = [
@@ -103,7 +145,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
     },
     {
       name: `Delete ${school?.schoolType?.name}`,
-      onClick: () => handleDeleteSchool(school),
+      onClick: () => handleDeleteSchoolPrompt(),
     },
   ];
   return (
@@ -219,7 +261,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           title="Yearly Tuition"
           icon={() => {
             return (
-              <Icons.scrollText
+              <BadgeDollarSign
                 className="h-[20px] w-[20px] mr-2"
                 color="teal"
               />
@@ -233,8 +275,18 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           className="mt-4 min-h-[75px]"
           title="Year Founded"
           icon={() => {
+            return <Calendar className="h-[20px] w-[20px] mr-2" color="teal" />;
+          }}
+          color="teal"
+        >
+          {school?.yearFounded}
+        </Callout>
+        <Callout
+          className="mt-4 min-h-[75px]"
+          title="Undergrad Students"
+          icon={() => {
             return (
-              <Icons.scrollText
+              <Icons.graduationCap
                 className="h-[20px] w-[20px] mr-2"
                 color="teal"
               />
@@ -242,9 +294,8 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           }}
           color="teal"
         >
-          {school?.yearFounded}
+          {school?.undergradStudents}
         </Callout>
-
         <Callout
           className="mt-4 min-h-[75px]"
           title="Country"
@@ -298,6 +349,15 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         >
           {school?.city}
         </Callout>
+        <PromptAlert
+          loading={isDeletingSchool}
+          content={`This action cannot be undone. This will permanently delete this data from our servers.`}
+          showPrompt={openDeleteSchoolPrompt}
+          handleHidePrompt={() => {
+            setOpenDeleteSchoolPrompt(false);
+          }}
+          handleConfirmPrompt={() => handleConfirmPrompt(school)}
+        />
       </CardContent>
     </Card>
   );

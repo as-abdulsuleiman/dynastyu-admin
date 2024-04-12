@@ -114,8 +114,14 @@ const CreateSkillType: FC<CreateSkillTypeProps> = ({
   const handleAddOption = (val: string) => {
     if (options?.includes(val)) {
       toast({
-        title: "Options",
+        title: "Something went wrong",
         description: `${val || "Value"} already exists`,
+        variant: "destructive",
+      });
+    } else if (!val || val === "") {
+      toast({
+        title: "Something went wrong",
+        description: `${val || "Value"} can't be empty`,
         variant: "destructive",
       });
     } else {
@@ -130,8 +136,14 @@ const CreateSkillType: FC<CreateSkillTypeProps> = ({
   const handleVideoLabelOption = (val: string) => {
     if (videosLabels?.includes(val)) {
       toast({
-        title: "Second value options",
+        title: "Something went wrong",
         description: `${val || "Value"} already exists`,
+        variant: "destructive",
+      });
+    } else if (!val || val === "") {
+      toast({
+        title: "Something went wrong",
+        description: `Value can't be empty`,
         variant: "destructive",
       });
     } else {
@@ -150,6 +162,18 @@ const CreateSkillType: FC<CreateSkillTypeProps> = ({
         description: `${val || "Value"} already exists`,
         variant: "destructive",
       });
+    } else if (!val || val === "") {
+      toast({
+        title: "Something went wrong",
+        description: `Value can't be empty`,
+        variant: "destructive",
+      });
+    } else if (!val || val === "") {
+      toast({
+        title: "Something went wrong",
+        description: `Value can't be empty`,
+        variant: "destructive",
+      });
     } else {
       setValue("mask", [...(mask as string[]), val], {
         shouldTouch: true,
@@ -164,6 +188,12 @@ const CreateSkillType: FC<CreateSkillTypeProps> = ({
       toast({
         title: "Second value options",
         description: `${val || "Value"} already exists`,
+        variant: "destructive",
+      });
+    } else if (!val || val === "") {
+      toast({
+        title: "Something went wrong",
+        description: `Value can't be empty`,
         variant: "destructive",
       });
     } else {
@@ -449,7 +479,7 @@ const CreateSkillType: FC<CreateSkillTypeProps> = ({
                   htmlFor="is_primary_for_recruitment"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 >
-                  Primary for recruitment
+                  Primary For Recruitment
                 </label>
               </div>
             </div>

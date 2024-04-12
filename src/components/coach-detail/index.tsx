@@ -8,9 +8,10 @@ import {
   useDeleteCoachMutation,
   useDeleteUserMutation,
   useGetCoachQuery,
+  useGetUserQuery,
   useUpdateCoachMutation,
 } from "@/services/graphql";
-import { Title, Text, Grid, Callout } from "@tremor/react";
+import { Title, Text, Grid, Callout, Badge } from "@tremor/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import UsersAnalytics from "@/components/analytics/users";
@@ -26,6 +27,9 @@ import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
 import MoreHorizontal from "../Icons/more-horizontal";
 import VerifiedIcon from "@/components/Icons/verified";
+import { StatusEnum } from "@/lib/enums/updating-profile.enum";
+import StatusOnlineIcon from "@heroicons/react/outline/StatusOnlineIcon";
+import StatusOfflineIcon from "@heroicons/react/outline/StatusOfflineIcon";
 
 interface CoachDetailProps {
   params: {
@@ -38,11 +42,13 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   const { toast } = useToast();
   const [showimage, setShowImage] = useState(true);
   const [viewPlayerCardUrl, setViewPlayerCardUrl] = useState(false);
+  const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
+  const [viewAnalytics, setViewAnalytics] = useState(false);
   const [deleteCoach] = useDeleteCoachMutation();
   const [updateCoach] = useUpdateCoachMutation();
   const [deleteUser] = useDeleteUserMutation();
 
-  const { data, loading, refetch } = useGetCoachQuery({
+  const { data, loading, refetch } = useGetUserQuery({
     variables: {
       where: {
         id: params?.id,
@@ -50,12 +56,15 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     },
   });
 
+  const coachData = data?.user;
+
   const handleDeleteCoach = async (item: any) => {
+    setUpdatingProfile(StatusEnum.DELETING);
     try {
       const response = await deleteCoach({
         variables: {
           where: {
-            id: params?.id,
+            id: item?.coachProfile?.id,
           },
         },
       });
@@ -63,14 +72,14 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
         await deleteUser({
           variables: {
             where: {
-              id: item?.user?.id,
+              id: item?.id,
             },
           },
         });
         await refetch();
         toast({
           title: "Profile successfully deleted.",
-          description: `@${item?.user?.username} account has been deleted.`,
+          description: `@${item?.username} account has been deleted.`,
           variant: "successfull",
         });
       }
@@ -82,16 +91,19 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
         }`,
         variant: "destructive",
       });
+    } finally {
+      setUpdatingProfile(null);
     }
   };
 
   const handleActivateCoach = async (item: any) => {
+    setUpdatingProfile(StatusEnum.ACTIVATING);
     try {
-      const isCoachActive = item?.user?.isActive;
+      const isCoachActive = item?.isActive;
       await updateCoach({
         variables: {
           where: {
-            id: params?.id,
+            id: item?.coachProfile?.id,
           },
           data: {
             user: {
@@ -104,7 +116,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       });
       toast({
         title: "Profile successfully updated.",
-        description: `@${item?.user?.username} profile has been ${
+        description: `@${item?.username} profile has been ${
           isCoachActive ? "deactivated" : "activated"
         }`,
         variant: "successfull",
@@ -117,16 +129,19 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
         }`,
         variant: "destructive",
       });
+    } finally {
+      setUpdatingProfile(null);
     }
   };
 
   const handleVerifyCoach = async (item: any) => {
+    setUpdatingProfile(StatusEnum.VERIFYING);
     try {
-      const isVerified = item?.verified;
+      const isVerified = item?.coachProfile?.verified;
       await updateCoach({
         variables: {
           where: {
-            id: params?.id,
+            id: item?.coachProfile?.id,
           },
           data: {
             verified: {
@@ -137,15 +152,11 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       });
       toast({
         title: "Profile successfully updated.",
-        description: `@${item?.user?.username} profile has been ${
+        description: `@${item?.username} profile has been ${
           !isVerified ? "verified" : "unverified"
         } `,
         variant: "successfull",
       });
-      // if (resp.data?.updateOneCoachProfile) {
-      //   // await refetch();
-
-      // }
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -154,51 +165,59 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
         }`,
         variant: "destructive",
       });
+    } finally {
+      setUpdatingProfile(null);
     }
   };
 
   const handleEditCoach = (item: any) => {
-    router.push(`/coaches/edit?coach=${params?.id}`, { scroll: true });
+    router.push(`/coaches/edit?coach=${item?.coachProfile?.id}`, {
+      scroll: true,
+    });
   };
 
   const dropdownItems = [
     {
       name: `Edit Profile`,
-      onClick: () => handleEditCoach(data?.coachProfile),
+      onClick: () => handleEditCoach(coachData),
     },
     {
       name: `${
-        data?.coachProfile?.verified ? "Unverify Profile" : "Verify Profile"
+        coachData?.coachProfile?.verified
+          ? "Unverify Profile"
+          : "Verify Profile"
       }`,
-      onClick: async () => await handleVerifyCoach(data?.coachProfile),
+      onClick: async () => await handleVerifyCoach(coachData),
     },
     {
       name: `View School`,
       onClick: () =>
-        router.push(`/school/${data?.coachProfile?.schoolId}`, {
+        router.push(`/school/${coachData?.coachProfile?.schoolId}`, {
           scroll: true,
         }),
     },
     {
-      name: `${
-        data?.coachProfile?.user?.isActive ? "Deactivate" : "Activate"
-      } Profile`,
-      onClick: async () => await handleActivateCoach(data?.coachProfile),
+      name: `${coachData?.isActive ? "Deactivate" : "Activate"} Profile`,
+      onClick: async () => await handleActivateCoach(coachData),
     },
     {
       name: "View Profile Picture",
       onClick: () => setViewPlayerCardUrl(true),
     },
+    {
+      name: "View User Analytics",
+      onClick: () => setViewAnalytics(true),
+    },
     // {
     //   name: "Delete Profile",
-    //   onClick: async () => await handleDeleteCoach(data?.coachProfile),
+    //   onClick: async () => await handleDeleteCoach(coachData),
     // },
   ];
 
   const dataList: any = [
     {
       name: "Following",
-      value: data?.coachProfile?.user?._count?.following || 0,
+      value: coachData?._count?.following || 0,
       color: "teal",
       icon: () => (
         <Icons.users2 className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
@@ -207,7 +226,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
 
     {
       name: "Follwers",
-      value: data?.coachProfile?.user?._count?.followedBy || 0,
+      value: coachData?._count?.followedBy || 0,
       color: "teal",
       icon: () => (
         <Icons.usersRound className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
@@ -216,7 +235,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     {
       name: "Posts",
       color: "teal",
-      value: data?.coachProfile?.user?._count?.posts || 0,
+      value: coachData?._count?.posts || 0,
       icon: () => (
         <Icons.fileImage className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
@@ -224,7 +243,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     {
       name: "Verified Athletes",
       color: "teal",
-      value: data?.coachProfile?._count?.verifiedAthletes || 0,
+      value: coachData?.coachProfile?._count?.verifiedAthletes || 0,
       icon: () => (
         <Icons.athlete className="mr-2.5 mb-[-6px] h-5 w-5 stroke-teal-600" />
       ),
@@ -232,14 +251,14 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
 
     {
       name: "Reposts",
-      value: data?.coachProfile?.user?._count?.reposts || 0,
+      value: coachData?._count?.reposts || 0,
       icon: () => (
         <Icons.switchCamera className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
     {
       name: "Interested Schools",
-      value: data?.coachProfile?.user?._count?.interestedSchools || 0,
+      value: coachData?._count?.interestedSchools || 0,
       icon: () => (
         <Icons.school className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
@@ -247,7 +266,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     {
       name: "Evaluations Created",
       color: "teal",
-      value: data?.coachProfile?.user?._count?.evaluationsCreated || 0,
+      value: coachData?._count?.evaluationsCreated || 0,
       icon: () => (
         <Icons.clipboardEdit className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
@@ -255,12 +274,84 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     {
       name: "Comments",
       color: "teal",
-      value: data?.coachProfile?.user?._count?.comments || 0,
+      value: coachData?._count?.comments || 0,
       icon: () => (
         <Icons.messageCircleCode className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
   ];
+
+  const renderBadges = () => {
+    return (
+      <>
+        {loading ? (
+          <>
+            {Array.from([1, 2, 3]).map((a, i) => {
+              return (
+                <Skeleton
+                  key={i}
+                  className={`w-[80px] h-[20px] flex flex-row ml-3 rounded-xl ${
+                    i === 2 ? "mr-3" : ""
+                  }`}
+                />
+              );
+            })}
+          </>
+        ) : (
+          <div className="hidden lg:flex lg:flex-row lg:items-center">
+            <Badge
+              datatype={coachData?.isActive ? "increase" : "decrease"}
+              className="flex flex-row  text-sm font-TTHovesRegular pl-3"
+              color={coachData?.isActive ? "teal" : "rose"}
+              icon={
+                updatingProfile === StatusEnum.ACTIVATING
+                  ? undefined
+                  : coachData?.isActive
+                  ? StatusOnlineIcon
+                  : StatusOfflineIcon
+              }
+            >
+              {updatingProfile === StatusEnum.ACTIVATING
+                ? "Updating..."
+                : coachData?.isActive
+                ? "Active"
+                : "Deactivated"}
+            </Badge>
+            <Badge
+              datatype={
+                updatingProfile === StatusEnum.VERIFYING
+                  ? undefined
+                  : coachData?.coachProfile?.verified
+                  ? "increase"
+                  : "decrease"
+              }
+              className="flex flex-row ml-3 mr-3"
+              color={coachData?.coachProfile?.verified ? "sky" : "rose"}
+              icon={() => {
+                if (updatingProfile === StatusEnum.VERIFYING) {
+                  return undefined;
+                } else if (coachData?.coachProfile?.verified) {
+                  return (
+                    <Icons.badgeCheck className="h-4 w-4 mr-2" color="sky" />
+                  );
+                } else {
+                  return (
+                    <Icons.badgeAlert className="h-4 w-4 mr-2" color="rose" />
+                  );
+                }
+              }}
+            >
+              {updatingProfile === StatusEnum.VERIFYING
+                ? "Updating..."
+                : coachData?.coachProfile?.verified
+                ? "Verified"
+                : "Not Verified"}
+            </Badge>
+          </div>
+        )}
+      </>
+    );
+  };
 
   return (
     <main className="w-full h-full relative">
@@ -282,20 +373,19 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
             <div className="ml-0">
               <div className="flex flex-row items-center">
                 <Title>
-                  {data?.coachProfile?.user?.firstname}{" "}
-                  {data?.coachProfile?.user?.surname}
+                  {coachData?.firstname} {coachData?.surname}
                 </Title>
                 <Icons.whistle className="h-4 w-4 ml-2 fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis" />
               </div>
               <Text>
-                {data?.coachProfile?.title} at{" "}
-                {data?.coachProfile?.school?.name}
+                {coachData?.coachProfile?.title} at{" "}
+                {coachData?.coachProfile?.school?.name}
               </Text>
             </div>
             <div className="ml-auto hidden">
               <Button
                 variant="ghost"
-                onClick={() => handleEditCoach(data?.coachProfile)}
+                onClick={() => handleEditCoach(coachData)}
               >
                 Edit Profile
               </Button>
@@ -304,16 +394,6 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
         </div>
       )}
       <Separator className="my-6" />
-      <UsersAnalytics
-        loading={loading}
-        data={dataList}
-        showStatus={true}
-        showVerified
-        isVerified={data?.coachProfile?.verified || false}
-        isActive={data?.coachProfile?.user?.isActive || false}
-        title={`${data?.coachProfile?.user?.firstname} 
-          ${data?.coachProfile?.user?.surname} Analytics`}
-      />
       <Grid numItemsMd={1} numItemsLg={1} className="mt-6 gap-6">
         <Card>
           <CardContent className="p-6">
@@ -327,12 +407,13 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                     className="h-[120px] w-[120px] shadow cursor-pointer"
                     height={120}
                     width={120}
+                    type="image"
                     fallbackType="icon"
                     fallbackClassName={"h-[120px] w-[120px]"}
-                    avatar={data?.coachProfile?.user.avatar as string}
-                    fallback={`${data?.coachProfile?.user?.username?.charAt(
+                    avatar={coachData?.avatar as string}
+                    fallback={`${coachData?.username?.charAt(
                       0
-                    )} ${data?.coachProfile?.user?.firstname?.charAt(0)}`}
+                    )} ${coachData?.firstname?.charAt(0)}`}
                     icon={<Icons.user className="h-8 w-8" />}
                   />
                 }
@@ -344,7 +425,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                     fill
                     sizes="100vw"
                     quality={80}
-                    src={data?.coachProfile?.user?.avatar as string}
+                    src={coachData?.avatar as string}
                     alt=""
                     className={`rounded-2xl object-cover border-[#717070] border-[0.1px] relative ${
                       showimage ? "blur-sm " : "blur-none"
@@ -361,10 +442,9 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
               ) : (
                 <div className="flex flex-row items-center justify-center">
                   <Text className="text-sm relative mr-1">
-                    {/* {data?.coachProfile?.user?.firstname}{" "} */}@
-                    {data?.coachProfile?.user?.username}
+                    @{coachData?.username}
                   </Text>
-                  {data?.coachProfile?.verified ? (
+                  {coachData?.coachProfile?.verified ? (
                     <TooltipCard
                       message="Verified"
                       trigger={<VerifiedIcon className="cursor-pointer" />}
@@ -373,18 +453,21 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                 </div>
               )}
               <div className="ml-auto absolute right-0 top-0">
-                {loading ? (
-                  <Skeleton className="w-[40px] h-[20px]" />
-                ) : (
-                  <MenubarCard
-                    trigger={
-                      <Button size="icon" variant="outline">
-                        <MoreHorizontal className="cursor-pointer" />
-                      </Button>
-                    }
-                    items={dropdownItems}
-                  />
-                )}
+                <div className="flex flex-row items-center">
+                  {renderBadges()}
+                  {loading ? (
+                    <Skeleton className="w-[40px] h-[20px]" />
+                  ) : (
+                    <MenubarCard
+                      trigger={
+                        <Button size="icon" variant="outline">
+                          <MoreHorizontal className="cursor-pointer" />
+                        </Button>
+                      }
+                      items={dropdownItems}
+                    />
+                  )}
+                </div>
               </div>
             </div>
             <Separator className="my-6" />
@@ -396,8 +479,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
               }}
               color="teal"
             >
-              {data?.coachProfile?.user?.firstname}{" "}
-              {data?.coachProfile?.user?.surname}
+              {coachData?.firstname} {coachData?.surname}
             </Callout>
             <Callout
               className="mt-4"
@@ -409,7 +491,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
               }}
               color="teal"
             >
-              {data?.coachProfile?.user.email}
+              {coachData?.email}
             </Callout>
             <Callout
               className="mt-4"
@@ -421,7 +503,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
               }}
               color="teal"
             >
-              {data?.coachProfile?.title}
+              {coachData?.coachProfile?.title}
             </Callout>
             <Callout
               className="mt-4"
@@ -436,7 +518,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
               }}
               color="teal"
             >
-              {data?.coachProfile?.school?.name}
+              {coachData?.coachProfile?.school?.name}
             </Callout>
             <Callout
               className="mt-4"
@@ -452,8 +534,8 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
               color="teal"
             >
               <span className="flex flex-row items-center">
-                <>{data?.coachProfile?.country?.name}</>
-                {data?.coachProfile?.country?.flag ? (
+                <>{coachData?.coachProfile?.country?.name}</>
+                {coachData?.coachProfile?.country?.flag ? (
                   <Image
                     alt="country_flag"
                     width={30}
@@ -461,7 +543,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
                     quality={100}
                     priority
-                    src={data?.coachProfile?.country?.flag}
+                    src={coachData?.coachProfile?.country?.flag}
                     className="h-[30px] w-[30px] rounded-full ml-auto object-cover"
                   />
                 ) : null}
@@ -480,7 +562,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
               }}
               color="teal"
             >
-              {data?.coachProfile?.state}
+              {coachData?.coachProfile?.state}
             </Callout>
             <Callout
               className="mt-4"
@@ -495,15 +577,31 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
               }}
               color="teal"
             >
-              {data?.coachProfile?.city}
+              {coachData?.coachProfile?.city}
             </Callout>
           </CardContent>
         </Card>
-        {/* <SchoolCard
-            loading={loading}
-            school={data?.coachProfile?.school as GetSchoolQuery}
-          /> */}
       </Grid>
+      <ModalCard
+        isModal={true}
+        isOpen={viewAnalytics}
+        onOpenChange={() => setViewAnalytics(!viewAnalytics)}
+      >
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12">
+            <UsersAnalytics
+              loading={loading}
+              data={dataList}
+              showStatus={true}
+              showVerified
+              isVerified={coachData?.coachProfile?.verified || false}
+              isActive={coachData?.isActive || false}
+              title={`${coachData?.firstname} 
+          ${coachData?.surname} Analytics`}
+            />
+          </div>
+        </div>
+      </ModalCard>
     </main>
   );
 };

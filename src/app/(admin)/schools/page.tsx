@@ -10,7 +10,9 @@ import {
   SchoolWhereInput,
   SortOrder,
   useDeleteSchoolMutation,
+  useGetSchoolLazyQuery,
   useGetSchoolsQuery,
+  useUpdateSchoolMutation,
 } from "@/services/graphql";
 import { useDebouncedValue } from "@mantine/hooks";
 import { Title, Text, Grid, Flex, TextInput } from "@tremor/react";
@@ -23,20 +25,14 @@ import Pagination from "@/components/pagination";
 import UserAvatar from "@/components/user-avatar";
 import { Button } from "@/components/ui/button";
 import { observer } from "mobx-react-lite";
-import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
-import CreateSchool from "@/components/create-school";
 import { SearchInput } from "@/components/search-input";
 import { useToast } from "@/hooks/use-toast";
 import { ToastAction } from "@/components/ui/toast";
 import { Separator } from "@/components/ui/separator";
 import MenubarCard from "@/components/menubar";
 import MoreHorizontal from "@/components/Icons/more-horizontal";
+import { formatDate } from "@/lib/utils";
+import PromptAlert from "@/components/prompt-alert";
 
 const filterItems = [
   { name: "College", value: "College" },
@@ -46,6 +42,7 @@ const headerItems = [
   { name: "Name" },
   { name: "School Type" },
   { name: "Email" },
+  { name: "Created At" },
   { name: "Action" },
 ];
 
@@ -66,6 +63,11 @@ const Schools: FC<SchoolsProps> = ({}) => {
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [debounced] = useDebouncedValue(value, 300);
   const [deleteSchool] = useDeleteSchoolMutation();
+  const [updateSchool] = useUpdateSchoolMutation();
+  const [getSchool] = useGetSchoolLazyQuery();
+  const [isDeletingSchool, setIsDeletingSchool] = useState(false);
+  const [openDeleteSchoolPrompt, setOpenDeleteSchoolPrompt] = useState(false);
+  const [activeSchool, setActiveSchool] = useState({});
   const {
     data: schools,
     loading,
@@ -170,39 +172,125 @@ const Schools: FC<SchoolsProps> = ({}) => {
       },
     });
   };
+  const handleDeleteSchoolPrompt = (item: any) => {
+    setActiveSchool(item);
+    setOpenDeleteSchoolPrompt(true);
+  };
 
-  const handleDeleteSchool = async (school: any) => {
+  const handleConfirmPrompt = async (school: any) => {
     try {
-      const response = await deleteSchool({
+      setIsDeletingSchool(true);
+      const { data: schoolData } = await getSchool({
         variables: {
           where: {
-            id: Number(school?.id),
+            id: school?.id,
           },
         },
       });
-      if (response.data?.deleteOneSchool) {
-        // await refetch();
-        toast({
-          title: "School successfully deleted.",
-          description: `${school?.name} has been deleted.`,
-          variant: "default",
-        });
-      }
+      const athletesInterestedId = schoolData?.school?.athletesInterested?.map(
+        (val: any) => val?.athleteId
+      );
+      const athletesRecruitedId = schoolData?.school?.athletesRecruited?.map(
+        (val: any) => val?.athleteId
+      );
+      const athletesProspectedId = schoolData?.school?.athletesProspected?.map(
+        (val: any) => val?.athleteId
+      );
+      const schoolPostId = schoolData?.school?.posts?.map(
+        (val: any) => val?.id
+      );
+      const athletesId = schoolData?.school?.athletes?.map(
+        (val: any) => val?.id
+      );
+      const coachesId = schoolData?.school?.coaches?.map((val: any) => val?.id);
+
+      await updateSchool({
+        variables: {
+          where: {
+            id: school.id,
+          },
+          data: {
+            athletesProspected: {
+              deleteMany: [
+                {
+                  athleteId: {
+                    in: athletesProspectedId || [],
+                  },
+                },
+              ],
+            },
+            athletesRecruited: {
+              deleteMany: [
+                {
+                  athleteId: {
+                    in: athletesRecruitedId || [],
+                  },
+                },
+              ],
+            },
+            athletesInterested: {
+              deleteMany: [
+                {
+                  athleteId: {
+                    in: athletesInterestedId || [],
+                  },
+                },
+              ],
+            },
+            posts: {
+              deleteMany: [
+                {
+                  id: {
+                    in: schoolPostId || [],
+                  },
+                },
+              ],
+            },
+            athletes: {
+              deleteMany: [
+                {
+                  id: {
+                    in: athletesId || [],
+                  },
+                },
+              ],
+            },
+            coaches: {
+              deleteMany: [
+                {
+                  id: {
+                    in: coachesId || [],
+                  },
+                },
+              ],
+            },
+          },
+        },
+      });
+      await deleteSchool({
+        variables: {
+          where: {
+            id: schoolData?.school?.id,
+          },
+        },
+      });
+      refetch();
     } catch (error) {
       toast({
         title: "Something went wrong.",
         description: `${
-          error || "Could not successfully created a coach. Please try again."
+          error || "Could not successfully update Athlete. Please try again."
         }`,
         variant: "destructive",
       });
+    } finally {
+      setActiveSchool({});
+      setIsDeletingSchool(false);
+      setOpenDeleteSchoolPrompt(false);
     }
   };
 
   const handleEditSchool = (item: any) => {
-    // if (item?.schoolType?.name === "College") {
-    //   router.push(`/schools/edit?school=${item?.id}`);
-    // }
     router.push(`/schools/edit?school=${item?.id}`);
   };
 
@@ -217,10 +305,10 @@ const Schools: FC<SchoolsProps> = ({}) => {
         name: `Edit School`,
         onClick: () => handleEditSchool(item),
       },
-      // {
-      //   name: "Delete School",
-      //   onclick: async () => await handleDeleteSchool(item),
-      // },
+      {
+        name: "Delete School",
+        onClick: () => handleDeleteSchoolPrompt(item),
+      },
     ];
 
     return (
@@ -251,6 +339,11 @@ const Schools: FC<SchoolsProps> = ({}) => {
         </TableCell>
         <TableCell className="text-center text-sm">
           <div>{item?.email}</div>
+        </TableCell>
+        <TableCell className="text-center cursor-pointer text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {formatDate(new Date(item?.createdAt), "MMMM dd yyyy")}
+          </div>
         </TableCell>
         <TableCell className="text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
@@ -312,6 +405,16 @@ const Schools: FC<SchoolsProps> = ({}) => {
       {loading || !schools?.schools?.length ? null : (
         <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
       )}
+      <PromptAlert
+        loading={isDeletingSchool}
+        content={`This action cannot be undone. This will permanently delete this data from our servers.`}
+        showPrompt={openDeleteSchoolPrompt}
+        handleHidePrompt={() => {
+          setActiveSchool({});
+          setOpenDeleteSchoolPrompt(false);
+        }}
+        handleConfirmPrompt={() => handleConfirmPrompt(activeSchool)}
+      />
     </main>
   );
 };
