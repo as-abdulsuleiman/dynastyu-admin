@@ -1,7 +1,7 @@
 /** @format */
 
 import { FC } from "react";
-import { FolderRoot, Home, Medal, Settings } from "lucide-react";
+import { Bell, FolderRoot, Home, Medal, Settings } from "lucide-react";
 import { usePathname, useParams, useRouter } from "next/navigation";
 import { Icons } from "../Icons";
 import SkillIcon from "../Icons/skill";
@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import UseThemeColor from "@/hooks/useThemeColor";
 import Link from "next/link";
 import LayoutGridIcon from "@/components/Icons/layout-grid";
+// import Notification from "../Icons/notification";
 
 interface SidebarItemsProps {
   handleNavigation: (val: string) => void;
@@ -158,6 +159,24 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
         />
       ),
     },
+
+    // {
+    //   name: "Notifications",
+    //   hasFill: false,
+    //   path: "/notifications",
+    //   hasBadge: false,
+    //   count: 0,
+    //   // items: [
+    //   //   {
+    //   //     name: "Create Fan",
+    //   //     path: "/fans/new",
+    //   //   },
+    //   // ],
+    //   icon: ({ className, color }: IconProps) => (
+    //     <Bell className={className} color={color} />
+    //   ),
+    // },
+
     {
       name: "Settings",
       hasFill: false,
@@ -188,9 +207,9 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
 
         if (isActive) {
           if (val?.hasFill) {
-            activeIconColor = "fill-white dark:fill-white";
+            activeIconColor = "fill-white";
           } else {
-            activeIconColor = "stroke-white dark:stroke-white";
+            activeIconColor = "stroke-white";
           }
         } else {
           if (val?.hasFill) {
@@ -211,20 +230,20 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
               className={`group flex-row flex cursor-pointer items-center mt-4 transition-transform ease-linear duration-200`}
             >
               <div
-                className={`flex flex-row w-full h-full py-[8px] px-[16px] rounded-lg items-center ${
+                className={`flex flex-row w-full h-full py-[8px] px-[16px] rounded-md items-center ${
                   isActive ? "bg-primary" : "bg-secondary"
                 }`}
               >
                 <Icon />
                 <div
-                  className={`text-[16px] font-TTHovesDemiBold  ${
+                  className={`text-[16px] font-TTHovesDemiBold ml-4 mt-[0px] text-base ${
                     isActive ? "text-primary-foreground" : ""
-                  } ml-4 mt-[0px] text-base`}
+                  } `}
                 >
                   {val?.name}
                 </div>
                 {isActive ? (
-                  <ChevronDownIcon className="ml-auto h-5 w-5 stroke-gray-200 dark:stroke-gray-200" />
+                  <ChevronDownIcon className="ml-auto h-5 w-5 stroke-primary-foreground dark:stroke-primary-foreground" />
                 ) : null}
               </div>
             </Link>

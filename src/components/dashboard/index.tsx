@@ -34,6 +34,9 @@ import {
 import MenubarCard from "@/components/menubar";
 import { Separator } from "../ui/separator";
 import { SearchInput } from "../search-input";
+import { Button } from "../ui/button";
+import MoreHorizontal from "../Icons/more-horizontal";
+import { formatDate } from "@/lib/utils";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -48,6 +51,7 @@ const headerItems = [
   { name: "Role" },
   { name: "Email" },
   { name: "Status" },
+  { name: "Created At" },
   { name: "Actions" },
 ];
 enum FilterEnum {
@@ -349,10 +353,19 @@ const Dashboard: FC<DashboardProps> = () => {
             </Badge>
           )}
         </TableCell>
+        <TableCell className="text-center cursor-pointer text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {formatDate(new Date(item?.createdAt), "MMMM dd yyyy")}
+          </div>
+        </TableCell>
         <TableCell className="text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
-              trigger={<Icons.moreHorizontal className="cursor-pointer" />}
+              trigger={
+                <Button size="icon" variant="outline">
+                  <MoreHorizontal className="cursor-pointer" />
+                </Button>
+              }
               items={userItems}
             />
           </div>

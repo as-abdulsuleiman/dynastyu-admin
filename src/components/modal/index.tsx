@@ -14,7 +14,7 @@ interface ModalProps {
   isOpen: boolean;
   onOpenChange: () => void;
   trigger?: React.ReactNode | JSX.Element;
-  content: React.ReactNode | JSX.Element;
+  children: React.ReactNode;
   contentClass?: string;
   label?: string;
   isModal?: boolean;
@@ -23,18 +23,25 @@ interface ModalProps {
 const ModalCard: FC<ModalProps> = ({
   label,
   trigger,
-  content,
+  children,
   isOpen,
-  isModal,
+  isModal = true,
   contentClass,
   onOpenChange,
 }) => {
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange} modal={isModal}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+    <Dialog
+      open={isOpen}
+      onOpenChange={onOpenChange}
+      modal={isModal}
+      defaultOpen={false}
+    >
+      {trigger ? <DialogTrigger asChild>{trigger}</DialogTrigger> : null}
       <DialogContent
+        onOpenAutoFocus={(event) => event.preventDefault()}
+        onInteractOutside={(event) => event.preventDefault()}
         className={cn(
-          "w-full sm:max-w-[425px] md:max-w-lg m-auto",
+          "w-[95%] max-w-2xl h-fit container md:max-w-lg m-auto rounded-2xl z-50 bg-background bg-gradient-to-bl from-primary-black via-primary-black/5 to-primary-black px-[16px] md:px-[2rem] py-[2rem]",
           contentClass
         )}
       >
@@ -43,7 +50,7 @@ const ModalCard: FC<ModalProps> = ({
             <DialogTitle>{label}</DialogTitle>
           </DialogHeader>
         ) : null}
-        {content}
+        <div className="p-4">{children}</div>
       </DialogContent>
     </Dialog>
   );

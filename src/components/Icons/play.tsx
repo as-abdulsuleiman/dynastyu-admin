@@ -10,7 +10,7 @@ const PlayIcon = (props: LucideProps) => (
       fillRule="evenodd"
       clipRule="evenodd"
       d="M2.25 2.827a.938.938 0 0 1 1.39-.822l5.77 3.174a.937.937 0 0 1 0 1.643L3.64 9.996a.938.938 0 0 1-1.39-.822V2.827Z"
-      fill={props.color || "#8D97A5"}
+      fill={props?.color || "#8D97A5"}
     />
   </svg>
 );
