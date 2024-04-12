@@ -5,7 +5,6 @@ import * as Yup from "yup";
 export const SchoolValidator = Yup.object({
     logo: Yup.string().url(),
     name: Yup.string().required("Name is required").min(2, "Minimum 2 symbols"),
-    conference: Yup.string().required("Conference is required"),
     division: Yup.string().required("Division is required"),
     email: Yup.string().email("Invalid email address").required("Email is required"),
     description: Yup.string(),
@@ -23,6 +22,9 @@ export const SchoolValidator = Yup.object({
       name:Yup.string().required("school type is required"),
       id:Yup.number().integer().positive().required("School type is required"),
     }),
+    conference: Yup.string().when('schoolType.name', ([schoolTypeName], schema) => {
+      return schoolTypeName === 'High School'  ? schema.notRequired() : schema.required('Conference is required');
+    }),
 });
 
-// Yup.string().required("Account type is required"),
+

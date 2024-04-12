@@ -515,7 +515,7 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
           <SearchInput
             className="h-[40px]"
             onChange={(e) => setValue(e?.target?.value)}
-            placeholder="Search..."
+            placeholder="Type to search..."
           />
         </div>
       </div>

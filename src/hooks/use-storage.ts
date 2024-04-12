@@ -193,16 +193,17 @@ export const useStorage = ({
     let url = "";
     let job;
     if (type === "video") {
-      if (process?.env?.NODE_ENV === "production") {
-        job = await processVideo({
-          variables: {
-            data: { filePath: `Documents/${userId}/${folderName}/${fileName}` },
-          },
-        });
-      }
-      // console.log("job", job?.data?.processVideo);
-      // url = `https://storage.googleapis.com/dynastyu-9de03.appspot.com/Documents/${userId}/${folderName}/${fileName}/master.m3u8`;
-      url = await getDownloadURL(storageRef);
+      // if (process?.env?.NODE_ENV === "production") {
+       https://firebasestorage.googleapis.com/v0/b/dynastyu-files/o
+      // }
+      job = await processVideo({
+        variables: {
+          data: { filePath: `Documents/${userId}/${folderName}/${fileName}` },
+        },
+      });
+      console.log("job", job?.data?.processVideo);
+      url = `https://firebasestorage.googleapis.com/v0/b/dynastyu-files/o/Documents/${userId}/${folderName}/${fileName}/master.m3u8`;
+      // url = await getDownloadURL(storageRef);
     } else {
       url = await getDownloadURL(storageRef);
     }

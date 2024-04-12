@@ -35,17 +35,9 @@ const SchoolStatCard: FC<indexProps> = ({ whereClause, title }) => {
       where: { ...whereClause },
     },
     onCompleted: (data: GetSchoolsQuery) => {
-      setSchools(data.schools as any);
+      setSchools(data?.schools as any);
     },
   });
-
-  useEffect(() => {
-    refetch({
-      where: {
-        ...whereClause,
-      },
-    });
-  }, [refetch, whereClause]);
 
   const activeSchool = `${title?.toLowerCase()}s`;
 

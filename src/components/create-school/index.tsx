@@ -132,7 +132,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
     setValue,
     getValues,
     watch,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isSubmitting, isValid, isDirty },
   } = useForm({
     mode: "onBlur",
     resolver: yupResolver(SchoolValidator),
@@ -251,10 +251,13 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
     try {
       const payload = await SchoolValidator.validate(values);
       let updateType = editType && searchParams?.school;
+      let resp;
       if (updateType) {
-        await updateSchoolFn(payload);
+        const res = await updateSchoolFn(payload);
+        resp = res?.data?.updateOneSchool;
       } else {
-        await createSchool(payload);
+        const res = await createSchool(payload);
+        resp = res?.data?.createOneSchool;
       }
       const toastTitle = updateType ? "School updated" : "School created";
       const toastMsg = updateType
@@ -265,7 +268,11 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
         description: toastMsg,
         variant: "successfull",
       });
-      router.push(`/schools`);
+      router.push(
+        resp?.schoolType?.name === "High School"
+          ? `/schools/high-school`
+          : `/schools/college`
+      );
     } catch (error: any) {
       toast({
         title: "Something went wrong.",
@@ -471,50 +478,76 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
             />
           </div>
         </div>
-        {/* {schoolType?.name ? "High School" ? } */}
         <div className="grid grid-cols-12 gap-6 py-2">
-          <div className="col-span-12 sm:col-span-6">
-            <ComboBoxCard
-              loading={loadingDivision}
-              error={errors?.division?.message}
-              scrollAreaClass="h-[100px]"
-              id="division"
-              valueKey="value"
-              displayKey="label"
-              IdKey="label"
-              isOpen={openDivision}
-              placeholder="Select Division"
-              selectedValue={{ value: division }}
-              onClose={() => setOpenDivision(!openDivision)}
-              onSelectValue={(item) => {
-                setConferences(item?.conferences);
-                setValue("division", item?.value);
-              }}
-              label={"Division"}
-              items={divisionData as any}
-            />
-          </div>
-          <div className="col-span-12 sm:col-span-6">
-            <ComboBoxCard
-              loading={loadingDivision}
-              disabled={!division}
-              error={errors?.conference?.message}
-              scrollAreaClass="h-[100px]"
-              id="conference"
-              valueKey="value"
-              displayKey="label"
-              IdKey="label"
-              placeholder="Select Conference"
-              isOpen={openConference}
-              selectedValue={{ value: conference }}
-              onClose={() => setOpenConference(!openConference)}
-              onSelectValue={(item) => {
-                setValue("conference", item?.value);
-              }}
-              label="Conference"
-              items={conferenceData as any}
-            />
-            {/* <Input
+          {schoolType?.name === "High School" ? (
+            <div className="col-span-12 sm:col-span-12">
+              <ComboBoxCard
+                loading={loadingDivision}
+                error={errors?.division?.message}
+                scrollAreaClass="h-[170px]"
+                id="division"
+                valueKey="value"
+                displayKey="label"
+                IdKey="label"
+                isOpen={openDivision}
+                placeholder="Select Classification"
+                selectedValue={{ value: division }}
+                onClose={() => setOpenDivision(!openDivision)}
+                onSelectValue={(item) => {
+                  setValue("division", item?.value);
+                }}
+                label={"Classification"}
+                items={classificationOptions as any}
+              />
+            </div>
+          ) : (
+            <>
+              <div className="col-span-12 sm:col-span-6">
+                <ComboBoxCard
+                  loading={loadingDivision}
+                  error={errors?.division?.message}
+                  scrollAreaClass="h-[100px]"
+                  id="division"
+                  valueKey="value"
+                  displayKey="label"
+                  IdKey="label"
+                  isOpen={openDivision}
+                  placeholder="Select Division"
+                  selectedValue={{ value: division }}
+                  onClose={() => setOpenDivision(!openDivision)}
+                  onSelectValue={(item) => {
+                    setConferences(item?.conferences);
+                    setValue("division", item?.value);
+                  }}
+                  label={"Division"}
+                  items={divisionData as any}
+                />
+              </div>
+              <div className="col-span-12 sm:col-span-6">
+                <ComboBoxCard
+                  loading={loadingDivision}
+                  disabled={!division}
+                  error={errors?.conference?.message}
+                  scrollAreaClass="h-[100px]"
+                  id="conference"
+                  valueKey="value"
+                  displayKey="label"
+                  IdKey="label"
+                  placeholder="Select Conference"
+                  isOpen={openConference}
+                  selectedValue={{ value: conference }}
+                  onClose={() => setOpenConference(!openConference)}
+                  onSelectValue={(item) => {
+                    setValue("conference", item?.value);
+                  }}
+                  label="Conference"
+                  items={conferenceData as any}
+                />
+              </div>
+            </>
+          )}
+
+          {/* <Input
               id="conference"
               type="text"
               label="Conference"
@@ -523,7 +556,6 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
               error={errors?.conference?.message}
               {...register("conference", { required: true })}
             /> */}
-          </div>
         </div>
         <div className="grid grid-cols-12 gap-6 py-2">
           <div className="col-span-12 sm:col-span-6">
@@ -656,7 +688,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
           variant="default"
           className="w-full mt-6"
           type="submit"
-          disabled={isSubmitting || !isValid}
+          disabled={isSubmitting || !isDirty}
         >
           {isSubmitting ? (
             <div className="flex flex-row items-center justify-center">

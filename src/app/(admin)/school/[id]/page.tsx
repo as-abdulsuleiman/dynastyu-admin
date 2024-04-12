@@ -9,20 +9,19 @@ import { useGetSchoolQuery } from "@/services/graphql";
 import { useRouter } from "next/navigation";
 import { Title, Text, Grid } from "@tremor/react";
 import { Icons } from "@/components/Icons";
-import UsersAnalytics from "@/components/analytics/users";
 import AthletesInterested from "@/components/athletes-interested";
 import SchoolCard from "@/components/school-card";
 import SchoolCoaches from "@/components/school-coaches";
 import { observer } from "mobx-react-lite";
 import { Separator } from "@/components/ui/separator";
 
-interface pageProps {
+interface PageProps {
   params: {
     id: number;
   };
 }
 
-const Page: FC<pageProps> = ({ params }) => {
+const Page: FC<PageProps> = ({ params }) => {
   const router = useRouter();
   const { data, loading } = useGetSchoolQuery({
     variables: {
@@ -31,74 +30,6 @@ const Page: FC<pageProps> = ({ params }) => {
       },
     },
   });
-
-  const dataList: any = [
-    {
-      name: "Athletes Interested",
-      value: data?.school?._count?.athletesInterested || 0,
-      color: "teal",
-      icon: () => (
-        <Icons.users2 className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
-      ),
-    },
-
-    {
-      name: "Athletes Prospected",
-      value: data?.school?._count?.athletesProspected || 0,
-      color: "teal",
-      icon: () => (
-        <Icons.usersRound className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
-      ),
-    },
-    {
-      name: "Athletes Recruited",
-      color: "teal",
-      value: data?.school?._count?.athletesRecruited || 0,
-      icon: () => (
-        <Icons.athlete className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
-      ),
-    },
-
-    {
-      name: "Coaches",
-      color: "teal",
-      value: data?.school?._count?.coaches || 0,
-      icon: () => (
-        <Icons.whistle className="mr-2.5 mb-[-6px] h-5 w-5 fill-teal-600" />
-      ),
-    },
-
-    {
-      name: "Evaluations",
-      value: data?.school?._count?.evaluations || 0,
-      icon: () => (
-        <Icons.clipboardEdit className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
-      ),
-    },
-    {
-      name: "Posts",
-      value: data?.school?._count?.posts || 0,
-      icon: () => (
-        <Icons.fileImage className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
-      ),
-    },
-    // {
-    //   name: "Evaluations Created",
-    //   color: "teal",
-    //   value: data?.school?._count?.evaluationsCreated || 0,
-    //   icon: () => (
-    //     <Icons.clipboardEdit className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
-    //   ),
-    // },
-    // {
-    //   name: "Comments",
-    //   color: "teal",
-    //   value: data?.school?._count?.comments || 0,
-    //   icon: () => (
-    //     <Icons.messageCircleCode className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
-    //   ),
-    // },
-  ];
 
   return (
     <main className="w-full h-full relative">
@@ -128,28 +59,11 @@ const Page: FC<pageProps> = ({ params }) => {
                 {data?.school?.schoolType?.name} at {data?.school?.address}
               </Text>
             </div>
-            <div className="ml-auto">
-              <Button
-                variant="ghost"
-                onClick={() =>
-                  router.push(`/schools/edit?school=${params?.id}`)
-                }
-              >
-                Edit School
-              </Button>
-            </div>
           </div>
         </div>
       )}
       <Separator className="my-6" />
-      <UsersAnalytics
-        loading={loading}
-        data={dataList}
-        showStatus={false}
-        // isActive={data?.school?.user?.isActive || false}
-        title={`${data?.school?.name} 
-       Analytics`}
-      />
+
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
         <SchoolCoaches
           loading={loading}
