@@ -107,10 +107,22 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
     {
       name: "Schools",
       hasFill: false,
-      path: "/schools",
+      path: "/schools/college",
       hasBadge: false,
       count: 0,
       items: [
+        {
+          name: "College",
+          path: "/schools/college",
+          hasBadge: false,
+          count: 0,
+        },
+        {
+          name: "High School",
+          path: "/schools/high-school",
+          hasBadge: false,
+          count: 0,
+        },
         {
           name: "Create School",
           path: "/schools/new",

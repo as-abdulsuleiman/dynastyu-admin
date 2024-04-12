@@ -56,10 +56,10 @@ enum FilterEnum {
 
 interface SchoolsProps {}
 
-const Schools: FC<SchoolsProps> = ({}) => {
+const HighSchool: FC<SchoolsProps> = ({}) => {
   const { toast } = useToast();
   const router = useRouter();
-  const [status, setStatus] = useState<string>("College");
+  const [status, setStatus] = useState<string>("High School");
   const [value, setValue] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isActivating, setIsactivating] = useState<boolean>();
@@ -73,7 +73,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
     refetch,
   } = useGetSchoolsQuery({
     variables: {
-      where: { schoolTypeId: { equals: 2 } },
+      where: { schoolTypeId: { equals: 1 } },
       orderBy: {
         createdAt: SortOrder.Desc,
       },
@@ -87,13 +87,9 @@ const Schools: FC<SchoolsProps> = ({}) => {
       return {
         schoolTypeId: { equals: 1 },
       };
-    } else if (status === FilterEnum.COLLEGE) {
-      return {
-        schoolTypeId: { equals: 2 },
-      };
     } else {
       return {
-        schoolTypeId: { equals: 2 },
+        schoolTypeId: { equals: 1 },
       };
     }
   }, [status]);
@@ -275,14 +271,14 @@ const Schools: FC<SchoolsProps> = ({}) => {
       </div>
       <Separator className="my-6" />
       <Grid numItemsMd={2} numItemsLg={3} className="mt-6 gap-6">
-        <SchoolStatCard whereClause={whereClause} title={status} />
+        <SchoolStatCard whereClause={whereClause} title={"High School"} />
       </Grid>
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
         <SearchInput
           onChange={(e) => setValue(e.target.value)}
           placeholder="Type to search..."
         />
-        <SelectCard
+        {/* <SelectCard
           className="bg-background dark:bg-dark-background"
           defaultValue="College"
           items={filterItems}
@@ -290,7 +286,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
           onValueChange={(e) => {
             setStatus(e);
           }}
-        />
+        /> */}
       </Grid>
       <UniversalTable
         title="School List"
@@ -306,4 +302,4 @@ const Schools: FC<SchoolsProps> = ({}) => {
   );
 };
 
-export default observer(Schools);
+export default observer(HighSchool);
