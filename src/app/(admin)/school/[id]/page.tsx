@@ -19,7 +19,7 @@ import { Title, Text, Grid } from "@tremor/react";
 import { Icons } from "@/components/Icons";
 import AthletesInterested from "@/components/athletes-interested";
 import SchoolCard from "@/components/school-card";
-import SchoolCoaches from "@/components/school-coaches";
+// import SchoolCoaches from "@/components/school-coaches";
 import { observer } from "mobx-react-lite";
 import { Separator } from "@/components/ui/separator";
 import ComboboxCard from "@/components/combobox-card";
@@ -30,6 +30,8 @@ import { useDebouncedValue } from "@mantine/hooks";
 import { cn } from "@/lib/utils";
 import PromptAlert from "@/components/prompt-alert";
 import { toast } from "@/hooks/use-toast";
+import SchoolCoaches from "@/components/school-coaches";
+import { PromptStatusEnum } from "@/lib/enums/updating-profile.enum";
 
 interface PageProps {
   params: {
@@ -43,7 +45,7 @@ const Page: FC<PageProps> = ({ params }) => {
   const [searchValue, setSearchValue] = useState<string>("");
   const [selectedCoach, setSelectedCoach] = useState<any | number>({});
   const [debounced] = useDebouncedValue(searchValue, 300);
-  const [addCoachPrompt, setAddCoachPrompt] = useState<boolean>(false);
+  const [promptStatus, setPromptStatus] = useState<PromptStatusEnum | null>();
   const [updateSchool, { loading: SchoolUpdateLoading }] =
     useUpdateSchoolMutation();
 
@@ -134,18 +136,16 @@ const Page: FC<PageProps> = ({ params }) => {
     });
   }, [coachData?.coachProfiles]);
 
-  const selectedCoachUserId = selectedCoach?.id;
-
-  const handleAddCoach = async () => {
+  const handleAddCoach = async (selectedCoach: any) => {
     try {
       await updateSchool({
         variables: {
+          where: { id: params?.id },
           data: {
             coaches: {
-              connect: [{ userId: selectedCoachUserId }],
+              connect: [{ userId: selectedCoach?.id }],
             },
           },
-          where: { id: params?.id },
         },
       });
       refetchSchoolCoach();
@@ -162,7 +162,52 @@ const Page: FC<PageProps> = ({ params }) => {
         variant: "destructive",
       });
     } finally {
-      setAddCoachPrompt(false);
+      setPromptStatus(null);
+      setSelectedCoach({});
+    }
+  };
+
+  const handleRemoveCoach = async (item: any) => {
+    setSelectedCoach(item);
+    setPromptStatus(PromptStatusEnum.REMOVING);
+  };
+
+  const handleConfirmRemoveCoachPrompt = async (selectedCoach: any) => {
+    try {
+      const response = await updateSchool({
+        variables: {
+          where: {
+            id: params?.id,
+          },
+          data: {
+            coaches: {
+              disconnect: [
+                {
+                  userId: selectedCoach?.user?.id,
+                },
+              ],
+            },
+          },
+        },
+      });
+      if (response.data?.updateOneSchool) {
+        refetchSchoolCoach();
+        toast({
+          title: "Coach successfully removed.",
+          description: `@${selectedCoach?.user?.username} has been removed from this school.`,
+          variant: "successfull",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not successfully created a coach. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    } finally {
+      setPromptStatus(null);
       setSelectedCoach({});
     }
   };
@@ -259,9 +304,7 @@ const Page: FC<PageProps> = ({ params }) => {
               size="sm"
               className="ml-auto"
               variant="default"
-              onClick={() => {
-                setAddCoachPrompt(true);
-              }}
+              onClick={() => setPromptStatus(PromptStatusEnum.ADDING)}
             >
               Add Coach
             </Button>
@@ -270,6 +313,7 @@ const Page: FC<PageProps> = ({ params }) => {
       </div>
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
         <SchoolCoaches
+          handleClick={handleRemoveCoach}
           loading={loadingSchoolCoach}
           coaches={(schoolCoach?.coachProfiles as any) || []}
         />
@@ -284,14 +328,24 @@ const Page: FC<PageProps> = ({ params }) => {
       <PromptAlert
         loading={SchoolUpdateLoading}
         content={`This action will add @${selectedCoach?.value} to ${data?.school?.name}.`}
-        showPrompt={addCoachPrompt}
+        showPrompt={promptStatus === PromptStatusEnum.ADDING}
         handleHidePrompt={() => {
-          setAddCoachPrompt(false);
+          setPromptStatus(null);
           setSelectedCoach({});
         }}
-        handleConfirmPrompt={() => {
-          handleAddCoach();
+        handleConfirmPrompt={() => handleAddCoach(selectedCoach)}
+      />
+      <PromptAlert
+        loading={SchoolUpdateLoading}
+        content={`This action will remove @${selectedCoach?.user?.username} from ${data?.school?.name}.`}
+        showPrompt={promptStatus === PromptStatusEnum.REMOVING}
+        handleHidePrompt={() => {
+          setPromptStatus(null);
+          setSelectedCoach({});
         }}
+        handleConfirmPrompt={() =>
+          handleConfirmRemoveCoachPrompt(selectedCoach)
+        }
       />
     </main>
   );

@@ -106,6 +106,7 @@ const SelectCountry = forwardRef<HTMLDivElement, SelectCountryProps>(
             loading={loading}
             error={error}
             hasSearch
+            shouldFilter={true}
             placeholder={placeholder || "Select Country..."}
             iconKey="emoji"
             scrollAreaClass="h-[250px]"
