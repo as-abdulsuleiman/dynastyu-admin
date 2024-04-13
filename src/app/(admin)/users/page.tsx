@@ -130,9 +130,9 @@ const Users: FC<UsersProps> = ({}) => {
       where: {
         ...whereClause,
         OR: [
+          { username: { contains: debounced, mode: QueryMode.Insensitive } },
           { firstname: { contains: debounced, mode: QueryMode.Insensitive } },
           { surname: { contains: debounced, mode: QueryMode.Insensitive } },
-          { username: { contains: debounced, mode: QueryMode.Insensitive } },
         ],
       },
     });
