@@ -2,7 +2,7 @@
 
 "use client";
 
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Text, Title } from "@tremor/react";
 import { Skeleton } from "../ui/skeleton";
 import { Button } from "../ui/button";
@@ -18,16 +18,22 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
+import { useUpdateSchoolMutation } from "@/services/graphql";
+import { toast } from "@/hooks/use-toast";
+import PromptAlert from "../prompt-alert";
 
 interface SchoolCoachesProps {
   loading: boolean;
   coaches: Coach[];
+  schoolId?: number;
+  refetchCoaches?: () => void;
 }
 
 type Coach = {
   id: number;
   title: string;
   user: {
+    id: number;
     avatar: string;
     firstname: string;
     surname: string;
@@ -37,55 +43,126 @@ type Coach = {
   __typename: "CoachProfile";
 };
 
-const renderContent = (val: Coach, router: AppRouterInstance) => {
-  return (
-    <div className="flex flex-flex items-center">
-      <div className="flex flex-flex items-center">
-        <UserAvatar
-          className="h-[40px] w-[40px] shadow"
-          fallbackType="name"
-          avatar={val?.user?.avatar as string}
-          fallback={`${val?.user?.firstname?.charAt(
-            0
-          )} ${val?.user?.surname?.charAt(0)}`}
-        />
-        <div className="flex flex-col ml-3 mt-1">
-          <Text className="text-tremor-default truncate">
-            {val?.user?.firstname}
-            {val?.user?.surname}
-          </Text>
-          <Text className="text-tremor-label">{val?.title}</Text>
-        </div>
-      </div>
-      <Button
-        variant="outline"
-        className="ml-auto"
-        onClick={() =>
-          router.push(`/coach/${Number(val?.id)}`, { scroll: true })
-        }
-      >
-        View
-      </Button>
-    </div>
-  );
-};
-
-const renderLoader = () => {
-  return (
-    <div className="w-full flex flex-col">
-      {Array.from([1, 2, 3, 4]).map((a, i) => {
-        return (
-          <div key={i} className="mb-4">
-            <Skeleton className="w-full h-[35px]" />
-          </div>
-        );
-      })}
-    </div>
-  );
-};
-
-const SchoolCoaches: FC<SchoolCoachesProps> = ({ loading, coaches }) => {
+const SchoolCoaches: FC<SchoolCoachesProps> = ({
+  loading,
+  coaches,
+  schoolId,
+  refetchCoaches,
+}) => {
+  const [updateSchool, { loading: loadingRemoveCoach }] =
+    useUpdateSchoolMutation();
   const router = useRouter();
+  const [removePrompt, setRemovePrompt] = useState(false);
+
+  const handleRemoveCoach = async (item: Coach) => {
+    try {
+      const response = await updateSchool({
+        variables: {
+          where: {
+            id: schoolId,
+          },
+          data: {
+            coaches: {
+              disconnect: [
+                {
+                  userId: item?.user?.id,
+                },
+              ],
+            },
+          },
+        },
+      });
+      if (response.data?.updateOneSchool) {
+        if (refetchCoaches) {
+          refetchCoaches();
+        }
+        toast({
+          title: "Coach successfully removed.",
+          description: `@${item?.user?.username} has been removed from this school.`,
+          variant: "successfull",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not successfully created a coach. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    } finally {
+      setRemovePrompt(false);
+    }
+  };
+
+  const renderContent = (val: Coach, router: AppRouterInstance) => {
+    return (
+      <div className="flex flex-col items-start">
+        <div className="flex  items-center">
+          <UserAvatar
+            className="h-[40px] w-[40px] shadow"
+            fallbackType="name"
+            avatar={val?.user?.avatar as string}
+            fallback={`${val?.user?.firstname?.charAt(
+              0
+            )} ${val?.user?.surname?.charAt(0)}`}
+          />
+          <div className="flex flex-col ml-3 mt-1">
+            <Text className="text-tremor-default truncate">
+              {val?.user?.firstname}
+              {val?.user?.surname}
+            </Text>
+            <Text className="text-tremor-label">{val?.title}</Text>
+          </div>
+        </div>
+
+        <div className="flex items-end mt-3  ml-0  md:ml-auto">
+          <Button
+            variant="outline"
+            className="ml-auto mr-4"
+            size="sm"
+            onClick={() => router.push(`/coach/${val?.id}`, { scroll: true })}
+          >
+            View
+          </Button>
+          <Button
+            variant="outline"
+            className="ml-auto"
+            size="sm"
+            onClick={() => {
+              setRemovePrompt(true);
+            }}
+          >
+            Remove Coach
+          </Button>
+        </div>
+        <PromptAlert
+          loading={loadingRemoveCoach}
+          content={`This action will remove @${val?.user?.username} from this will school.`}
+          showPrompt={removePrompt}
+          handleHidePrompt={() => {
+            setRemovePrompt(false);
+          }}
+          handleConfirmPrompt={() => handleRemoveCoach(val)}
+        />
+      </div>
+    );
+  };
+
+  const renderLoader = () => {
+    return (
+      <div className="w-full flex flex-col">
+        {Array.from([1, 2, 3, 4]).map((a, i) => {
+          return (
+            <div key={i} className="mb-4">
+              <Skeleton className="w-full h-[35px]" />
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <Card>
       <CardContent className="p-6">

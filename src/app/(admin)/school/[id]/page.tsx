@@ -23,7 +23,7 @@ interface PageProps {
 
 const Page: FC<PageProps> = ({ params }) => {
   const router = useRouter();
-  const { data, loading } = useGetSchoolQuery({
+  const { data, loading, refetch } = useGetSchoolQuery({
     variables: {
       where: {
         id: params?.id,
@@ -67,7 +67,9 @@ const Page: FC<PageProps> = ({ params }) => {
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
         <SchoolCoaches
           loading={loading}
+          schoolId={params?.id}
           coaches={(data?.school?.coaches as any) || []}
+          refetchCoaches={() => refetch()}
         />
         <AthletesInterested
           loading={loading}
