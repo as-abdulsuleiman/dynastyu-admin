@@ -38,6 +38,8 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   const [openDeleteSchoolPrompt, setOpenDeleteSchoolPrompt] = useState(false);
   const [viewAnalytics, setViewAnalytics] = useState(false);
 
+  const isHighSchoolType = school?.schoolType?.name === "High School" ?? false;
+
   const dataList: any = [
     {
       name: "Athletes Interested",
@@ -108,78 +110,69 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
 
   const handleConfirmPrompt = async (school: any) => {
     setIsDeletingSchool(true);
-    const athletesInterestedId = school?.athletesInterested?.map(
-      (val: any) => val?.athleteId
+    const athletesInterestedId = school?.school?.athletesInterested?.map(
+      (val: any) => ({
+        athleteId_schoolId: {
+          athleteId: val?.athleteId,
+          schoolId: school?.id,
+        },
+      })
     );
-    const athletesRecruitedId = school?.athletesRecruited?.map(
-      (val: any) => val?.athleteId
+
+    const athletesRecruitedId = school?.school?.athletesRecruited?.map(
+      (val: any) => ({
+        athleteId_schoolId: {
+          athleteId: val?.athleteId,
+          schoolId: school?.id,
+        },
+      })
     );
-    const athletesProspectedId = school?.athletesProspected?.map(
-      (val: any) => val?.athleteId
+
+    const athletesProspectedId = school?.school?.athletesProspected?.map(
+      (val: any) => ({
+        athleteId_schoolId: {
+          athleteId: val?.athleteId,
+          schoolId: school?.id,
+        },
+      })
     );
-    const schoolPostId = school?.posts?.map((val: any) => val?.id);
-    const athletesId = school?.athletes?.map((val: any) => val?.id);
-    const coachesId = school?.coaches?.map((val: any) => val?.id);
+    const schoolPostId = school?.school?.posts?.map((val: any) => ({
+      id: {
+        in: val?.id,
+      },
+    }));
+
+    const athletesId = school?.athletes?.map((val: any) => ({
+      userId: val?.userId,
+    }));
+
+    const coachesId = school?.coaches?.map((val: any) => ({
+      userId: val?.userId,
+    }));
     try {
       await updateSchool({
         variables: {
           where: {
-            id: school.id,
+            id: school?.id,
           },
           data: {
             athletesProspected: {
-              deleteMany: [
-                {
-                  athleteId: {
-                    in: athletesProspectedId || [],
-                  },
-                },
-              ],
+              disconnect: athletesProspectedId || [],
             },
             athletesRecruited: {
-              deleteMany: [
-                {
-                  athleteId: {
-                    in: athletesRecruitedId || [],
-                  },
-                },
-              ],
+              disconnect: athletesRecruitedId || [],
             },
             athletesInterested: {
-              deleteMany: [
-                {
-                  athleteId: {
-                    in: athletesInterestedId || [],
-                  },
-                },
-              ],
+              disconnect: athletesInterestedId || [],
             },
             posts: {
-              deleteMany: [
-                {
-                  id: {
-                    in: schoolPostId || [],
-                  },
-                },
-              ],
+              deleteMany: schoolPostId || [],
             },
             athletes: {
-              deleteMany: [
-                {
-                  id: {
-                    in: athletesId || [],
-                  },
-                },
-              ],
+              disconnect: athletesId || [],
             },
             coaches: {
-              deleteMany: [
-                {
-                  id: {
-                    in: coachesId || [],
-                  },
-                },
-              ],
+              disconnect: coachesId || [],
             },
           },
         },
@@ -191,7 +184,9 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           },
         },
       });
-      router.push(`/schools`);
+      router.push(
+        isHighSchoolType ? `/schools/high-school` : `/schools/college`
+      );
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -240,7 +235,9 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           {loading ? (
             <Skeleton className="w-[120px] h-[25px] mt-2" />
           ) : (
-            <Text className="text-xl mt-2">{school?.schoolType?.name}</Text>
+            <Text className="text-sm font-TTHovesRegular mt-2">
+              {school?.name}
+            </Text>
           )}
 
           <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
@@ -286,36 +283,57 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         >
           {school?.address}
         </Callout>
-        <Callout
-          className="mt-4 min-h-[75px]"
-          title="Division"
-          icon={() => {
-            return (
-              <Icons.folderDot
-                className="h-[20px] w-[20px] mr-2"
-                color="teal"
-              />
-            );
-          }}
-          color="teal"
-        >
-          {school?.division}
-        </Callout>
-        <Callout
-          className="mt-4 min-h-[75px]"
-          title="Conference"
-          icon={() => {
-            return (
-              <Icons.activitySquare
-                className="h-[20px] w-[20px] mr-2"
-                color="teal"
-              />
-            );
-          }}
-          color="teal"
-        >
-          {school?.conference}
-        </Callout>
+        {isHighSchoolType ? (
+          <Callout
+            className="mt-4 min-h-[75px]"
+            title="Classification"
+            icon={() => {
+              return (
+                <Icons.folderDot
+                  className="h-[20px] w-[20px] mr-2"
+                  color="teal"
+                />
+              );
+            }}
+            color="teal"
+          >
+            {school?.division}
+          </Callout>
+        ) : (
+          <>
+            <Callout
+              className="mt-4 min-h-[75px]"
+              title="Division"
+              icon={() => {
+                return (
+                  <Icons.folderDot
+                    className="h-[20px] w-[20px] mr-2"
+                    color="teal"
+                  />
+                );
+              }}
+              color="teal"
+            >
+              {school?.division}
+            </Callout>
+            <Callout
+              className="mt-4 min-h-[75px]"
+              title="Conference"
+              icon={() => {
+                return (
+                  <Icons.activitySquare
+                    className="h-[20px] w-[20px] mr-2"
+                    color="teal"
+                  />
+                );
+              }}
+              color="teal"
+            >
+              {school?.conference}
+            </Callout>
+          </>
+        )}
+
         <Callout
           className="mt-4 min-h-[75px]"
           title="Description"

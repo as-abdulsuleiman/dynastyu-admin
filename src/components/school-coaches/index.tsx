@@ -27,6 +27,7 @@ interface SchoolCoachesProps {
 type Coach = {
   id: number;
   title: string;
+  userId: number;
   user: {
     avatar: string;
     firstname: string;
@@ -60,9 +61,7 @@ const renderContent = (val: Coach, router: AppRouterInstance) => {
       <Button
         variant="outline"
         className="ml-auto"
-        onClick={() =>
-          router.push(`/coach/${Number(val?.id)}`, { scroll: true })
-        }
+        onClick={() => router.push(`/coach/${val?.userId}`, { scroll: true })}
       >
         View
       </Button>

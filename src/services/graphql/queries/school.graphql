@@ -81,7 +81,7 @@ query getSchool($where: SchoolWhereUniqueInput!) {
       athlete {
         verified
         verifiedById
-        position{
+        position {
           id
           name
           shortName
@@ -96,6 +96,7 @@ query getSchool($where: SchoolWhereUniqueInput!) {
       }
     }
     coaches {
+      userId
       id
       title
       user {
@@ -114,6 +115,7 @@ query getSchool($where: SchoolWhereUniqueInput!) {
     }
     athletesRecruited {
       athleteId
+      userId
       User {
         username
         id
@@ -123,6 +125,7 @@ query getSchool($where: SchoolWhereUniqueInput!) {
       }
     }
     athletesProspected {
+      userId
       athleteId
       User {
         username
@@ -434,12 +437,12 @@ mutation registerSchool($data: SchoolCreateInput!) {
     backgroundImage
     yearFounded
     yearlyTuition
-    country{
+    country {
       name
       abbreviation
       flag
     }
-    schoolType{
+    schoolType {
       name
       id
     }
@@ -467,7 +470,7 @@ query getSchoolTypes(
     name
     updatedAt
     createdAt
-    _count{
+    _count {
       schools
     }
   }

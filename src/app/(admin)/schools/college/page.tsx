@@ -7,7 +7,6 @@ import { Icons } from "@/components/Icons";
 import {
   GetSchoolsQuery,
   QueryMode,
-  SchoolWhereInput,
   SortOrder,
   useDeleteSchoolMutation,
   useGetSchoolLazyQuery,
@@ -18,7 +17,6 @@ import { useDebouncedValue } from "@mantine/hooks";
 import { Title, Text, Grid, Flex, TextInput } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
-import SelectCard from "@/components/select";
 import SchoolStatCard from "@/components/stat-cards/school";
 import UniversalTable from "@/components/universal-table";
 import Pagination from "@/components/pagination";
@@ -27,17 +25,12 @@ import { Button } from "@/components/ui/button";
 import { observer } from "mobx-react-lite";
 import { SearchInput } from "@/components/search-input";
 import { useToast } from "@/hooks/use-toast";
-import { ToastAction } from "@/components/ui/toast";
 import { Separator } from "@/components/ui/separator";
 import MenubarCard from "@/components/menubar";
 import MoreHorizontal from "@/components/Icons/more-horizontal";
 import { formatDate } from "@/lib/utils";
 import PromptAlert from "@/components/prompt-alert";
 
-const filterItems = [
-  { name: "College", value: "College" },
-  { name: "High School", value: "High School" },
-];
 const headerItems = [
   { name: "Name" },
   { name: "School Type" },
@@ -45,11 +38,6 @@ const headerItems = [
   { name: "Created At" },
   { name: "Action" },
 ];
-
-enum FilterEnum {
-  HIGHSCHOOL = "High School",
-  COLLEGE = "College",
-}
 
 interface SchoolsProps {}
 
@@ -176,82 +164,69 @@ const Schools: FC<SchoolsProps> = ({}) => {
           },
         },
       });
+
       const athletesInterestedId = schoolData?.school?.athletesInterested?.map(
-        (val: any) => val?.athleteId
+        (val: any) => ({
+          athleteId_schoolId: {
+            athleteId: val?.athleteId,
+            schoolId: school?.id,
+          },
+        })
       );
+
       const athletesRecruitedId = schoolData?.school?.athletesRecruited?.map(
-        (val: any) => val?.athleteId
+        (val: any) => ({
+          athleteId_schoolId: {
+            athleteId: val?.athleteId,
+            schoolId: school?.id,
+          },
+        })
       );
       const athletesProspectedId = schoolData?.school?.athletesProspected?.map(
-        (val: any) => val?.athleteId
+        (val: any) => ({
+          athleteId_schoolId: {
+            athleteId: val?.athleteId,
+            schoolId: school?.id,
+          },
+        })
       );
-      const schoolPostId = schoolData?.school?.posts?.map(
-        (val: any) => val?.id
-      );
-      const athletesId = schoolData?.school?.athletes?.map(
-        (val: any) => val?.id
-      );
-      const coachesId = schoolData?.school?.coaches?.map((val: any) => val?.id);
+      const schoolPostId = schoolData?.school?.posts?.map((val: any) => ({
+        id: {
+          in: val?.id,
+        },
+      }));
+
+      const athletesId = school?.athletes?.map((val: any) => ({
+        userId: val?.userId,
+      }));
+
+      const coachesId = school?.coaches?.map((val: any) => ({
+        userId: val?.userId,
+      }));
 
       await updateSchool({
         variables: {
           where: {
-            id: school.id,
+            id: school?.id,
           },
           data: {
             athletesProspected: {
-              deleteMany: [
-                {
-                  athleteId: {
-                    in: athletesProspectedId || [],
-                  },
-                },
-              ],
+              disconnect: athletesProspectedId || [],
             },
             athletesRecruited: {
-              deleteMany: [
-                {
-                  athleteId: {
-                    in: athletesRecruitedId || [],
-                  },
-                },
-              ],
+              disconnect: athletesRecruitedId || [],
             },
             athletesInterested: {
-              deleteMany: [
-                {
-                  athleteId: {
-                    in: athletesInterestedId || [],
-                  },
-                },
-              ],
+              disconnect: athletesInterestedId || [],
             },
             posts: {
-              deleteMany: [
-                {
-                  id: {
-                    in: schoolPostId || [],
-                  },
-                },
-              ],
+              deleteMany: schoolPostId || [],
             },
             athletes: {
-              deleteMany: [
-                {
-                  id: {
-                    in: athletesId || [],
-                  },
-                },
-              ],
+              disconnect: athletesId || [],
             },
             coaches: {
-              deleteMany: [
-                {
-                  id: {
-                    in: coachesId || [],
-                  },
-                },
-              ],
+              disconnect: coachesId || [],
             },
           },
         },

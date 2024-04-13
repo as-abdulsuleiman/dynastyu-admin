@@ -2,10 +2,18 @@
 
 "use client";
 
-import { FC } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useGetSchoolQuery } from "@/services/graphql";
+import {
+  QueryMode,
+  SortOrder,
+  UserWhereInput,
+  useGetCoachesQuery,
+  useGetSchoolQuery,
+  useGetUsersQuery,
+  useUpdateSchoolMutation,
+} from "@/services/graphql";
 import { useRouter } from "next/navigation";
 import { Title, Text, Grid } from "@tremor/react";
 import { Icons } from "@/components/Icons";
@@ -14,6 +22,14 @@ import SchoolCard from "@/components/school-card";
 import SchoolCoaches from "@/components/school-coaches";
 import { observer } from "mobx-react-lite";
 import { Separator } from "@/components/ui/separator";
+import ComboboxCard from "@/components/combobox-card";
+import { CheckIcon } from "lucide-react";
+import { CommandItem } from "@/components/ui/command";
+import UserAvatar from "@/components/user-avatar";
+import { useDebouncedValue } from "@mantine/hooks";
+import { cn } from "@/lib/utils";
+import PromptAlert from "@/components/prompt-alert";
+import { toast } from "@/hooks/use-toast";
 
 interface PageProps {
   params: {
@@ -23,13 +39,169 @@ interface PageProps {
 
 const Page: FC<PageProps> = ({ params }) => {
   const router = useRouter();
-  const { data, loading } = useGetSchoolQuery({
+  const [openCoach, setOpenCoach] = useState<boolean>(false);
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [selectedCoach, setSelectedCoach] = useState<any | number>({});
+  const [debounced] = useDebouncedValue(searchValue, 300);
+  const [addCoachPrompt, setAddCoachPrompt] = useState<boolean>(false);
+  const [updateSchool, { loading: SchoolUpdateLoading }] =
+    useUpdateSchoolMutation();
+
+  const {
+    data,
+    loading,
+    refetch: refetchSchool,
+  } = useGetSchoolQuery({
     variables: {
       where: {
         id: params?.id,
       },
     },
   });
+
+  const {
+    data: schoolCoach,
+    loading: loadingSchoolCoach,
+    refetch: refetchSchoolCoach,
+  } = useGetCoachesQuery({
+    variables: {
+      where: {
+        schoolId: {
+          equals: params?.id,
+        },
+      },
+    },
+  });
+
+  const coachId = data?.school?.coaches?.map((coach) => coach?.userId);
+
+  const {
+    data: coachData,
+    loading: userLoading,
+    refetch: refetchCoaches,
+  } = useGetCoachesQuery({
+    variables: {
+      where: {
+        userId: {
+          notIn: coachId,
+        },
+        OR: [
+          {
+            user: {
+              is: {
+                username: { contains: debounced, mode: QueryMode.Insensitive },
+              },
+            },
+          },
+          {
+            user: {
+              is: {
+                firstname: { contains: debounced, mode: QueryMode.Insensitive },
+              },
+            },
+          },
+          {
+            user: {
+              is: {
+                surname: { contains: debounced, mode: QueryMode.Insensitive },
+              },
+            },
+          },
+          {
+            user: {
+              is: {
+                email: { contains: debounced, mode: QueryMode.Insensitive },
+              },
+            },
+          },
+        ],
+      },
+      take: 10,
+      orderBy: {
+        createdAt: SortOrder.Desc,
+      },
+    },
+  });
+
+  const usersDataOptions = useMemo(() => {
+    return coachData?.coachProfiles?.map((a) => {
+      return {
+        id: a?.user?.id,
+        label: `${a?.user?.firstname} ${a?.user?.surname}`,
+        value: a?.user?.username,
+        avatar: a?.user?.avatar,
+      };
+    });
+  }, [coachData?.coachProfiles]);
+
+  const selectedCoachUserId = selectedCoach?.id;
+
+  const handleAddCoach = async () => {
+    try {
+      await updateSchool({
+        variables: {
+          data: {
+            coaches: {
+              connect: [{ userId: selectedCoachUserId }],
+            },
+          },
+          where: { id: params?.id },
+        },
+      });
+      refetchSchoolCoach();
+      toast({
+        title: "Coach successfully added.",
+        variant: "successfull",
+      });
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not successfully add coach. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    } finally {
+      setAddCoachPrompt(false);
+      setSelectedCoach({});
+    }
+  };
+
+  const coachCustomItems = ({ item, id }: { item: any; id: number }) => {
+    return (
+      <CommandItem
+        className="capitalize "
+        key={item?.id || id}
+        value={selectedCoach}
+        onSelect={() => {
+          setSelectedCoach({ value: item?.value, id: item?.id });
+          setOpenCoach(false);
+        }}
+      >
+        <>
+          <div className="flex items-center">
+            <UserAvatar
+              className="h-[55px] w-[55px] shadow mr-4 "
+              fallbackType="name"
+              avatar={item?.avatar as string}
+              fallback={`${item?.label?.charAt(0)} `}
+            />
+
+            <div>
+              <div className="text-sm mb-0.5">{item?.label}</div>
+              <div className="text-xs">{`@ ${item?.value}`}</div>
+            </div>
+          </div>
+        </>
+        <CheckIcon
+          className={cn(
+            "ml-auto h-4 w-4",
+            selectedCoach?.value === item?.value ? "opacity-100" : "opacity-0"
+          )}
+        />
+      </CommandItem>
+    );
+  };
 
   return (
     <main className="w-full h-full relative">
@@ -50,9 +222,7 @@ const Page: FC<PageProps> = ({ params }) => {
           <div className="flex flex-row items-center">
             <div className="ml-0">
               <div className="flex flex-row items-center">
-                <Title>
-                  {data?.school?.name} {/* {data?.s?.user?.surname} */}
-                </Title>
+                <Title>{data?.school?.name}</Title>
                 <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
               </div>
               <Text>
@@ -63,11 +233,45 @@ const Page: FC<PageProps> = ({ params }) => {
         </div>
       )}
       <Separator className="my-6" />
-
+      <div className="mb-6 w-full  sm:w-1/2 ml-auto flex flex-col">
+        <ComboboxCard
+          valueKey="value"
+          displayKey="label"
+          IdKey="value"
+          label="Add Coach"
+          id="school-coach"
+          placeholder={"Select Coach"}
+          isOpen={openCoach}
+          scrollAreaClass="h-72"
+          hasSearch
+          shouldFilter={false}
+          searchValue={searchValue}
+          handleSearch={(search) => setSearchValue(search)}
+          loading={userLoading}
+          onClose={() => setOpenCoach(!openCoach)}
+          items={usersDataOptions as any}
+          selectedValue={selectedCoach}
+          customRenderItems={coachCustomItems}
+        />
+        {Object?.keys(selectedCoach)?.length === 0 ? null : (
+          <div className="w-full flex mt-6 ">
+            <Button
+              size="sm"
+              className="ml-auto"
+              variant="default"
+              onClick={() => {
+                setAddCoachPrompt(true);
+              }}
+            >
+              Add Coach
+            </Button>
+          </div>
+        )}
+      </div>
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
         <SchoolCoaches
-          loading={loading}
-          coaches={(data?.school?.coaches as any) || []}
+          loading={loadingSchoolCoach}
+          coaches={(schoolCoach?.coachProfiles as any) || []}
         />
         <AthletesInterested
           loading={loading}
@@ -77,6 +281,18 @@ const Page: FC<PageProps> = ({ params }) => {
       <Grid numItemsMd={1} numItemsLg={1} className="mt-6 gap-6">
         <SchoolCard loading={loading} school={data?.school as any} />
       </Grid>
+      <PromptAlert
+        loading={SchoolUpdateLoading}
+        content={`This action will add @${selectedCoach?.value} to ${data?.school?.name}.`}
+        showPrompt={addCoachPrompt}
+        handleHidePrompt={() => {
+          setAddCoachPrompt(false);
+          setSelectedCoach({});
+        }}
+        handleConfirmPrompt={() => {
+          handleAddCoach();
+        }}
+      />
     </main>
   );
 };

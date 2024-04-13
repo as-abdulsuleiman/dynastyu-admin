@@ -34,10 +34,6 @@ import MoreHorizontal from "@/components/Icons/more-horizontal";
 import { formatDate } from "@/lib/utils";
 import PromptAlert from "@/components/prompt-alert";
 
-const filterItems = [
-  { name: "College", value: "College" },
-  { name: "High School", value: "High School" },
-];
 const headerItems = [
   { name: "Name" },
   { name: "School Type" },
@@ -45,11 +41,6 @@ const headerItems = [
   { name: "Created At" },
   { name: "Action" },
 ];
-
-enum FilterEnum {
-  HIGHSCHOOL = "High School",
-  COLLEGE = "College",
-}
 
 interface SchoolsProps {}
 
@@ -177,81 +168,67 @@ const Schools: FC<SchoolsProps> = ({}) => {
         },
       });
       const athletesInterestedId = schoolData?.school?.athletesInterested?.map(
-        (val: any) => val?.athleteId
+        (val: any) => ({
+          athleteId_schoolId: {
+            athleteId: val?.athleteId,
+            schoolId: school?.id,
+          },
+        })
       );
+
       const athletesRecruitedId = schoolData?.school?.athletesRecruited?.map(
-        (val: any) => val?.athleteId
+        (val: any) => ({
+          athleteId_schoolId: {
+            athleteId: val?.athleteId,
+            schoolId: school?.id,
+          },
+        })
       );
       const athletesProspectedId = schoolData?.school?.athletesProspected?.map(
-        (val: any) => val?.athleteId
+        (val: any) => ({
+          athleteId_schoolId: {
+            athleteId: val?.athleteId,
+            schoolId: school?.id,
+          },
+        })
       );
-      const schoolPostId = schoolData?.school?.posts?.map(
-        (val: any) => val?.id
-      );
-      const athletesId = schoolData?.school?.athletes?.map(
-        (val: any) => val?.id
-      );
-      const coachesId = schoolData?.school?.coaches?.map((val: any) => val?.id);
+      const schoolPostId = schoolData?.school?.posts?.map((val: any) => ({
+        id: {
+          in: val?.id,
+        },
+      }));
+
+      const athletesId = school?.athletes?.map((val: any) => ({
+        userId: val?.userId,
+      }));
+
+      const coachesId = school?.coaches?.map((val: any) => ({
+        userId: val?.userId,
+      }));
 
       await updateSchool({
         variables: {
           where: {
-            id: school.id,
+            id: school?.id,
           },
           data: {
             athletesProspected: {
-              deleteMany: [
-                {
-                  athleteId: {
-                    in: athletesProspectedId || [],
-                  },
-                },
-              ],
+              disconnect: athletesProspectedId || [],
             },
             athletesRecruited: {
-              deleteMany: [
-                {
-                  athleteId: {
-                    in: athletesRecruitedId || [],
-                  },
-                },
-              ],
+              disconnect: athletesRecruitedId || [],
             },
             athletesInterested: {
-              deleteMany: [
-                {
-                  athleteId: {
-                    in: athletesInterestedId || [],
-                  },
-                },
-              ],
+              disconnect: athletesInterestedId || [],
             },
             posts: {
-              deleteMany: [
-                {
-                  id: {
-                    in: schoolPostId || [],
-                  },
-                },
-              ],
+              deleteMany: schoolPostId || [],
             },
             athletes: {
-              deleteMany: [
-                {
-                  id: {
-                    in: athletesId || [],
-                  },
-                },
-              ],
+              disconnect: athletesId || [],
             },
             coaches: {
-              deleteMany: [
-                {
-                  id: {
-                    in: coachesId || [],
-                  },
-                },
-              ],
+              disconnect: coachesId || [],
             },
           },
         },
