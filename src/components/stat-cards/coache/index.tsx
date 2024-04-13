@@ -22,7 +22,7 @@ const CoacheStatCard: FC<indexProps> = ({}) => {
   const { data: coaches, loading } = useGetCoachesQuery({
     variables: {},
     onCompleted: (data: GetCoachesQuery) => {
-      setCoaches(data.coachProfiles as any);
+      setCoaches(data?.coachProfiles as any);
     },
   });
 

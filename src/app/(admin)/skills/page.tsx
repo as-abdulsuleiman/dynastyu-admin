@@ -1,7 +1,7 @@
 /** @format */
 
-import AthleteSkill from "@/components/athlete-skills";
 import { FC } from "react";
+import AthleteSkill from "@/components/athlete-skills";
 
 interface AthleteSkillProps {
   params: {
@@ -12,10 +12,13 @@ interface AthleteSkillProps {
   };
 }
 
-const AthleteSkills: FC<AthleteSkillProps> = ({ params, searchParams }) => {
+const AthleteSkills: FC<AthleteSkillProps> = async ({
+  params,
+  searchParams,
+}) => {
   return (
     <div>
-      <AthleteSkill AthleteId={searchParams?.athlete} />
+      <AthleteSkill searchParams={searchParams} params={params} />
     </div>
   );
 };

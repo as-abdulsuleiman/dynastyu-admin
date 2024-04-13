@@ -5,6 +5,7 @@ fragment SchoolCommonParts on School {
   uuid
   name
   email
+  createdAt
   schoolType {
     id
     name
@@ -31,6 +32,7 @@ fragment SkillCommonParts on Skills {
   id
   value
   verified
+  createdAt
   skillType {
     id
     name
@@ -113,6 +115,7 @@ query getSchool($where: SchoolWhereUniqueInput!) {
     }
     athletesRecruited {
       athleteId
+      userId
       User {
         username
         id
@@ -122,6 +125,7 @@ query getSchool($where: SchoolWhereUniqueInput!) {
       }
     }
     athletesProspected {
+      userId
       athleteId
       User {
         username
@@ -144,6 +148,16 @@ query getSchool($where: SchoolWhereUniqueInput!) {
         surname
         avatar
       }
+    }
+    posts{
+      id
+      uuid
+      userId
+    }
+    athletes{
+      id
+      uuid
+      userId
     }
   }
 }

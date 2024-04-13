@@ -52,6 +52,7 @@ fragment UserCommonParts on User {
     uuid
     graduationYear
     hudlLink
+    featured
     recruitingContactName
     recruitingPhoneNumber
     recruitingRelationship
@@ -62,6 +63,33 @@ fragment UserCommonParts on User {
     playerCardUrl
     verified
     gpa
+    _count{
+      transcripts
+      skills
+      evaluations
+      SkillHistory
+      socialAccounts
+    }
+    verifiedBy{
+      id
+      title
+      city
+      state
+      user {
+        id
+        firstname
+        surname
+        username
+      }
+    }
+    socialAccounts {
+      id
+      uuid
+      name
+      link
+      type
+      athleteProfileId
+    }
     school {
       id
       name
@@ -112,6 +140,10 @@ fragment UserCommonParts on User {
     title
     city
     state
+    verified
+    _count{
+      verifiedAthletes
+    }
     country {
       name
       id

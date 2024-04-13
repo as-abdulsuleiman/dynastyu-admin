@@ -29,6 +29,7 @@ import SelectCity from "../select-city";
 import { useToast } from "@/hooks/use-toast";
 import SuspenseLoader from "../suspense-loader";
 import { Separator } from "../ui/separator";
+import { useRootStore } from "@/mobx";
 
 type FormData = yup.InferType<typeof AthleteValidator>;
 
@@ -44,6 +45,9 @@ interface CreateAthleteProps {
 const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
   const router = useRouter();
   const { toast } = useToast();
+  const {
+    authStore: { user },
+  } = useRootStore();
   const [openAccountType, setOpenAccountType] = useState<boolean>(false);
   const [openHighSchool, setOpenHighSchool] = useState<boolean>(false);
   const [openYears, setOpenYears] = useState<boolean>(false);
@@ -155,7 +159,7 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
 
   const handleAvatarUploadSuccess = useCallback(
     (url: string | null) => {
-      setValue("avatar", url as string);
+      setValue("avatar", url as string, { shouldDirty: true });
     },
     [setValue]
   );
@@ -295,9 +299,10 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
               height={120}
               width={120}
               imgUrl={avatar}
-              id="coaches_profile"
+              id="athlete_profile"
               onUploadSuccess={handleAvatarUploadSuccess}
-              storageLocation="coaches"
+              folder="profile_files"
+              userId={athleteData?.athleteProfile?.userId}
             />
           </div>
         </div>

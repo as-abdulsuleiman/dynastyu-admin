@@ -2,7 +2,7 @@
 
 "use client";
 
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Callout, Text } from "@tremor/react";
 import UserAvatar from "../user-avatar";
 import { Icons } from "../Icons";
@@ -17,6 +17,13 @@ import { useToast } from "@/hooks/use-toast";
 import MenubarCard from "../menubar";
 import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
+import MoreHorizontal from "../Icons/more-horizontal";
+import { Button } from "../ui/button";
+import { BadgeDollarSign, Calendar } from "lucide-react";
+import PromptAlert from "../prompt-alert";
+import ModalCard from "@/components/modal";
+import UsersAnalytics from "@/components/analytics/users";
+
 interface SchoolCardProps {
   loading?: boolean;
   school: any;
@@ -27,50 +34,145 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   const { toast } = useToast();
   const [deleteSchool] = useDeleteSchoolMutation();
   const [updateSchool] = useUpdateSchoolMutation();
+  const [isDeletingSchool, setIsDeletingSchool] = useState(false);
+  const [openDeleteSchoolPrompt, setOpenDeleteSchoolPrompt] = useState(false);
+  const [viewAnalytics, setViewAnalytics] = useState(false);
 
-  const handleDeleteSchool = async (school: any) => {
-    const athletesInterestedId = school?.athletesInterested?.map(
-      (val: any) => val?.athleteId
+  const isHighSchoolType = school?.schoolType?.name === "High School" ?? false;
+
+  const dataList: any = [
+    {
+      name: "Athletes Interested",
+      value: school?._count?.athletesInterested || 0,
+      color: "teal",
+      icon: () => (
+        <Icons.users2 className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
+    },
+
+    {
+      name: "Athletes Prospected",
+      value: school?._count?.athletesProspected || 0,
+      color: "teal",
+      icon: () => (
+        <Icons.usersRound className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
+    },
+    {
+      name: "Athletes Recruited",
+      color: "teal",
+      value: school?._count?.athletesRecruited || 0,
+      icon: () => (
+        <Icons.athlete className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
+    },
+
+    {
+      name: "Coaches",
+      color: "teal",
+      value: school?._count?.coaches || 0,
+      icon: () => (
+        <Icons.whistle className="mr-2.5 mb-[-6px] h-5 w-5 fill-teal-600" />
+      ),
+    },
+
+    {
+      name: "Evaluations",
+      value: school?._count?.evaluations || 0,
+      icon: () => (
+        <Icons.clipboardEdit className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
+    },
+    {
+      name: "Posts",
+      value: school?._count?.posts || 0,
+      icon: () => (
+        <Icons.fileImage className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+      ),
+    },
+    // {
+    //   name: "Evaluations Created",
+    //   color: "teal",
+    //   value: data?.school?._count?.evaluationsCreated || 0,
+    //   icon: () => (
+    //     <Icons.clipboardEdit className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+    //   ),
+    // },
+    // {
+    //   name: "Comments",
+    //   color: "teal",
+    //   value: data?.school?._count?.comments || 0,
+    //   icon: () => (
+    //     <Icons.messageCircleCode className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+    //   ),
+    // },
+  ];
+
+  const handleConfirmPrompt = async (school: any) => {
+    setIsDeletingSchool(true);
+    const athletesInterestedId = school?.school?.athletesInterested?.map(
+      (val: any) => ({
+        athleteId_schoolId: {
+          athleteId: val?.athleteId,
+          schoolId: school?.id,
+        },
+      })
     );
-    const athletesRecruitedId = school?.athletesInterested?.map(
-      (val: any) => val?.athleteId
+
+    const athletesRecruitedId = school?.school?.athletesRecruited?.map(
+      (val: any) => ({
+        athleteId_schoolId: {
+          athleteId: val?.athleteId,
+          schoolId: school?.id,
+        },
+      })
     );
-    const athletesProspectedId = school?.athletesProspected?.map(
-      (val: any) => val?.athleteId
+
+    const athletesProspectedId = school?.school?.athletesProspected?.map(
+      (val: any) => ({
+        athleteId_schoolId: {
+          athleteId: val?.athleteId,
+          schoolId: school?.id,
+        },
+      })
     );
+    const schoolPostId = school?.school?.posts?.map((val: any) => ({
+      id: {
+        in: val?.id,
+      },
+    }));
+
+    const athletesId = school?.athletes?.map((val: any) => ({
+      userId: val?.userId,
+    }));
+
+    const coachesId = school?.coaches?.map((val: any) => ({
+      userId: val?.userId,
+    }));
     try {
       await updateSchool({
         variables: {
           where: {
-            id: school.id,
+            id: school?.id,
           },
           data: {
             athletesProspected: {
-              deleteMany: [
-                {
-                  athleteId: {
-                    in: athletesProspectedId,
-                  },
-                },
-              ],
+              disconnect: athletesProspectedId || [],
             },
             athletesRecruited: {
-              deleteMany: [
-                {
-                  athleteId: {
-                    in: athletesRecruitedId,
-                  },
-                },
-              ],
+              disconnect: athletesRecruitedId || [],
             },
             athletesInterested: {
-              deleteMany: [
-                {
-                  athleteId: {
-                    in: athletesInterestedId,
-                  },
-                },
-              ],
+              disconnect: athletesInterestedId || [],
+            },
+            posts: {
+              deleteMany: schoolPostId || [],
+            },
+            athletes: {
+              disconnect: athletesId || [],
+            },
+            coaches: {
+              disconnect: coachesId || [],
             },
           },
         },
@@ -82,7 +184,9 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           },
         },
       });
-      router.push(`/schools`);
+      router.push(
+        isHighSchoolType ? `/schools/high-school` : `/schools/college`
+      );
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -91,7 +195,13 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         }`,
         variant: "destructive",
       });
+    } finally {
+      setIsDeletingSchool(false);
+      setOpenDeleteSchoolPrompt(false);
     }
+  };
+  const handleDeleteSchoolPrompt = () => {
+    setOpenDeleteSchoolPrompt(true);
   };
 
   const dropdownItems = [
@@ -101,7 +211,11 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
     },
     {
       name: `Delete ${school?.schoolType?.name}`,
-      onClick: () => handleDeleteSchool(school),
+      onClick: () => handleDeleteSchoolPrompt(),
+    },
+    {
+      name: "View Analytics",
+      onClick: () => setViewAnalytics(true),
     },
   ];
   return (
@@ -121,7 +235,9 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           {loading ? (
             <Skeleton className="w-[120px] h-[25px] mt-2" />
           ) : (
-            <Text className="text-xl mt-2">{school?.schoolType?.name}</Text>
+            <Text className="text-sm font-TTHovesRegular mt-2">
+              {school?.name}
+            </Text>
           )}
 
           <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
@@ -129,7 +245,11 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
               <Skeleton className="w-[40px] h-[20px]" />
             ) : (
               <MenubarCard
-                trigger={<Icons.moreHorizontal className="cursor-pointer" />}
+                trigger={
+                  <Button size="icon" variant="outline">
+                    <MoreHorizontal className="cursor-pointer" />
+                  </Button>
+                }
                 items={dropdownItems}
               />
             )}
@@ -163,36 +283,57 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         >
           {school?.address}
         </Callout>
-        <Callout
-          className="mt-4 min-h-[75px]"
-          title="Division"
-          icon={() => {
-            return (
-              <Icons.folderDot
-                className="h-[20px] w-[20px] mr-2"
-                color="teal"
-              />
-            );
-          }}
-          color="teal"
-        >
-          {school?.division}
-        </Callout>
-        <Callout
-          className="mt-4 min-h-[75px]"
-          title="Conference"
-          icon={() => {
-            return (
-              <Icons.activitySquare
-                className="h-[20px] w-[20px] mr-2"
-                color="teal"
-              />
-            );
-          }}
-          color="teal"
-        >
-          {school?.conference}
-        </Callout>
+        {isHighSchoolType ? (
+          <Callout
+            className="mt-4 min-h-[75px]"
+            title="Classification"
+            icon={() => {
+              return (
+                <Icons.folderDot
+                  className="h-[20px] w-[20px] mr-2"
+                  color="teal"
+                />
+              );
+            }}
+            color="teal"
+          >
+            {school?.division}
+          </Callout>
+        ) : (
+          <>
+            <Callout
+              className="mt-4 min-h-[75px]"
+              title="Division"
+              icon={() => {
+                return (
+                  <Icons.folderDot
+                    className="h-[20px] w-[20px] mr-2"
+                    color="teal"
+                  />
+                );
+              }}
+              color="teal"
+            >
+              {school?.division}
+            </Callout>
+            <Callout
+              className="mt-4 min-h-[75px]"
+              title="Conference"
+              icon={() => {
+                return (
+                  <Icons.activitySquare
+                    className="h-[20px] w-[20px] mr-2"
+                    color="teal"
+                  />
+                );
+              }}
+              color="teal"
+            >
+              {school?.conference}
+            </Callout>
+          </>
+        )}
+
         <Callout
           className="mt-4 min-h-[75px]"
           title="Description"
@@ -213,7 +354,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           title="Yearly Tuition"
           icon={() => {
             return (
-              <Icons.scrollText
+              <BadgeDollarSign
                 className="h-[20px] w-[20px] mr-2"
                 color="teal"
               />
@@ -227,8 +368,18 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           className="mt-4 min-h-[75px]"
           title="Year Founded"
           icon={() => {
+            return <Calendar className="h-[20px] w-[20px] mr-2" color="teal" />;
+          }}
+          color="teal"
+        >
+          {school?.yearFounded}
+        </Callout>
+        <Callout
+          className="mt-4 min-h-[75px]"
+          title="Undergrad Students"
+          icon={() => {
             return (
-              <Icons.scrollText
+              <Icons.graduationCap
                 className="h-[20px] w-[20px] mr-2"
                 color="teal"
               />
@@ -236,9 +387,8 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           }}
           color="teal"
         >
-          {school?.yearFounded}
+          {school?.undergradStudents}
         </Callout>
-
         <Callout
           className="mt-4 min-h-[75px]"
           title="Country"
@@ -292,6 +442,32 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         >
           {school?.city}
         </Callout>
+        <PromptAlert
+          loading={isDeletingSchool}
+          content={`This action cannot be undone. This will permanently delete this data from our servers.`}
+          showPrompt={openDeleteSchoolPrompt}
+          handleHidePrompt={() => {
+            setOpenDeleteSchoolPrompt(false);
+          }}
+          handleConfirmPrompt={() => handleConfirmPrompt(school)}
+        />
+        <ModalCard
+          isModal={true}
+          isOpen={viewAnalytics}
+          onOpenChange={() => setViewAnalytics(!viewAnalytics)}
+        >
+          <div className="grid grid-cols-12 gap-6">
+            <div className="col-span-12">
+              <UsersAnalytics
+                loading={loading}
+                data={dataList}
+                showStatus={false}
+                // isActive={data?.school?.user?.isActive || false}
+                title={`${school?.name} Analytics`}
+              />
+            </div>
+          </div>
+        </ModalCard>
       </CardContent>
     </Card>
   );

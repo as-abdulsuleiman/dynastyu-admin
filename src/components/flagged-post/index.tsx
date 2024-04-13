@@ -28,6 +28,7 @@ import MenubarCard from "../menubar";
 import { Icons } from "../Icons";
 import { formatDate } from "@/lib/utils";
 import { Separator } from "../ui/separator";
+import { Button } from "../ui/button";
 
 const filterItems = [
   { name: "Spam", value: "Spam" },
@@ -51,7 +52,7 @@ const headerItems = [
   { name: "Posted By" },
   { name: "Flagged By" },
   { name: "Reason" },
-  { name: "Date" },
+  { name: "Created At" },
   { name: "Actions" },
 ];
 
@@ -222,7 +223,12 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
               <UserAvatar
                 className="h-[79px] w-[79px] shadow cursor-pointer relative"
                 fallbackType="name"
-                avatar={item?.post?.images[0] as string}
+                type={item?.post?.videos?.length > 0 ? "video" : "image"}
+                avatar={
+                  item?.post?.videos?.length > 0
+                    ? item?.post?.videos[0]
+                    : (item?.post?.images[0] as string)
+                }
                 fallback={`${item?.user?.username?.charAt(
                   0
                 )} ${item?.user?.firstname?.charAt(0)}`}
@@ -254,7 +260,11 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
         <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
-              trigger={<MoreHorizontal className="cursor-pointer" />}
+              trigger={
+                <Button size="icon" variant="outline">
+                  <MoreHorizontal className="cursor-pointer" />
+                </Button>
+              }
               items={flaggedPostItems}
             />
           </div>

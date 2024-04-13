@@ -30,7 +30,9 @@ import {
 } from "@/services/graphql";
 import { SearchInput } from "@/components/search-input";
 import MenubarCard from "@/components/menubar";
+import MoreHorizontal from "@/components/Icons/more-horizontal";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -128,9 +130,9 @@ const Users: FC<UsersProps> = ({}) => {
       where: {
         ...whereClause,
         OR: [
+          { username: { contains: debounced, mode: QueryMode.Insensitive } },
           { firstname: { contains: debounced, mode: QueryMode.Insensitive } },
           { surname: { contains: debounced, mode: QueryMode.Insensitive } },
-          { username: { contains: debounced, mode: QueryMode.Insensitive } },
         ],
       },
     });
@@ -309,7 +311,7 @@ const Users: FC<UsersProps> = ({}) => {
             }
           >
             <UserAvatar
-              className="h-[59px] w-[59px] shadow cursor-pointer"
+              className="h-[79px] w-[79px] shadow cursor-pointer"
               fallbackType="name"
               avatar={item?.avatar as string}
               fallback={`${item?.firstname?.charAt(0)} ${item?.surname?.charAt(
@@ -347,7 +349,11 @@ const Users: FC<UsersProps> = ({}) => {
         <TableCell className="text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
-              trigger={<Icons.moreHorizontal className="cursor-pointer" />}
+              trigger={
+                <Button size="icon" variant="outline">
+                  <MoreHorizontal className="cursor-pointer" />
+                </Button>
+              }
               items={userItems}
             />
           </div>

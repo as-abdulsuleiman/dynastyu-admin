@@ -22,8 +22,9 @@ import Resizer from "react-image-file-resizer";
 
 interface AvatarUploaderProps {
   id?: string;
-  storageLocation: string;
+  folder: string;
   error?: string;
+  userId: number;
   onUploadSuccess?: (downloadUrl: string | null) => void;
   imgUrl?: string;
   width?: number;
@@ -31,13 +32,14 @@ interface AvatarUploaderProps {
 }
 
 const AvatarUploader: FC<AvatarUploaderProps> = ({
-  storageLocation = "files",
+  folder = "files",
   onUploadSuccess = () => ({}),
   id = "avatar",
   error,
   imgUrl,
   height,
   width,
+  userId,
 }) => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(true);
@@ -49,7 +51,8 @@ const AvatarUploader: FC<AvatarUploaderProps> = ({
   const { progress, url, uploading } = useStorage({
     file,
     fileName,
-    storageLocation,
+    folder: folder,
+    userId: userId,
   });
 
   useEffect(() => {

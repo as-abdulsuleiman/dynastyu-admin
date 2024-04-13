@@ -9,6 +9,7 @@ import {
   QueryMode,
   SortOrder,
   UserWhereInput,
+  useGetCoachesQuery,
   useGetSchoolQuery,
   useGetUsersQuery,
   useUpdateSchoolMutation,
@@ -16,7 +17,6 @@ import {
 import { useRouter } from "next/navigation";
 import { Title, Text, Grid } from "@tremor/react";
 import { Icons } from "@/components/Icons";
-import UsersAnalytics from "@/components/analytics/users";
 import AthletesInterested from "@/components/athletes-interested";
 import SchoolCard from "@/components/school-card";
 import SchoolCoaches from "@/components/school-coaches";
@@ -31,19 +31,22 @@ import { cn } from "@/lib/utils";
 import PromptAlert from "@/components/prompt-alert";
 import { toast } from "@/hooks/use-toast";
 
-interface pageProps {
+interface PageProps {
   params: {
     id: number;
   };
 }
 
-const Page: FC<pageProps> = ({ params }) => {
+const Page: FC<PageProps> = ({ params }) => {
   const router = useRouter();
   const [openCoach, setOpenCoach] = useState<boolean>(false);
-  const [searchValue, setSearchValue] = useState<string>();
+  const [searchValue, setSearchValue] = useState<string>("");
   const [selectedCoach, setSelectedCoach] = useState<any | number>({});
   const [debounced] = useDebouncedValue(searchValue, 300);
   const [addCoachPrompt, setAddCoachPrompt] = useState<boolean>(false);
+  const [updateSchool, { loading: SchoolUpdateLoading }] =
+    useUpdateSchoolMutation();
+
   const {
     data,
     loading,
@@ -56,44 +59,62 @@ const Page: FC<pageProps> = ({ params }) => {
     },
   });
 
-  const isCollegeType = data?.school?.schoolType?.name === "College";
-  // const coachUserId = data?.school?.coaches?.map((coach) => coach.userId);
-
-  const whereClause: UserWhereInput = useMemo(() => {
-    if (isCollegeType) {
-      return {
-        accountType: {
-          is: {
-            title: {
-              equals: "Coach",
-            },
-          },
-        },
-      };
-    } else {
-      return {
-        accountType: {
-          is: {
-            title: {
-              equals: "Athlete",
-            },
-          },
-        },
-      };
-    }
-  }, [isCollegeType]);
-
   const {
-    data: userData,
-    loading: userLoading,
-    refetch,
-  } = useGetUsersQuery({
+    data: schoolCoach,
+    loading: loadingSchoolCoach,
+    refetch: refetchSchoolCoach,
+  } = useGetCoachesQuery({
     variables: {
       where: {
-        // id: {
-        //   notIn: coachUserId || [],
-        // },
-        ...whereClause,
+        schoolId: {
+          equals: params?.id,
+        },
+      },
+    },
+  });
+
+  const coachId = data?.school?.coaches?.map((coach) => coach?.userId);
+
+  const {
+    data: coachData,
+    loading: userLoading,
+    refetch: refetchCoaches,
+  } = useGetCoachesQuery({
+    variables: {
+      where: {
+        userId: {
+          notIn: coachId,
+        },
+        OR: [
+          {
+            user: {
+              is: {
+                username: { contains: debounced, mode: QueryMode.Insensitive },
+              },
+            },
+          },
+          {
+            user: {
+              is: {
+                firstname: { contains: debounced, mode: QueryMode.Insensitive },
+              },
+            },
+          },
+          {
+            user: {
+              is: {
+                surname: { contains: debounced, mode: QueryMode.Insensitive },
+              },
+            },
+          },
+          {
+            user: {
+              is: {
+                email: { contains: debounced, mode: QueryMode.Insensitive },
+              },
+            },
+          },
+        ],
       },
       take: 10,
       orderBy: {
@@ -102,108 +123,16 @@ const Page: FC<pageProps> = ({ params }) => {
     },
   });
 
-  const [updateSchool, { loading: SchoolUpdateLoading }] =
-    useUpdateSchoolMutation();
-
-  useEffect(() => {
-    refetch({
-      where: {
-        // OR: [
-        //   { username: { contains: debounced, mode: QueryMode.Insensitive } },
-        //   { firstname: { contains: debounced, mode: QueryMode.Insensitive } },
-        //   { surname: { contains: debounced, mode: QueryMode.Insensitive } },
-        // ],
-        ...whereClause,
-      },
-    });
-  }, [debounced, refetch, userData, whereClause]);
-
-  const schoolCoaches = new Set(
-    data?.school?.coaches?.map((item) => item.user.id)
-  );
-
-  const filteredUsers = userData?.users?.filter(
-    (item) => !schoolCoaches.has(item.id)
-  );
-
   const usersDataOptions = useMemo(() => {
-    return filteredUsers?.map((a) => {
+    return coachData?.coachProfiles?.map((a) => {
       return {
-        id: a?.id,
-        label: `${a?.firstname} ${a?.surname}`,
-        value: a?.username,
-        avatar: a?.avatar,
+        id: a?.user?.id,
+        label: `${a?.user?.firstname} ${a?.user?.surname}`,
+        value: a?.user?.username,
+        avatar: a?.user?.avatar,
       };
     });
-  }, [filteredUsers]);
-
-  const dataList: any = [
-    {
-      name: "Athletes Interested",
-      value: data?.school?._count?.athletesInterested || 0,
-      color: "teal",
-      icon: () => (
-        <Icons.users2 className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
-      ),
-    },
-
-    {
-      name: "Athletes Prospected",
-      value: data?.school?._count?.athletesProspected || 0,
-      color: "teal",
-      icon: () => (
-        <Icons.usersRound className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
-      ),
-    },
-    {
-      name: "Athletes Recruited",
-      color: "teal",
-      value: data?.school?._count?.athletesRecruited || 0,
-      icon: () => (
-        <Icons.athlete className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
-      ),
-    },
-
-    {
-      name: "Coaches",
-      color: "teal",
-      value: data?.school?._count?.coaches || 0,
-      icon: () => (
-        <Icons.whistle className="mr-2.5 mb-[-6px] h-5 w-5 fill-teal-600" />
-      ),
-    },
-
-    {
-      name: "Evaluations",
-      value: data?.school?._count?.evaluations || 0,
-      icon: () => (
-        <Icons.clipboardEdit className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
-      ),
-    },
-    {
-      name: "Posts",
-      value: data?.school?._count?.posts || 0,
-      icon: () => (
-        <Icons.fileImage className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
-      ),
-    },
-    // {
-    //   name: "Evaluations Created",
-    //   color: "teal",
-    //   value: data?.school?._count?.evaluationsCreated || 0,
-    //   icon: () => (
-    //     <Icons.clipboardEdit className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
-    //   ),
-    // },
-    // {
-    //   name: "Comments",
-    //   color: "teal",
-    //   value: data?.school?._count?.comments || 0,
-    //   icon: () => (
-    //     <Icons.messageCircleCode className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
-    //   ),
-    // },
-  ];
+  }, [coachData?.coachProfiles]);
 
   const selectedCoachUserId = selectedCoach?.id;
 
@@ -219,8 +148,7 @@ const Page: FC<pageProps> = ({ params }) => {
           where: { id: params?.id },
         },
       });
-
-      refetchSchool();
+      refetchSchoolCoach();
       toast({
         title: "Coach successfully added.",
         variant: "successfull",
@@ -294,30 +222,17 @@ const Page: FC<pageProps> = ({ params }) => {
           <div className="flex flex-row items-center">
             <div className="ml-0">
               <div className="flex flex-row items-center">
-                <Title>
-                  {data?.school?.name} {/* {data?.s?.user?.surname} */}
-                </Title>
+                <Title>{data?.school?.name}</Title>
                 <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
               </div>
               <Text>
                 {data?.school?.schoolType?.name} at {data?.school?.address}
               </Text>
             </div>
-            <div className="ml-auto">
-              <Button
-                variant="ghost"
-                onClick={() =>
-                  router.push(`/schools/edit?school=${params?.id}`)
-                }
-              >
-                Edit School
-              </Button>
-            </div>
           </div>
         </div>
       )}
       <Separator className="my-6" />
-
       <div className="mb-6 w-full  sm:w-1/2 ml-auto flex flex-col">
         <ComboboxCard
           valueKey="value"
@@ -329,6 +244,7 @@ const Page: FC<pageProps> = ({ params }) => {
           isOpen={openCoach}
           scrollAreaClass="h-72"
           hasSearch
+          shouldFilter={false}
           searchValue={searchValue}
           handleSearch={(search) => setSearchValue(search)}
           loading={userLoading}
@@ -337,8 +253,7 @@ const Page: FC<pageProps> = ({ params }) => {
           selectedValue={selectedCoach}
           customRenderItems={coachCustomItems}
         />
-
-        {Object.keys(selectedCoach).length === 0 ? null : (
+        {Object?.keys(selectedCoach)?.length === 0 ? null : (
           <div className="w-full flex mt-6 ">
             <Button
               size="sm"
@@ -353,18 +268,10 @@ const Page: FC<pageProps> = ({ params }) => {
           </div>
         )}
       </div>
-      <UsersAnalytics
-        loading={loading}
-        data={dataList}
-        showStatus={false}
-        // isActive={data?.school?.user?.isActive || false}
-        title={`${data?.school?.name} 
-       Analytics`}
-      />
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
         <SchoolCoaches
-          loading={loading}
-          coaches={(data?.school?.coaches as any) || []}
+          loading={loadingSchoolCoach}
+          coaches={(schoolCoach?.coachProfiles as any) || []}
         />
         <AthletesInterested
           loading={loading}

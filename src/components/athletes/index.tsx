@@ -11,14 +11,14 @@ import SelectCard from "@/components/select";
 import AthleteStatCard from "@/components/stat-cards/athlete";
 import { useDebouncedValue } from "@mantine/hooks";
 import {
-  AthleteProfileWhereInput,
-  GetAthletesQuery,
+  GetUsersQuery,
   QueryMode,
   SortOrder,
+  UserWhereInput,
   useDeleteAthleteMutation,
   useDeleteUserMutation,
-  useGetAthletesQuery,
   useGetUsersLazyQuery,
+  useGetUsersQuery,
   useUpdateAthleteMutation,
 } from "@/services/graphql";
 import UniversalTable from "@/components/universal-table";
@@ -31,6 +31,10 @@ import StarIcon from "@/components/Icons/starIcon";
 import MenubarCard from "../menubar";
 import { Separator } from "../ui/separator";
 import { SearchInput } from "../search-input";
+import MoreHorizontal from "../Icons/more-horizontal";
+import { Button } from "../ui/button";
+import { formatDate } from "@/lib/utils";
+import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -47,6 +51,7 @@ const headerItems = [
   { name: "Status" },
   { name: "Verified" },
   { name: "Featured" },
+  { name: "Created At" },
   { name: "Actions" },
 ];
 
@@ -73,9 +78,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
 
   const [status, setStatus] = useState<string>("");
   const [value, setValue] = useState<string>("");
-  const [isActivating, setIsActivating] = useState<boolean>(false);
-  const [isFeaturing, setIsFeaturing] = useState<boolean>(false);
-  const [isVerifying, setIsVerifying] = useState<boolean>(false);
+  const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [debounced] = useDebouncedValue(value, 300);
   const [updateAthlete] = useUpdateAthleteMutation();
@@ -84,49 +87,72 @@ const Athletes: FC<AthletesProps> = ({}) => {
   const [getUsers] = useGetUsersLazyQuery();
   const [getAthletes] = useGetUsersLazyQuery();
 
-  const { data, loading, refetch, fetchMore } = useGetAthletesQuery({
+  const {
+    data: athleteData,
+    refetch,
+    fetchMore,
+    loading,
+  } = useGetUsersQuery({
     variables: {
+      where: {
+        accountType: {
+          is: {
+            title: {
+              equals: "Athlete",
+            },
+          },
+        },
+      },
       take: 10,
       orderBy: {
         createdAt: SortOrder.Desc,
       },
     },
-    // returnPartialData: true,
-    fetchPolicy: "cache-first",
-    // pollInterval: 30 * 1000,
   });
 
-  const whereClause: AthleteProfileWhereInput = useMemo(() => {
+  // const { data, loading, refetch, fetchMore } = useGetAthletesQuery({
+  //   variables: {
+  //     take: 10,
+  //     orderBy: {
+  //       createdAt: SortOrder.Desc,
+  //     },
+  //   },
+  //   // returnPartialData: true,
+  //   fetchPolicy: "cache-first",
+  //   // pollInterval: 30 * 1000,
+  // });
+
+  const whereClause: UserWhereInput = useMemo(() => {
     if (status === FilterEnum.INACTIVE) {
       return {
-        user: {
-          is: {
-            isActive: {
-              equals: false,
-            },
-          },
+        isActive: {
+          equals: false,
         },
       };
     } else if (status === FilterEnum.ACTIVE) {
       return {
-        user: {
+        isActive: {
+          equals: true,
+        },
+      };
+    } else if (status === FilterEnum.VERIFIED) {
+      return {
+        athleteProfile: {
           is: {
-            isActive: {
+            verified: {
               equals: true,
             },
           },
         },
       };
-    } else if (status === FilterEnum.VERIFIED) {
-      return {
-        verified: {
-          equals: true,
-        },
-      };
     } else if (status === FilterEnum.NOTVERIFIED) {
       return {
-        verified: {
-          equals: false,
+        athleteProfile: {
+          is: {
+            verified: {
+              equals: false,
+            },
+          },
         },
       };
     } else {
@@ -137,46 +163,37 @@ const Athletes: FC<AthletesProps> = ({}) => {
   useEffect(() => {
     refetch({
       where: {
+        accountType: {
+          is: {
+            title: {
+              equals: "Athlete",
+            },
+          },
+        },
         ...whereClause,
         OR: [
           {
-            user: {
-              is: {
-                username: {
-                  contains: debounced,
-                  mode: QueryMode.Insensitive,
-                },
-              },
+            username: {
+              contains: debounced,
+              mode: QueryMode.Insensitive,
             },
           },
           {
-            user: {
-              is: {
-                firstname: {
-                  contains: debounced,
-                  mode: QueryMode.Insensitive,
-                },
-              },
+            firstname: {
+              contains: debounced,
+              mode: QueryMode.Insensitive,
             },
           },
           {
-            user: {
-              is: {
-                surname: {
-                  contains: debounced,
-                  mode: QueryMode.Insensitive,
-                },
-              },
+            surname: {
+              contains: debounced,
+              mode: QueryMode.Insensitive,
             },
           },
           {
-            user: {
-              is: {
-                email: {
-                  contains: debounced,
-                  mode: QueryMode.Insensitive,
-                },
-              },
+            email: {
+              contains: debounced,
+              mode: QueryMode.Insensitive,
             },
           },
         ],
@@ -186,9 +203,9 @@ const Athletes: FC<AthletesProps> = ({}) => {
 
   const lastUserId = useMemo(() => {
     const lastPostInResults =
-      data?.athleteProfiles[data?.athleteProfiles?.length - 1];
+      athleteData?.users[athleteData?.users?.length - 1];
     return lastPostInResults?.id;
-  }, [data?.athleteProfiles]);
+  }, [athleteData?.users]);
 
   const handleDeleteAthlete = async (item: any) => {
     try {
@@ -214,7 +231,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
         setAthletes(athleteResp.data?.users as any);
         toast({
           title: "Athlete successfully deleted.",
-          description: `@${item?.user?.username} account has been deleted.`,
+          description: `@${item?.username} account has been deleted.`,
           variant: "default",
         });
       }
@@ -230,14 +247,14 @@ const Athletes: FC<AthletesProps> = ({}) => {
   };
 
   const handleActivateAthlete = async (item: any) => {
-    setIsActivating(true);
+    setUpdatingProfile(StatusEnum.ACTIVATING);
     setSelectedUser(item?.id);
     try {
-      const isAthleteActive = item?.user?.isActive;
+      const isAthleteActive = item?.isActive;
       await updateAthlete({
         variables: {
           where: {
-            id: item?.id,
+            id: item?.athleteProfile?.id,
           },
           data: {
             user: {
@@ -248,10 +265,10 @@ const Athletes: FC<AthletesProps> = ({}) => {
           },
         },
       });
-      await refetch();
+      await refetch({});
       toast({
         title: "Profile successfully updated.",
-        description: `@${item?.user?.username} profile has been ${
+        description: `@${item?.username} profile has been ${
           isAthleteActive ? "deactivated" : "activated"
         }`,
         variant: "successfull",
@@ -266,20 +283,20 @@ const Athletes: FC<AthletesProps> = ({}) => {
         variant: "destructive",
       });
     } finally {
-      setIsActivating(false);
+      setUpdatingProfile(null);
       setSelectedUser(null);
     }
   };
 
   const handleFeaturedAthlete = async (item: any) => {
-    setIsFeaturing(true);
+    setUpdatingProfile(StatusEnum.FEATURING);
     setSelectedUser(item?.id);
     try {
-      const isAthleteFeatured = item?.featured;
+      const isAthleteFeatured = item?.athleteProfile?.featured;
       await updateAthlete({
         variables: {
           where: {
-            id: item?.id,
+            id: item?.athleteProfile?.id,
           },
           data: {
             featured: { set: !isAthleteFeatured },
@@ -288,7 +305,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
       });
       toast({
         title: "Profile successfully updated.",
-        description: `@${item?.user?.username} profile has been ${
+        description: `@${item?.username} profile has been ${
           !isAthleteFeatured ? "added to featured" : "removed from featured"
         } `,
         variant: "successfull",
@@ -312,29 +329,29 @@ const Athletes: FC<AthletesProps> = ({}) => {
         variant: "destructive",
       });
     } finally {
-      setIsFeaturing(false);
+      setUpdatingProfile(null);
       setSelectedUser(null);
     }
   };
 
   const handleVerifyAthlete = async (item: any) => {
-    setIsVerifying(true);
+    setUpdatingProfile(StatusEnum.VERIFYING);
     setSelectedUser(item?.id);
     try {
-      const isVerified = item?.verified;
+      const isVerified = item?.athleteProfile?.verified;
       await updateAthlete({
         variables: {
-          where: { id: item?.id },
+          where: { id: item?.athleteProfile?.id },
           data: {
             verified: { set: !isVerified },
             verifiedBy: { connect: { id: user?.coachProfile?.id } },
           },
         },
       });
-      // await refetch();
+      await refetch({});
       toast({
         title: "Profile successfully updated.",
-        description: `@${item?.user?.username} profile has been ${
+        description: `@${item?.username} profile has been ${
           !isVerified ? "verified" : "unverified"
         }`,
         variant: "successfull",
@@ -358,7 +375,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
         variant: "destructive",
       });
     } finally {
-      setIsVerifying(false);
+      setUpdatingProfile(null);
       setSelectedUser(null);
     }
   };
@@ -376,18 +393,15 @@ const Athletes: FC<AthletesProps> = ({}) => {
         },
       },
       updateQuery: (
-        previousResult: GetAthletesQuery,
+        previousResult: GetUsersQuery,
         { fetchMoreResult }
-      ): GetAthletesQuery => {
-        if (
-          !fetchMoreResult ||
-          fetchMoreResult?.athleteProfiles?.length === 0
-        ) {
+      ): GetUsersQuery => {
+        if (!fetchMoreResult || fetchMoreResult?.users?.length === 0) {
           return previousResult;
         } else {
-          const previousPosts = previousResult?.athleteProfiles;
-          const fetchMorePosts = fetchMoreResult?.athleteProfiles;
-          fetchMoreResult.athleteProfiles = [...fetchMorePosts];
+          const previousPosts = previousResult?.users;
+          const fetchMorePosts = fetchMoreResult?.users;
+          fetchMoreResult.users = [...fetchMorePosts];
           return { ...fetchMoreResult };
         }
       },
@@ -398,7 +412,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
     fetchMore({
       variables: {
         take: -10,
-        skip: data?.athleteProfiles?.length,
+        skip: athleteData?.users,
         cursor: {
           id: lastUserId,
         },
@@ -407,18 +421,15 @@ const Athletes: FC<AthletesProps> = ({}) => {
         },
       },
       updateQuery: (
-        previousResult: GetAthletesQuery,
+        previousResult: GetUsersQuery,
         { fetchMoreResult }
-      ): GetAthletesQuery => {
-        if (
-          !fetchMoreResult ||
-          fetchMoreResult?.athleteProfiles?.length === 0
-        ) {
+      ): GetUsersQuery => {
+        if (!fetchMoreResult || fetchMoreResult?.users?.length === 0) {
           return previousResult;
         } else {
-          const previousPosts = previousResult?.athleteProfiles;
-          const fetchMorePosts = fetchMoreResult?.athleteProfiles;
-          fetchMoreResult.athleteProfiles = [...fetchMorePosts];
+          const previousPosts = previousResult?.users;
+          const fetchMorePosts = fetchMoreResult?.users;
+          fetchMoreResult.users = [...fetchMorePosts];
           return { ...fetchMoreResult };
         }
       },
@@ -430,27 +441,43 @@ const Athletes: FC<AthletesProps> = ({}) => {
       {
         name: "View Details",
         onClick: () => {
-          router.push(`/athlete/${Number(item?.id)}`, { scroll: true });
-        },
-      },
-      {
-        name: "Edit Profile",
-        onClick: () => {
-          router.push(`/athletes/edit?athlete=${Number(item?.id)}`, {
+          router.push(`/athlete/${item?.id}`, {
             scroll: true,
           });
         },
       },
       {
-        name: `${item.verified ? "Unverify" : "Verify"} Profile`,
+        name: "View Skills",
+        onClick: () => {
+          router.push(`/skills?athlete=${item?.athleteProfile?.id}`, {
+            scroll: true,
+          });
+        },
+      },
+      {
+        name: "Edit Profile",
+        onClick: () => {
+          router.push(`/athletes/edit?athlete=${item?.athleteProfile?.id}`, {
+            scroll: true,
+          });
+        },
+      },
+      {
+        name: `${
+          item?.athleteProfile.verified ? "Unverify" : "Verify"
+        } Profile`,
         onClick: () => handleVerifyAthlete(item),
       },
       {
-        name: `${item?.user?.isActive ? "Deactivate" : "Activate"} Profile`,
+        name: `${item?.isActive ? "Deactivate" : "Activate"} Profile`,
         onClick: () => handleActivateAthlete(item),
       },
       {
-        name: `${item?.featured ? "Remove from featured" : "Add to featured"}`,
+        name: `${
+          item?.athleteProfile?.featured
+            ? "Remove from featured"
+            : "Add to featured"
+        }`,
         onClick: () => handleFeaturedAthlete(item),
       },
       // {
@@ -458,72 +485,79 @@ const Athletes: FC<AthletesProps> = ({}) => {
       //   onclick: async () => await handleDeleteAthlete(item),
       // },
     ];
+
     return (
       <TableRow key={item?.id}>
         <TableCell>
           <div
             className="flex flex-row items-center justify-start"
             onClick={() =>
-              router.push(`/athlete/${item?.id}`, { scroll: true })
+              router.push(`/athlete/${item?.id}`, {
+                scroll: true,
+              })
             }
           >
             <UserAvatar
               className="h-[79px] w-[79px] shadow cursor-pointer"
               fallbackType="name"
-              avatar={item?.user?.avatar as string}
-              fallback={`${item?.user?.username?.charAt(
+              avatar={item?.avatar as string}
+              fallback={`${item?.username?.charAt(0)} ${item?.firstname?.charAt(
                 0
-              )} ${item?.user?.firstname?.charAt(0)}`}
+              )}`}
             />
             <div className="ml-4 cursor-pointer text-base">
-              {item?.user?.firstname} {item?.user?.surname}
+              {item?.firstname} {item?.surname}
             </div>
           </div>
         </TableCell>
         <TableCell className="text-center text-sm">
-          <div>{item?.user?.username ? `@${item?.user?.username}` : ""}</div>
+          <div>{item?.username ? `@${item?.username}` : ""}</div>
         </TableCell>
         <TableCell className="text-center text-sm">
-          <div>{item?.user?.email}</div>
+          <div>{item?.email}</div>
         </TableCell>
         <TableCell className="text-center text-sm">
           <div className="flex flex-row items-center justify-center">
-            <div className="mr-2">{item?.position?.name}</div>{" "}
-            <div>({item?.position?.shortName})</div>
+            <div className="mr-2">{item?.athleteProfile?.position?.name}</div>{" "}
+            <div>({item?.athleteProfile?.position?.shortName})</div>
           </div>
         </TableCell>
         <TableCell className="text-center">
-          {item?.id === selectedUser && isActivating ? (
+          {item?.id === selectedUser &&
+          updatingProfile === StatusEnum.ACTIVATING ? (
             <div className="text-center flex flex-row justify-center items-center">
               <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin " />
-              {item?.user?.isActive ? "Deactivating..." : "Activating..."}
+              {item?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (
             <Badge
               size="xs"
               className="cursor-pointer text-sm"
-              color={item?.user?.isActive ? "teal" : "rose"}
+              color={item?.isActive ? "teal" : "rose"}
               // tooltip={item?.user?.isActive ? "Active" : "Deactivated"}
-              icon={item?.user?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
+              icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
               datatype="moderateDecrease"
             >
-              {item?.user?.isActive ? "Active" : "Deactivated"}
+              {item?.isActive ? "Active" : "Deactivated"}
             </Badge>
           )}
         </TableCell>
         <TableCell className="text-center text-sm">
-          {item?.id === selectedUser && isVerifying ? (
+          {item?.id === selectedUser &&
+          updatingProfile === StatusEnum.VERIFYING ? (
             <div className="text-center flex flex-row justify-center items-center">
               <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin " />
-              {item?.verified ? "Unverifying..." : "Verifying..."}
+              {item?.athleteProfile?.verified
+                ? "Unverifying..."
+                : "Verifying..."}
             </div>
           ) : (
             <Badge
               size="xs"
               className="cursor-pointer px-[8px] text-sm"
-              color={item?.verified ? "sky" : "rose"}
+              color={item?.athleteProfile?.verified ? "sky" : "rose"}
               icon={() => {
-                return item.verified ? (
+                return item?.athleteProfile?.verified ? (
                   <Icons.badgeCheck className="h-4 w-4 mr-1" color="sky" />
                 ) : (
                   <Icons.badgeAlert className="h-4 w-4 mr-1" color="rose" />
@@ -531,12 +565,13 @@ const Athletes: FC<AthletesProps> = ({}) => {
               }}
               datatype="moderateDecrease"
             >
-              {item?.verified ? "Verified" : "Not Verified"}
+              {item?.athleteProfile?.verified ? "Verified" : "Not Verified"}
             </Badge>
           )}
         </TableCell>
         <TableCell className="text-center text-sm">
-          {item?.id === selectedUser && isFeaturing ? (
+          {item?.id === selectedUser &&
+          updatingProfile === StatusEnum.FEATURING ? (
             <div className="text-center flex flex-row justify-center items-center">
               <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin" />
               {"Loading..."}
@@ -545,20 +580,29 @@ const Athletes: FC<AthletesProps> = ({}) => {
             <Badge
               size="xs"
               className="cursor-pointer px-[8px] text-sm"
-              color={item?.featured ? "yellow" : "rose"}
+              color={item?.athleteProfile?.featured ? "yellow" : "rose"}
               icon={() => {
                 return <StarIcon className="h-4 w-4 mr-1" />;
               }}
               datatype="moderateDecrease"
             >
-              {item?.featured ? "Featured" : "Not Featured"}
+              {item?.athleteProfile?.featured ? "Featured" : "Not Featured"}
             </Badge>
           )}
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
+            {formatDate(new Date(item?.createdAt), "MMMM dd yyyy")}
+          </div>
+        </TableCell>
+        <TableCell className="text-center cursor-pointer text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
             <MenubarCard
-              trigger={<Icons.moreHorizontal className="cursor-pointer" />}
+              trigger={
+                <Button size="icon" variant="outline">
+                  <MoreHorizontal className="cursor-pointer" />
+                </Button>
+              }
               items={athleteItems}
             />
           </div>
@@ -604,11 +648,11 @@ const Athletes: FC<AthletesProps> = ({}) => {
       <UniversalTable
         title="Athlete List"
         headerItems={headerItems}
-        items={data?.athleteProfiles as any[]}
+        items={athleteData?.users as any[]}
         loading={loading}
         renderItems={renderItems}
       />
-      {loading || !data?.athleteProfiles?.length ? null : (
+      {loading || !athleteData?.users?.length ? null : (
         <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
       )}
     </main>
