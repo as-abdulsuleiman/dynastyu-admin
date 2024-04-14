@@ -16,9 +16,10 @@ import { FC, useEffect } from "react";
 interface indexProps {
   whereClause: SchoolWhereInput;
   title: string;
+  path: string;
 }
 
-const SchoolStatCard: FC<indexProps> = ({ whereClause, title }) => {
+const SchoolStatCard: FC<indexProps> = ({ whereClause, title, path }) => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -49,8 +50,8 @@ const SchoolStatCard: FC<indexProps> = ({ whereClause, title }) => {
       loading={loading}
       categoryValues={[schoolCount.length || 0]}
       categories={[activeSchool]}
-      onClick={() => router.push("/schools")}
-      showIcon={pathname === "/schools"}
+      onClick={() => router.push("/schools/college")}
+      showIcon={pathname === path}
       icon={
         <Icons.school className="h-4 w-4 stroke-tremor-content-teal dark:stroke-dark-tremor-content-teal" />
       }

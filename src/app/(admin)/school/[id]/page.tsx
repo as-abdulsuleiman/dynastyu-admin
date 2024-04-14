@@ -135,7 +135,7 @@ const Page: FC<PageProps> = ({ params }) => {
 
   const handleAddCoach = async (selectedCoach: any) => {
     try {
-      await updateSchool({
+      const res = await updateSchool({
         variables: {
           where: { id: params?.id },
           data: {
@@ -145,11 +145,23 @@ const Page: FC<PageProps> = ({ params }) => {
           },
         },
       });
-      refetchSchoolCoach();
-      toast({
-        title: "Coach successfully added.",
-        variant: "successfull",
-      });
+      if (res?.data?.updateOneSchool) {
+        setPromptStatus(null);
+        setSelectedCoach({});
+        await refetchSchoolCoach({});
+        await refetchCoaches({
+          where: {
+            userId: {
+              notIn: coachId,
+            },
+          },
+        });
+        toast({
+          title: "Coach successfully added.",
+          description: `@${selectedCoach?.value} has been successfully added to ${data?.school?.name}`,
+          variant: "successfull",
+        });
+      }
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -188,11 +200,20 @@ const Page: FC<PageProps> = ({ params }) => {
           },
         },
       });
-      if (response.data?.updateOneSchool) {
-        refetchSchoolCoach();
+      if (response?.data?.updateOneSchool) {
+        setPromptStatus(null);
+        setSelectedCoach({});
+        await refetchSchoolCoach({});
+        await refetchCoaches({
+          where: {
+            userId: {
+              notIn: coachId,
+            },
+          },
+        });
         toast({
           title: "Coach successfully removed.",
-          description: `@${selectedCoach?.user?.username} has been removed from this school.`,
+          description: `@${selectedCoach?.user?.username} has been removed from ${data?.school?.name} .`,
           variant: "successfull",
         });
       }
@@ -247,6 +268,16 @@ const Page: FC<PageProps> = ({ params }) => {
     );
   };
 
+  let schoolLoaction;
+  if (data?.school) {
+    if (data?.school?.city) {
+      schoolLoaction = data?.school?.city;
+    }
+    if (data?.school?.state) {
+      schoolLoaction = `${schoolLoaction}, ${data?.school?.state}`;
+    }
+  }
+
   return (
     <main className="w-full h-full relative">
       <Button
@@ -267,13 +298,20 @@ const Page: FC<PageProps> = ({ params }) => {
             <div className="ml-0">
               <div className="flex flex-row items-center">
                 <Title>{data?.school?.name}</Title>
-                <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
               </div>
               <Text>
-                {data?.school?.schoolType?.name} {""}{" "}
-                {data?.school?.address ? "at" : ""}
-                {""}
-                {data?.school?.address}
+                <strong className="font-TTHovesRegular">Address:</strong>
+                <span className="ml-2">{data?.school?.address || "N/A"}</span>
+              </Text>
+              <Text>
+                <strong className="font-TTHovesRegular">Location:</strong>
+                <span className="ml-2">{schoolLoaction || "N/A"}</span>
+              </Text>
+              <Text>
+                <strong className="font-TTHovesRegular">School Type:</strong>
+                <span className="ml-2">
+                  {data?.school?.schoolType?.name || "N/A"}
+                </span>
               </Text>
             </div>
           </div>

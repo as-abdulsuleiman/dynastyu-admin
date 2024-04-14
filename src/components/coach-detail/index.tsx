@@ -101,18 +101,31 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     },
   });
 
-  const schoolDataOptions = useMemo(
-    () =>
-      schoolData?.schools?.map((school) => ({
-        label: `${school?.name}, ${school?.city}`,
-        value: school?.name,
-        id: school?.id,
-        logo: school?.logo,
-        city: school?.city,
-        state: school?.state,
-      })) || [],
-    [schoolData?.schools]
-  );
+  const schoolDataOptions = useMemo(() => {
+    return (
+      schoolData?.schools.map((school) => {
+        let schoolLoaction;
+        if (school) {
+          if (school?.city) {
+            schoolLoaction = school?.city;
+          }
+          if (school?.state) {
+            schoolLoaction = `${schoolLoaction}, ${school?.state}`;
+          }
+        }
+        return {
+          label: `${school?.name}${schoolLoaction ? "," : ""} ${
+            schoolLoaction || ""
+          }`,
+          value: school?.name,
+          id: school?.id,
+          logo: school?.logo,
+          city: school?.city,
+          state: school?.state,
+        };
+      }) || []
+    );
+  }, [schoolData?.schools]);
 
   const handleDeleteCoach = async (item: any) => {
     setUpdatingProfile(StatusEnum.DELETING);
@@ -249,7 +262,8 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       });
       refetch();
       toast({
-        title: "Coach successfully added.",
+        title: "School successfully added.",
+        description: `@${coachData?.username} has successfully been added ${school?.value}`,
         variant: "successfull",
       });
     } catch (error) {
@@ -452,6 +466,15 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   };
 
   const CustomSchoolItems = ({ item, id }: { item: any; id: number }) => {
+    let schoolLoaction;
+    if (item) {
+      if (item?.city) {
+        schoolLoaction = item?.city;
+      }
+      if (item?.state) {
+        schoolLoaction = `${schoolLoaction}, ${item?.state}`;
+      }
+    }
     return (
       <CommandItem
         className="capitalize cursor-pointer"
@@ -462,24 +485,19 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
           setOpenSchool(false);
         }}
       >
-        <>
-          <div className="flex items-center">
-            <UserAvatar
-              fallbackClassName="h-[55px] w-[55px]"
-              className="h-[55px] w-[55px] shadow mr-4 "
-              fallbackType="name"
-              avatar={item?.avatar as string}
-              fallback={`${item?.label?.charAt(0)} `}
-            />
-            <div>
-              <div className="text-sm mb-0.5">{item?.label}</div>
-              <div className="text-sm text-primary">
-                {item?.city ? `${item?.city},` : ""} {""}
-                {item?.state}
-              </div>
-            </div>
+        <div className="flex items-center">
+          <UserAvatar
+            fallbackClassName="h-[55px] w-[55px]"
+            className="h-[55px] w-[55px] shadow mr-4 "
+            fallbackType="name"
+            avatar={item?.avatar as string}
+            fallback={`${item?.label?.charAt(0)} `}
+          />
+          <div>
+            <div className="text-sm mb-0.5">{item?.label}</div>
+            <div className="text-sm text-primary">{schoolLoaction || ""}</div>
           </div>
-        </>
+        </div>
         <CheckIcon
           className={cn(
             "ml-auto h-4 w-4",
@@ -537,9 +555,9 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
           valueKey="value"
           displayKey="label"
           IdKey="value"
-          label="Add Coach"
-          id="school-coach"
-          placeholder={"Select Coach"}
+          label="Add School"
+          id="school-coach-add"
+          placeholder={"Select School"}
           isOpen={openSchool}
           scrollAreaClass="h-72"
           hasSearch
@@ -560,7 +578,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
               variant="default"
               onClick={() => setPromptStatus(PromptStatusEnum.ADDING)}
             >
-              Add Coach
+              Add School
             </Button>
           </div>
         )}

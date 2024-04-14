@@ -347,6 +347,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
       <Separator className="my-6" />
       <Grid numItemsMd={2} numItemsLg={3} className="mt-6 gap-6">
         <SchoolStatCard
+          path="/schools/high-school"
           whereClause={{
             schoolType: {
               is: {

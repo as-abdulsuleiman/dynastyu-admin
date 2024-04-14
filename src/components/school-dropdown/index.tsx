@@ -79,18 +79,44 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
     },
   });
 
-  const schools = useMemo(
-    () =>
-      schooldata?.schools?.map((school) => ({
-        label: `${school?.name}, ${school?.city}`,
-        value: school?.name,
-        id: school?.id,
-        logo: school?.logo,
-        city: school?.city,
-        state: school?.state,
-      })) || [],
-    [schooldata?.schools]
-  );
+  const schools = useMemo(() => {
+    return (
+      schooldata?.schools.map((school) => {
+        let schoolLoaction;
+        if (school) {
+          if (school?.city) {
+            schoolLoaction = school?.city;
+          }
+          if (school?.state) {
+            schoolLoaction = `${schoolLoaction}, ${school?.state}`;
+          }
+        }
+        return {
+          label: `${school?.name}${schoolLoaction ? "," : ""} ${
+            schoolLoaction || ""
+          }`,
+          value: school?.name,
+          id: school?.id,
+          logo: school?.logo,
+          city: school?.city,
+          state: school?.state,
+        };
+      }) || []
+    );
+  }, [schooldata?.schools]);
+
+  // const schools = useMemo(
+  //   () =>
+  //     schooldata?.schools?.map((school) => ({
+  //       label: `${school?.name}, ${school?.city}`,
+  //       value: school?.name,
+  //       id: school?.id,
+  //       logo: school?.logo,
+  //       city: school?.city,
+  //       state: school?.state,
+  //     })) || [],
+  //   [schooldata?.schools]
+  // );
 
   useEffect(() => {
     refetch({
