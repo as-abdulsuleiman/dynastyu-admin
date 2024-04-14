@@ -3,13 +3,13 @@
 import { FC } from "react";
 import CoachDetail from "@/components/coach-detail";
 
-interface pageProps {
+interface PageProps {
   params: {
     id: number;
   };
 }
 
-const Page: FC<pageProps> = ({ params }) => {
+const Page: FC<PageProps> = ({ params }) => {
   return <CoachDetail params={params} />;
 };
 

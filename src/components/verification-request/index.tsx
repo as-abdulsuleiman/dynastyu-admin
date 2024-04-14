@@ -23,6 +23,7 @@ import { useRootStore } from "@/mobx";
 import MediaCard from "../media-card";
 import { Separator } from "../ui/separator";
 import MoreHorizontal from "../Icons/more-horizontal";
+import VerifiedIcon from "@/components/Icons/verified";
 
 interface VerificationRequestProps {
   params: {
@@ -81,12 +82,9 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
     {
       name: `View Profile`,
       onClick: () =>
-        router.push(
-          `/athlete/${data?.skillVerificationRequest?.skill?.athleteId}`,
-          {
-            scroll: true,
-          }
-        ),
+        router.push(`/athlete/${data?.skillVerificationRequest?.userId}`, {
+          scroll: true,
+        }),
     },
   ];
 
@@ -198,7 +196,7 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
             </div>
           ) : (
             <div className="flex flex-row items-center justify-center mt-1">
-              <div className="text-xl relative mr-1">
+              <div className="text-sm relative mr-1 font-TTHovesRegular">
                 @{data?.skillVerificationRequest?.user?.username}
               </div>
               {data?.skillVerificationRequest?.verified ? (
@@ -209,20 +207,11 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
                   )}
                   trigger={
                     <div className="cursor-pointer">
-                      <Icons.badgeCheck className="h-5 w-5" color="teal" />
+                      <VerifiedIcon className="cursor-pointer" />
                     </div>
                   }
                 />
-              ) : (
-                <HoverCard
-                  content={<Text>{"Not Verified"}</Text>}
-                  trigger={
-                    <div className="cursor-pointer">
-                      <Icons.badgeAlert className="h-5 w-5" color="teal" />
-                    </div>
-                  }
-                />
-              )}
+              ) : null}
             </div>
           )}
           <div className="ml-auto absolute flex flex-row items-center right-0 top-0">

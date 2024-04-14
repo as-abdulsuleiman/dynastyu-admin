@@ -38,8 +38,8 @@ const ModalCard: FC<ModalProps> = ({
     >
       {trigger ? <DialogTrigger asChild>{trigger}</DialogTrigger> : null}
       <DialogContent
-        onOpenAutoFocus={(event) => event.preventDefault()}
-        onInteractOutside={(event) => event.preventDefault()}
+        onOpenAutoFocus={(event) => event?.preventDefault()}
+        onInteractOutside={(event) => event?.preventDefault()}
         className={cn(
           "w-[95%] max-w-2xl h-fit container md:max-w-lg m-auto rounded-2xl z-50 bg-background bg-gradient-to-bl from-primary-black via-primary-black/5 to-primary-black px-[16px] md:px-[2rem] py-[2rem]",
           contentClass

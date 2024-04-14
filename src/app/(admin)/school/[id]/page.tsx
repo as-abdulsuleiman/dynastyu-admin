@@ -8,10 +8,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   QueryMode,
   SortOrder,
-  UserWhereInput,
   useGetCoachesQuery,
   useGetSchoolQuery,
-  useGetUsersQuery,
   useUpdateSchoolMutation,
 } from "@/services/graphql";
 import { useRouter } from "next/navigation";
@@ -19,7 +17,6 @@ import { Title, Text, Grid } from "@tremor/react";
 import { Icons } from "@/components/Icons";
 import AthletesInterested from "@/components/athletes-interested";
 import SchoolCard from "@/components/school-card";
-// import SchoolCoaches from "@/components/school-coaches";
 import { observer } from "mobx-react-lite";
 import { Separator } from "@/components/ui/separator";
 import ComboboxCard from "@/components/combobox-card";
@@ -164,6 +161,7 @@ const Page: FC<PageProps> = ({ params }) => {
     } finally {
       setPromptStatus(null);
       setSelectedCoach({});
+      setSearchValue("");
     }
   };
 
@@ -226,6 +224,7 @@ const Page: FC<PageProps> = ({ params }) => {
         <>
           <div className="flex items-center">
             <UserAvatar
+              fallbackClassName="h-[55px] w-[55px]"
               className="h-[55px] w-[55px] shadow mr-4 "
               fallbackType="name"
               avatar={item?.avatar as string}
@@ -271,7 +270,10 @@ const Page: FC<PageProps> = ({ params }) => {
                 <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
               </div>
               <Text>
-                {data?.school?.schoolType?.name} at {data?.school?.address}
+                {data?.school?.schoolType?.name} {""}{" "}
+                {data?.school?.address ? "at" : ""}
+                {""}
+                {data?.school?.address}
               </Text>
             </div>
           </div>

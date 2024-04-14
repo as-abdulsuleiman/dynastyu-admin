@@ -21,17 +21,14 @@ import { formatDate } from "@/lib/utils";
 import TranscriptCard from "@/components/transcript-card";
 import HoverCard from "@/components/hover-card";
 import InterestedSchoolCard from "@/components/interested-school-card";
-import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
 import { useRootStore } from "@/mobx";
 import RecruitedSchoolCard from "@/components/recruited-school-card";
-import AthleteSkillCard from "@/components/athlete-skill-card";
 import MenubarCard from "@/components/menubar";
 import TwitterIcon from "@/components/Icons/twitter";
 import InstagramIcon from "@/components/Icons/instagram";
 import TiktokIcon from "@/components/Icons/tiktok";
 import ModalCard from "../modal";
-import { AspectRatio } from "../ui/aspect-ratio";
 import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
 import VerifiedIcon from "@/components/Icons/verified";
@@ -41,6 +38,8 @@ import StatusOnlineIcon from "@heroicons/react/outline/StatusOnlineIcon";
 import StatusOfflineIcon from "@heroicons/react/outline/StatusOfflineIcon";
 import StarIcon from "../Icons/starIcon";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
+import ProfileImage from "../profile-image";
+import Flag from "../flag";
 interface AthleteDetailProps {
   params: {
     id: number;
@@ -53,7 +52,6 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
   } = useRootStore();
   const router = useRouter();
   const { toast } = useToast();
-  const [loadingImage, setLoadingImage] = useState(true);
   const [viewPlayerCardUrl, setViewPlayerCardUrl] = useState(false);
   const [viewAnalytics, setViewAnalytics] = useState(false);
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
@@ -398,13 +396,6 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
       onClick: () => handleFeaturedAthlete(athleteData),
     },
     {
-      name: "View School",
-      onClick: () =>
-        router.push(`/school/${athleteData?.athleteProfile?.schoolId}`, {
-          scroll: true,
-        }),
-    },
-    {
       name: "View Analytics",
       onClick: () => setViewAnalytics(true),
     },
@@ -413,10 +404,24 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     //   onClick: async () => await handleDeleteAthlete(data?.athleteProfile),
     // },
     {
-      name: "View Profile Picture",
-      onClick: () => setViewPlayerCardUrl(true),
+      name: "View Profile",
+      onClick: () => {
+        if (athleteData?.avatar) {
+          setViewPlayerCardUrl(true);
+        }
+      },
     },
   ];
+
+  if (athleteData?.athleteProfile?.schoolId) {
+    dropdownItems.push({
+      name: "View School",
+      onClick: () =>
+        router.push(`/school/${athleteData?.athleteProfile?.schoolId}`, {
+          scroll: true,
+        }),
+    });
+  }
 
   const renderBadges = () => {
     return (
@@ -540,13 +545,14 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               : "N/A"}
           </Text>
           <Text>
-            {athleteData?.athleteProfile?.position?.name} at{" "}
+            {athleteData?.athleteProfile?.position?.name
+              ? `${athleteData?.athleteProfile?.position?.name} at`
+              : ""}{" "}
             {athleteData?.athleteProfile?.school?.name}
           </Text>
         </div>
       )}
       <Separator className="my-6" />
-
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
         <InterestedSchoolCard
           loading={loading}
@@ -583,7 +589,11 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               <ModalCard
                 isModal={true}
                 isOpen={viewPlayerCardUrl}
-                onOpenChange={() => setViewPlayerCardUrl(!viewPlayerCardUrl)}
+                onOpenChange={() => {
+                  if (athleteData?.avatar) {
+                    setViewPlayerCardUrl(!viewPlayerCardUrl);
+                  }
+                }}
                 trigger={
                   <UserAvatar
                     className="h-[120px] w-[120px] shadow cursor-pointer"
@@ -600,23 +610,10 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                   />
                 }
               >
-                <AspectRatio
-                  ratio={16 / 16}
-                  className="cursor-pointer bg-muted"
-                >
-                  <Image
-                    onLoadingComplete={() => setLoadingImage(false)}
-                    priority
-                    fill
-                    sizes="100vw"
-                    quality={80}
-                    src={athleteData?.avatar as string}
-                    alt="profile_picture"
-                    className={`rounded-2xl object-cover relative ${
-                      loadingImage ? "blur-sm " : "blur-none"
-                    }`}
-                  />
-                </AspectRatio>
+                <ProfileImage
+                  imageUrl={athleteData?.avatar as string}
+                  alt={athleteData?.username as string}
+                />
               </ModalCard>
               {loading ? (
                 <div className="flex flex-row items-center">
@@ -823,15 +820,9 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               <span className="flex flex-row items-center">
                 <>{athleteData?.athleteProfile?.country?.name}</>
                 {athleteData?.athleteProfile?.country?.flag ? (
-                  <Image
-                    alt="country_flag"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
-                    quality={100}
-                    priority
-                    width={30}
-                    height={30}
-                    src={athleteData?.athleteProfile?.country?.flag}
-                    className="h-[30px] w-[30px] rounded-full ml-auto object-cover"
+                  <Flag
+                    flag={athleteData?.athleteProfile?.country?.flag as string}
+                    alt={athleteData?.athleteProfile?.country?.name as string}
                   />
                 ) : null}
               </span>

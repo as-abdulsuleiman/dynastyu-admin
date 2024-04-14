@@ -26724,6 +26724,7 @@ export const UserCommonPartsFragmentDoc = gql`
     city
     state
     verified
+    schoolId
     _count {
       verifiedAthletes
     }

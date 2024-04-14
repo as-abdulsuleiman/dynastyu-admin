@@ -278,19 +278,18 @@ const Users: FC<UsersProps> = ({}) => {
       item?.accountType?.role?.title?.toLowerCase() === AccountType.ATHLETE
     ) {
       userType = "athlete";
-      userId = item?.athleteProfile?.id;
+      userId = item?.id;
     } else if (
       item?.accountType?.role?.title?.toLowerCase() === AccountType.COACH
     ) {
       userType = "coach";
-      userId = item?.coachProfile?.id;
+      userId = item?.id;
     }
 
     const userItems = [
       {
         name: "View Details",
-        onClick: () =>
-          router.push(`/${userType}/${Number(userId)}`, { scroll: true }),
+        onClick: () => router.push(`/${userType}/${userId}`, { scroll: true }),
       },
       {
         name: `${item?.isActive ? "Deactivate" : "Activate"} User`,
@@ -307,7 +306,7 @@ const Users: FC<UsersProps> = ({}) => {
           <div
             className="flex flex-row items-center justify-start"
             onClick={() =>
-              router.push(`/${userType}/${Number(userId)}`, { scroll: true })
+              router.push(`/${userType}/${userId}`, { scroll: true })
             }
           >
             <UserAvatar

@@ -91,7 +91,6 @@ const Dashboard: FC<DashboardProps> = () => {
         createdAt: SortOrder.Desc,
       },
     },
-    // pollInterval: 30 * 1000,
   });
 
   const whereClause: UserWhereInput = useMemo(() => {
@@ -220,7 +219,7 @@ const Dashboard: FC<DashboardProps> = () => {
           variant: "default",
         });
         const response = await getUsers({});
-        setUsers(response.data?.users as any);
+        setUsers(response?.data?.users as any);
         refetch();
       }
     } catch (error) {
@@ -283,19 +282,18 @@ const Dashboard: FC<DashboardProps> = () => {
       item?.accountType?.role?.title?.toLowerCase() === AccountType.ATHLETE
     ) {
       userType = "athlete";
-      userId = item?.athleteProfile?.id;
+      userId = item?.id;
     } else if (
       item?.accountType?.role?.title?.toLowerCase() === AccountType.COACH
     ) {
       userType = "coach";
-      userId = item?.coachProfile?.id;
+      userId = item?.id;
     }
 
     const userItems = [
       {
         name: "View Details",
-        onClick: () =>
-          router.push(`/${userType}/${Number(userId)}`, { scroll: true }),
+        onClick: () => router.push(`/${userType}/${userId}`, { scroll: true }),
       },
       {
         name: `${item?.isActive ? "Deactivate" : "Activate"} Profile`,
