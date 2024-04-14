@@ -19,14 +19,13 @@ import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/utils";
 import MenubarCard from "../menubar";
 import ModalCard from "../modal";
-import { AspectRatio } from "../ui/aspect-ratio";
-import Image from "next/image";
 import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
 import MoreHorizontal from "../Icons/more-horizontal";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 import StatusOnlineIcon from "@heroicons/react/outline/StatusOnlineIcon";
 import StatusOfflineIcon from "@heroicons/react/outline/StatusOfflineIcon";
+import ProfileImage from "../profile-image";
 
 interface FanDetailProps {
   params: {
@@ -37,7 +36,6 @@ interface FanDetailProps {
 const FanDetail: FC<FanDetailProps> = ({ params }) => {
   const router = useRouter();
   const { toast } = useToast();
-  const [showimage, setShowImage] = useState(true);
   const [viewPlayerCardUrl, setViewPlayerCardUrl] = useState(false);
   const [viewAnalytics, setViewAnalytics] = useState(false);
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
@@ -131,8 +129,12 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
       onClick: async () => await handleActivateProfile(fanData?.user),
     },
     {
-      name: "View Profile Picture",
-      onClick: () => setViewPlayerCardUrl(true),
+      name: "View Profile",
+      onClick: () => {
+        if (fanData?.user?.avatar) {
+          setViewPlayerCardUrl(!viewPlayerCardUrl);
+        }
+      },
     },
     {
       name: "View Analytics",
@@ -255,7 +257,6 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
             <Title>
               {fanData?.user?.firstname} {fanData?.user?.surname}
             </Title>
-            <Icons.circleUserRound className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
           </div>
           <Text>@{fanData?.user?.username}</Text>
         </div>
@@ -267,7 +268,11 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
             <ModalCard
               isModal={true}
               isOpen={viewPlayerCardUrl}
-              onOpenChange={() => setViewPlayerCardUrl(!viewPlayerCardUrl)}
+              onOpenChange={() => {
+                if (fanData?.user?.avatar) {
+                  setViewPlayerCardUrl(!viewPlayerCardUrl);
+                }
+              }}
               trigger={
                 <UserAvatar
                   className="h-[120px] w-[120px] shadow cursor-pointer"
@@ -284,20 +289,10 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
                 />
               }
             >
-              <AspectRatio ratio={16 / 16} className="cursor-pointer">
-                <Image
-                  onLoadingComplete={() => setShowImage(false)}
-                  priority
-                  fill
-                  sizes="100vw"
-                  quality={80}
-                  src={fanData?.user?.avatar as string}
-                  alt="profile_picture"
-                  className={`rounded-2xl object-cover border-[#717070] border-[0.1px] relative ${
-                    showimage ? "blur-sm " : "blur-none"
-                  }`}
-                />
-              </AspectRatio>
+              <ProfileImage
+                imageUrl={fanData?.user?.avatar as string}
+                alt={fanData?.user?.username as string}
+              />
             </ModalCard>
             {loading ? (
               <div className="flex flex-row items-center">

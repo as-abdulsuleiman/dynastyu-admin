@@ -47,7 +47,13 @@ type InterestedSchool = {
   __typename: "InterestedSchools";
 };
 
-const renderContent = (val: InterestedSchool, router: AppRouterInstance) => {
+const RenderContent = ({
+  val,
+  router,
+}: {
+  val: InterestedSchool;
+  router: AppRouterInstance;
+}) => {
   return (
     <div className="flex flex-col">
       <div className="flex flex-row items-start md:items-center mb-1">
@@ -72,7 +78,7 @@ const renderContent = (val: InterestedSchool, router: AppRouterInstance) => {
         variant="outline"
         className="ml-auto"
         onClick={() =>
-          router.push(`/school/${Number(val?.school?.id)}`, { scroll: true })
+          router.push(`/school/${val?.school?.id}`, { scroll: true })
         }
       >
         View
@@ -120,7 +126,7 @@ const InterestedSchoolCard: FC<InterestedSchoolCardProps> = ({
                 <AccordionItem value={`${"item"}-${index + 1}`} key={index}>
                   <AccordionTrigger>{val?.school?.name}</AccordionTrigger>
                   <AccordionContent>
-                    {renderContent(val, router)}
+                    <RenderContent val={val} router={router} />
                   </AccordionContent>
                 </AccordionItem>
               );

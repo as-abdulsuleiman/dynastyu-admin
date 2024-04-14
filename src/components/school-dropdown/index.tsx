@@ -75,7 +75,7 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
       where: {
         ...whereClause,
       },
-      take: 30,
+      take: 20,
     },
   });
 
@@ -155,7 +155,7 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
                     {schools?.map((school) => {
                       return (
                         <CommandItem
-                          className="cusor-pointer"
+                          className="cursor-pointer"
                           key={school?.id}
                           value={school?.label}
                           onSelect={(currentValue) => {
@@ -180,7 +180,7 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
                               <div className="ml-3 mb-1">
                                 <div>{school?.label}</div>
                                 <div className="text-sm text-primary">
-                                  {school?.city ? `${school?.city},` : ""}
+                                  {school?.city ? `${school?.city},` : ""} {""}
                                   {school?.state}
                                 </div>
                               </div>

@@ -56,6 +56,7 @@ const renderContent = (val: AthletesInterested, router: AppRouterInstance) => {
     <div className="flex flex-flex items-center">
       <div className="flex flex-flex items-center">
         <UserAvatar
+          fallbackClassName="h-[40px] w-[40px]"
           className="h-[40px] w-[40px] shadow"
           fallbackType="name"
           avatar={val?.User?.avatar as string}
@@ -75,9 +76,7 @@ const renderContent = (val: AthletesInterested, router: AppRouterInstance) => {
       <Button
         variant="outline"
         className="ml-auto"
-        onClick={() =>
-          router.push(`/athlete/${Number(val?.athleteId)}`, { scroll: true })
-        }
+        onClick={() => router.push(`/athlete/${val?.userId}`, { scroll: true })}
       >
         View
       </Button>

@@ -280,6 +280,16 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
     }
   };
 
+  const coachSchoolId = useMemo(() => {
+    if (coachData?.coachProfile?.schoolId) {
+      return {
+        id: { equals: coachData?.coachProfile?.schoolId },
+      };
+    } else {
+      return {};
+    }
+  }, [coachData?.coachProfile]);
+
   return (
     <main className="w-full h-full">
       <Button
@@ -437,9 +447,13 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               label="High School"
               error={errors.school?.id?.message}
               whereClause={{
-                id: { equals: coachData?.coachProfile?.schoolId },
-                schoolTypeId: {
-                  equals: 1,
+                ...coachSchoolId,
+                schoolType: {
+                  is: {
+                    name: {
+                      equals: "High School",
+                    },
+                  },
                 },
               }}
             />

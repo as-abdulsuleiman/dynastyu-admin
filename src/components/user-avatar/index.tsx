@@ -8,6 +8,7 @@ import Image from "next/image";
 import { AvatarProps } from "@radix-ui/react-avatar";
 import { observer } from "mobx-react-lite";
 import ReactPlayer from "react-player";
+import { cn } from "@/lib/utils";
 
 interface UserAvatarProps extends AvatarProps {
   avatar?: string;
@@ -64,7 +65,10 @@ const UserAvatar: FC<UserAvatarProps> = ({
   const renderEmptyMedia = () => {
     return (
       <AvatarFallback
-        className={`capitalize text-xs h-[79px] w-[79px] ${fallbackClassName}`}
+        className={cn(
+          "capitalize text-xs h-[79px] w-[79px]",
+          fallbackClassName
+        )}
       >
         {fallbackType === "icon" ? (
           <div className="flex h-full w-full flex-row items-center justify-center m-auto absolute inset-0">
@@ -84,6 +88,7 @@ const UserAvatar: FC<UserAvatarProps> = ({
             onLoad={() => setLoading(false)}
             width={width || 110}
             height={height || 110}
+            quality={100}
             src={url}
             alt="profile"
             className={`${loading ? "blur-sm " : "blur-none"} object-cover `}

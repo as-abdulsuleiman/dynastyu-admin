@@ -399,7 +399,7 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
       {
         name: "View Details",
         onClick: () => {
-          router.push(`/coach/${Number(item?.id)}`, { scroll: true });
+          router.push(`/coach/${item?.userId}`, { scroll: true });
         },
       },
       {

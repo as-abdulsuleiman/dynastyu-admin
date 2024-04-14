@@ -141,6 +141,7 @@ fragment UserCommonParts on User {
     city
     state
     verified
+    schoolId
     _count{
       verifiedAthletes
     }

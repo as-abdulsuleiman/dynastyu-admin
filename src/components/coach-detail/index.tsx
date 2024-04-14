@@ -2,12 +2,13 @@
 
 "use client";
 
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  QueryMode,
   useDeleteCoachMutation,
   useDeleteUserMutation,
-  useGetCoachQuery,
+  useGetSchoolsQuery,
   useGetUserQuery,
   useUpdateCoachMutation,
 } from "@/services/graphql";
@@ -18,18 +19,27 @@ import UsersAnalytics from "@/components/analytics/users";
 import { Icons } from "@/components/Icons";
 import UserAvatar from "@/components/user-avatar";
 import TooltipCard from "@/components/tooltip-card";
-import Image from "next/image";
 import { useToast } from "@/hooks/use-toast";
 import MenubarCard from "@/components/menubar";
 import ModalCard from "../modal";
-import { AspectRatio } from "../ui/aspect-ratio";
 import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
 import MoreHorizontal from "../Icons/more-horizontal";
 import VerifiedIcon from "@/components/Icons/verified";
-import { StatusEnum } from "@/lib/enums/updating-profile.enum";
+import {
+  PromptStatusEnum,
+  StatusEnum,
+} from "@/lib/enums/updating-profile.enum";
 import StatusOnlineIcon from "@heroicons/react/outline/StatusOnlineIcon";
 import StatusOfflineIcon from "@heroicons/react/outline/StatusOfflineIcon";
+import ProfileImage from "../profile-image";
+import ComboboxCard from "../combobox-card";
+import { useDebouncedValue } from "@mantine/hooks";
+import { CheckIcon } from "lucide-react";
+import { CommandItem } from "../ui/command";
+import { cn } from "@/lib/utils";
+import Flag from "../flag";
+import PromptAlert from "../prompt-alert";
 
 interface CoachDetailProps {
   params: {
@@ -40,10 +50,16 @@ interface CoachDetailProps {
 const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   const router = useRouter();
   const { toast } = useToast();
-  const [showimage, setShowImage] = useState(true);
   const [viewPlayerCardUrl, setViewPlayerCardUrl] = useState(false);
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
   const [viewAnalytics, setViewAnalytics] = useState(false);
+  const [openSchool, setOpenSchool] = useState<boolean>(false);
+  const [searchValue, setSearchValue] = useState<string>("");
+  const [selectedSchool, setSelectedSchool] = useState<any | number>({});
+  const [debounced] = useDebouncedValue(searchValue, 300);
+  const [promptStatus, setPromptStatus] = useState<PromptStatusEnum | null>();
+  const [IsAddingSchool, setIsAddingSchool] = useState<boolean>(false);
+
   const [deleteCoach] = useDeleteCoachMutation();
   const [updateCoach] = useUpdateCoachMutation();
   const [deleteUser] = useDeleteUserMutation();
@@ -57,6 +73,46 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   });
 
   const coachData = data?.user;
+
+  const coachSchoolId = useMemo(() => {
+    if (coachData?.coachProfile?.schoolId) {
+      return {
+        id: {
+          not: {
+            equals: coachData?.coachProfile?.schoolId,
+          },
+        },
+      };
+    } else {
+      return {};
+    }
+  }, [coachData?.coachProfile]);
+
+  const { data: schoolData, loading: loadingSchool } = useGetSchoolsQuery({
+    variables: {
+      where: {
+        ...coachSchoolId,
+        OR: [
+          { name: { contains: debounced, mode: QueryMode.Insensitive } },
+          { email: { contains: debounced, mode: QueryMode.Insensitive } },
+        ],
+      },
+      take: 10,
+    },
+  });
+
+  const schoolDataOptions = useMemo(
+    () =>
+      schoolData?.schools?.map((school) => ({
+        label: `${school?.name}, ${school?.city}`,
+        value: school?.name,
+        id: school?.id,
+        logo: school?.logo,
+        city: school?.city,
+        state: school?.state,
+      })) || [],
+    [schoolData?.schools]
+  );
 
   const handleDeleteCoach = async (item: any) => {
     setUpdatingProfile(StatusEnum.DELETING);
@@ -176,6 +232,42 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     });
   };
 
+  const handleAddCoachToSchool = async (school: any) => {
+    setIsAddingSchool(true);
+    try {
+      await updateCoach({
+        variables: {
+          where: { id: coachData?.coachProfile?.id },
+          data: {
+            school: {
+              connect: {
+                id: school?.id,
+              },
+            },
+          },
+        },
+      });
+      refetch();
+      toast({
+        title: "Coach successfully added.",
+        variant: "successfull",
+      });
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not successfully add coach. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    } finally {
+      setIsAddingSchool(false);
+      setPromptStatus(null);
+      setSelectedSchool({});
+      setSearchValue("");
+    }
+  };
+
   const dropdownItems = [
     {
       name: `Edit Profile`,
@@ -190,19 +282,16 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       onClick: async () => await handleVerifyCoach(coachData),
     },
     {
-      name: `View School`,
-      onClick: () =>
-        router.push(`/school/${coachData?.coachProfile?.schoolId}`, {
-          scroll: true,
-        }),
-    },
-    {
       name: `${coachData?.isActive ? "Deactivate" : "Activate"} Profile`,
       onClick: async () => await handleActivateCoach(coachData),
     },
     {
-      name: "View Profile Picture",
-      onClick: () => setViewPlayerCardUrl(true),
+      name: "View Profile",
+      onClick: () => {
+        if (coachData?.avatar) {
+          setViewPlayerCardUrl(true);
+        }
+      },
     },
     {
       name: "View Analytics",
@@ -213,6 +302,15 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     //   onClick: async () => await handleDeleteCoach(coachData),
     // },
   ];
+  if (coachData?.coachProfile?.schoolId) {
+    dropdownItems.push({
+      name: `View School`,
+      onClick: () =>
+        router.push(`/school/${coachData?.coachProfile?.schoolId}`, {
+          scroll: true,
+        }),
+    });
+  }
 
   const dataList: any = [
     {
@@ -353,6 +451,45 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     );
   };
 
+  const CustomSchoolItems = ({ item, id }: { item: any; id: number }) => {
+    return (
+      <CommandItem
+        className="capitalize cursor-pointer"
+        key={item?.id || id}
+        value={selectedSchool}
+        onSelect={() => {
+          setSelectedSchool({ value: item?.value, id: item?.id });
+          setOpenSchool(false);
+        }}
+      >
+        <>
+          <div className="flex items-center">
+            <UserAvatar
+              fallbackClassName="h-[55px] w-[55px]"
+              className="h-[55px] w-[55px] shadow mr-4 "
+              fallbackType="name"
+              avatar={item?.avatar as string}
+              fallback={`${item?.label?.charAt(0)} `}
+            />
+            <div>
+              <div className="text-sm mb-0.5">{item?.label}</div>
+              <div className="text-sm text-primary">
+                {item?.city ? `${item?.city},` : ""} {""}
+                {item?.state}
+              </div>
+            </div>
+          </div>
+        </>
+        <CheckIcon
+          className={cn(
+            "ml-auto h-4 w-4",
+            selectedSchool?.id === item?.id ? "opacity-100" : "opacity-0"
+          )}
+        />
+      </CommandItem>
+    );
+  };
+
   return (
     <main className="w-full h-full relative">
       <Button
@@ -375,11 +512,12 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                 <Title>
                   {coachData?.firstname} {coachData?.surname}
                 </Title>
-                <Icons.whistle className="h-4 w-4 ml-2 fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis" />
               </div>
+              <Text>@{coachData?.username}</Text>
               <Text>
-                {coachData?.coachProfile?.title} at{" "}
-                {coachData?.coachProfile?.school?.name}
+                {coachData?.coachProfile?.title}{" "}
+                {coachData?.coachProfile?.school?.name ? "at" : ""}
+                {""} {coachData?.coachProfile?.school?.name}
               </Text>
             </div>
             <div className="ml-auto hidden">
@@ -394,6 +532,39 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
         </div>
       )}
       <Separator className="my-6" />
+      <div className="mb-6 w-full  sm:w-1/2 ml-auto flex flex-col">
+        <ComboboxCard
+          valueKey="value"
+          displayKey="label"
+          IdKey="value"
+          label="Add Coach"
+          id="school-coach"
+          placeholder={"Select Coach"}
+          isOpen={openSchool}
+          scrollAreaClass="h-72"
+          hasSearch
+          shouldFilter={false}
+          searchValue={searchValue}
+          handleSearch={(search) => setSearchValue(search)}
+          loading={loadingSchool}
+          onClose={() => setOpenSchool(!openSchool)}
+          items={schoolDataOptions as any}
+          selectedValue={selectedSchool}
+          customRenderItems={CustomSchoolItems}
+        />
+        {Object?.keys(selectedSchool)?.length === 0 ? null : (
+          <div className="w-full flex mt-6 ">
+            <Button
+              size="sm"
+              className="ml-auto"
+              variant="default"
+              onClick={() => setPromptStatus(PromptStatusEnum.ADDING)}
+            >
+              Add Coach
+            </Button>
+          </div>
+        )}
+      </div>
       <Grid numItemsMd={1} numItemsLg={1} className="mt-6 gap-6">
         <Card>
           <CardContent className="p-6">
@@ -401,7 +572,11 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
               <ModalCard
                 isModal={true}
                 isOpen={viewPlayerCardUrl}
-                onOpenChange={() => setViewPlayerCardUrl(!viewPlayerCardUrl)}
+                onOpenChange={() => {
+                  if (coachData?.avatar) {
+                    setViewPlayerCardUrl(!viewPlayerCardUrl);
+                  }
+                }}
                 trigger={
                   <UserAvatar
                     className="h-[120px] w-[120px] shadow cursor-pointer"
@@ -418,22 +593,11 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                   />
                 }
               >
-                <AspectRatio ratio={16 / 16} className="cursor-pointer">
-                  <Image
-                    onLoadingComplete={() => setShowImage(false)}
-                    priority
-                    fill
-                    sizes="100vw"
-                    quality={80}
-                    src={coachData?.avatar as string}
-                    alt=""
-                    className={`rounded-2xl object-cover border-[#717070] border-[0.1px] relative ${
-                      showimage ? "blur-sm " : "blur-none"
-                    }`}
-                  />
-                </AspectRatio>
+                <ProfileImage
+                  imageUrl={coachData?.avatar as string}
+                  alt={coachData?.username as string}
+                />
               </ModalCard>
-
               {loading ? (
                 <div className="flex flex-row items-center">
                   <Skeleton className="w-[120px] h-[25px] mt-2 mr-1" />
@@ -536,15 +700,9 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
               <span className="flex flex-row items-center">
                 <>{coachData?.coachProfile?.country?.name}</>
                 {coachData?.coachProfile?.country?.flag ? (
-                  <Image
-                    alt="country_flag"
-                    width={30}
-                    height={30}
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
-                    quality={100}
-                    priority
-                    src={coachData?.coachProfile?.country?.flag}
-                    className="h-[30px] w-[30px] rounded-full ml-auto object-cover"
+                  <Flag
+                    flag={coachData?.coachProfile?.country?.flag as string}
+                    alt={coachData?.coachProfile?.country?.name as string}
                   />
                 ) : null}
               </span>
@@ -602,6 +760,16 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
           </div>
         </div>
       </ModalCard>
+      <PromptAlert
+        loading={IsAddingSchool}
+        content={`This action will add @${coachData?.username} to ${selectedSchool?.value}.`}
+        showPrompt={promptStatus === PromptStatusEnum.ADDING}
+        handleHidePrompt={() => {
+          setPromptStatus(null);
+          setSelectedSchool({});
+        }}
+        handleConfirmPrompt={() => handleAddCoachToSchool(selectedSchool)}
+      />
     </main>
   );
 };
