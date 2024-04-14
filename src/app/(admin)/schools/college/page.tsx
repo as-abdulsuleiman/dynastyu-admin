@@ -334,17 +334,13 @@ const Schools: FC<SchoolsProps> = ({}) => {
             <Title>Schools</Title>
             <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
           </div>
-          <Text>Schools Overview</Text>
+          <Text>School Overview</Text>
         </div>
-        {/* <div className="ml-auto justify-end">
-          <Button onClick={() => router.push("/schools/new")}>
-            Add New School
-          </Button>
-        </div> */}
       </div>
       <Separator className="my-6" />
       <Grid numItemsMd={2} numItemsLg={3} className="mt-6 gap-6">
         <SchoolStatCard
+          path="/schools/college"
           whereClause={{
             schoolType: {
               is: {
