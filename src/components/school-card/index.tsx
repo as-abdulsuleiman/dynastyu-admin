@@ -3,11 +3,10 @@
 "use client";
 
 import { FC, useState } from "react";
-import { Callout, Text } from "@tremor/react";
+import { Text } from "@tremor/react";
 import UserAvatar from "../user-avatar";
 import { Icons } from "../Icons";
 import { Skeleton } from "../ui/skeleton";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   useDeleteSchoolMutation,
@@ -23,6 +22,7 @@ import { BadgeDollarSign, Calendar } from "lucide-react";
 import PromptAlert from "../prompt-alert";
 import ModalCard from "@/components/modal";
 import UsersAnalytics from "@/components/analytics/users";
+import CalloutCard from "../callout";
 
 interface SchoolCardProps {
   loading?: boolean;
@@ -256,192 +256,157 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           </div>
         </div>
         <Separator className="my-6" />
-        <Callout
-          className="mt-4 min-h-[75px]"
+        <CalloutCard
+          color="teal"
+          type="string"
           title={school?.schoolType?.name || ("High School" as string)}
-          icon={() => {
-            return (
-              <Icons.graduationCap
+          className="mt-4 min-h-[75px]"
+          content={school?.name}
+          icon={() => (
+            <Icons.graduationCap
+              className="h-[20px] w-[20px] mr-2"
+              color="teal"
+            />
+          )}
+        />
+        <CalloutCard
+          color="teal"
+          type="string"
+          title="Address"
+          className="mt-4 min-h-[75px]"
+          content={school?.address}
+          icon={() => (
+            <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+        />
+        {isHighSchoolType ? (
+          <CalloutCard
+            color="teal"
+            type="string"
+            title="Classification"
+            className="mt-4 min-h-[75px]"
+            content={school?.division}
+            icon={() => (
+              <Icons.folderDot
                 className="h-[20px] w-[20px] mr-2"
                 color="teal"
               />
-            );
-          }}
-          color="teal"
-        >
-          {school?.name}
-        </Callout>
-        <Callout
-          className="mt-4 min-h-[75px]"
-          title="Address"
-          icon={() => {
-            return (
-              <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
-            );
-          }}
-          color="teal"
-        >
-          {school?.address}
-        </Callout>
-        {isHighSchoolType ? (
-          <Callout
-            className="mt-4 min-h-[75px]"
-            title="Classification"
-            icon={() => {
-              return (
+            )}
+          />
+        ) : (
+          <>
+            <CalloutCard
+              color="teal"
+              type="string"
+              className="mt-4 min-h-[75px]"
+              title="Division"
+              content={school?.division}
+              icon={() => (
                 <Icons.folderDot
                   className="h-[20px] w-[20px] mr-2"
                   color="teal"
                 />
-              );
-            }}
-            color="teal"
-          >
-            {school?.division}
-          </Callout>
-        ) : (
-          <>
-            <Callout
-              className="mt-4 min-h-[75px]"
-              title="Division"
-              icon={() => {
-                return (
-                  <Icons.folderDot
-                    className="h-[20px] w-[20px] mr-2"
-                    color="teal"
-                  />
-                );
-              }}
-              color="teal"
-            >
-              {school?.division}
-            </Callout>
-            <Callout
-              className="mt-4 min-h-[75px]"
-              title="Conference"
-              icon={() => {
-                return (
-                  <Icons.activitySquare
-                    className="h-[20px] w-[20px] mr-2"
-                    color="teal"
-                  />
-                );
-              }}
-              color="teal"
-            >
-              {school?.conference}
-            </Callout>
+              )}
+            />
           </>
         )}
 
-        <Callout
+        <CalloutCard
+          color="teal"
+          type="string"
+          className="mt-4 min-h-[75px]"
+          title="Conference"
+          content={school?.conference}
+          icon={() => (
+            <Icons.activitySquare
+              className="h-[20px] w-[20px] mr-2"
+              color="teal"
+            />
+          )}
+        />
+
+        <CalloutCard
+          color="teal"
+          type="string"
           className="mt-4 min-h-[75px]"
           title="Description"
-          icon={() => {
-            return (
-              <Icons.scrollText
-                className="h-[20px] w-[20px] mr-2"
-                color="teal"
-              />
-            );
-          }}
+          content={school?.description}
+          icon={() => (
+            <Icons.scrollText className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+        />
+
+        <CalloutCard
           color="teal"
-        >
-          {school?.description}
-        </Callout>
-        <Callout
+          type="string"
           className="mt-4 min-h-[75px]"
           title="Yearly Tuition"
-          icon={() => {
-            return (
-              <BadgeDollarSign
-                className="h-[20px] w-[20px] mr-2"
-                color="teal"
-              />
-            );
-          }}
+          content={school?.yearlyTuition ? `$ ${school?.yearlyTuition}` : ""}
+          icon={() => (
+            <BadgeDollarSign className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+        />
+
+        <CalloutCard
           color="teal"
-        >
-          {school?.yearlyTuition ? `$ ${school?.yearlyTuition}` : ""}
-        </Callout>
-        <Callout
+          type="string"
           className="mt-4 min-h-[75px]"
           title="Year Founded"
-          icon={() => {
-            return <Calendar className="h-[20px] w-[20px] mr-2" color="teal" />;
-          }}
+          content={school?.yearFounded}
+          icon={() => (
+            <Calendar className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+        />
+
+        <CalloutCard
           color="teal"
-        >
-          {school?.yearFounded}
-        </Callout>
-        <Callout
+          type="string"
           className="mt-4 min-h-[75px]"
           title="Undergrad Students"
-          icon={() => {
-            return (
-              <Icons.graduationCap
-                className="h-[20px] w-[20px] mr-2"
-                color="teal"
-              />
-            );
-          }}
+          content={school?.undergradStudents}
+          icon={() => (
+            <Icons.graduationCap
+              className="h-[20px] w-[20px] mr-2"
+              color="teal"
+            />
+          )}
+        />
+
+        <CalloutCard
           color="teal"
-        >
-          {school?.undergradStudents}
-        </Callout>
-        <Callout
+          type="flag"
           className="mt-4 min-h-[75px]"
           title="Country"
-          icon={() => {
-            return (
-              <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
-            );
-          }}
-          color="teal"
-        >
-          <span className="flex flex-row items-center h-full">
-            <>{school?.country?.name}</>
-            {school?.country?.flag ? (
-              <Image
-                alt="country_flag"
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 100vw"
-                quality={100}
-                priority
-                width={30}
-                height={30}
-                src={school?.country?.flag}
-                className="h-[30px] w-[30px] rounded-full ml-auto object-cover"
-              />
-            ) : null}
-          </span>
-        </Callout>
-        <Callout
-          className="mt-4 min-h-[75px]"
+          icon={() => (
+            <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+          content={school?.country?.name}
+          flagUrl={school?.country?.flag}
+        />
+
+        <CalloutCard
+          type="string"
           title="State"
-          icon={() => {
-            return (
-              <Icons.pin className="h-[20px] w-[20px] mr-2" color="teal" />
-            );
-          }}
           color="teal"
-        >
-          {school?.state}
-        </Callout>
-        <Callout
           className="mt-4 min-h-[75px]"
+          icon={() => (
+            <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+          content={school?.state}
+        />
+
+        <CalloutCard
+          type="string"
           title="City"
-          icon={() => {
-            return (
-              <Icons.locateFixed
-                className="h-[20px] w-[20px] mr-2"
-                color="teal"
-              />
-            );
-          }}
-          color="teal"
-        >
-          {school?.city}
-        </Callout>
+          className="mt-4 min-h-[75px]"
+          icon={() => (
+            <Icons.locateFixed
+              className="h-[20px] w-[20px] mr-2"
+              color="teal"
+            />
+          )}
+          content={school?.city}
+        />
         <PromptAlert
           loading={isDeletingSchool}
           content={`This action cannot be undone. This will permanently delete this data from our servers.`}

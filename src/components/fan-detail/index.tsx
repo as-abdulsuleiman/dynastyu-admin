@@ -8,7 +8,7 @@ import {
   useGetUserQuery,
   useUpdateUserMutation,
 } from "@/services/graphql";
-import { Title, Text, Callout, Badge } from "@tremor/react";
+import { Title, Text, Badge } from "@tremor/react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "../ui/skeleton";
@@ -26,6 +26,7 @@ import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 import StatusOnlineIcon from "@heroicons/react/outline/StatusOnlineIcon";
 import StatusOfflineIcon from "@heroicons/react/outline/StatusOfflineIcon";
 import ProfileImage from "../profile-image";
+import CalloutCard from "../callout";
 
 interface FanDetailProps {
   params: {
@@ -53,7 +54,6 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
         id: params?.id,
       },
     },
-    // pollInterval: 30 * 1000,
   });
 
   const handleDeleteProfile = async (item: any) => {
@@ -65,7 +65,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
           },
         },
       });
-      await toast({
+      toast({
         title: "Fan successfully deleted.",
         description: `@${item?.username} account has been deleted.`,
         variant: "default",
@@ -325,69 +325,74 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
             </div>
           </div>
           <Separator className="my-6" />
-          <Callout
-            className="mt-4 min-h-[75px]"
+          <CalloutCard
+            color="teal"
             title="Name"
-            icon={() => {
-              return (
-                <Icons.user className="h-[19px] w-[19px] mr-2" color="teal" />
-              );
-            }}
-            color="teal"
-          >
-            {fanData?.user?.firstname} {fanData?.user?.surname}
-          </Callout>
-          <Callout
+            type="string"
             className="mt-4 min-h-[75px]"
+            icon={() => (
+              <Icons.user className="h-[19px] w-[19px] mr-2" color="teal" />
+            )}
+            content={`${fanData?.user?.firstname} ${fanData?.user?.surname}`}
+          />
+
+          <CalloutCard
+            color="teal"
             title="Email"
-            icon={() => {
-              return (
-                <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
-              );
-            }}
-            color="teal"
-          >
-            {fanData?.user?.email}
-          </Callout>
-          <Callout
+            type="string"
             className="mt-4 min-h-[75px]"
+            icon={() => (
+              <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
+            )}
+            content={fanData?.user?.email}
+          />
+
+          <CalloutCard
+            color="teal"
+            type="string"
             title="Date of Birth"
-            icon={() => {
-              return (
-                <Icons.cake className="h-[19px] w-[19px] mr-2" color="teal" />
-              );
-            }}
+            className="mt-4 min-h-[75px]"
+            icon={() => (
+              <Icons.cake className="h-[19px] w-[19px] mr-2" color="teal" />
+            )}
+            content={fanData?.user?.dob && formatDate(fanData?.user?.dob)}
+          />
+
+          <CalloutCard
             color="teal"
-          >
-            {fanData?.user?.dob && formatDate(fanData?.user?.dob)}
-          </Callout>
-          <Callout
+            type="flag"
             className="mt-4"
+            title="Country"
+            icon={() => (
+              <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+            )}
+            content={fanData?.user?.country?.name}
+            flagUrl={fanData?.user?.country?.flag}
+          />
+
+          <CalloutCard
+            type="string"
             title="State"
-            icon={() => {
-              return (
-                <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
-              );
-            }}
             color="teal"
-          >
-            {fanData?.user?.state}
-          </Callout>
-          <Callout
             className="mt-4"
+            icon={() => (
+              <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+            )}
+            content={fanData?.user?.state}
+          />
+
+          <CalloutCard
+            type="string"
             title="City"
-            icon={() => {
-              return (
-                <Icons.locateFixed
-                  className="h-[20px] w-[20px] mr-2"
-                  color="teal"
-                />
-              );
-            }}
-            color="teal"
-          >
-            {fanData?.user?.city}
-          </Callout>
+            className="mt-4"
+            icon={() => (
+              <Icons.locateFixed
+                className="h-[20px] w-[20px] mr-2"
+                color="teal"
+              />
+            )}
+            content={fanData?.user?.city}
+          />
         </CardContent>
       </Card>
       <ModalCard

@@ -2,7 +2,7 @@
 
 "use client";
 
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -14,7 +14,6 @@ import {
 } from "@/services/graphql";
 import { useRouter } from "next/navigation";
 import { Title, Text, Grid } from "@tremor/react";
-import { Icons } from "@/components/Icons";
 import AthletesInterested from "@/components/athletes-interested";
 import SchoolCard from "@/components/school-card";
 import { observer } from "mobx-react-lite";
