@@ -30,6 +30,8 @@ import { Separator } from "@/components/ui/separator";
 import PromptAlert from "@/components/prompt-alert";
 import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
+import ContentHeader from "@/components/content-header";
+import SkillIcon from "@/components/Icons/skill";
 
 const headerItems = [
   { name: "Name" },
@@ -286,11 +288,18 @@ const Page: FC<pageProps> = ({}) => {
   return (
     <main className="w-full h-full">
       <div className="flex flex-col sm:flex-row items-start sm:items-center">
-        <div className="flex flex-col">
-          <Title>Skill Types</Title>
-          <Text className="hidden">Skill Types Overview</Text>
+        <div className="flex flex-row items-center">
+          <ContentHeader
+            title="Skill Types"
+            icon={
+              <SkillIcon className="h-[22px] w-[22px] ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            }
+            isIcon
+            subHeader="Skill Types Overview"
+          />
         </div>
       </div>
+
       <Separator className="my-6" />
       <Grid numItemsMd={2} numItemsLg={3} className="mt-6 gap-6">
         <SkillTypeStatCard title="Skill Types" />

@@ -36,6 +36,7 @@ import { Separator } from "../ui/separator";
 import MoreHorizontal from "../Icons/more-horizontal";
 import { formatDate } from "@/lib/utils";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
+import ContentHeader from "../content-header";
 
 enum FilterEnum {
   ACTIVE = "Active",
@@ -509,10 +510,15 @@ const Coaches: FC<CoachesProps> = ({}) => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center">
         <div className="flex flex-col">
           <div className="flex flex-row items-center">
-            <Title>Coaches</Title>
-            <Icons.whistle className="h-4 w-4 ml-2 fill-foreground dark:fill-foreground" />
+            <ContentHeader
+              title="Coaches"
+              icon={
+                <Icons.whistle className="h-4 w-4 ml-2 fill-foreground dark:fill-foreground" />
+              }
+              isIcon
+              subHeader="Coaches Overview"
+            />
           </div>
-          <Text>Coaches Overview</Text>
         </div>
       </div>
       <Separator className="my-6" />

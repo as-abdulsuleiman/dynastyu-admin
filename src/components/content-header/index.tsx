@@ -8,6 +8,9 @@ interface ContentHeaderProps {
   subHeader?: string;
   className?: string;
   icon?: ReactNode;
+  isIcon?: boolean;
+  isSubItem?: boolean;
+  renderSubItem?: ReactNode;
 }
 
 const ContentHeader: FC<ContentHeaderProps> = ({
@@ -15,14 +18,21 @@ const ContentHeader: FC<ContentHeaderProps> = ({
   subHeader,
   className,
   icon,
+  isIcon,
+  isSubItem = false,
+  renderSubItem,
 }) => {
   return (
     <div className={cn("flex flex-col", className)}>
       <div className="flex flex-row items-center">
-        <div className="text-lg font-TTHovesDemiBold">{title}</div>
-        <div className="ml-2">{icon}</div>
+        <h3 className={`text-lg font-TTHovesDemiBold`}>{title}</h3>
+        {isIcon ? <div className="">{icon}</div> : null}
       </div>
-      <div className="text-sm font-TTHovesRegular">{subHeader}</div>
+      {isSubItem ? (
+        <div>{renderSubItem}</div>
+      ) : (
+        <h1 className={`text-sm font-TTHovesRegular`}>{subHeader}</h1>
+      )}
     </div>
   );
 };

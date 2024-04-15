@@ -30,6 +30,7 @@ import { useToast } from "@/hooks/use-toast";
 import SuspenseLoader from "../suspense-loader";
 import { Separator } from "../ui/separator";
 import { useRootStore } from "@/mobx";
+import ContentHeader from "../content-header";
 
 type FormData = yup.InferType<typeof AthleteValidator>;
 
@@ -280,12 +281,17 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
       </Button>
       <div className="flex flex-col">
         <div className="flex flex-row items-center">
-          <Title>
-            {fetchAthlete ? `Edit Athlete Profile` : " Add New Athlete"}
-          </Title>
-          <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+          <ContentHeader
+            title={`${
+              fetchAthlete ? `Edit Athlete Profile` : " Add New Athlete"
+            }`}
+            icon={
+              <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            }
+            isIcon
+            subHeader="Athletes Details"
+          />
         </div>
-        <Text>Athlete Overview</Text>
       </div>
       <Separator className="my-6" />
       <form

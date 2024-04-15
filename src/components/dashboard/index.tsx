@@ -37,6 +37,7 @@ import { SearchInput } from "../search-input";
 import { Button } from "../ui/button";
 import MoreHorizontal from "../Icons/more-horizontal";
 import { formatDate } from "@/lib/utils";
+import ContentHeader from "../content-header";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -374,8 +375,12 @@ const Dashboard: FC<DashboardProps> = () => {
 
   return (
     <main className="w-full h-full">
-      <Title>Dashboard Overview</Title>
-      <Text>Welcome to DynastyU Admin</Text>
+      <div className="flex flex-row items-center">
+        <ContentHeader
+          title="Dashboard Overview"
+          subHeader="Welcome to DynastyU Admin"
+        />
+      </div>
       <Separator className="my-6" />
       <Grid numItemsMd={2} numItemsLg={2} numItemsSm={2} className="mt-6 gap-6">
         <UserStatCard />

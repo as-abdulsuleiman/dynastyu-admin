@@ -27,6 +27,7 @@ import StatusOnlineIcon from "@heroicons/react/outline/StatusOnlineIcon";
 import StatusOfflineIcon from "@heroicons/react/outline/StatusOfflineIcon";
 import ProfileImage from "../profile-image";
 import CalloutCard from "../callout";
+import ContentHeader from "../content-header";
 
 interface FanDetailProps {
   params: {
@@ -254,11 +255,15 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
       ) : (
         <div className="flex flex-col">
           <div className="flex flex-row items-center">
-            <Title>
-              {fanData?.user?.firstname} {fanData?.user?.surname}
-            </Title>
+            <ContentHeader
+              title={`${fanData?.user?.firstname} ${fanData?.user?.surname}`}
+              icon={
+                <Icons.fans className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+              }
+              isIcon
+              subHeader="Fan Details"
+            />
           </div>
-          <Text>@{fanData?.user?.username}</Text>
         </div>
       )}
       <Separator className="my-6" />

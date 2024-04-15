@@ -30,6 +30,7 @@ import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import MoreHorizontal from "../Icons/more-horizontal";
 import { formatDate } from "@/lib/utils";
+import ContentHeader from "../content-header";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -338,8 +339,16 @@ const Fans: FC<FansProps> = ({}) => {
 
   return (
     <main className="w-full h-full">
-      <Title>Fans</Title>
-      <Text>In Progress</Text>
+      <div className="flex flex-row items-center">
+        <ContentHeader
+          title="Fans"
+          icon={
+            <Icons.fans className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+          }
+          isIcon
+          subHeader="Fans Overview"
+        />
+      </div>
       <Separator className="my-6" />
       <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
         <FanStatCard />

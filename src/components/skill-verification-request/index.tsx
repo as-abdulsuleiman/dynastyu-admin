@@ -28,6 +28,7 @@ import { Separator } from "../ui/separator";
 import { SearchInput } from "../search-input";
 import { Button } from "../ui/button";
 import MoreHorizontal from "../Icons/more-horizontal";
+import ContentHeader from "../content-header";
 
 interface SkillVerificationRequestProps {}
 
@@ -314,10 +315,13 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
     <main className="w-full h-full relative">
       <div className="flex flex-col">
         <div className="flex flex-row items-center">
-          <Title>Skill Verification Request</Title>
-          <SkillIcon
-            className="h-[22px] w-[22px] ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis"
-            // color={"#fff"}
+          <ContentHeader
+            title="Skill Verification Request"
+            icon={
+              <SkillIcon className="h-[22px] w-[22px] ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            }
+            isIcon
+            subHeader="Skill Verification Overview"
           />
         </div>
       </div>

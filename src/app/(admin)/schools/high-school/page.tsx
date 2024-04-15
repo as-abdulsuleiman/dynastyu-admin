@@ -33,6 +33,7 @@ import MenubarCard from "@/components/menubar";
 import MoreHorizontal from "@/components/Icons/more-horizontal";
 import { formatDate } from "@/lib/utils";
 import PromptAlert from "@/components/prompt-alert";
+import ContentHeader from "@/components/content-header";
 
 const headerItems = [
   { name: "Name" },
@@ -333,10 +334,15 @@ const Schools: FC<SchoolsProps> = ({}) => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center">
         <div className="flex flex-col">
           <div className="flex flex-row items-center">
-            <Title>Schools</Title>
-            <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            <ContentHeader
+              title="Schools"
+              icon={
+                <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+              }
+              isIcon
+              subHeader="High School Overview"
+            />
           </div>
-          <Text>Schools Overview</Text>
         </div>
         {/* <div className="ml-auto justify-end">
           <Button onClick={() => router.push("/schools/new")}>

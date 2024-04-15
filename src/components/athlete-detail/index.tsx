@@ -40,6 +40,7 @@ import StarIcon from "../Icons/starIcon";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 import ProfileImage from "../profile-image";
 import CalloutCard from "../callout";
+import ContentHeader from "../content-header";
 interface AthleteDetailProps {
   params: {
     id: number;
@@ -532,24 +533,32 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
       ) : (
         <div className="flex flex-col">
           <div className="flex flex-row items-center">
-            <Title>
-              {athleteData?.firstname} {athleteData?.surname}
-            </Title>
-            <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            <ContentHeader
+              title={`${athleteData?.firstname} ${athleteData?.surname}`}
+              icon={
+                <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+              }
+              isIcon
+              isSubItem
+              renderSubItem={
+                <div>
+                  <Text>
+                    Class of:{" "}
+                    {athleteData?.athleteProfile?.graduationYear
+                      ? athleteData?.athleteProfile?.graduationYear
+                      : "N/A"}
+                  </Text>
+                  <Text>
+                    {athleteData?.athleteProfile?.position?.name
+                      ? `${athleteData?.athleteProfile?.position?.name} at`
+                      : ""}{" "}
+                    {athleteData?.athleteProfile?.school?.name}
+                  </Text>
+                  <Text>@{athleteData?.username}</Text>
+                </div>
+              }
+            />
           </div>
-          <Text>@{athleteData?.username}</Text>
-          <Text>
-            Class of:{" "}
-            {athleteData?.athleteProfile?.graduationYear
-              ? athleteData?.athleteProfile?.graduationYear
-              : "N/A"}
-          </Text>
-          <Text>
-            {athleteData?.athleteProfile?.position?.name
-              ? `${athleteData?.athleteProfile?.position?.name} at`
-              : ""}{" "}
-            {athleteData?.athleteProfile?.school?.name}
-          </Text>
         </div>
       )}
       <Separator className="my-6" />

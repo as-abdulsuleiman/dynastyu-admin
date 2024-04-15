@@ -35,6 +35,7 @@ import { observer } from "mobx-react-lite";
 import { Separator } from "../ui/separator";
 import { formatDate } from "@/lib/utils";
 import MoreHorizontal from "../Icons/more-horizontal";
+import ContentHeader from "../content-header";
 
 enum FilterEnum {
   ACTIVE = "Active",
@@ -500,10 +501,15 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center">
         <div className="flex flex-col">
           <div className="flex flex-row items-center">
-            <Title>Coaches</Title>
-            <Icons.whistle className="h-4 w-4 ml-2 fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis" />
+            <ContentHeader
+              title="Coaches"
+              icon={
+                <Icons.whistle className="h-4 w-4 ml-2 fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis" />
+              }
+              isIcon
+              subHeader="Coaches Verification Overview"
+            />
           </div>
-          <Text>Coaches Overview</Text>
         </div>
       </div>
       <Separator className="my-6" />

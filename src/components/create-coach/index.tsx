@@ -32,6 +32,7 @@ import SelectCity from "../select-city";
 import SelectState from "../select-state";
 import { useRouter } from "next/navigation";
 import { Separator } from "../ui/separator";
+import ContentHeader from "../content-header";
 
 type FormData = yup.InferType<typeof CoachValidator>;
 
@@ -301,10 +302,15 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
       </Button>
       <div className="flex flex-col">
         <div className="flex flex-row items-center">
-          <Title>{fetchCoach ? `Edit Coach Profile` : " Add New Coach"}</Title>
-          <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+          <ContentHeader
+            title={`${fetchCoach ? `Edit Coach Profile` : " Add New Coach"}`}
+            icon={
+              <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            }
+            isIcon
+            subHeader="Coach Details"
+          />
         </div>
-        <Text>Coach Overview</Text>
       </div>
       <Separator className="my-6" />
       <form

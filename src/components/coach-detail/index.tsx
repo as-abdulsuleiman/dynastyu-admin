@@ -40,6 +40,7 @@ import { CommandItem } from "../ui/command";
 import { cn } from "@/lib/utils";
 import PromptAlert from "../prompt-alert";
 import CalloutCard from "../callout";
+import ContentHeader from "../content-header";
 
 interface CoachDetailProps {
   params: {
@@ -527,16 +528,20 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
           <div className="flex flex-row items-center">
             <div className="ml-0">
               <div className="flex flex-row items-center">
-                <Title>
-                  {coachData?.firstname} {coachData?.surname}
-                </Title>
+                <ContentHeader
+                  title={`${coachData?.firstname} ${coachData?.surname}`}
+                  icon={
+                    <Icons.whistle className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+                  }
+                  isIcon
+                  subHeader="Coach Details"
+                />
               </div>
-              <Text>@{coachData?.username}</Text>
-              <Text>
+              {/* <Text>
                 {coachData?.coachProfile?.title}{" "}
                 {coachData?.coachProfile?.school?.name ? "at" : ""}
                 {""} {coachData?.coachProfile?.school?.name}
-              </Text>
+              </Text> */}
             </div>
             <div className="ml-auto hidden">
               <Button
