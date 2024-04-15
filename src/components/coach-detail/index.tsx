@@ -12,7 +12,7 @@ import {
   useGetUserQuery,
   useUpdateCoachMutation,
 } from "@/services/graphql";
-import { Title, Text, Grid, Callout, Badge } from "@tremor/react";
+import { Title, Text, Grid, Badge } from "@tremor/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import UsersAnalytics from "@/components/analytics/users";
@@ -38,8 +38,8 @@ import { useDebouncedValue } from "@mantine/hooks";
 import { CheckIcon } from "lucide-react";
 import { CommandItem } from "../ui/command";
 import { cn } from "@/lib/utils";
-import Flag from "../flag";
 import PromptAlert from "../prompt-alert";
+import CalloutCard from "../callout";
 
 interface CoachDetailProps {
   params: {
@@ -653,108 +653,80 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
               </div>
             </div>
             <Separator className="my-6" />
-            <Callout
-              className="mt-4"
+            <CalloutCard
+              color="teal"
               title="Name"
-              icon={() => {
-                return <Icons.user className="h-5 w-5" color="teal" />;
-              }}
-              color="teal"
-            >
-              {coachData?.firstname} {coachData?.surname}
-            </Callout>
-            <Callout
+              type="string"
               className="mt-4"
+              icon={() => <Icons.user className="h-5 w-5" color="teal" />}
+              content={`${coachData?.firstname} ${coachData?.surname}`}
+            />
+            <CalloutCard
               title="Email"
-              icon={() => {
-                return (
-                  <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
-                );
-              }}
+              type="string"
               color="teal"
-            >
-              {coachData?.email}
-            </Callout>
-            <Callout
+              className="mt-4"
+              icon={() => (
+                <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
+              )}
+              content={coachData?.email}
+            />
+            <CalloutCard
+              type="string"
+              color="teal"
               className="mt-4"
               title="Coach Title"
-              icon={() => {
-                return (
-                  <Icons.tags className="h-[20px] w-[20px] mr-2" color="teal" />
-                );
-              }}
+              content={coachData?.coachProfile?.title}
+              icon={() => (
+                <Icons.tags className="h-[20px] w-[20px] mr-2" color="teal" />
+              )}
+            />
+
+            <CalloutCard
               color="teal"
-            >
-              {coachData?.coachProfile?.title}
-            </Callout>
-            <Callout
+              type="string"
               className="mt-4"
               title="High Scool"
-              icon={() => {
-                return (
-                  <Icons.school
-                    className="h-[19px] w-[19px] mr-2"
-                    color="teal"
-                  />
-                );
-              }}
+              content={coachData?.coachProfile?.school?.name}
+              icon={() => (
+                <Icons.school className="h-[19px] w-[19px] mr-2" color="teal" />
+              )}
+            />
+            <CalloutCard
               color="teal"
-            >
-              {coachData?.coachProfile?.school?.name}
-            </Callout>
-            <Callout
+              type="flag"
               className="mt-4"
               title="Country"
-              icon={() => {
-                return (
-                  <Icons.mapPin
-                    className="h-[20px] w-[20px] mr-2"
-                    color="teal"
-                  />
-                );
-              }}
-              color="teal"
-            >
-              <span className="flex flex-row items-center">
-                <>{coachData?.coachProfile?.country?.name}</>
-                {coachData?.coachProfile?.country?.flag ? (
-                  <Flag
-                    flag={coachData?.coachProfile?.country?.flag as string}
-                    alt={coachData?.coachProfile?.country?.name as string}
-                  />
-                ) : null}
-              </span>
-            </Callout>
-            <Callout
-              className="mt-4"
+              icon={() => (
+                <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+              )}
+              content={coachData?.coachProfile?.country?.name}
+              flagUrl={coachData?.coachProfile?.country?.flag}
+            />
+
+            <CalloutCard
+              type="string"
               title="State"
-              icon={() => {
-                return (
-                  <Icons.mapPin
-                    className="h-[20px] w-[20px] mr-2"
-                    color="teal"
-                  />
-                );
-              }}
               color="teal"
-            >
-              {coachData?.coachProfile?.state}
-            </Callout>
-            <Callout
               className="mt-4"
+              icon={() => (
+                <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+              )}
+              content={coachData?.coachProfile?.state}
+            />
+
+            <CalloutCard
+              type="string"
               title="City"
-              icon={() => {
-                return (
-                  <Icons.locateFixed
-                    className="h-[20px] w-[20px] mr-2"
-                    color="teal"
-                  />
-                );
-              }}
-              color="teal"
-            >
-              {coachData?.coachProfile?.city}
-            </Callout>
+              className="mt-4"
+              icon={() => (
+                <Icons.locateFixed
+                  className="h-[20px] w-[20px] mr-2"
+                  color="teal"
+                />
+              )}
+              content={coachData?.coachProfile?.city}
+            />
           </CardContent>
         </Card>
       </Grid>

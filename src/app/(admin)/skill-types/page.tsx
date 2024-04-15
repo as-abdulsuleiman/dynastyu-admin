@@ -58,8 +58,7 @@ const Page: FC<pageProps> = ({}) => {
   const [value, setValue] = useState<string>("");
   const [deleteSkillTypePrompt, setDeleteSkillTypePrompt] = useState(false);
   const [deletingSkillType, setDeletingSkillType] = useState(false);
-
-  const [activeSkillType, setActiveSkillType] = useState({});
+  const [activeSkillType, setActiveSkillType] = useState<any | null>({});
   const [debounced] = useDebouncedValue(value, 300);
   const [deleteSkillType] = useDeleteSkillTypeMutation();
   const [deleteSkills] = useDeleteManySkillsMutation();
@@ -219,7 +218,7 @@ const Page: FC<pageProps> = ({}) => {
         variant: "destructive",
       });
     } finally {
-      setActiveSkillType({});
+      setActiveSkillType(null);
       setDeletingSkillType(false);
       setDeleteSkillTypePrompt(false);
     }
@@ -324,11 +323,12 @@ const Page: FC<pageProps> = ({}) => {
         <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
       )}
       <PromptAlert
+        title={`Are you absolutely sure?`}
         loading={deletingSkillType}
-        content={`This action cannot be undone. This will permanently delete this data from our servers.`}
+        content={`This will permanently delete ${activeSkillType?.name} from our servers.`}
         showPrompt={deleteSkillTypePrompt}
         handleHidePrompt={() => {
-          setActiveSkillType({});
+          setActiveSkillType(null);
           setDeleteSkillTypePrompt(false);
         }}
         handleConfirmPrompt={() => handleConfirmPrompt(activeSkillType)}

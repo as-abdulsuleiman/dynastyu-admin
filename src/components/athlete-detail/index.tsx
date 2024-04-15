@@ -3,7 +3,7 @@
 "use client";
 
 import { FC, useMemo, useState } from "react";
-import { Title, Text, Grid, Callout, Badge } from "@tremor/react";
+import { Title, Text, Grid, Badge } from "@tremor/react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import {
@@ -39,7 +39,7 @@ import StatusOfflineIcon from "@heroicons/react/outline/StatusOfflineIcon";
 import StarIcon from "../Icons/starIcon";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 import ProfileImage from "../profile-image";
-import Flag from "../flag";
+import CalloutCard from "../callout";
 interface AthleteDetailProps {
   params: {
     id: number;
@@ -576,11 +576,6 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
           loading={false}
           recruitingContact={recruitingContact}
         />
-        {/* <AthleteSkillCard
-          athleteId={params?.id}
-          loading={loading}
-          athleteSkills={(data?.athleteProfile?.skills as any) || []}
-        /> */}
       </Grid>
       <Grid numItemsMd={1} numItemsLg={1} className="mt-6 gap-6">
         <Card>
@@ -654,179 +649,121 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               </div>
             </div>
             <Separator className="my-6" />
-            <Callout
-              className="mt-4 min-h-[75px]"
+            <CalloutCard
+              color="teal"
+              type="string"
               title="Name"
-              icon={() => {
-                return (
-                  <Icons.user className="h-[19px] w-[19px] mr-2" color="teal" />
-                );
-              }}
-              color="teal"
-            >
-              {athleteData?.firstname} {athleteData?.surname}
-            </Callout>
-            <Callout
               className="mt-4 min-h-[75px]"
-              title="Email"
-              icon={() => {
-                return (
-                  <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
-                );
-              }}
+              icon={() => (
+                <Icons.user className="h-[19px] w-[19px] mr-2" color="teal" />
+              )}
+              content={`${athleteData?.firstname} ${athleteData?.surname}`}
+            />
+            <CalloutCard
               color="teal"
-            >
-              {athleteData?.email}
-            </Callout>
-            <Callout
+              type="string"
+              title="Email"
+              className="mt-4 min-h-[75px]"
+              content={athleteData?.email}
+              icon={() => (
+                <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
+              )}
+            />
+            <CalloutCard
+              color="teal"
+              type="string"
               className="mt-4"
               title="High Scool"
-              icon={() => {
-                return (
-                  <Icons.school
-                    className="h-[19px] w-[19px] mr-2"
-                    color="teal"
-                  />
-                );
-              }}
+              content={athleteData?.athleteProfile?.school?.name}
+              icon={() => (
+                <Icons.school className="h-[19px] w-[19px] mr-2" color="teal" />
+              )}
+            />
+            <CalloutCard
               color="teal"
-            >
-              {athleteData?.athleteProfile?.school?.name}
-            </Callout>
-            <Callout
+              type="string"
               className="mt-4"
               title="Position"
-              icon={() => {
-                return (
-                  <Icons.athlete
-                    className="h-[19px] w-[19px] mr-2"
-                    color="teal"
-                  />
-                );
-              }}
+              icon={() => (
+                <Icons.athlete
+                  className="h-[19px] w-[19px] mr-2"
+                  color="teal"
+                />
+              )}
+              content={`${athleteData?.athleteProfile?.position?.name} (${athleteData?.athleteProfile?.position?.shortName})`}
+            />
+            <CalloutCard
               color="teal"
-            >
-              {athleteData?.athleteProfile?.position?.name} (
-              {athleteData?.athleteProfile?.position?.shortName})
-            </Callout>
-            <Callout
+              type="string"
               className="mt-4 min-h-[75px]"
               title="Graduation Year"
-              icon={() => {
-                return (
-                  <Icons.graduationCap
-                    className="h-[19px] w-[19px] mr-2"
-                    color="teal"
-                  />
-                );
-              }}
-              color="teal"
-            >
-              {athleteData?.athleteProfile?.graduationYear}
-            </Callout>
-            <Callout
-              className="mt-4 min-h-[75px]"
+              icon={() => (
+                <Icons.graduationCap
+                  className="h-[19px] w-[19px] mr-2"
+                  color="teal"
+                />
+              )}
+              content={athleteData?.athleteProfile?.graduationYear}
+            />
+            <CalloutCard
               title="gpa"
-              icon={() => {
-                return (
-                  <Icons.presentation
-                    className="h-[19px] w-[19px] mr-2"
-                    color="teal"
-                  />
-                );
-              }}
               color="teal"
-            >
-              {athleteData?.athleteProfile?.gpa}
-            </Callout>
+              type="string"
+              className="mt-4 min-h-[75px]"
+              icon={() => (
+                <Icons.presentation
+                  className="h-[19px] w-[19px] mr-2"
+                  color="teal"
+                />
+              )}
+              content={athleteData?.athleteProfile?.gpa}
+            />
             {athleteData?.athleteProfile?.hudlLink ? (
-              <Callout
+              <CalloutCard
+                color="teal"
+                type="link"
                 className="mt-4 min-h-[75px]"
                 title="Huddle"
-                icon={() => {
-                  return (
-                    <Icons.link
-                      className="h-[19px] w-[19px] mr-2"
-                      color="teal"
-                    />
-                  );
-                }}
-                color="teal"
-              >
-                <input
-                  onClick={() => {
-                    if (athleteData?.athleteProfile?.hudlLink as string) {
-                      window.open(
-                        athleteData?.athleteProfile?.hudlLink as string,
-                        "_blank"
-                      );
-                    }
-                  }}
-                  className="border-none right-0 rounded-none bg-transparent w-full focus-visible:outline-none cursor-pointer focus-visible:ring-0"
-                  readOnly
-                  type="url"
-                  defaultValue={athleteData?.athleteProfile?.hudlLink as string}
-                />
-              </Callout>
+                icon={() => (
+                  <Icons.link className="h-[19px] w-[19px] mr-2" color="teal" />
+                )}
+                content={athleteData?.athleteProfile?.hudlLink}
+              />
             ) : null}
             {socialAccounts?.map((val, index) => {
               return (
-                <Callout
+                <CalloutCard
                   key={index}
                   className="mt-4 min-h-[75px]"
                   title={val?.name}
-                  icon={() => {
-                    return <> {val?.icon}</>;
-                  }}
+                  icon={() => <> {val?.icon}</>}
                   color="teal"
-                >
-                  <input
-                    onClick={() => {
-                      window.open(val?.link as string, "_blank");
-                    }}
-                    className="border-none right-0 rounded-none bg-transparent w-full focus-visible:outline-none cursor-pointer focus-visible:ring-0"
-                    readOnly
-                    type="url"
-                    defaultValue={val?.link}
-                  />
-                </Callout>
+                  type="link"
+                  content={val?.link}
+                />
               );
             })}
-            <Callout
-              className="mt-4 min-h-[75px]"
+            <CalloutCard
               title="Date of Birth"
-              icon={() => {
-                return (
-                  <Icons.cake className="h-[19px] w-[19px] mr-2" color="teal" />
-                );
-              }}
               color="teal"
-            >
-              {athleteData?.dob && formatDate(athleteData?.dob)}
-            </Callout>
-            <Callout
+              type="string"
+              className="mt-4 min-h-[75px]"
+              icon={() => (
+                <Icons.cake className="h-[19px] w-[19px] mr-2" color="teal" />
+              )}
+              content={athleteData?.dob && formatDate(athleteData?.dob)}
+            />
+            <CalloutCard
+              color="teal"
+              type="flag"
               className="mt-4"
               title="Country"
-              icon={() => {
-                return (
-                  <Icons.mapPin
-                    className="h-[20px] w-[20px] mr-2"
-                    color="teal"
-                  />
-                );
-              }}
-              color="teal"
-            >
-              <span className="flex flex-row items-center">
-                <>{athleteData?.athleteProfile?.country?.name}</>
-                {athleteData?.athleteProfile?.country?.flag ? (
-                  <Flag
-                    flag={athleteData?.athleteProfile?.country?.flag as string}
-                    alt={athleteData?.athleteProfile?.country?.name as string}
-                  />
-                ) : null}
-              </span>
-            </Callout>
+              icon={() => (
+                <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+              )}
+              content={athleteData?.athleteProfile?.country?.name}
+              flagUrl={athleteData?.athleteProfile?.country?.flag}
+            />
           </CardContent>
         </Card>
       </Grid>
