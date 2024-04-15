@@ -32,7 +32,7 @@ const PromptAlert: FC<PromptAlertProps> = ({
 }) => {
   return (
     <AlertDialog defaultOpen={false} open={showPrompt}>
-      <AlertDialogContent>
+      <AlertDialogContent className="w-[95%] max-w-2xl md:max-w-lg">
         <AlertDialogHeader>
           <AlertDialogTitle>
             {title || "Are you absolutely sure?"}
@@ -42,11 +42,15 @@ const PromptAlert: FC<PromptAlertProps> = ({
               "This action cannot be undone. This will permanently delete your account and remove your data from our servers."}
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={handleHidePrompt}>
+        <AlertDialogFooter className="flex flex-row items-end ml-auto">
+          <AlertDialogCancel disabled={loading} onClick={handleHidePrompt}>
             Cancel
           </AlertDialogCancel>
-          <AlertDialogAction disabled={loading} onClick={handleConfirmPrompt}>
+          <AlertDialogAction
+            className="ml-[8px]"
+            disabled={loading}
+            onClick={handleConfirmPrompt}
+          >
             {loading ? (
               <div className="flex flex-row items-center justify-center">
                 <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
