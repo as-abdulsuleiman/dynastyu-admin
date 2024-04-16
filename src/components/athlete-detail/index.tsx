@@ -516,6 +516,32 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     );
   };
 
+  const subHeaderItems: any[] = [
+    {
+      class: (
+        <div className="text-sm font-TTHovesRegular">
+          Class of:{" "}
+          {athleteData?.athleteProfile?.graduationYear
+            ? athleteData?.athleteProfile?.graduationYear
+            : "N/A"}
+        </div>
+      ),
+      school: (
+        <div className="text-sm font-TTHovesRegular">
+          {athleteData?.athleteProfile?.position?.name
+            ? `${athleteData?.athleteProfile?.position?.name} at`
+            : ""}{" "}
+          {athleteData?.athleteProfile?.school?.name}
+        </div>
+      ),
+      userName: (
+        <div className="text-sm font-TTHovesRegular">
+          {athleteData?.username ? `@${athleteData?.username}` : ""}
+        </div>
+      ),
+    },
+  ];
+
   return (
     <main className="w-full h-full relative">
       <Button
@@ -542,19 +568,15 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               isSubItem
               renderSubItem={
                 <div>
-                  <Text>
-                    Class of:{" "}
-                    {athleteData?.athleteProfile?.graduationYear
-                      ? athleteData?.athleteProfile?.graduationYear
-                      : "N/A"}
-                  </Text>
-                  <Text>
-                    {athleteData?.athleteProfile?.position?.name
-                      ? `${athleteData?.athleteProfile?.position?.name} at`
-                      : ""}{" "}
-                    {athleteData?.athleteProfile?.school?.name}
-                  </Text>
-                  <Text>@{athleteData?.username}</Text>
+                  {subHeaderItems?.map((item) => {
+                    return (
+                      <>
+                        <div>{item?.userName}</div>
+                        <div>{item?.class}</div>
+                        <div>{item?.school}</div>
+                      </>
+                    );
+                  })}
                 </div>
               }
             />

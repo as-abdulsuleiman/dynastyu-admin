@@ -534,14 +534,16 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                     <Icons.whistle className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
                   }
                   isIcon
-                  subHeader="Coach Details"
+                  isSubItem
+                  renderSubItem={
+                    <div className="text-sm font-TTHovesRegular">
+                      {coachData?.coachProfile?.title}{" "}
+                      {coachData?.coachProfile?.school?.name ? "at" : ""}
+                      {""} {coachData?.coachProfile?.school?.name}
+                    </div>
+                  }
                 />
               </div>
-              {/* <Text>
-                {coachData?.coachProfile?.title}{" "}
-                {coachData?.coachProfile?.school?.name ? "at" : ""}
-                {""} {coachData?.coachProfile?.school?.name}
-              </Text> */}
             </div>
             <div className="ml-auto hidden">
               <Button

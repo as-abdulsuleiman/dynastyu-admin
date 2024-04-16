@@ -238,6 +238,21 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
     );
   };
 
+  const subHeaderItems: any[] = [
+    {
+      email: (
+        <div className="text-sm font-TTHovesRegular">
+          {fanData?.user?.email ? fanData?.user?.email : ""}
+        </div>
+      ),
+      userName: (
+        <div className="text-sm font-TTHovesRegular">
+          {fanData?.user?.username ? `@${fanData?.user?.username}` : ""}{" "}
+        </div>
+      ),
+    },
+  ];
+
   return (
     <main className="w-full h-full relative">
       <Button
@@ -256,12 +271,26 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
         <div className="flex flex-col">
           <div className="flex flex-row items-center">
             <ContentHeader
-              title={`${fanData?.user?.firstname} ${fanData?.user?.surname}`}
+              title={
+                `${fanData?.user?.firstname} ${fanData?.user?.surname}` || ""
+              }
+              isIcon
               icon={
                 <Icons.fans className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
               }
-              isIcon
-              subHeader="Fan Details"
+              isSubItem
+              renderSubItem={
+                <div>
+                  {subHeaderItems?.map((item) => {
+                    return (
+                      <>
+                        <div>{item?.userName}</div>
+                        <div>{item?.email}</div>
+                      </>
+                    );
+                  })}
+                </div>
+              }
             />
           </div>
         </div>

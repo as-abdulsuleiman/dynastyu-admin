@@ -278,6 +278,31 @@ const Page: FC<PageProps> = ({ params }) => {
     }
   }
 
+  const subheaderItems: any[] = [
+    {
+      address: (
+        <div className="text-sm font-TTHovesRegular">
+          <strong>Address:</strong>
+          <span className="ml-2">{data?.school?.address || "N/A"}</span>
+        </div>
+      ),
+      location: (
+        <div className="text-sm font-TTHovesRegular">
+          <strong>Location:</strong>
+          <span className="ml-2">{schoolLoaction || "N/A"}</span>
+        </div>
+      ),
+      schoolType: (
+        <div className="text-sm font-TTHovesRegular">
+          <strong>School Type:</strong>
+          <span className="ml-2">
+            {data?.school?.schoolType?.name || "N/A"}
+          </span>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <main className="w-full h-full relative">
       <Button
@@ -303,28 +328,15 @@ const Page: FC<PageProps> = ({ params }) => {
                   renderSubItem={
                     <div className="flex flex-col">
                       {" "}
-                      <Text>
-                        <strong className="font-TTHovesRegular">
-                          Address:
-                        </strong>
-                        <span className="ml-2">
-                          {data?.school?.address || "N/A"}
-                        </span>
-                      </Text>
-                      <Text>
-                        <strong className="font-TTHovesRegular">
-                          Location:
-                        </strong>
-                        <span className="ml-2">{schoolLoaction || "N/A"}</span>
-                      </Text>
-                      <Text>
-                        <strong className="font-TTHovesRegular">
-                          School Type:
-                        </strong>
-                        <span className="ml-2">
-                          {data?.school?.schoolType?.name || "N/A"}
-                        </span>
-                      </Text>
+                      {subheaderItems?.map((item) => {
+                        return (
+                          <>
+                            <div>{item?.address}</div>
+                            <div>{item?.location}</div>
+                            <div>{item?.schoolType}</div>
+                          </>
+                        );
+                      })}
                     </div>
                   }
                 />
