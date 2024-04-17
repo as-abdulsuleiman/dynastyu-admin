@@ -1,68 +1,72 @@
 /** @format */
 
-import { FC, ReactNode } from "react";
-import {
-  MultiSelect,
-  MultiSelectItem,
-  SearchSelect,
-  SearchSelectItem,
-} from "@tremor/react";
-import { UserCircleIcon } from "@heroicons/react/outline";
-import { cn } from "@/lib/utils";
-import { Checkbox } from "../ui/checkbox";
-import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
+import { FC } from "react";
+import Multiselect from "multiselect-react-dropdown";
+import ChevronDown from "../Icons/chevron-down";
 
 interface MultiSelectorProps {
-  items: Items[];
-  selectedItem: string[];
-  onValueChange: (e: any) => void;
+  groupBy?: string;
+  options: Options[];
   className?: string;
+  loading?: boolean;
   placeholder?: string;
-  defaultValue?: string[];
-  placeholderSearch?: string;
+  displayValue: string;
+  showCheckbox?: boolean;
+  selectedOptions: Options[];
+  hidePlaceholder?: boolean;
+  avoidHighlightFirstOption?: boolean;
+  handleSelect: (selectedList: Options[], selectedItem: Options) => void;
+  handleRemove: (selectedList: Options[], removedItem: Options) => void;
 }
-type Items = {
-  name: string;
-  value: string;
+
+type Options = {
+  id: string | number;
+  value: any;
+  label: string;
 };
 
 const MultiSelector: FC<MultiSelectorProps> = ({
-  items,
-  selectedItem,
-  onValueChange,
-  className,
+  options,
+  loading,
+  groupBy,
+  handleSelect,
+  handleRemove,
   placeholder,
-  defaultValue,
-  placeholderSearch,
+  showCheckbox,
+  selectedOptions,
+  hidePlaceholder,
+  displayValue = "label",
+  avoidHighlightFirstOption,
 }) => {
   return (
-    <MultiSelect
-      className={cn("", className)}
-      value={selectedItem}
-      placeholder={placeholder || "Filter by..."}
-      placeholderSearch={placeholderSearch}
-      onValueChange={onValueChange}
-      // icon={UserCircleIcon}
-    >
-      {/* <SearchSelectItem icon={UserCircleIcon} value="5">
-        Very Long DropdownItem Value as an edge case
-      </SearchSelectItem> */}
-      {items?.map((val, index) => {
-        return (
-          <MultiSelectItem
-            key={index}
-            value={val.value}
-            className="cursor-pointer"
-            // icon={UserCircleIcon}
-          >
-            {val.name}
-          </MultiSelectItem>
-        );
-      })}
-      {/* <MultiSelectItem value="1">Option 1</MultiSelectItem>
-      <MultiSelectItem value="2">Option 2</MultiSelectItem>
-      <MultiSelectItem value="3">Option 3</MultiSelectItem> */}
-    </MultiSelect>
+    <div className="relative">
+      <Multiselect
+        closeIcon="circle"
+        placeholder={placeholder}
+        id="Multiselect"
+        className="text-sm shadow-sm transition-colors"
+        options={options}
+        loading={loading}
+        selectedValues={selectedOptions}
+        onSelect={handleSelect}
+        onRemove={handleRemove}
+        displayValue={displayValue}
+        showCheckbox={showCheckbox}
+        groupBy={groupBy}
+        avoidHighlightFirstOption={avoidHighlightFirstOption}
+        hidePlaceholder={hidePlaceholder}
+        showArrow
+        customArrow={<ChevronDown className="chevron-down_dir" />}
+        style={{
+          chips: {
+            background: "hsl(var(--primary))",
+          },
+          multiselectContainer: {
+            color: "hsl(var(--foreground))",
+          },
+        }}
+      />
+    </div>
   );
 };
 

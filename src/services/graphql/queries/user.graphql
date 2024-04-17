@@ -94,6 +94,8 @@ fragment UserCommonParts on User {
       id
       name
       logo
+      state
+      city
       schoolType {
         name
         id
@@ -161,6 +163,7 @@ fragment UserCommonParts on User {
       primaryColor
       description
       city
+      state
       latitude
       longitude
       radius

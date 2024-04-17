@@ -2,10 +2,12 @@
 
 "use client";
 
-import { FC, useEffect, useMemo } from "react";
+import { FC, useMemo } from "react";
 import {
   QueryMode,
   SchoolWhereInput,
+  SortOrder,
+  useGetFindFirstSchoolQuery,
   useGetSchoolsQuery,
 } from "@/services/graphql";
 import * as React from "react";
@@ -44,11 +46,13 @@ interface SchoolDropdownProps {
   onBlur?: React.FocusEventHandler<HTMLInputElement> | undefined;
   side?: "top" | "right" | "bottom" | "left" | undefined;
   buttonClass?: string;
+  schoolId?: number;
 }
 
 const SchoolDropdown: FC<SchoolDropdownProps> = ({
   whereClause,
   id,
+  schoolId,
   error,
   label,
   isOpen,
@@ -65,23 +69,49 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
   const [search, setSearch] = React.useState("");
   const [debounced] = useDebouncedValue(search, 300);
 
-  const {
-    data: schooldata,
-    loading,
-    refetch,
-    fetchMore,
-  } = useGetSchoolsQuery({
+  const { data: selectedSchoolData } = useGetFindFirstSchoolQuery({
+    variables: {
+      where: {
+        id: { equals: schoolId },
+      },
+    },
+    skip: !schoolId,
+  });
+
+  const { data: schooldata, loading } = useGetSchoolsQuery({
     variables: {
       where: {
         ...whereClause,
+        OR: [{ name: { contains: debounced, mode: QueryMode.Insensitive } }],
       },
       take: 20,
+      orderBy: {
+        createdAt: SortOrder.Desc,
+      },
     },
   });
 
+  const isObjectEmpty = (obj: any) => {
+    return Object?.keys(obj || {}).length > 0 ?? false;
+  };
+
   const schools = useMemo(() => {
+    let newSchool = [];
+    const oldSchool = schooldata?.schools || [];
+    const IscoachSchoolFound = isObjectEmpty(
+      selectedSchoolData?.findFirstSchool || {}
+    );
+    const coachSchool = IscoachSchoolFound
+      ? selectedSchoolData?.findFirstSchool
+      : {};
+    if (IscoachSchoolFound) {
+      newSchool = [coachSchool, ...oldSchool];
+    } else {
+      newSchool = [...oldSchool];
+    }
+
     return (
-      schooldata?.schools.map((school) => {
+      newSchool?.map((school: any) => {
         let schoolLoaction;
         if (school) {
           if (school?.city) {
@@ -103,29 +133,7 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
         };
       }) || []
     );
-  }, [schooldata?.schools]);
-
-  // const schools = useMemo(
-  //   () =>
-  //     schooldata?.schools?.map((school) => ({
-  //       label: `${school?.name}, ${school?.city}`,
-  //       value: school?.name,
-  //       id: school?.id,
-  //       logo: school?.logo,
-  //       city: school?.city,
-  //       state: school?.state,
-  //     })) || [],
-  //   [schooldata?.schools]
-  // );
-
-  useEffect(() => {
-    refetch({
-      where: {
-        ...whereClause,
-        OR: [{ name: { contains: debounced, mode: QueryMode.Insensitive } }],
-      },
-    });
-  }, [search, debounced, refetch, whereClause]);
+  }, [selectedSchoolData?.findFirstSchool, schooldata?.schools]);
 
   return (
     <div className="w-full relative" onBlur={onBlur} tabIndex={0}>
@@ -181,7 +189,7 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
                     {schools?.map((school) => {
                       return (
                         <CommandItem
-                          className="cursor-pointer"
+                          className={`cursor-pointer `}
                           key={school?.id}
                           value={school?.label}
                           onSelect={(currentValue) => {
