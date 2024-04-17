@@ -8,7 +8,7 @@ import {
   useGetUserQuery,
   useUpdateUserMutation,
 } from "@/services/graphql";
-import { Title, Text, Badge } from "@tremor/react";
+import { Title, Text } from "@tremor/react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "../ui/skeleton";
@@ -27,6 +27,7 @@ import StatusOnlineIcon from "@heroicons/react/outline/StatusOnlineIcon";
 import StatusOfflineIcon from "@heroicons/react/outline/StatusOfflineIcon";
 import ProfileImage from "../profile-image";
 import CalloutCard from "../callout";
+import BadgeCard from "../badge-card";
 
 interface FanDetailProps {
   params: {
@@ -213,9 +214,8 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
           </>
         ) : (
           <div className="hidden lg:flex lg:flex-row lg:items-center mr-3">
-            <Badge
+            <BadgeCard
               datatype={fanData?.user?.isActive ? "increase" : "decrease"}
-              className="flex flex-row  text-sm font-TTHovesRegular pl-3"
               color={fanData?.user?.isActive ? "teal" : "rose"}
               icon={
                 updatingProfile === StatusEnum.ACTIVATING
@@ -230,7 +230,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
                 : fanData?.user?.isActive
                 ? "Active"
                 : "Deactivated"}
-            </Badge>
+            </BadgeCard>
           </div>
         )}
       </>

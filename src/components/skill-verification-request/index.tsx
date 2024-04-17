@@ -3,7 +3,7 @@
 "use client";
 
 import { FC, useEffect, useMemo, useState } from "react";
-import { Title, Flex, Badge, Grid, TextInput } from "@tremor/react";
+import { Title, Flex, Grid, TextInput } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
 import {
@@ -28,6 +28,7 @@ import { Separator } from "../ui/separator";
 import { SearchInput } from "../search-input";
 import { Button } from "../ui/button";
 import MoreHorizontal from "../Icons/more-horizontal";
+import BadgeCard from "../badge-card";
 
 interface SkillVerificationRequestProps {}
 
@@ -273,7 +274,7 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
               {item?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (
-            <Badge
+            <BadgeCard
               size="xs"
               className="cursor-pointer"
               color={item?.verified ? "sky" : "rose"}
@@ -286,7 +287,7 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
               datatype="moderateDecrease"
             >
               {item?.verified ? "DU Verified" : "Not Verified"}
-            </Badge>
+            </BadgeCard>
           )}
         </TableCell>
         <TableCell className="text-center text-sm">

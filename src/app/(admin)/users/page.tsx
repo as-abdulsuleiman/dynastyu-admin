@@ -3,7 +3,7 @@
 "use client";
 
 import { FC, useEffect, useMemo, useState } from "react";
-import { Title, Grid, Badge } from "@tremor/react";
+import { Title, Grid } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOfflineIcon, StatusOnlineIcon } from "@heroicons/react/outline";
 import { useDebouncedValue } from "@mantine/hooks";
@@ -33,6 +33,7 @@ import MenubarCard from "@/components/menubar";
 import MoreHorizontal from "@/components/Icons/more-horizontal";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import BadgeCard from "@/components/badge-card";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -334,15 +335,14 @@ const Users: FC<UsersProps> = ({}) => {
               {item?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (
-            <Badge
+            <BadgeCard
               size="xs"
-              className="cursor-pointer text-sm"
               color={item?.isActive ? "teal" : "rose"}
               icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
               datatype="moderateDecrease"
             >
               {item?.isActive ? "Active" : "Deactivated"}
-            </Badge>
+            </BadgeCard>
           )}
         </TableCell>
         <TableCell className="text-sm">

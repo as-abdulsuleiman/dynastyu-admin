@@ -5,7 +5,7 @@
 import { FC, useEffect, useMemo, useState } from "react";
 import { Icons } from "@/components/Icons";
 import { useRootStore } from "@/mobx";
-import { Title, Text, Grid, Flex, Badge, TextInput } from "@tremor/react";
+import { Title, Text, Grid } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import SelectCard from "@/components/select";
 import AthleteStatCard from "@/components/stat-cards/athlete";
@@ -35,6 +35,7 @@ import MoreHorizontal from "../Icons/more-horizontal";
 import { Button } from "../ui/button";
 import { formatDate } from "@/lib/utils";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
+import BadgeCard from "../badge-card";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -530,16 +531,15 @@ const Athletes: FC<AthletesProps> = ({}) => {
               {item?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (
-            <Badge
+            <BadgeCard
               size="xs"
-              className="cursor-pointer text-sm"
               color={item?.isActive ? "teal" : "rose"}
               // tooltip={item?.user?.isActive ? "Active" : "Deactivated"}
               icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
               datatype="moderateDecrease"
             >
               {item?.isActive ? "Active" : "Deactivated"}
-            </Badge>
+            </BadgeCard>
           )}
         </TableCell>
         <TableCell className="text-center text-sm">
@@ -552,9 +552,9 @@ const Athletes: FC<AthletesProps> = ({}) => {
                 : "Verifying..."}
             </div>
           ) : (
-            <Badge
+            <BadgeCard
               size="xs"
-              className="cursor-pointer px-[8px] text-sm"
+              className="px-[8px]"
               color={item?.athleteProfile?.verified ? "sky" : "rose"}
               icon={() => {
                 return item?.athleteProfile?.verified ? (
@@ -566,7 +566,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
               datatype="moderateDecrease"
             >
               {item?.athleteProfile?.verified ? "Verified" : "Not Verified"}
-            </Badge>
+            </BadgeCard>
           )}
         </TableCell>
         <TableCell className="text-center text-sm">
@@ -577,9 +577,9 @@ const Athletes: FC<AthletesProps> = ({}) => {
               {"Loading..."}
             </div>
           ) : (
-            <Badge
+            <BadgeCard
               size="xs"
-              className="cursor-pointer px-[8px] text-sm"
+              className="px-[8px]"
               color={item?.athleteProfile?.featured ? "yellow" : "rose"}
               icon={() => {
                 return <StarIcon className="h-4 w-4 mr-1" />;
@@ -587,7 +587,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
               datatype="moderateDecrease"
             >
               {item?.athleteProfile?.featured ? "Featured" : "Not Featured"}
-            </Badge>
+            </BadgeCard>
           )}
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">

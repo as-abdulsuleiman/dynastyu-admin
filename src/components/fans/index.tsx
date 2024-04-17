@@ -3,7 +3,7 @@
 "use client";
 
 import { FC, useEffect, useMemo, useState } from "react";
-import { Title, Text, Flex, Grid, Badge, TextInput } from "@tremor/react";
+import { Title, Text, Flex, Grid, TextInput } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOfflineIcon, StatusOnlineIcon } from "@heroicons/react/outline";
 import {
@@ -30,6 +30,7 @@ import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import MoreHorizontal from "../Icons/more-horizontal";
 import { formatDate } from "@/lib/utils";
+import BadgeCard from "../badge-card";
 
 const filterItems = [
   { name: "Active", value: "Active" },
@@ -304,15 +305,14 @@ const Fans: FC<FansProps> = ({}) => {
               {item?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (
-            <Badge
+            <BadgeCard
               size="xs"
-              className="cursor-pointer text-sm"
               color={item?.isActive ? "teal" : "rose"}
               icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
               datatype="moderateDecrease"
             >
               {item?.isActive ? "Active" : "Deactivated"}
-            </Badge>
+            </BadgeCard>
           )}
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">
