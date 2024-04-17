@@ -20,7 +20,7 @@ import {
 } from "@/services/graphql";
 import ComboBoxCard from "../combobox-card";
 import SchoolDropdown from "../school-dropdown";
-import { coachTitleOptions, formatDate } from "@/lib/utils";
+import { coachTitleOptions } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { Icons } from "../Icons";
 import { projectAuth } from "@/services/firebase/config";
@@ -253,17 +253,17 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
       const payload = await CoachValidator.validate(values);
       const updateType = editType && searchParams?.coach;
       if (updateType) {
-        await updateCoachFn(payload);
-        await toast({
+        const response = await updateCoachFn(payload);
+        toast({
           title: "Profile successfully updated",
           description: `@${values?.username} profile has been successfully updated`,
           variant: "successfull",
         });
-        router.push(`/coach/${searchParams?.coach}`);
+        router.push(`/coach/${response.data?.updateOneCoachProfile?.userId}`);
       } else {
         await createCoach(payload);
         await sendPasswordResetEmail(projectAuth, values?.email);
-        await toast({
+        toast({
           title: "Profile successfully created.",
           description: `A password reset link has been sent to ${values?.email} to complete the process.`,
           variant: "successfull",
@@ -279,16 +279,6 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
     } finally {
     }
   };
-
-  const coachSchoolId = useMemo(() => {
-    if (coachData?.coachProfile?.schoolId) {
-      return {
-        id: { equals: coachData?.coachProfile?.schoolId },
-      };
-    } else {
-      return {};
-    }
-  }, [coachData?.coachProfile]);
 
   return (
     <main className="w-full h-full">
@@ -428,6 +418,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
             <SchoolDropdown
               scrollAreaClass="h-72"
               hasSearch={true}
+              schoolId={coachData?.coachProfile?.schoolId}
               id="schoolId"
               // onBlur={() => setFocus("school", { shouldSelect: true })}
               onClose={() => setOpenSchool(!openSchool)}
@@ -445,17 +436,31 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               }}
               placeholder={"Select high school"}
               label="High School"
-              error={errors.school?.id?.message}
-              whereClause={{
-                ...coachSchoolId,
-                schoolType: {
-                  is: {
-                    name: {
-                      equals: "High School",
-                    },
-                  },
-                },
-              }}
+              error={errors?.school?.id?.message}
+              whereClause={
+                {
+                  // OR: [
+                  //   {
+                  //     schoolType: {
+                  //       is: {
+                  //         name: {
+                  //           equals: "High School",
+                  //         },
+                  //       },
+                  //     },
+                  //   },
+                  //   {
+                  //     schoolType: {
+                  //       is: {
+                  //         name: {
+                  //           equals: "College",
+                  //         },
+                  //       },
+                  //     },
+                  //   },
+                  // ],
+                }
+              }
             />
           </div>
           <div className="col-span-12 sm:col-span-6">
@@ -530,7 +535,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               <Checkbox
                 checked={canReceiveMessages}
                 onCheckedChange={(e: boolean) =>
-                  setValue("canReceiveMessages", e)
+                  setValue("canReceiveMessages", e, { shouldDirty: true })
                 }
                 id="can_receive_messages"
                 name="can_receive_messages"

@@ -82,26 +82,7 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
     fetchMore,
   } = useGetPostFlagsQuery({
     variables: {
-      take: 10,
-      orderBy: {
-        createdAt: SortOrder.Desc,
-      },
-    },
-  });
-
-  const whereClause: PostFlagWhereInput = useMemo(() => {
-    return {
-      reason: {
-        contains: status,
-        mode: QueryMode.Insensitive,
-      },
-    };
-  }, [status]);
-
-  useEffect(() => {
-    refetch({
       where: {
-        ...whereClause,
         OR: [
           {
             user: {
@@ -135,8 +116,21 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
           },
         ],
       },
-    });
-  }, [status, debounced, refetch, whereClause]);
+      take: 10,
+      orderBy: {
+        createdAt: SortOrder.Desc,
+      },
+    },
+  });
+
+  // const whereClause: PostFlagWhereInput = useMemo(() => {
+  //   return {
+  //     reason: {
+  //       contains: status,
+  //       mode: QueryMode.Insensitive,
+  //     },
+  //   };
+  // }, [status]);
 
   const lastpostFlagId = useMemo(() => {
     const lastPostInResults =
@@ -286,15 +280,18 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
       <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
         <FlaggedPostStatCard />
       </Grid>
-      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-        {/* <TextInput
-          className="h-[38px]"
-          icon={() => {
-            return <Icons.search className="h-10 w-5 ml-2.5" />;
-          }}
-          onValueChange={(e) => setValue(e)}
-          placeholder="Type to search..."
-        /> */}
+
+      <div className="flex mt-6 gap-6 w-full justify-end">
+        <div className="w-full md:w-1/2 order-2">
+          <SearchInput
+            className="h-[40px]"
+            onChange={(e) => setValue(e?.target?.value)}
+            placeholder="Type to search..."
+          />
+        </div>
+      </div>
+      {/* <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
+       
         <SearchInput
           onChange={(e) => setValue(e.target.value)}
           placeholder="Search..."
@@ -308,7 +305,7 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
             setStatus(e);
           }}
         />
-      </Grid>
+      </Grid> */}
       <UniversalTable
         title="Flagged Post List"
         headerItems={headerItems}

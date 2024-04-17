@@ -50,6 +50,7 @@ query getSchools(
   $cursor: SchoolWhereUniqueInput
   $take: Int
   $skip: Int
+  $distinct: [SchoolScalarFieldEnum!]
 ) {
   schools(
     where: $where
@@ -57,6 +58,7 @@ query getSchools(
     cursor: $cursor
     take: $take
     skip: $skip
+    distinct: $distinct
   ) {
     ...SchoolCommonParts
   }
@@ -159,6 +161,26 @@ query getSchool($where: SchoolWhereUniqueInput!) {
       uuid
       userId
     }
+  }
+}
+ 
+query getFindFirstSchool(
+  $where: SchoolWhereInput
+  $orderBy: [SchoolOrderByWithRelationInput!]
+  $cursor: SchoolWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [SchoolScalarFieldEnum!]
+) {
+  findFirstSchool(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    ...SchoolCommonParts
   }
 }
 

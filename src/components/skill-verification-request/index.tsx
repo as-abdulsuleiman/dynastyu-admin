@@ -2,14 +2,13 @@
 
 "use client";
 
-import { FC, useEffect, useMemo, useState } from "react";
-import { Title, Flex, Badge, Grid, TextInput } from "@tremor/react";
+import { FC, useMemo, useState } from "react";
+import { Title, Badge, Grid } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
 import {
   GetSkillVerificationRequestsQuery,
   QueryMode,
-  SkillVerificationRequestWhereInput,
   SortOrder,
   useGetSkillVerificationRequestsQuery,
 } from "@/services/graphql";
@@ -17,7 +16,6 @@ import { Icons } from "../Icons";
 import UniversalTable from "@/components/universal-table";
 import UserAvatar from "../user-avatar";
 import Pagination from "../pagination";
-import SelectCard from "@/components/select";
 import { useDebouncedValue } from "@mantine/hooks";
 import MenubarCard from "../menubar";
 import SkillIcon from "../Icons/skill";
@@ -41,32 +39,61 @@ const headerItems = [
   { name: "Actions" },
 ];
 
-const filterItems = [
-  { name: "Verified", value: "Verified" },
-  { name: "Not Verified", value: "Not Verified" },
-];
-
-enum FilterEnum {
-  ACTIVE = "Active",
-  INACTIVE = "Inactive",
-  APPROVED = "Approved",
-  VERIFIED = "Verified",
-  NOTVERIFIED = "Not Verified",
-  NOTAPPROVED = "Not Approved",
-}
-
 const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
   const router = useRouter();
-  const [isActivating, setIsactivating] = useState<boolean>(false);
-  const [selectedUser, setSelectedUser] = useState<number | null>(null);
-  const [isOpen, setIsOpen] = useState<number | null>(null);
-  const [status, setStatus] = useState<string>("Not Verified");
   const [value, setValue] = useState<string>("");
   const [debounced] = useDebouncedValue(value, 300);
 
   const { data, loading, refetch, fetchMore } =
     useGetSkillVerificationRequestsQuery({
       variables: {
+        where: {
+          verified: {
+            equals: false,
+          },
+          OR: [
+            {
+              user: {
+                is: {
+                  username: {
+                    contains: debounced,
+                    mode: QueryMode.Insensitive,
+                  },
+                },
+              },
+            },
+            {
+              user: {
+                is: {
+                  firstname: {
+                    contains: debounced,
+                    mode: QueryMode.Insensitive,
+                  },
+                },
+              },
+            },
+            {
+              user: {
+                is: {
+                  surname: {
+                    contains: debounced,
+                    mode: QueryMode.Insensitive,
+                  },
+                },
+              },
+            },
+            {
+              user: {
+                is: {
+                  email: {
+                    contains: debounced,
+                    mode: QueryMode.Insensitive,
+                  },
+                },
+              },
+            },
+          ],
+        },
         take: 10,
         orderBy: {
           createdAt: SortOrder.Desc,
@@ -75,78 +102,6 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
       fetchPolicy: "cache-first",
       pollInterval: 30 * 1000,
     });
-
-  const whereClause: SkillVerificationRequestWhereInput = useMemo(() => {
-    if (status === FilterEnum.VERIFIED) {
-      return {
-        verified: {
-          equals: true,
-        },
-      };
-    } else if (status === FilterEnum.NOTVERIFIED) {
-      return {
-        verified: {
-          equals: false,
-        },
-      };
-    } else {
-      return {
-        verified: {
-          equals: false,
-        },
-      };
-    }
-  }, [status]);
-
-  useEffect(() => {
-    refetch({
-      where: {
-        ...whereClause,
-        OR: [
-          {
-            user: {
-              is: {
-                username: {
-                  contains: debounced,
-                  mode: QueryMode.Insensitive,
-                },
-              },
-            },
-          },
-          {
-            user: {
-              is: {
-                firstname: {
-                  contains: debounced,
-                  mode: QueryMode.Insensitive,
-                },
-              },
-            },
-          },
-          {
-            user: {
-              is: {
-                surname: {
-                  contains: debounced,
-                  mode: QueryMode.Insensitive,
-                },
-              },
-            },
-          },
-          {
-            user: {
-              is: {
-                email: {
-                  contains: debounced,
-                  mode: QueryMode.Insensitive,
-                },
-              },
-            },
-          },
-        ],
-      },
-    });
-  }, [status, whereClause, debounced, refetch]);
 
   const handleViewDetail = async (item: any) => {
     router.push(`/skill-types/verification-request/${item?.id}`);
@@ -230,13 +185,7 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
       },
     ];
     return (
-      <TableRow
-        className="w-full"
-        key={item?.id}
-        onClick={() =>
-          setIsOpen((prev) => (prev !== item?.id ? item?.id : null))
-        }
-      >
+      <TableRow className="w-full" key={item?.id}>
         <TableCell>
           <div
             className="flex flex-row items-center justify-start"
@@ -253,7 +202,7 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
               )} ${item?.user?.surname?.charAt(0)}`}
             />
             <div className="ml-4 cursor-pointer text-base">
-              {item?.user?.firstname} {item?.user?.firstname}
+              {item?.user?.firstname} {item?.user?.surname}
             </div>
           </div>
         </TableCell>
@@ -267,27 +216,17 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
           {item?.user?.email}
         </TableCell>
         <TableCell className="text-center text-sm">
-          {item?.id === selectedUser && isActivating ? (
-            <div className="text-center flex flex-row justify-center items-center">
-              <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin" />
-              {item?.isActive ? "Deactivating..." : "Activating..."}
-            </div>
-          ) : (
-            <Badge
-              size="xs"
-              className="cursor-pointer"
-              color={item?.verified ? "sky" : "rose"}
-              // tooltip="decrease"
-              icon={() => {
-                return (
-                  <Icons.badgeAlert className="h-4 w-4 mr-1" color="rose" />
-                );
-              }}
-              datatype="moderateDecrease"
-            >
-              {item?.verified ? "DU Verified" : "Not Verified"}
-            </Badge>
-          )}
+          <Badge
+            size="xs"
+            className="cursor-pointer"
+            color={item?.verified ? "sky" : "rose"}
+            icon={() => {
+              return <Icons.badgeAlert className="h-4 w-4 mr-1" color="rose" />;
+            }}
+            datatype="moderateDecrease"
+          >
+            {item?.verified ? "DU Verified" : "Not Verified"}
+          </Badge>
         </TableCell>
         <TableCell className="text-center text-sm">
           <div>
@@ -325,28 +264,15 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
       <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
         <SkillVerificationRequestCountStatCard />
       </Grid>
-      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-        <SearchInput
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Type to search..."
-        />
-        {/* <TextInput
-          className="h-[38px]"
-          icon={() => {
-            return <Icons.search className="h-10 w-5 ml-2.5" />;
-          }}
-          onValueChange={(e) => setValue(e)}
-          placeholder="Type to search..."
-        /> */}
-        <SelectCard
-          className="ring-0 bg-background dark:bg-dark-background"
-          items={filterItems}
-          selectedItem={status}
-          onValueChange={(e) => {
-            setStatus(e);
-          }}
-        />
-      </Grid>
+      <div className="flex mt-6 gap-6 w-full justify-end">
+        <div className="w-full md:w-1/2 order-2">
+          <SearchInput
+            className="h-[40px]"
+            onChange={(e) => setValue(e?.target?.value)}
+            placeholder="Type to search..."
+          />
+        </div>
+      </div>
       <div>
         <UniversalTable
           title="Verification Request List"

@@ -2,16 +2,15 @@
 
 "use client";
 
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Grid, Text, Title, Flex, Badge, TextInput } from "@tremor/react";
+import { Grid, Text, Title, Badge } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 import FanStatCard from "@/components/stat-cards/fan";
 import UserStatCard from "@/components/stat-cards/user";
 import CoacheStatCard from "@/components/stat-cards/coache";
 import { useDebouncedValue } from "@mantine/hooks";
-import SelectCard from "@/components/select";
 import Pagination from "@/components/pagination";
 import AthleteStatCard from "@/components/stat-cards/athlete";
 import UniversalTable from "@/components/universal-table";
@@ -22,10 +21,10 @@ import { observer } from "mobx-react-lite";
 import { useRootStore } from "@/mobx";
 import { Icons } from "@/components/Icons";
 import {
+  GetUserQuery,
   GetUsersQuery,
   QueryMode,
   SortOrder,
-  UserWhereInput,
   useDeleteUserMutation,
   useGetUsersLazyQuery,
   useGetUsersQuery,
@@ -37,14 +36,10 @@ import { SearchInput } from "../search-input";
 import { Button } from "../ui/button";
 import MoreHorizontal from "../Icons/more-horizontal";
 import { formatDate } from "@/lib/utils";
+import MultiSelector from "../multi-selector";
+import { usersFilter } from "@/lib/filters";
+import { generateProfilePath, getURLParams } from "@/lib/helpers";
 
-const filterItems = [
-  { name: "Active", value: "Active" },
-  { name: "Inactive", value: "Inactive" },
-  { name: "Athlete", value: "Athlete" },
-  { name: "Fan", value: "Fan" },
-  { name: "Coach", value: "Coach" },
-];
 const headerItems = [
   { name: "Name" },
   { name: "Username" },
@@ -54,13 +49,6 @@ const headerItems = [
   { name: "Created At" },
   { name: "Actions" },
 ];
-enum FilterEnum {
-  ACTIVE = "Active",
-  INACTIVE = "Inactive",
-  ATHLETE = "Athlete",
-  FAN = "Fan",
-  COACH = "Coach",
-}
 
 interface DashboardProps {}
 
@@ -70,7 +58,7 @@ const Dashboard: FC<DashboardProps> = () => {
     userStore: { setUsers },
   } = useRootStore();
   const router = useRouter();
-  const [status, setStatus] = useState<string>("");
+  const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [value, setValue] = useState<string>("");
   const [isActivating, setIsactivating] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
@@ -78,6 +66,7 @@ const Dashboard: FC<DashboardProps> = () => {
   const [deteteUser] = useDeleteUserMutation();
   const [updateUser] = useUpdateUserMutation();
   const [getUsers] = useGetUsersLazyQuery();
+  const filteredParams = getURLParams(selectedOptions);
 
   const {
     data: users,
@@ -86,6 +75,15 @@ const Dashboard: FC<DashboardProps> = () => {
     fetchMore,
   } = useGetUsersQuery({
     variables: {
+      where: {
+        ...filteredParams,
+        OR: [
+          { username: { contains: debounced, mode: QueryMode.Insensitive } },
+          { firstname: { contains: debounced, mode: QueryMode.Insensitive } },
+          { surname: { contains: debounced, mode: QueryMode.Insensitive } },
+          { email: { contains: debounced, mode: QueryMode.Insensitive } },
+        ],
+      },
       take: 10,
       orderBy: {
         createdAt: SortOrder.Desc,
@@ -93,54 +91,15 @@ const Dashboard: FC<DashboardProps> = () => {
     },
   });
 
-  const whereClause: UserWhereInput = useMemo(() => {
-    if (status === FilterEnum.INACTIVE) {
-      return {
-        isActive: {
-          equals: false,
-        },
-      };
-    } else if (status === FilterEnum.ACTIVE) {
-      return {
-        isActive: {
-          equals: true,
-        },
-      };
-    } else if (status === FilterEnum.ATHLETE) {
-      return {
-        accountTypeId: {
-          equals: 1,
-        },
-      };
-    } else if (status === FilterEnum.FAN) {
-      return {
-        accountTypeId: {
-          equals: 2,
-        },
-      };
-    } else if (status === FilterEnum.COACH) {
-      return {
-        accountTypeId: {
-          equals: 3,
-        },
-      };
-    } else {
-      return {};
-    }
-  }, [status]);
+  const handleSelectOption = (selectedList: any, selectedItem: any) => {
+    setSelectedOptions((prev) => [...prev, selectedItem]);
+  };
 
-  useEffect(() => {
-    refetch({
-      where: {
-        ...whereClause,
-        OR: [
-          { username: { contains: debounced, mode: QueryMode.Insensitive } },
-          { firstname: { contains: debounced, mode: QueryMode.Insensitive } },
-          { surname: { contains: debounced, mode: QueryMode.Insensitive } },
-        ],
-      },
-    });
-  }, [status, whereClause, debounced, refetch]);
+  const handleRemoveOption = (selectedList: any, removedItem: any) => {
+    setSelectedOptions((prev) => [
+      ...prev.filter((a) => a?.id !== removedItem?.id),
+    ]);
+  };
 
   const lastUserId = useMemo(() => {
     const lastPostInResults = users?.users[users?.users?.length - 1];
@@ -273,27 +232,11 @@ const Dashboard: FC<DashboardProps> = () => {
   };
 
   const renderItems = ({ item, id }: { item: any; id: any }) => {
-    let userType = "";
-    let userId = "";
-    if (item?.accountType?.role?.title?.toLowerCase() === AccountType.FAN) {
-      userType = "fan";
-      userId = item?.id;
-    } else if (
-      item?.accountType?.role?.title?.toLowerCase() === AccountType.ATHLETE
-    ) {
-      userType = "athlete";
-      userId = item?.id;
-    } else if (
-      item?.accountType?.role?.title?.toLowerCase() === AccountType.COACH
-    ) {
-      userType = "coach";
-      userId = item?.id;
-    }
-
+    const userPath = generateProfilePath(item as GetUserQuery["user"]);
     const userItems = [
       {
         name: "View Details",
-        onClick: () => router.push(`/${userType}/${userId}`, { scroll: true }),
+        onClick: () => router.push(userPath),
       },
       {
         name: `${item?.isActive ? "Deactivate" : "Activate"} Profile`,
@@ -309,9 +252,7 @@ const Dashboard: FC<DashboardProps> = () => {
         <TableCell>
           <div
             className="flex flex-row items-center justify-start"
-            onClick={() =>
-              router.push(`/${userType}/${Number(userId)}`, { scroll: true })
-            }
+            onClick={() => router.push(userPath)}
           >
             <UserAvatar
               className="h-[79px] w-[79px] shadow cursor-pointer"
@@ -388,13 +329,16 @@ const Dashboard: FC<DashboardProps> = () => {
           onChange={(e) => setValue(e.target.value)}
           placeholder="Type to search..."
         />
-        <SelectCard
-          className="bg-background dark:bg-dark-background dark:bg-dark-tremor-background"
-          items={filterItems}
-          selectedItem={status}
-          onValueChange={(e) => {
-            setStatus(e);
-          }}
+        <MultiSelector
+          options={usersFilter}
+          displayValue="label"
+          placeholder="Filter"
+          showCheckbox={true}
+          hidePlaceholder={true}
+          avoidHighlightFirstOption={true}
+          selectedOptions={selectedOptions}
+          handleRemove={handleRemoveOption}
+          handleSelect={handleSelectOption}
         />
       </Grid>
       <UniversalTable

@@ -295,23 +295,15 @@ const Page: FC<pageProps> = ({}) => {
       <Grid numItemsMd={2} numItemsLg={3} className="mt-6 gap-6">
         <SkillTypeStatCard title="Skill Types" />
       </Grid>
-      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-        <SearchInput
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="Type to search..."
-        />
-        <SelectCard
-          disabled
-          className=""
-          defaultValue="College"
-          items={filterItems}
-          selectedItem={status}
-          enableClear={true}
-          onValueChange={(e) => {
-            setStatus(e);
-          }}
-        />
-      </Grid>
+      <div className="flex mt-6 gap-6 w-full justify-end">
+        <div className="w-full md:w-1/2 order-2">
+          <SearchInput
+            onChange={(e) => setValue(e.target.value)}
+            placeholder="Type to search..."
+          />
+        </div>
+      </div>
+
       <UniversalTable
         title="Skill Type List"
         headerItems={headerItems}
