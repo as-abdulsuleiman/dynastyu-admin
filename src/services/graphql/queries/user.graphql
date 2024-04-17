@@ -94,6 +94,8 @@ fragment UserCommonParts on User {
       id
       name
       logo
+      state
+      city
       schoolType {
         name
         id
