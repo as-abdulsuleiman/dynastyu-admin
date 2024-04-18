@@ -33,7 +33,7 @@ const Page: FC<pageProps> = ({ params }) => {
   const { data, loading } = useGetUserQuery({
     variables: {
       where: {
-        id: Number(params?.userId),
+        id: params?.userId
       },
     },
   });

@@ -87,6 +87,7 @@ const SelectState: FC<SelectStateProps> = ({
         valueKey="value"
         displayKey="label"
         IdKey="id"
+        shouldFilter={true}
         isOpen={isOpen}
         selectedValue={{ value: stateSelected?.name }}
         onClose={() => setIsOpen(!isOpen)}

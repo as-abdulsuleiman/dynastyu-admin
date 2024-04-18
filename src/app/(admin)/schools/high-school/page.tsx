@@ -264,8 +264,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
     const userItems = [
       {
         name: "View Details",
-        onClick: () =>
-          router.push(`/school/${Number(item?.id)}`, { scroll: true }),
+        onClick: () => router.push(`/school/${item?.id}`, { scroll: true }),
       },
       {
         name: `Edit School`,

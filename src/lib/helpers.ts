@@ -55,7 +55,6 @@ const inventory = [
   
 ];
 
-
 export const getQueryParams = (params?: any[]) => {
   let itemsObject: any = {};
   inventory?.forEach((item: any, index: number) => {

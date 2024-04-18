@@ -25896,12 +25896,17 @@ export type GetCoachesQueryVariables = Exact<{
 
 export type GetCoachesQuery = { __typename?: 'Query', coachProfiles: Array<{ __typename?: 'CoachProfile', id: any, title?: string | null, schoolId?: any | null, verified: boolean, createdAt: any, userId: any, city?: string | null, state?: string | null, canReceiveMessages?: boolean | null, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, school?: { __typename?: 'School', name: string, logo?: string | null, address?: string | null } | null, user: { __typename?: 'User', firstname: string, surname: string, id: any, username?: string | null, avatar?: string | null, isActive: boolean, roleId?: any | null, email: string, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null } } }> };
 
-export type RegisterCoachMutationVariables = Exact<{
-  data: UserCreateInput;
+export type GetFindFirstCoachProfileQueryVariables = Exact<{
+  where?: InputMaybe<CoachProfileWhereInput>;
+  orderBy?: InputMaybe<Array<CoachProfileOrderByWithRelationInput> | CoachProfileOrderByWithRelationInput>;
+  cursor?: InputMaybe<CoachProfileWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  distinct?: InputMaybe<Array<CoachProfileScalarFieldEnum> | CoachProfileScalarFieldEnum>;
 }>;
 
 
-export type RegisterCoachMutation = { __typename?: 'Mutation', registerCoach: { __typename?: 'RegisterCoachReturn', coach: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null, email: string, coachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, school?: { __typename?: 'School', id: any, name: string } | null } | null } } };
+export type GetFindFirstCoachProfileQuery = { __typename?: 'Query', findFirstCoachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, schoolId?: any | null, verified: boolean, createdAt: any, userId: any, city?: string | null, state?: string | null, canReceiveMessages?: boolean | null, user: { __typename?: 'User', firstname: string, surname: string, id: any, username?: string | null, avatar?: string | null, isActive: boolean, roleId?: any | null, email: string } } | null };
 
 export type GetCoachQueryVariables = Exact<{
   where: CoachProfileWhereUniqueInput;
@@ -25909,6 +25914,13 @@ export type GetCoachQueryVariables = Exact<{
 
 
 export type GetCoachQuery = { __typename?: 'Query', coachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, schoolId?: any | null, verified: boolean, city?: string | null, state?: string | null, userId: any, createdAt: any, canReceiveMessages?: boolean | null, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, school?: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } } | null, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, user: { __typename?: 'User', firstname: string, surname: string, id: any, username?: string | null, avatar?: string | null, isActive: boolean, email: string, dob?: any | null, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null }, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, reposts: number, comments: number, interestedSchools: number, evaluationsCreated: number, prospectedSchools: number } | null } } | null };
+
+export type RegisterCoachMutationVariables = Exact<{
+  data: UserCreateInput;
+}>;
+
+
+export type RegisterCoachMutation = { __typename?: 'Mutation', registerCoach: { __typename?: 'RegisterCoachReturn', coach: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null, email: string, coachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, school?: { __typename?: 'School', id: any, name: string } | null } | null } } };
 
 export type UpdateCoachMutationVariables = Exact<{
   data: CoachProfileUpdateInput;
@@ -27603,53 +27615,76 @@ export type GetCoachesQueryHookResult = ReturnType<typeof useGetCoachesQuery>;
 export type GetCoachesLazyQueryHookResult = ReturnType<typeof useGetCoachesLazyQuery>;
 export type GetCoachesSuspenseQueryHookResult = ReturnType<typeof useGetCoachesSuspenseQuery>;
 export type GetCoachesQueryResult = Apollo.QueryResult<GetCoachesQuery, GetCoachesQueryVariables>;
-export const RegisterCoachDocument = gql`
-    mutation registerCoach($data: UserCreateInput!) {
-  registerCoach(data: $data) {
-    coach {
-      id
+export const GetFindFirstCoachProfileDocument = gql`
+    query getFindFirstCoachProfile($where: CoachProfileWhereInput, $orderBy: [CoachProfileOrderByWithRelationInput!], $cursor: CoachProfileWhereUniqueInput, $take: Int, $skip: Int, $distinct: [CoachProfileScalarFieldEnum!]) {
+  findFirstCoachProfile(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    skip: $skip
+    take: $take
+    distinct: $distinct
+  ) {
+    id
+    title
+    schoolId
+    verified
+    createdAt
+    userId
+    city
+    state
+    canReceiveMessages
+    user {
       firstname
       surname
+      id
       username
+      avatar
+      isActive
+      roleId
       email
-      coachProfile {
-        id
-        title
-        school {
-          id
-          name
-        }
-      }
     }
   }
 }
     `;
-export type RegisterCoachMutationFn = Apollo.MutationFunction<RegisterCoachMutation, RegisterCoachMutationVariables>;
 
 /**
- * __useRegisterCoachMutation__
+ * __useGetFindFirstCoachProfileQuery__
  *
- * To run a mutation, you first call `useRegisterCoachMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useRegisterCoachMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
+ * To run a query within a React component, call `useGetFindFirstCoachProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFindFirstCoachProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
  *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const [registerCoachMutation, { data, loading, error }] = useRegisterCoachMutation({
+ * const { data, loading, error } = useGetFindFirstCoachProfileQuery({
  *   variables: {
- *      data: // value for 'data'
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      distinct: // value for 'distinct'
  *   },
  * });
  */
-export function useRegisterCoachMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RegisterCoachMutation, RegisterCoachMutationVariables>) {
+export function useGetFindFirstCoachProfileQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetFindFirstCoachProfileQuery, GetFindFirstCoachProfileQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useMutation<RegisterCoachMutation, RegisterCoachMutationVariables>(RegisterCoachDocument, options);
+        return ApolloReactHooks.useQuery<GetFindFirstCoachProfileQuery, GetFindFirstCoachProfileQueryVariables>(GetFindFirstCoachProfileDocument, options);
       }
-export type RegisterCoachMutationHookResult = ReturnType<typeof useRegisterCoachMutation>;
-export type RegisterCoachMutationResult = Apollo.MutationResult<RegisterCoachMutation>;
-export type RegisterCoachMutationOptions = Apollo.BaseMutationOptions<RegisterCoachMutation, RegisterCoachMutationVariables>;
+export function useGetFindFirstCoachProfileLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetFindFirstCoachProfileQuery, GetFindFirstCoachProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetFindFirstCoachProfileQuery, GetFindFirstCoachProfileQueryVariables>(GetFindFirstCoachProfileDocument, options);
+        }
+export function useGetFindFirstCoachProfileSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetFindFirstCoachProfileQuery, GetFindFirstCoachProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetFindFirstCoachProfileQuery, GetFindFirstCoachProfileQueryVariables>(GetFindFirstCoachProfileDocument, options);
+        }
+export type GetFindFirstCoachProfileQueryHookResult = ReturnType<typeof useGetFindFirstCoachProfileQuery>;
+export type GetFindFirstCoachProfileLazyQueryHookResult = ReturnType<typeof useGetFindFirstCoachProfileLazyQuery>;
+export type GetFindFirstCoachProfileSuspenseQueryHookResult = ReturnType<typeof useGetFindFirstCoachProfileSuspenseQuery>;
+export type GetFindFirstCoachProfileQueryResult = Apollo.QueryResult<GetFindFirstCoachProfileQuery, GetFindFirstCoachProfileQueryVariables>;
 export const GetCoachDocument = gql`
     query getCoach($where: CoachProfileWhereUniqueInput!) {
   coachProfile(where: $where) {
@@ -27756,6 +27791,53 @@ export type GetCoachQueryHookResult = ReturnType<typeof useGetCoachQuery>;
 export type GetCoachLazyQueryHookResult = ReturnType<typeof useGetCoachLazyQuery>;
 export type GetCoachSuspenseQueryHookResult = ReturnType<typeof useGetCoachSuspenseQuery>;
 export type GetCoachQueryResult = Apollo.QueryResult<GetCoachQuery, GetCoachQueryVariables>;
+export const RegisterCoachDocument = gql`
+    mutation registerCoach($data: UserCreateInput!) {
+  registerCoach(data: $data) {
+    coach {
+      id
+      firstname
+      surname
+      username
+      email
+      coachProfile {
+        id
+        title
+        school {
+          id
+          name
+        }
+      }
+    }
+  }
+}
+    `;
+export type RegisterCoachMutationFn = Apollo.MutationFunction<RegisterCoachMutation, RegisterCoachMutationVariables>;
+
+/**
+ * __useRegisterCoachMutation__
+ *
+ * To run a mutation, you first call `useRegisterCoachMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterCoachMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registerCoachMutation, { data, loading, error }] = useRegisterCoachMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useRegisterCoachMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RegisterCoachMutation, RegisterCoachMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<RegisterCoachMutation, RegisterCoachMutationVariables>(RegisterCoachDocument, options);
+      }
+export type RegisterCoachMutationHookResult = ReturnType<typeof useRegisterCoachMutation>;
+export type RegisterCoachMutationResult = Apollo.MutationResult<RegisterCoachMutation>;
+export type RegisterCoachMutationOptions = Apollo.BaseMutationOptions<RegisterCoachMutation, RegisterCoachMutationVariables>;
 export const UpdateCoachDocument = gql`
     mutation updateCoach($data: CoachProfileUpdateInput!, $where: CoachProfileWhereUniqueInput!) {
   updateOneCoachProfile(where: $where, data: $data) {

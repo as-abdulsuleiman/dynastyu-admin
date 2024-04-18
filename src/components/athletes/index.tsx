@@ -120,7 +120,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
       const response = await deleteAthlete({
         variables: {
           where: {
-            id: Number(item.id),
+            id: item?.id,
           },
         },
       });
@@ -128,7 +128,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
         await deleteUser({
           variables: {
             where: {
-              id: Number(item?.user?.id),
+              id: item?.user?.id,
             },
           },
         });
