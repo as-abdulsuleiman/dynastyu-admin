@@ -63,14 +63,14 @@ fragment UserCommonParts on User {
     playerCardUrl
     verified
     gpa
-    _count{
+    _count {
       transcripts
       skills
       evaluations
       SkillHistory
       socialAccounts
     }
-    verifiedBy{
+    verifiedBy {
       id
       title
       city
@@ -144,7 +144,7 @@ fragment UserCommonParts on User {
     state
     verified
     schoolId
-    _count{
+    _count {
       verifiedAthletes
     }
     country {
@@ -580,5 +580,12 @@ mutation unFollowUser($where: FollowsWhereUniqueInput!) {
 mutation deleteUser($where: UserWhereUniqueInput!) {
   deleteOneUser(where: $where) {
     id
+  }
+}
+
+mutation createUser($data: CreateUserInput!) {
+  createUser(data: $data) {
+    tempPassword
+    user
   }
 }

@@ -262,6 +262,7 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
               label="Email"
               className="bg-transparent"
               placeholder="Your Email"
+              readOnly={!!fetchFan}
               error={errors.email?.message}
               {...register("email", { required: true })}
             />

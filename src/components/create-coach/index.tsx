@@ -265,18 +265,18 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
         });
         router.push(`/coach/${response.data?.updateOneCoachProfile?.userId}`);
       } else {
-        const resp = await getCoachProfile({
+        const { data: dbUser } = await getCoachProfile({
           variables: {
             where: {
               email: values?.email,
             },
           },
         });
-        const coachEmailFound = resp.data?.user?.email;
-        if (coachEmailFound && coachEmailFound === values?.email) {
+        const dbUserEmail = dbUser?.user?.email;
+        if (dbUserEmail && dbUserEmail === values?.email) {
           toast({
             title: "This email already exists",
-            description: `This email address, ${values?.email} has already been used.`,
+            description: `This email address ${values?.email} has already been used.`,
             variant: "destructive",
           });
         } else {
@@ -322,7 +322,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
         name="create_coach"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="grid grid-cols-12 gap-6 py-2">
+        <div className=" grid-cols-12 gap-6 py-2 hidden">
           <div className="col-span-12 place-self-center">
             <AvatarUploader
               height={120}
@@ -373,6 +373,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
             <Input
               id="email"
               label="Email"
+              readOnly={!!fetchCoach}
               className="bg-transparent"
               placeholder="Your Email"
               error={errors.email?.message}
