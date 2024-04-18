@@ -222,7 +222,7 @@ const Fans: FC<FansProps> = ({}) => {
       {
         name: `Edit Profile`,
         onClick: () =>
-          router.push(`/fans/edit?fan=${Number(item?.id)}`, {
+          router.push(`/fans/edit?fan=${item?.id}`, {
             scroll: true,
           }),
       },

@@ -169,7 +169,7 @@ const Users: FC<UsersProps> = ({}) => {
       const response = await deteteUser({
         variables: {
           where: {
-            id: Number(user?.id),
+            id: user?.id,
           },
         },
       });
@@ -202,7 +202,7 @@ const Users: FC<UsersProps> = ({}) => {
       const resp = await updateUser({
         variables: {
           where: {
-            id: Number(item?.id),
+            id: item?.id,
           },
           data: {
             isActive: { set: !isActive },
