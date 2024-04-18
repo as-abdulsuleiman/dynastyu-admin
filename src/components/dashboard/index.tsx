@@ -15,7 +15,6 @@ import Pagination from "@/components/pagination";
 import AthleteStatCard from "@/components/stat-cards/athlete";
 import UniversalTable from "@/components/universal-table";
 import UserAvatar from "@/components/user-avatar";
-import { AccountType } from "@/lib/enums/account-type.enum";
 import { useToast } from "@/hooks/use-toast";
 import { observer } from "mobx-react-lite";
 import { useRootStore } from "@/mobx";
@@ -26,6 +25,7 @@ import {
   QueryMode,
   SortOrder,
   useDeleteUserMutation,
+  useGetUserQuery,
   useGetUsersLazyQuery,
   useGetUsersQuery,
   useUpdateUserMutation,
@@ -67,6 +67,16 @@ const Dashboard: FC<DashboardProps> = () => {
   const [updateUser] = useUpdateUserMutation();
   const [getUsers] = useGetUsersLazyQuery();
   const filteredParams = getURLParams(selectedOptions);
+
+  const { data: firebaseUser } = useGetUserQuery({
+    variables: {
+      where: {
+        email: "zaq09663+asake@gmail.com",
+      },
+    },
+  });
+
+  console.log("firebaseUser", firebaseUser);
 
   const {
     data: users,

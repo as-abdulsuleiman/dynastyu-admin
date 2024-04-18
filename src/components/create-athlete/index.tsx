@@ -346,6 +346,7 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
               id="email"
               label="Email"
               autoComplete="email"
+              readOnly={!!fetchAthlete}
               className="bg-transparent"
               placeholder="Email"
               error={errors.email?.message}
