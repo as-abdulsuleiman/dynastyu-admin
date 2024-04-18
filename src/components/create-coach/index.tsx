@@ -281,13 +281,13 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
           });
         } else {
           await createCoach(payload);
+          await sendPasswordResetEmail(projectAuth, values?.email);
           toast({
             title: "Profile successfully created.",
-            // description: `A password reset link has been sent to ${values?.email} to complete the process.`,
+            description: `A password reset link has been sent to ${values?.email} to complete the process.`,
             variant: "successfull",
           });
           router.push(`/coaches`);
-          await sendPasswordResetEmail(projectAuth, values?.email);
         }
       }
     } catch (error: any) {
