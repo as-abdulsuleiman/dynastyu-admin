@@ -24,6 +24,7 @@ import MediaCard from "../media-card";
 import { Separator } from "../ui/separator";
 import MoreHorizontal from "../Icons/more-horizontal";
 import VerifiedIcon from "@/components/Icons/verified";
+import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
 
 interface VerificationRequestProps {
@@ -252,7 +253,7 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
             <div className="mt-1">
               {data?.skillVerificationRequest?.verified ? (
                 <div className="flex flex-col">
-                  <Badge className="px-1.5 pr-2" color="teal">
+                  <BadgeCard>
                     <span className="flex flex-row items-center text-tremor-default">
                       {data?.skillVerificationRequest?.verified ? (
                         <Icons.shield
@@ -264,7 +265,8 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
                         DU Verified
                       </span>
                     </span>
-                  </Badge>
+                  </BadgeCard>
+
                   <div className="flex flex-row items-center text-tremor-default mt-1">
                     Verification Date:{" "}
                     <div className="ml-2">

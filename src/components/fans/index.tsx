@@ -28,6 +28,7 @@ import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import MoreHorizontal from "../Icons/more-horizontal";
 import { formatDate } from "@/lib/utils";
+import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
 import MultiSelector from "../multi-selector";
 import { fanFilter } from "@/lib/filters";
@@ -270,15 +271,14 @@ const Fans: FC<FansProps> = ({}) => {
               {item?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (
-            <Badge
+            <BadgeCard
               size="xs"
-              className="cursor-pointer text-sm"
               color={item?.isActive ? "teal" : "rose"}
               icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
               datatype="moderateDecrease"
             >
               {item?.isActive ? "Active" : "Deactivated"}
-            </Badge>
+            </BadgeCard>
           )}
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">

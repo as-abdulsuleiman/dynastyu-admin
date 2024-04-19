@@ -2,7 +2,7 @@
 
 "use client";
 
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { Icons } from "@/components/Icons";
 import {
   GetSchoolsQuery,
@@ -14,7 +14,7 @@ import {
   useUpdateSchoolMutation,
 } from "@/services/graphql";
 import { useDebouncedValue } from "@mantine/hooks";
-import { Title, Text, Grid, Flex, TextInput } from "@tremor/react";
+import { Title, Text, Grid } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
 import SchoolStatCard from "@/components/stat-cards/school";
@@ -53,6 +53,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
   const [isDeletingSchool, setIsDeletingSchool] = useState(false);
   const [openDeleteSchoolPrompt, setOpenDeleteSchoolPrompt] = useState(false);
   const [activeSchool, setActiveSchool] = useState({});
+
   const {
     data: schools,
     loading,
@@ -66,6 +67,10 @@ const Schools: FC<SchoolsProps> = ({}) => {
             name: { equals: "College" },
           },
         },
+        OR: [
+          { name: { contains: debounced, mode: QueryMode.Insensitive } },
+          { email: { contains: debounced, mode: QueryMode.Insensitive } },
+        ],
       },
       orderBy: {
         createdAt: SortOrder.Desc,
@@ -73,22 +78,6 @@ const Schools: FC<SchoolsProps> = ({}) => {
       take: 10,
     },
   });
-
-  useEffect(() => {
-    refetch({
-      where: {
-        schoolType: {
-          is: {
-            name: { equals: "College" },
-          },
-        },
-        OR: [
-          { name: { contains: debounced, mode: QueryMode.Insensitive } },
-          { email: { contains: debounced, mode: QueryMode.Insensitive } },
-        ],
-      },
-    });
-  }, [debounced, refetch]);
 
   const lastUserId = useMemo(() => {
     const lastPostInResults = schools?.schools[schools?.schools?.length - 1];

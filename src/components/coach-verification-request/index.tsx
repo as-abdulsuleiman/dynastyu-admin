@@ -3,7 +3,7 @@
 "use client";
 
 import { FC, useEffect, useMemo, useState } from "react";
-import { Title, Text, Grid, Flex, Badge, TextInput } from "@tremor/react";
+import { Title, Text, Grid } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 import CoacheVerificationRequestStatCard from "@/components/stat-cards/coach-verification-request";
@@ -35,6 +35,7 @@ import { observer } from "mobx-react-lite";
 import { Separator } from "../ui/separator";
 import { formatDate } from "@/lib/utils";
 import MoreHorizontal from "../Icons/more-horizontal";
+import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
 
 enum FilterEnum {
@@ -461,9 +462,9 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
               {item?.verified ? "Unverifying..." : "Verifying..."}
             </div>
           ) : (
-            <Badge
+            <BadgeCard
               size="xs"
-              className="cursor-pointer px-[8px]"
+              className="px-[8px]"
               color={item?.verified ? "sky" : "rose"}
               icon={() => {
                 return item.verified ? (
@@ -475,7 +476,7 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
               datatype="moderateDecrease"
             >
               {item?.verified ? "Verified" : "Not Verified"}
-            </Badge>
+            </BadgeCard>
           )}
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">

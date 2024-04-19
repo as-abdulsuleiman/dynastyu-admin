@@ -276,15 +276,15 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
         const dbUserEmail = dbUser?.user?.email;
         if (dbUserEmail && dbUserEmail === values?.email) {
           toast({
-            title: "This email already exists",
-            description: `This email address ${values?.email} has already been used.`,
+            title: "Something went wrong.",
+            description: `This email address is already in use by another account.`,
             variant: "destructive",
           });
         } else {
           await createCoach(payload);
           await sendPasswordResetEmail(projectAuth, values?.email);
           toast({
-            title: "Profile successfully created.",
+            title: "Coach profile successfully created.",
             description: `A password reset link has been sent to ${values?.email} to complete the process.`,
             variant: "successfull",
           });

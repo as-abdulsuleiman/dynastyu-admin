@@ -9,6 +9,7 @@ import { Icons } from "@/components/Icons";
 import { Button } from "@/components/ui/button";
 import {
   SortOrder,
+  useGetSchoolLazyQuery,
   useGetSchoolQuery,
   useGetSchoolTypesQuery,
   useRegisterSchoolMutation,
@@ -74,6 +75,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
   const [conferences, setConferences] = useState<string[]>();
   const [registerSchool] = useRegisterSchoolMutation();
   const [updateSchool] = useUpdateSchoolMutation();
+  const [getSchoolProfile] = useGetSchoolLazyQuery();
 
   useEffect(() => {
     getDivisions();
@@ -249,31 +251,52 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
   };
 
   const onSubmit = async (values: FormData) => {
+    let updateType = editType && searchParams?.school;
     try {
       const payload = await SchoolValidator.validate(values);
-      let updateType = editType && searchParams?.school;
-      let resp;
       if (updateType) {
-        const res = await updateSchoolFn(payload);
-        resp = res?.data?.updateOneSchool;
+        const resp = await updateSchoolFn(payload);
+        const updatedSchool = resp.data?.updateOneSchool;
+        toast({
+          title: `${updatedSchool?.schoolType?.name} successfully updated`,
+          description: `You have successfully updated ${updatedSchool?.name} `,
+          variant: "successfull",
+        });
+        router.push(
+          updatedSchool?.schoolType?.name === "High School"
+            ? `/schools/high-school`
+            : `/schools/college`
+        );
       } else {
-        const res = await createSchool(payload);
-        resp = res?.data?.createOneSchool;
+        const { data: dbSchool } = await getSchoolProfile({
+          variables: {
+            where: {
+              email: values?.email,
+            },
+          },
+        });
+        const schoolEmail = dbSchool?.school?.email;
+        if (schoolEmail && schoolEmail === values?.email) {
+          toast({
+            title: "Something went wrong.",
+            description: `This email address is already in use by another account.`,
+            variant: "destructive",
+          });
+        } else {
+          const resp = await createSchool(payload);
+          const updatedSchool = resp?.data?.createOneSchool;
+          toast({
+            title: `${updatedSchool?.schoolType?.name} successfully created.`,
+            description: `You have successfully updated ${updatedSchool?.name} `,
+            variant: "successfull",
+          });
+          router.push(
+            updatedSchool?.schoolType?.name === "High School"
+              ? `/schools/high-school`
+              : `/schools/college`
+          );
+        }
       }
-      const toastTitle = updateType ? "School updated" : "School created";
-      const toastMsg = updateType
-        ? "You have successfully updated a school"
-        : "You have successfully created a school";
-      toast({
-        title: toastTitle,
-        description: toastMsg,
-        variant: "successfull",
-      });
-      router.push(
-        resp?.schoolType?.name === "High School"
-          ? `/schools/high-school`
-          : `/schools/college`
-      );
     } catch (error: any) {
       toast({
         title: "Something went wrong.",
