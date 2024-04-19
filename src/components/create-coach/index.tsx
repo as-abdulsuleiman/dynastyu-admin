@@ -307,7 +307,6 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
             icon={
               <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
             }
-            isIcon
             subHeader="Coach Details"
           />
         </div>

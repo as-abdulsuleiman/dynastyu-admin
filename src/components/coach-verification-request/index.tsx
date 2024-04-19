@@ -506,7 +506,6 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
               icon={
                 <Icons.whistle className="h-4 w-4 ml-2 fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis" />
               }
-              isIcon
               subHeader="Coaches Verification Overview"
             />
           </div>

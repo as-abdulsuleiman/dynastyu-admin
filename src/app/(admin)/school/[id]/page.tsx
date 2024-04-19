@@ -324,21 +324,7 @@ const Page: FC<PageProps> = ({ params }) => {
               <div className="flex flex-row items-center">
                 <ContentHeader
                   title={`${data?.school?.name || ""} `}
-                  isSubItem
-                  renderSubItem={
-                    <div className="flex flex-col">
-                      {" "}
-                      {subheaderItems?.map((item) => {
-                        return (
-                          <>
-                            <div>{item?.address}</div>
-                            <div>{item?.location}</div>
-                            <div>{item?.schoolType}</div>
-                          </>
-                        );
-                      })}
-                    </div>
-                  }
+                  subItems={subheaderItems}
                 />
               </div>
               {/* <Text>

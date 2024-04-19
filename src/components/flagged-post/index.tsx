@@ -282,7 +282,6 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
           icon={
             <FlagOffIcon className="h-4 w-4 ml-2 stroke-gray-700 dark:stroke-white" />
           }
-          isIcon
           subHeader="Flagged Post Overview"
         />
       </div>

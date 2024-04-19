@@ -345,7 +345,6 @@ const Fans: FC<FansProps> = ({}) => {
           icon={
             <Icons.fans className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
           }
-          isIcon
           subHeader="Fans Overview"
         />
       </div>

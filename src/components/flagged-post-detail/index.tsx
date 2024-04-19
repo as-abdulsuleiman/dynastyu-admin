@@ -112,7 +112,6 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
             icon={
               <FlagOffIcon className="h-4 w-4 ml-2 stroke-gray-700 dark:stroke-white" />
             }
-            isIcon
             subHeader="Flagged Post Details"
           />
         </div>

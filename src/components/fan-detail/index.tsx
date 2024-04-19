@@ -240,12 +240,12 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
 
   const subHeaderItems: any[] = [
     {
-      email: (
+      Email: (
         <div className="text-sm font-TTHovesRegular">
           {fanData?.user?.email ? fanData?.user?.email : ""}
         </div>
       ),
-      userName: (
+      UserName: (
         <div className="text-sm font-TTHovesRegular">
           {fanData?.user?.username ? `@${fanData?.user?.username}` : ""}{" "}
         </div>
@@ -274,23 +274,10 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
               title={
                 `${fanData?.user?.firstname} ${fanData?.user?.surname}` || ""
               }
-              isIcon
               icon={
                 <Icons.fans className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
               }
-              isSubItem
-              renderSubItem={
-                <div>
-                  {subHeaderItems?.map((item) => {
-                    return (
-                      <>
-                        <div>{item?.userName}</div>
-                        <div>{item?.email}</div>
-                      </>
-                    );
-                  })}
-                </div>
-              }
+              subItems={subHeaderItems}
             />
           </div>
         </div>

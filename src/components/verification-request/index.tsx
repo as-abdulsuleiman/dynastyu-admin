@@ -155,7 +155,6 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
             icon={
               <Icons.medal className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
             }
-            isIcon
             subHeader="Skill Verfication Details"
           />
         </div>

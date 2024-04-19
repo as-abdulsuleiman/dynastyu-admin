@@ -620,7 +620,6 @@ const Athletes: FC<AthletesProps> = ({}) => {
           icon={
             <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
           }
-          isIcon
           subHeader="Athletes Overview"
         />
       </div>

@@ -515,7 +515,6 @@ const Coaches: FC<CoachesProps> = ({}) => {
               icon={
                 <Icons.whistle className="h-4 w-4 ml-2 fill-foreground dark:fill-foreground" />
               }
-              isIcon
               subHeader="Coaches Overview"
             />
           </div>

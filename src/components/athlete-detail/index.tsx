@@ -534,7 +534,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
           {athleteData?.athleteProfile?.school?.name}
         </div>
       ),
-      userName: (
+      Username: (
         <div className="text-sm font-TTHovesRegular">
           {athleteData?.username ? `@${athleteData?.username}` : ""}
         </div>
@@ -564,21 +564,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               icon={
                 <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
               }
-              isIcon
-              isSubItem
-              renderSubItem={
-                <div>
-                  {subHeaderItems?.map((item) => {
-                    return (
-                      <>
-                        <div>{item?.userName}</div>
-                        <div>{item?.class}</div>
-                        <div>{item?.school}</div>
-                      </>
-                    );
-                  })}
-                </div>
-              }
+              subItems={subHeaderItems}
             />
           </div>
         </div>

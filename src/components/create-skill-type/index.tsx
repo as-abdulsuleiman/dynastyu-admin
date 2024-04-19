@@ -303,7 +303,6 @@ const CreateSkillType: FC<CreateSkillTypeProps> = ({
       <ContentHeader
         title={fetchSkillType ? "Edit Skill Type" : "Create New Skill Type"}
         subHeader="Skill Type Details"
-        isIcon
         icon={
           <SkillIcon className="h-[22px] w-[22px] ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
         }

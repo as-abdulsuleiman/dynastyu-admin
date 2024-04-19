@@ -206,7 +206,6 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
             icon={
               <Icons.circleUserRound className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
             }
-            isIcon
             subHeader="Fan Details"
           />
         </div>
