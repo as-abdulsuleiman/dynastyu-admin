@@ -15,12 +15,13 @@ import { CoachValidator } from "@/lib/validators/coach";
 import {
   useGetAccountTypesQuery,
   useGetCoachQuery,
+  useGetUserLazyQuery,
   useRegisterCoachMutation,
   useUpdateCoachMutation,
 } from "@/services/graphql";
 import ComboBoxCard from "../combobox-card";
 import SchoolDropdown from "../school-dropdown";
-import { coachTitleOptions, formatDate } from "@/lib/utils";
+import { coachTitleOptions } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { Icons } from "../Icons";
 import { projectAuth } from "@/services/firebase/config";
@@ -58,6 +59,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
   const [selectedStateId, setSelectedStateId] = useState<number | null>(0);
   const [registerCoach] = useRegisterCoachMutation();
   const [updateCoach] = useUpdateCoachMutation();
+  const [getCoachProfile] = useGetUserLazyQuery();
   const { action } = params;
   const editType = action === "edit" ?? false;
   const fetchCoach = editType && searchParams?.coach;
@@ -164,7 +166,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
 
   const handleAvatarUploadSuccess = useCallback(
     (url: string | null) => {
-      setValue("avatar", url as string);
+      setValue("avatar", (url || "") as string, { shouldDirty: true });
     },
     [setValue]
   );
@@ -189,11 +191,11 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               avatar: { set: values?.avatar },
               accountType: {
                 connect: {
-                  id: Number(values?.accountType?.accountTypeId),
+                  id: values?.accountType?.accountTypeId,
                 },
               },
               role: {
-                connect: { id: Number(values?.accountType?.roleId) },
+                connect: { id: values?.accountType?.roleId },
               },
             },
           },
@@ -224,19 +226,20 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
           avatar: values?.avatar,
           accountType: {
             connect: {
-              id: Number(values?.accountType?.accountTypeId),
+              id: values?.accountType?.accountTypeId,
             },
           },
           role: {
-            connect: { id: Number(values?.accountType?.roleId) },
+            connect: { id: values?.accountType?.roleId },
           },
           coachProfile: {
             create: {
-              title: values?.title,
+              verified: false,
+              title: values?.title || "",
               canReceiveMessages: values?.canReceiveMessages,
-              city: values?.city,
-              state: values?.state,
-              school: { connect: { id: Number(values?.school?.id) } },
+              city: values?.city || "",
+              state: values?.state || "",
+              school: { connect: { id: values?.school?.id } },
               country: {
                 connect: {
                   abbreviation: values?.country?.toLowerCase(),
@@ -250,26 +253,43 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
   };
 
   const onSubmit = async (values: FormData) => {
+    const updateType = action === "edit" && searchParams?.coach;
+
     try {
       const payload = await CoachValidator.validate(values);
-      const updateType = editType && searchParams?.coach;
       if (updateType) {
-        await updateCoachFn(payload);
-        await toast({
+        const response = await updateCoachFn(payload);
+        toast({
           title: "Profile successfully updated",
           description: `@${values?.username} profile has been successfully updated`,
           variant: "successfull",
         });
-        router.push(`/coach/${searchParams?.coach}`);
+        router.push(`/coach/${response.data?.updateOneCoachProfile?.userId}`);
       } else {
-        await createCoach(payload);
-        await sendPasswordResetEmail(projectAuth, values?.email);
-        await toast({
-          title: "Profile successfully created.",
-          description: `A password reset link has been sent to ${values?.email} to complete the process.`,
-          variant: "successfull",
+        const { data: dbUser } = await getCoachProfile({
+          variables: {
+            where: {
+              email: values?.email,
+            },
+          },
         });
-        router.push(`/coaches`);
+        const dbUserEmail = dbUser?.user?.email;
+        if (dbUserEmail && dbUserEmail === values?.email) {
+          toast({
+            title: "This email already exists",
+            description: `This email address ${values?.email} has already been used.`,
+            variant: "destructive",
+          });
+        } else {
+          await createCoach(payload);
+          await sendPasswordResetEmail(projectAuth, values?.email);
+          toast({
+            title: "Profile successfully created.",
+            description: `A password reset link has been sent to ${values?.email} to complete the process.`,
+            variant: "successfull",
+          });
+          router.push(`/coaches`);
+        }
       }
     } catch (error: any) {
       toast({
@@ -280,16 +300,6 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
     } finally {
     }
   };
-
-  const coachSchoolId = useMemo(() => {
-    if (coachData?.coachProfile?.schoolId) {
-      return {
-        id: { equals: coachData?.coachProfile?.schoolId },
-      };
-    } else {
-      return {};
-    }
-  }, [coachData?.coachProfile]);
 
   return (
     <main className="w-full h-full">
@@ -317,7 +327,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
         name="create_coach"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="grid grid-cols-12 gap-6 py-2">
+        <div className=" grid-cols-12 gap-6 py-2 hidden">
           <div className="col-span-12 place-self-center">
             <AvatarUploader
               height={120}
@@ -368,6 +378,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
             <Input
               id="email"
               label="Email"
+              readOnly={!!fetchCoach}
               className="bg-transparent"
               placeholder="Your Email"
               error={errors.email?.message}
@@ -433,6 +444,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
             <SchoolDropdown
               scrollAreaClass="h-72"
               hasSearch={true}
+              schoolId={coachData?.coachProfile?.schoolId}
               id="schoolId"
               // onBlur={() => setFocus("school", { shouldSelect: true })}
               onClose={() => setOpenSchool(!openSchool)}
@@ -450,17 +462,31 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               }}
               placeholder={"Select high school"}
               label="High School"
-              error={errors.school?.id?.message}
-              whereClause={{
-                ...coachSchoolId,
-                schoolType: {
-                  is: {
-                    name: {
-                      equals: "High School",
-                    },
-                  },
-                },
-              }}
+              error={errors?.school?.id?.message}
+              whereClause={
+                {
+                  // OR: [
+                  //   {
+                  //     schoolType: {
+                  //       is: {
+                  //         name: {
+                  //           equals: "High School",
+                  //         },
+                  //       },
+                  //     },
+                  //   },
+                  //   {
+                  //     schoolType: {
+                  //       is: {
+                  //         name: {
+                  //           equals: "College",
+                  //         },
+                  //       },
+                  //     },
+                  //   },
+                  // ],
+                }
+              }
             />
           </div>
           <div className="col-span-12 sm:col-span-6">
@@ -535,7 +561,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               <Checkbox
                 checked={canReceiveMessages}
                 onCheckedChange={(e: boolean) =>
-                  setValue("canReceiveMessages", e)
+                  setValue("canReceiveMessages", e, { shouldDirty: true })
                 }
                 id="can_receive_messages"
                 name="can_receive_messages"

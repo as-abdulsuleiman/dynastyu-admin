@@ -57,22 +57,40 @@ query getCoaches(
   }
 }
 
-mutation registerCoach($data: UserCreateInput!) {
-  registerCoach(data: $data) {
-    coach {
-      id
+query getFindFirstCoachProfile(
+  $where: CoachProfileWhereInput
+  $orderBy: [CoachProfileOrderByWithRelationInput!]
+  $cursor: CoachProfileWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [CoachProfileScalarFieldEnum!]
+) {
+  findFirstCoachProfile(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    skip: $skip
+    take: $take
+    distinct: $distinct
+  ) {
+    id
+    title
+    schoolId
+    verified
+    createdAt
+    userId
+    city
+    state
+    canReceiveMessages
+    user {
       firstname
       surname
+      id
       username
+      avatar
+      isActive
+      roleId
       email
-      coachProfile {
-        id
-        title
-        school {
-          id
-          name
-        }
-      }
     }
   }
 }
@@ -104,10 +122,10 @@ query getCoach($where: CoachProfileWhereUniqueInput!) {
       yearlyTuition
       yearFounded
       conference
-      schoolType{
+      schoolType {
         name
         id
-        _count{
+        _count {
           schools
         }
       }
@@ -144,6 +162,26 @@ query getCoach($where: CoachProfileWhereUniqueInput!) {
         interestedSchools
         evaluationsCreated
         prospectedSchools
+      }
+    }
+  }
+}
+
+mutation registerCoach($data: UserCreateInput!) {
+  registerCoach(data: $data) {
+    coach {
+      id
+      firstname
+      surname
+      username
+      email
+      coachProfile {
+        id
+        title
+        school {
+          id
+          name
+        }
       }
     }
   }

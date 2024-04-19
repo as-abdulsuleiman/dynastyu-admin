@@ -119,12 +119,96 @@ input[type="search"]::-webkit-search-cancel-button {
     scrollbar-width: none; /* Firefox */
   }
 }
-
-.tremor-MultiSelectItem-checkbox {
-  background-color: hsl(var(--primary)) !important;
+/* 
+#Multiselect {
+  background-color: transparent !important;
   accent-color: hsl(var(--primary)) !important;
 }
 
-.accent-tremor-brand {
+#Multiselect {
+  background-color: transparent !important;
   accent-color: hsl(var(--primary)) !important;
+}
+
+#Multiselect {
+  accent-color: hsl(var(--primary)) !important;
+}
+
+#Multiselect {
+  color: hsl(var(--foreground)) !important;
+} */
+
+.optionListContainer {
+  background-color: hsl(var(--background)) !important;
+  border-radius: calc(var(--radius) - 2px) !important;
+  /* border-color: hsl(var(--input)) !important; */
+  /* border-width: 1px !important; */
+}
+.highlightOption {
+  background-color: hsl(var(--muted) / 0.5) !important;
+}
+.multiSelectContainer li:hover {
+  background-color: hsl(var(--muted) / 0.5) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+.optionContainer {
+  border-radius: calc(var(--radius) - 2px) !important;
+  border-color: hsl(var(--input)) !important;
+  border-width: 1px !important;
+}
+.option .checkbox {
+  accent-color: hsl(var(--primary)) !important;
+  background-color: transparent !important;
+  border-color: hsl(var(--input)) !important;
+  border-width: 1px !important;
+}
+
+#Multiselect_input {
+  margin-top: 5.2px !important;
+  color: hsl(var(--foreground)) !important;
+}
+.searchBox {
+  color: hsl(var(--foreground)) !important;
+}
+
+::placeholder {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+::-ms-input-placeholder {
+  /* Edge 12 -18 */
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+.chevron-down_dir {
+  position: absolute !important;
+  right: 1px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 14px !important;
+}
+
+.chip {
+  padding: 2px 7px !important;
+  margin-bottom: 5px !important;
+  margin-right: 5px !important;
+  font-size: 12px !important;
+  font-family: TTHovesRegular !important;
+  cursor: pointer !important;
+}
+
+.searchWrapper {
+  border-radius: calc(var(--radius) - 2px) !important;
+  background-color: transparent !important;
+  border-width: 1px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+  position: relative !important;
+  border-color: hsl(var(--input)) !important;
+  display: block !important;
 }

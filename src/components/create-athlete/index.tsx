@@ -204,7 +204,7 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
   const onSubmit = async (values: FormData) => {
     try {
       const payload = await AthleteValidator.validate(values);
-      await updateAthleteProile({
+      const resp = await updateAthleteProile({
         variables: {
           where: {
             id: searchParams?.athlete,
@@ -256,6 +256,7 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
         description: `@${values?.username} profile has been successfully updated`,
         variant: "successfull",
       });
+      router.push(`/athlete/${resp.data?.updateOneAthleteProfile?.userId}`);
     } catch (error: any) {
       toast({
         title: "Something went wrong.",
@@ -265,9 +266,6 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
     }
   };
 
-  // if (loading) {
-  //   return <SuspenseLoader />;
-  // }
   return (
     <main className="w-full h-full">
       <Button
@@ -353,6 +351,7 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
               id="email"
               label="Email"
               autoComplete="email"
+              readOnly={!!fetchAthlete}
               className="bg-transparent"
               placeholder="Email"
               error={errors.email?.message}
@@ -417,10 +416,11 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
             <SchoolDropdown
               scrollAreaClass="h-72"
               hasSearch={true}
-              id="schoolId"
+              id="athleteProfileschoolId"
+              schoolId={athleteData?.athleteProfile?.schoolId}
               onClose={() => setOpenHighSchool(!openHighSchool)}
               isOpen={openHighSchool}
-              selectedValue={{ value: school?.name }}
+              selectedValue={{ value: school?.name, id: school?.id }}
               onSelectValue={(school) => {
                 setValue(
                   "school",
@@ -435,8 +435,12 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
               label="High School"
               error={errors.school?.id?.message}
               whereClause={{
-                schoolTypeId: {
-                  equals: 1,
+                schoolType: {
+                  is: {
+                    name: {
+                      equals: "High School",
+                    },
+                  },
                 },
               }}
             />

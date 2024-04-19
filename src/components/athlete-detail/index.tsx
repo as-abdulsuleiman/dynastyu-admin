@@ -424,6 +424,22 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     });
   }
 
+  const formattedSchoolName = useMemo(() => {
+    let formattedName;
+    if (athleteData?.athleteProfile?.school) {
+      if (athleteData?.athleteProfile?.school?.name) {
+        formattedName = athleteData?.athleteProfile?.school?.name;
+      }
+      if (athleteData?.athleteProfile?.school?.city) {
+        formattedName = `${formattedName}, ${athleteData?.athleteProfile?.school?.city}`;
+      }
+      if (athleteData?.athleteProfile?.school?.state) {
+        formattedName = `${formattedName}, ${athleteData?.athleteProfile?.school?.state}`;
+      }
+    }
+    return formattedName;
+  }, [athleteData?.athleteProfile]);
+
   const renderBadges = () => {
     return (
       <>
@@ -691,7 +707,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               type="string"
               className="mt-4"
               title="High Scool"
-              content={athleteData?.athleteProfile?.school?.name}
+              content={formattedSchoolName}
               icon={() => (
                 <Icons.school className="h-[19px] w-[19px] mr-2" color="teal" />
               )}

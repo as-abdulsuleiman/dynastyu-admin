@@ -2,17 +2,15 @@
 
 "use client";
 
-import { FC, useEffect, useMemo, useState } from "react";
-import { Title, Text, Grid, Flex, Badge, TextInput } from "@tremor/react";
+import { FC, useMemo, useState } from "react";
+import { Title, Text, Grid, Badge } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 import CoacheStatCard from "@/components/stat-cards/coache";
-import SelectCard from "@/components/select";
 import {
   GetUsersQuery,
   QueryMode,
   SortOrder,
-  UserWhereInput,
   useDeleteCoachMutation,
   useDeleteUserMutation,
   useGetCoachesLazyQuery,
@@ -37,24 +35,10 @@ import MoreHorizontal from "../Icons/more-horizontal";
 import { formatDate } from "@/lib/utils";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 import ContentHeader from "../content-header";
+import { getURLParams } from "@/lib/helpers";
+import MultiSelector from "../multi-selector";
+import { coachFilter } from "@/lib/filters";
 
-enum FilterEnum {
-  ACTIVE = "Active",
-  INACTIVE = "Inactive",
-  APPROVED = "Approved",
-  VERIFIED = "Verified",
-  NOTVERIFIED = "Not Verified",
-  NOTAPPROVED = "Not Approved",
-}
-
-const filterItems = [
-  { name: "Active", value: "Active" },
-  { name: "Inactive", value: "Inactive" },
-  { name: "Verified", value: "Verified" },
-  { name: "Not Verified", value: "Not Verified" },
-  // { name: "Approved", value: "Approved" },
-  // { name: "Not Approved", value: "Not Approved" },
-];
 const headerItems = [
   { name: "Name" },
   { name: "Username" },
@@ -77,8 +61,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
   const {
     coacheStore: { setCoaches },
   } = useRootStore();
-  const [status, setStatus] = useState<string>("");
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [value, setValue] = useState<string>("");
   const [debounced] = useDebouncedValue(value, 300);
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
@@ -88,6 +71,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
   const [deleteUser] = useDeleteUserMutation();
   const [getUsers] = useGetUsersLazyQuery();
   const [getCoaches] = useGetCoachesLazyQuery();
+  const filteredParams = getURLParams(selectedOptions);
 
   const {
     data: coachesData,
@@ -104,63 +88,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
             },
           },
         },
-      },
-      take: 10,
-      orderBy: {
-        createdAt: SortOrder.Desc,
-      },
-    },
-  });
-
-  const whereClause: UserWhereInput = useMemo(() => {
-    if (status === FilterEnum.INACTIVE) {
-      return {
-        isActive: {
-          equals: false,
-        },
-      };
-    } else if (status === FilterEnum.ACTIVE) {
-      return {
-        isActive: {
-          equals: true,
-        },
-      };
-    } else if (status === FilterEnum.VERIFIED) {
-      return {
-        coachProfile: {
-          is: {
-            verified: {
-              equals: true,
-            },
-          },
-        },
-      };
-    } else if (status === FilterEnum.NOTVERIFIED) {
-      return {
-        coachProfile: {
-          is: {
-            verified: {
-              equals: false,
-            },
-          },
-        },
-      };
-    } else {
-      return {};
-    }
-  }, [status]);
-
-  useEffect(() => {
-    refetch({
-      where: {
-        accountType: {
-          is: {
-            title: {
-              equals: "Coach",
-            },
-          },
-        },
-        ...whereClause,
+        ...filteredParams,
         OR: [
           {
             username: {
@@ -188,8 +116,12 @@ const Coaches: FC<CoachesProps> = ({}) => {
           },
         ],
       },
-    });
-  }, [status, whereClause, debounced, refetch]);
+      take: 10,
+      orderBy: {
+        createdAt: SortOrder.Desc,
+      },
+    },
+  });
 
   const lastUserId = useMemo(() => {
     const lastPostInResults =
@@ -326,6 +258,16 @@ const Coaches: FC<CoachesProps> = ({}) => {
 
   const handleEditCoach = (item: any) => {
     router.push(`/coaches/edit?coach=${item?.coachProfile?.id}`);
+  };
+
+  const handleSelectOption = (selectedList: any, selectedItem: any) => {
+    setSelectedOptions((prev) => [...prev, selectedItem]);
+  };
+
+  const handleRemoveOption = (selectedList: any, removedItem: any) => {
+    setSelectedOptions((prev) => [
+      ...prev.filter((a) => a?.id !== removedItem?.id),
+    ]);
   };
 
   const fetchNext = () => {
@@ -529,13 +471,16 @@ const Coaches: FC<CoachesProps> = ({}) => {
           onChange={(e) => setValue(e.target.value)}
           placeholder="Search..."
         />
-        <SelectCard
-          className="ring-0 bg-background dark:bg-dark-background"
-          items={filterItems}
-          selectedItem={status}
-          onValueChange={(e) => {
-            setStatus(e);
-          }}
+        <MultiSelector
+          options={coachFilter}
+          displayValue="label"
+          placeholder="Filter"
+          showCheckbox={true}
+          hidePlaceholder={true}
+          avoidHighlightFirstOption={true}
+          selectedOptions={selectedOptions}
+          handleRemove={handleRemoveOption}
+          handleSelect={handleSelectOption}
         />
       </Grid>
       <UniversalTable

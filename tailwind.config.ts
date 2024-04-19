@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
 const { fontFamily, screens } = require("tailwindcss/defaultTheme");
+const colors = require('tailwindcss/colors');
 
 module.exports = {
   darkMode: ["class"],
@@ -70,7 +71,7 @@ module.exports = {
           },
           background: {
             // muted: "hsl(var(--muted-foreground))", // gray-50
-            subtle: 'hsl(var(--background))', // gray-100
+            subtle: "hsl(var(--accent))", // gray-100
             DEFAULT: 'hsl(var(--background))', // white
             emphasis:'hsl(var(--background))', // gray-700
           },
@@ -101,7 +102,7 @@ module.exports = {
           },
           background: {
             // muted:  "hsl(var(--background))", // custom
-            subtle:  'hsl(var(--background))', // gray-800
+            subtle: "hsl(var(--accent))", // gray-800
             DEFAULT: 'hsl(var(--background))', // gray-900
             emphasis: 'hsl(var(--background))', // gray-300
           },

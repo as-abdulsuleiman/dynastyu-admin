@@ -2,19 +2,17 @@
 
 "use client";
 
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { Icons } from "@/components/Icons";
 import { useRootStore } from "@/mobx";
-import { Title, Text, Grid, Flex, Badge, TextInput } from "@tremor/react";
+import { Title, Text, Grid, Badge } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
-import SelectCard from "@/components/select";
 import AthleteStatCard from "@/components/stat-cards/athlete";
 import { useDebouncedValue } from "@mantine/hooks";
 import {
   GetUsersQuery,
   QueryMode,
   SortOrder,
-  UserWhereInput,
   useDeleteAthleteMutation,
   useDeleteUserMutation,
   useGetUsersLazyQuery,
@@ -36,35 +34,9 @@ import { Button } from "../ui/button";
 import { formatDate } from "@/lib/utils";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 import ContentHeader from "../content-header";
-
-const filterItems = [
-  { name: "Active", value: "Active" },
-  { name: "Inactive", value: "Inactive" },
-  { name: "Verified", value: "Verified" },
-  { name: "Not Verified", value: "Not Verified" },
-];
-
-const headerItems = [
-  { name: "Name" },
-  { name: "Username" },
-  { name: "Email" },
-  { name: "Position" },
-  { name: "Status" },
-  { name: "Verified" },
-  { name: "Featured" },
-  { name: "Created At" },
-  { name: "Actions" },
-];
-
-enum FilterEnum {
-  ACTIVE = "Active",
-  INACTIVE = "Inactive",
-  APPROVED = "Approved",
-  VERIFIED = "Verified",
-  NOTVERIFIED = "Not Verified",
-  NOTAPPROVED = "Not Approved",
-  FEATURED = "Featured",
-}
+import { athleteFilter, athleteHeaderItems } from "@/lib/filters";
+import MultiSelector from "../multi-selector";
+import { getURLParams } from "@/lib/helpers";
 
 interface AthletesProps {}
 
@@ -76,8 +48,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
     userStore: { setUsers },
     athleteStore: { setAthletes },
   } = useRootStore();
-
-  const [status, setStatus] = useState<string>("");
+  const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [value, setValue] = useState<string>("");
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
@@ -87,6 +58,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
   const [deleteAthlete] = useDeleteAthleteMutation();
   const [getUsers] = useGetUsersLazyQuery();
   const [getAthletes] = useGetUsersLazyQuery();
+  const filteredParams = getURLParams(selectedOptions);
 
   const {
     data: athleteData,
@@ -103,75 +75,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
             },
           },
         },
-      },
-      take: 10,
-      orderBy: {
-        createdAt: SortOrder.Desc,
-      },
-    },
-  });
-
-  // const { data, loading, refetch, fetchMore } = useGetAthletesQuery({
-  //   variables: {
-  //     take: 10,
-  //     orderBy: {
-  //       createdAt: SortOrder.Desc,
-  //     },
-  //   },
-  //   // returnPartialData: true,
-  //   fetchPolicy: "cache-first",
-  //   // pollInterval: 30 * 1000,
-  // });
-
-  const whereClause: UserWhereInput = useMemo(() => {
-    if (status === FilterEnum.INACTIVE) {
-      return {
-        isActive: {
-          equals: false,
-        },
-      };
-    } else if (status === FilterEnum.ACTIVE) {
-      return {
-        isActive: {
-          equals: true,
-        },
-      };
-    } else if (status === FilterEnum.VERIFIED) {
-      return {
-        athleteProfile: {
-          is: {
-            verified: {
-              equals: true,
-            },
-          },
-        },
-      };
-    } else if (status === FilterEnum.NOTVERIFIED) {
-      return {
-        athleteProfile: {
-          is: {
-            verified: {
-              equals: false,
-            },
-          },
-        },
-      };
-    } else {
-      return {};
-    }
-  }, [status]);
-
-  useEffect(() => {
-    refetch({
-      where: {
-        accountType: {
-          is: {
-            title: {
-              equals: "Athlete",
-            },
-          },
-        },
-        ...whereClause,
+        ...filteredParams,
         OR: [
           {
             username: {
@@ -199,8 +103,12 @@ const Athletes: FC<AthletesProps> = ({}) => {
           },
         ],
       },
-    });
-  }, [status, whereClause, debounced, refetch]);
+      take: 10,
+      orderBy: {
+        createdAt: SortOrder.Desc,
+      },
+    },
+  });
 
   const lastUserId = useMemo(() => {
     const lastPostInResults =
@@ -213,7 +121,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
       const response = await deleteAthlete({
         variables: {
           where: {
-            id: Number(item.id),
+            id: item?.id,
           },
         },
       });
@@ -221,7 +129,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
         await deleteUser({
           variables: {
             where: {
-              id: Number(item?.user?.id),
+              id: item?.user?.id,
             },
           },
         });
@@ -465,7 +373,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
       },
       {
         name: `${
-          item?.athleteProfile.verified ? "Unverify" : "Verify"
+          item?.athleteProfile?.verified ? "Unverify" : "Verify"
         } Profile`,
         onClick: () => handleVerifyAthlete(item),
       },
@@ -611,6 +519,15 @@ const Athletes: FC<AthletesProps> = ({}) => {
       </TableRow>
     );
   };
+  const handleSelectOption = (selectedList: any, selectedItem: any) => {
+    setSelectedOptions((prev) => [...prev, selectedItem]);
+  };
+
+  const handleRemoveOption = (selectedList: any, removedItem: any) => {
+    setSelectedOptions((prev) => [
+      ...prev.filter((a) => a?.id !== removedItem?.id),
+    ]);
+  };
 
   return (
     <main className="w-full h-full">
@@ -629,31 +546,25 @@ const Athletes: FC<AthletesProps> = ({}) => {
         <AthleteStatCard />
       </Grid>
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-        {/* <TextInput
-          className="h-[38px]"
-          icon={() => {
-            return <Icons.search className="h-10 w-5 ml-2.5" />;
-          }}
-          onValueChange={(e) => setValue(e)}
-          placeholder="Type to search..."
-        /> */}
         <SearchInput
           onChange={(e) => setValue(e.target.value)}
           placeholder="Type to search..."
         />
-
-        <SelectCard
-          className="ring-0 bg-background dark:bg-dark-background"
-          items={filterItems}
-          selectedItem={status}
-          onValueChange={(e) => {
-            setStatus(e);
-          }}
+        <MultiSelector
+          options={athleteFilter}
+          displayValue="label"
+          placeholder="Filter"
+          showCheckbox={true}
+          hidePlaceholder={true}
+          avoidHighlightFirstOption={true}
+          selectedOptions={selectedOptions}
+          handleRemove={handleRemoveOption}
+          handleSelect={handleSelectOption}
         />
       </Grid>
       <UniversalTable
         title="Athlete List"
-        headerItems={headerItems}
+        headerItems={athleteHeaderItems}
         items={athleteData?.users as any[]}
         loading={loading}
         renderItems={renderItems}

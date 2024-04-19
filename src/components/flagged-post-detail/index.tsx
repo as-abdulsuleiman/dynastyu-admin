@@ -7,7 +7,7 @@ import { observer } from "mobx-react-lite";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import { useGetPostFlagQuery } from "@/services/graphql";
+import { GetUserQuery, useGetPostFlagQuery } from "@/services/graphql";
 import { Title, Text } from "@tremor/react";
 import MediaCard from "../media-card";
 import FlagOffIcon from "@/components/Icons/flag-off";
@@ -16,6 +16,7 @@ import UserAvatar from "../user-avatar";
 import { Icons } from "../Icons";
 import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
+import { generateProfilePath } from "@/lib/helpers";
 import ContentHeader from "../content-header";
 
 interface FlaggedPostDetailProps {
@@ -37,10 +38,12 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
   });
 
   const renderPostedBy = (post: any) => {
+    const userPath = generateProfilePath(post?.user as GetUserQuery["user"]);
     return (
       <div className="flex flex-col justify-center mt-8">
         <div className="flex flex-row items-center">
           <UserAvatar
+            onClick={() => router.push(userPath)}
             className="h-[90px] w-[90px] shadow cursor-pointer"
             height={90}
             width={90}
@@ -58,17 +61,18 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
               {post?.user?.surname}
             </div>
             @{post?.user?.username}
-            <div></div>
           </div>
         </div>
       </div>
     );
   };
   const renderFlaggedBy = (user: any) => {
+    const userPath = generateProfilePath(user as GetUserQuery["user"]);
     return (
       <div className="flex flex-col justify-center mt-8">
         <div className="flex flex-row items-center">
           <UserAvatar
+            onClick={() => router.push(userPath)}
             className="h-[90px] w-[90px] shadow cursor-pointer"
             height={90}
             width={90}
