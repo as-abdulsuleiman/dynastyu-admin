@@ -26293,6 +26293,13 @@ export type DeleteSchoolMutationVariables = Exact<{
 
 export type DeleteSchoolMutation = { __typename?: 'Mutation', deleteOneSchool?: { __typename?: 'School', id: any, uuid: string, email: string } | null };
 
+export type DeleteManyInterestedSchoolsMutationVariables = Exact<{
+  where?: InputMaybe<InterestedSchoolsWhereInput>;
+}>;
+
+
+export type DeleteManyInterestedSchoolsMutation = { __typename?: 'Mutation', deleteManyInterestedSchools: { __typename?: 'AffectedRowsOutput', count: number } };
+
 export type GetManySkillsQueryVariables = Exact<{
   where?: InputMaybe<SkillsWhereInput>;
   orderBy?: InputMaybe<Array<SkillsOrderByWithRelationInput> | SkillsOrderByWithRelationInput>;
@@ -29971,6 +29978,39 @@ export function useDeleteSchoolMutation(baseOptions?: ApolloReactHooks.MutationH
 export type DeleteSchoolMutationHookResult = ReturnType<typeof useDeleteSchoolMutation>;
 export type DeleteSchoolMutationResult = Apollo.MutationResult<DeleteSchoolMutation>;
 export type DeleteSchoolMutationOptions = Apollo.BaseMutationOptions<DeleteSchoolMutation, DeleteSchoolMutationVariables>;
+export const DeleteManyInterestedSchoolsDocument = gql`
+    mutation deleteManyInterestedSchools($where: InterestedSchoolsWhereInput) {
+  deleteManyInterestedSchools(where: $where) {
+    count
+  }
+}
+    `;
+export type DeleteManyInterestedSchoolsMutationFn = Apollo.MutationFunction<DeleteManyInterestedSchoolsMutation, DeleteManyInterestedSchoolsMutationVariables>;
+
+/**
+ * __useDeleteManyInterestedSchoolsMutation__
+ *
+ * To run a mutation, you first call `useDeleteManyInterestedSchoolsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteManyInterestedSchoolsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteManyInterestedSchoolsMutation, { data, loading, error }] = useDeleteManyInterestedSchoolsMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteManyInterestedSchoolsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteManyInterestedSchoolsMutation, DeleteManyInterestedSchoolsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteManyInterestedSchoolsMutation, DeleteManyInterestedSchoolsMutationVariables>(DeleteManyInterestedSchoolsDocument, options);
+      }
+export type DeleteManyInterestedSchoolsMutationHookResult = ReturnType<typeof useDeleteManyInterestedSchoolsMutation>;
+export type DeleteManyInterestedSchoolsMutationResult = Apollo.MutationResult<DeleteManyInterestedSchoolsMutation>;
+export type DeleteManyInterestedSchoolsMutationOptions = Apollo.BaseMutationOptions<DeleteManyInterestedSchoolsMutation, DeleteManyInterestedSchoolsMutationVariables>;
 export const GetManySkillsDocument = gql`
     query getManySkills($where: SkillsWhereInput, $orderBy: [SkillsOrderByWithRelationInput!], $cursor: SkillsWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SkillsScalarFieldEnum!]) {
   findFirstSkills(

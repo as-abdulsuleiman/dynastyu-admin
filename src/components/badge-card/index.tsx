@@ -1,9 +1,12 @@
+/** @format */
+
 import React, { FC, ReactNode } from "react";
 import { Badge, BadgeProps } from "@tremor/react";
+import { cn } from "@/lib/utils";
 
 interface BadgeCardProps {
   className?: string;
-  icon?: BadgeProps["icon"] | any;
+  icon?: BadgeProps["icon"];
   color?: BadgeProps["color"];
   size?: BadgeProps["size"];
   datatype?: string;
@@ -22,7 +25,10 @@ const BadgeCard: FC<BadgeCardProps> = ({
       <Badge
         size={size}
         datatype={datatype}
-        className={`${className} cursor-pointer flex text-sm font-TTHovesRegular`}
+        className={cn(
+          "cursor-pointer flex text-sm font-TTHovesRegular",
+          className
+        )}
         color={color}
         icon={icon}
       >
