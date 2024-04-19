@@ -13,7 +13,7 @@ import {
   useGetUserQuery,
   useUpdateCoachMutation,
 } from "@/services/graphql";
-import { Title, Text, Grid, Badge } from "@tremor/react";
+import { Title, Text, Grid } from "@tremor/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import UsersAnalytics from "@/components/analytics/users";
@@ -41,6 +41,7 @@ import { CommandItem } from "../ui/command";
 import { cn } from "@/lib/utils";
 import PromptAlert from "../prompt-alert";
 import CalloutCard from "../callout";
+import BadgeCard from "../badge-card";
 
 interface CoachDetailProps {
   params: {
@@ -431,9 +432,9 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
           </>
         ) : (
           <div className="hidden lg:flex lg:flex-row lg:items-center">
-            <Badge
+            <BadgeCard
               datatype={coachData?.isActive ? "increase" : "decrease"}
-              className="flex flex-row  text-sm font-TTHovesRegular pl-3"
+              className="pl-3"
               color={coachData?.isActive ? "teal" : "rose"}
               icon={
                 updatingProfile === StatusEnum.ACTIVATING
@@ -448,8 +449,8 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                 : coachData?.isActive
                 ? "Active"
                 : "Deactivated"}
-            </Badge>
-            <Badge
+            </BadgeCard>
+            <BadgeCard
               datatype={
                 updatingProfile === StatusEnum.VERIFYING
                   ? undefined
@@ -457,7 +458,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                   ? "increase"
                   : "decrease"
               }
-              className="flex flex-row ml-3 mr-3"
+              className="ml-3 mr-3"
               color={coachData?.coachProfile?.verified ? "sky" : "rose"}
               icon={() => {
                 if (updatingProfile === StatusEnum.VERIFYING) {
@@ -478,7 +479,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                 : coachData?.coachProfile?.verified
                 ? "Verified"
                 : "Not Verified"}
-            </Badge>
+            </BadgeCard>
           </div>
         )}
       </>

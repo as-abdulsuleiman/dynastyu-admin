@@ -3,7 +3,7 @@
 "use client";
 
 import { FC, useMemo, useState } from "react";
-import { Title, Text, Grid, Badge } from "@tremor/react";
+import { Title, Text, Grid } from "@tremor/react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import {
@@ -40,6 +40,7 @@ import StarIcon from "../Icons/starIcon";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 import ProfileImage from "../profile-image";
 import CalloutCard from "../callout";
+import BadgeCard from "../badge-card";
 interface AthleteDetailProps {
   params: {
     id: number;
@@ -457,9 +458,9 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
           </>
         ) : (
           <div className="hidden lg:flex lg:flex-row lg:items-center">
-            <Badge
+            <BadgeCard
               datatype={athleteData?.isActive ? "increase" : "decrease"}
-              className="flex flex-row  text-sm font-TTHovesRegular pl-3"
+              className="ml-3"
               color={athleteData?.isActive ? "teal" : "rose"}
               icon={
                 updatingProfile === StatusEnum.ACTIVATING
@@ -474,8 +475,9 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                 : athleteData?.isActive
                 ? "Active"
                 : "Deactivated"}
-            </Badge>
-            <Badge
+            </BadgeCard>
+
+            <BadgeCard
               datatype={
                 updatingProfile === StatusEnum.VERIFYING
                   ? undefined
@@ -483,7 +485,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                   ? "increase"
                   : "decrease"
               }
-              className="flex flex-row ml-3"
+              className="ml-3"
               color={athleteData?.athleteProfile?.verified ? "sky" : "rose"}
               icon={() => {
                 if (updatingProfile === StatusEnum.VERIFYING) {
@@ -504,12 +506,13 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                 : athleteData?.athleteProfile?.verified
                 ? "Verified"
                 : "Not Verified"}
-            </Badge>
-            <Badge
+            </BadgeCard>
+
+            <BadgeCard
               datatype={
                 athleteData?.athleteProfile?.featured ? "increase" : "decrease"
               }
-              className="flex flex-row ml-3 mr-3"
+              className="ml-3 mr-3"
               color={athleteData?.athleteProfile?.featured ? "yellow" : "rose"}
               icon={() => {
                 if (updatingProfile === StatusEnum.FEATURING) {
@@ -524,7 +527,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                 : athleteData?.athleteProfile?.featured
                 ? "Featured"
                 : "Not Featured"}
-            </Badge>
+            </BadgeCard>
           </div>
         )}
       </>

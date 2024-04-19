@@ -2,8 +2,8 @@
 
 "use client";
 
-import { FC, useMemo, useState } from "react";
-import { Title, Text, Grid, Badge } from "@tremor/react";
+import { FC, useEffect, useMemo, useState } from "react";
+import { Title, Text, Grid } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 import CoacheStatCard from "@/components/stat-cards/coache";
@@ -34,6 +34,7 @@ import { Separator } from "../ui/separator";
 import MoreHorizontal from "../Icons/more-horizontal";
 import { formatDate } from "@/lib/utils";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
+import BadgeCard from "../badge-card";
 import { getURLParams } from "@/lib/helpers";
 import MultiSelector from "../multi-selector";
 import { coachFilter } from "@/lib/filters";
@@ -387,16 +388,17 @@ const Coaches: FC<CoachesProps> = ({}) => {
               {item?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (
-            <Badge
-              size="xs"
-              className="cursor-pointer text-sm"
-              color={item?.isActive ? "teal" : "rose"}
-              // tooltip={item?.user?.isActive ? "Active" : "Deactivated"}
-              icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
-              datatype="moderateDecrease"
-            >
-              {item?.isActive ? "Active" : "Deactivated"}
-            </Badge>
+            <div className="flex justify-center">
+              <BadgeCard
+                size="xs"
+                color={item?.isActive ? "teal" : "rose"}
+                // tooltip={item?.user?.isActive ? "Active" : "Deactivated"}
+                icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
+                datatype="moderateDecrease"
+              >
+                {item?.isActive ? "Active" : "Deactivated"}
+              </BadgeCard>
+            </div>
           )}
         </TableCell>
         <TableCell className="text-center text-sm">
@@ -407,22 +409,23 @@ const Coaches: FC<CoachesProps> = ({}) => {
               {item?.coachProfile?.verified ? "Unverifying..." : "Verifying..."}
             </div>
           ) : (
-            <Badge
-              size="xs"
-              className="cursor-pointer px-[8px text-sm"
-              color={item?.coachProfile?.verified ? "sky" : "rose"}
-              // tooltip={item?.verified ? "Verified" : "Not Verified"}
-              icon={() => {
-                return item?.coachProfile?.verified ? (
-                  <Icons.badgeCheck className="h-4 w-4 mr-1" color="sky" />
-                ) : (
-                  <Icons.badgeAlert className="h-4 w-4 mr-1" color="rose" />
-                );
-              }}
-              datatype="moderateDecrease"
-            >
-              {item?.coachProfile?.verified ? "Verified" : "Not Verified"}
-            </Badge>
+            <div className="flex justify-center">
+              <BadgeCard
+                size="xs"
+                color={item?.coachProfile?.verified ? "sky" : "rose"}
+                // tooltip={item?.verified ? "Verified" : "Not Verified"}
+                icon={() => {
+                  return item?.coachProfile?.verified ? (
+                    <Icons.badgeCheck className="h-4 w-4 mr-1" color="sky" />
+                  ) : (
+                    <Icons.badgeAlert className="h-4 w-4 mr-1" color="rose" />
+                  );
+                }}
+                datatype="moderateDecrease"
+              >
+                {item?.coachProfile?.verified ? "Verified" : "Not Verified"}
+              </BadgeCard>
+            </div>
           )}
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">

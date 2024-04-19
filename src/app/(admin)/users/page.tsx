@@ -32,6 +32,7 @@ import MenubarCard from "@/components/menubar";
 import MoreHorizontal from "@/components/Icons/more-horizontal";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import BadgeCard from "@/components/badge-card";
 import MultiSelector from "@/components/multi-selector";
 import { usersFilter } from "@/lib/filters";
 import { generateProfilePath, getURLParams } from "@/lib/helpers";
@@ -281,15 +282,14 @@ const Users: FC<UsersProps> = ({}) => {
               {item?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (
-            <Badge
+            <BadgeCard
               size="xs"
-              className="cursor-pointer text-sm"
               color={item?.isActive ? "teal" : "rose"}
               icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
               datatype="moderateDecrease"
             >
               {item?.isActive ? "Active" : "Deactivated"}
-            </Badge>
+            </BadgeCard>
           )}
         </TableCell>
         <TableCell className="text-sm">

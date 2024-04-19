@@ -26,6 +26,7 @@ import { Separator } from "../ui/separator";
 import { SearchInput } from "../search-input";
 import { Button } from "../ui/button";
 import MoreHorizontal from "../Icons/more-horizontal";
+import BadgeCard from "../badge-card";
 
 interface SkillVerificationRequestProps {}
 
@@ -216,17 +217,18 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
           {item?.user?.email}
         </TableCell>
         <TableCell className="text-center text-sm">
-          <Badge
+          <BadgeCard
             size="xs"
             className="cursor-pointer"
             color={item?.verified ? "sky" : "rose"}
+            // tooltip="decrease"
             icon={() => {
               return <Icons.badgeAlert className="h-4 w-4 mr-1" color="rose" />;
             }}
             datatype="moderateDecrease"
           >
             {item?.verified ? "DU Verified" : "Not Verified"}
-          </Badge>
+          </BadgeCard>
         </TableCell>
         <TableCell className="text-center text-sm">
           <div>

@@ -4,7 +4,7 @@
 
 import { FC, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Grid, Text, Title, Badge } from "@tremor/react";
+import { Grid, Text, Title } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 import FanStatCard from "@/components/stat-cards/fan";
@@ -36,6 +36,7 @@ import { SearchInput } from "../search-input";
 import { Button } from "../ui/button";
 import MoreHorizontal from "../Icons/more-horizontal";
 import { formatDate } from "@/lib/utils";
+import BadgeCard from "../badge-card";
 import MultiSelector from "../multi-selector";
 import { usersFilter } from "@/lib/filters";
 import { generateProfilePath, getURLParams } from "@/lib/helpers";
@@ -291,7 +292,7 @@ const Dashboard: FC<DashboardProps> = () => {
               {item?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (
-            <Badge
+            <BadgeCard
               size="xs"
               className="cursor-pointer text-sm"
               color={item?.isActive ? "teal" : "rose"}
@@ -299,7 +300,7 @@ const Dashboard: FC<DashboardProps> = () => {
               datatype="moderateDecrease"
             >
               {item?.isActive ? "Active" : "Deactivated"}
-            </Badge>
+            </BadgeCard>
           )}
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">

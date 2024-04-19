@@ -3,17 +3,11 @@
 "use client";
 
 import { FC, ReactNode } from "react";
-import {
-  Badge,
-  BadgeDelta,
-  CategoryBar,
-  Flex,
-  Legend,
-  Metric,
-} from "@tremor/react";
+import { BadgeDelta, CategoryBar, Flex, Legend, Metric } from "@tremor/react";
 import { Skeleton } from "../ui/skeleton";
 import { observer } from "mobx-react-lite";
 import { Card, CardContent } from "../ui/card";
+import BadgeCard from "../badge-card";
 
 interface CountCardProps {
   title: string;
@@ -51,7 +45,7 @@ const StatCard: FC<CountCardProps> = ({
             )}
           </div>
           {showIcon ? (
-            <Badge
+            <BadgeCard
               color="teal"
               icon={() => {
                 return <>{icon}</>;

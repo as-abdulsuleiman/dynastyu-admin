@@ -4,7 +4,6 @@
 
 import { FC } from "react";
 import {
-  Badge,
   BarList,
   Bold,
   Color,
@@ -19,6 +18,7 @@ import { observer } from "mobx-react-lite";
 import StarIcon from "@/components/Icons/starIcon";
 import { Icons } from "@/components/Icons";
 import { Card, CardContent } from "@/components/ui/card";
+import BadgeCard from "@/components/badge-card";
 
 type BarData = {
   key?: string;
@@ -98,20 +98,19 @@ const UsersAnalytics: FC<indexProps> = ({
                 {/* {isVerified ?} */}
 
                 {showStatus ? (
-                  <Badge
+                  <BadgeCard
                     datatype={isActive ? "increase" : "decrease"}
-                    className="flex flex-row "
                     color={isActive ? "teal" : "rose"}
                     icon={isActive ? StatusOnlineIcon : StatusOfflineIcon}
                   >
                     {isActive ? "Active" : "Deactivated"}
-                  </Badge>
+                  </BadgeCard>
                 ) : null}
 
                 {showVerified ? (
-                  <Badge
+                  <BadgeCard
                     datatype={isVerified ? "increase" : "decrease"}
-                    className="flex flex-row ml-3"
+                    className=" ml-3"
                     color={isVerified ? "sky" : "rose"}
                     icon={() => {
                       if (isVerified) {
@@ -132,18 +131,19 @@ const UsersAnalytics: FC<indexProps> = ({
                     }}
                   >
                     {isVerified ? "Verified" : "Not Verified"}
-                  </Badge>
+                  </BadgeCard>
                 ) : null}
 
                 {showFeatured ? (
-                  <Badge
+                  <BadgeCard
                     datatype={featured ? "increase" : "decrease"}
-                    className="flex flex-row ml-3"
+                    className="ml-3"
                     color={featured ? "yellow" : "rose"}
                     icon={() => <StarIcon className="h-4 w-4 mr-1" />}
                   >
+                    {" "}
                     {featured ? "Featured" : "Not Featured"}
-                  </Badge>
+                  </BadgeCard>
                 ) : null}
               </div>
             </div>
