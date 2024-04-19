@@ -2,22 +2,20 @@
 
 "use client";
 
-import { FC, useEffect, useMemo, useState } from "react";
-import { Title, Text, Flex, Grid, TextInput } from "@tremor/react";
+import { FC, useMemo, useState } from "react";
+import { Title, Text, Grid, Badge } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOfflineIcon, StatusOnlineIcon } from "@heroicons/react/outline";
 import {
   GetUsersQuery,
   QueryMode,
   SortOrder,
-  UserWhereInput,
   useGetUsersQuery,
   useUpdateUserMutation,
 } from "@/services/graphql";
 import FanStatCard from "@/components/stat-cards/fan";
 import { SearchInput } from "../search-input";
 import { useDebouncedValue } from "@mantine/hooks";
-import SelectCard from "@/components/select";
 import UniversalTable from "../universal-table";
 import Pagination from "../pagination";
 import UserAvatar from "../user-avatar";
@@ -31,13 +29,9 @@ import { Button } from "../ui/button";
 import MoreHorizontal from "../Icons/more-horizontal";
 import { formatDate } from "@/lib/utils";
 import BadgeCard from "../badge-card";
-
-const filterItems = [
-  { name: "Active", value: "Active" },
-  { name: "Inactive", value: "Inactive" },
-  // { name: "Verified", value: "Verified" },
-  // { name: "Not Verified", value: "Not Verified" },
-];
+import MultiSelector from "../multi-selector";
+import { fanFilter } from "@/lib/filters";
+import { getURLParams } from "@/lib/helpers";
 
 const headerItems = [
   { name: "Name" },
@@ -48,15 +42,6 @@ const headerItems = [
   { name: "Actions" },
 ];
 
-enum FilterEnum {
-  ACTIVE = "Active",
-  INACTIVE = "Inactive",
-  APPROVED = "Approved",
-  VERIFIED = "Verified",
-  NOTVERIFIED = "Not Verified",
-  NOTAPPROVED = "Not Approved",
-}
-
 interface FansProps {}
 
 const Fans: FC<FansProps> = ({}) => {
@@ -65,12 +50,14 @@ const Fans: FC<FansProps> = ({}) => {
   //   userStore: { setUsers },
   // } = useRootStore();
   const router = useRouter();
-  const [status, setStatus] = useState<string>("");
+  const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [value, setValue] = useState<string>("");
   const [debounced] = useDebouncedValue(value, 300);
   const [isActivating, setIsactivating] = useState<boolean>();
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [updateUser] = useUpdateUserMutation();
+  const filteredParams = getURLParams(selectedOptions);
+
   const {
     data: fansData,
     loading: loading,
@@ -86,43 +73,7 @@ const Fans: FC<FansProps> = ({}) => {
             },
           },
         },
-      },
-      take: 10,
-      orderBy: {
-        createdAt: SortOrder.Desc,
-      },
-    },
-  });
-
-  const whereClause: UserWhereInput = useMemo(() => {
-    if (status === FilterEnum.INACTIVE) {
-      return {
-        isActive: {
-          equals: false,
-        },
-      };
-    } else if (status === FilterEnum.ACTIVE) {
-      return {
-        isActive: {
-          equals: true,
-        },
-      };
-    } else {
-      return {};
-    }
-  }, [status]);
-
-  useEffect(() => {
-    refetch({
-      where: {
-        accountType: {
-          is: {
-            title: {
-              equals: "Fan",
-            },
-          },
-        },
-        ...whereClause,
+        ...filteredParams,
         OR: [
           {
             username: {
@@ -150,8 +101,12 @@ const Fans: FC<FansProps> = ({}) => {
           },
         ],
       },
-    });
-  }, [status, whereClause, debounced, refetch]);
+      take: 10,
+      orderBy: {
+        createdAt: SortOrder.Desc,
+      },
+    },
+  });
 
   const handleActiveUser = async (item: any) => {
     setSelectedUser(item?.id);
@@ -187,6 +142,16 @@ const Fans: FC<FansProps> = ({}) => {
       setIsactivating(false);
       setSelectedUser(null);
     }
+  };
+
+  const handleSelectOption = (selectedList: any, selectedItem: any) => {
+    setSelectedOptions((prev) => [...prev, selectedItem]);
+  };
+
+  const handleRemoveOption = (selectedList: any, removedItem: any) => {
+    setSelectedOptions((prev) => [
+      ...prev.filter((a) => a?.id !== removedItem?.id),
+    ]);
   };
 
   const lastUserId = useMemo(() => {
@@ -258,7 +223,7 @@ const Fans: FC<FansProps> = ({}) => {
       {
         name: `Edit Profile`,
         onClick: () =>
-          router.push(`/fans/edit?fan=${Number(item?.id)}`, {
+          router.push(`/fans/edit?fan=${item?.id}`, {
             scroll: true,
           }),
       },
@@ -349,21 +314,16 @@ const Fans: FC<FansProps> = ({}) => {
           onChange={(e) => setValue(e.target.value)}
           placeholder="Type to search..."
         />
-        {/* <TextInput
-          className="h-[38px]"
-          icon={() => {
-            return <Icons.search className="h-10 w-5 ml-2.5" />;
-          }}
-          onValueChange={(e) => setValue(e)}
-          placeholder="Type to search..."
-        /> */}
-        <SelectCard
-          className="ring-0 bg-background dark:bg-dark-background"
-          items={filterItems}
-          selectedItem={status}
-          onValueChange={(e) => {
-            setStatus(e);
-          }}
+        <MultiSelector
+          options={fanFilter}
+          displayValue="label"
+          placeholder="Filter"
+          showCheckbox={true}
+          hidePlaceholder={true}
+          avoidHighlightFirstOption={true}
+          selectedOptions={selectedOptions}
+          handleRemove={handleRemoveOption}
+          handleSelect={handleSelectOption}
         />
       </Grid>
       <UniversalTable

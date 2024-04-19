@@ -199,7 +199,7 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
       const response = await deleteCoach({
         variables: {
           where: {
-            id: Number(item.id),
+            id: item.id,
           },
         },
       });
@@ -207,7 +207,7 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
         await deleteUser({
           variables: {
             where: {
-              id: Number(item?.user?.id),
+              id: item?.user?.id,
             },
           },
         });
@@ -241,7 +241,7 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
       await updateCoach({
         variables: {
           where: {
-            id: Number(item?.id),
+            id: item?.id,
           },
           data: {
             user: {
@@ -425,9 +425,7 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
         <TableCell>
           <div
             className="flex flex-row justify-start items-center"
-            onClick={() =>
-              router.push(`/coach/${Number(item?.id)}`, { scroll: true })
-            }
+            onClick={() => router.push(`/coach/${item?.id}`, { scroll: true })}
           >
             <UserAvatar
               className="h-[79px] w-[79px] shadow cursor-pointer"

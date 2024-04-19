@@ -6,6 +6,7 @@ import { FC, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   QueryMode,
+  SortOrder,
   useDeleteCoachMutation,
   useDeleteUserMutation,
   useGetSchoolsQuery,
@@ -99,6 +100,9 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
         ],
       },
       take: 10,
+      orderBy: {
+        createdAt: SortOrder.Desc,
+      },
     },
   });
 
@@ -394,6 +398,22 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     },
   ];
 
+  const formattedSchoolName = useMemo(() => {
+    let formattedName;
+    if (coachData?.coachProfile?.school) {
+      if (coachData?.coachProfile?.school?.name) {
+        formattedName = coachData?.coachProfile?.school?.name;
+      }
+      if (coachData?.coachProfile?.school?.city) {
+        formattedName = `${formattedName}, ${coachData?.coachProfile?.school?.city}`;
+      }
+      if (coachData?.coachProfile?.school?.state) {
+        formattedName = `${formattedName}, ${coachData?.coachProfile?.school?.state}`;
+      }
+    }
+    return formattedName;
+  }, [coachData?.coachProfile?.school]);
+
   const renderBadges = () => {
     return (
       <>
@@ -508,7 +528,6 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       </CommandItem>
     );
   };
-
   return (
     <main className="w-full h-full relative">
       <Button
@@ -687,8 +706,11 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
               color="teal"
               type="string"
               className="mt-4"
-              title="High Scool"
-              content={coachData?.coachProfile?.school?.name}
+              title={
+                coachData?.coachProfile?.school?.schoolType?.name ||
+                "High Scool"
+              }
+              content={formattedSchoolName}
               icon={() => (
                 <Icons.school className="h-[19px] w-[19px] mr-2" color="teal" />
               )}

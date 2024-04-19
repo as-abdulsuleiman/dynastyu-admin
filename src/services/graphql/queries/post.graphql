@@ -230,7 +230,6 @@ query getPostFlag($where: PostFlagWhereUniqueInput!) {
     userId
     postId
     reason
-    userId
     postId
     user {
       id
@@ -240,9 +239,18 @@ query getPostFlag($where: PostFlagWhereUniqueInput!) {
       surname
       avatar
       email
+      accountType {
+        id
+        title
+        role {
+          id
+          title
+        }
+      }
     }
     post {
       id
+      userId
       uuid
       videos
       images
@@ -258,6 +266,14 @@ query getPostFlag($where: PostFlagWhereUniqueInput!) {
         surname
         avatar
         email
+        accountType {
+          id
+          title
+          role {
+            id
+            title
+          }
+        }
       }
     }
   }

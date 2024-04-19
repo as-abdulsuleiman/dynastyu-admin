@@ -83,6 +83,7 @@ const SelectCity: FC<SelectCityProps> = ({
         id="state"
         valueKey="value"
         displayKey="label"
+        shouldFilter={true}
         IdKey="id"
         isOpen={isOpen}
         selectedValue={{ value: citySelected?.name }}

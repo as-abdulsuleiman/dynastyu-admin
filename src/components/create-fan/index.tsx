@@ -128,7 +128,7 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
 
   const onSubmit = async (values: FormData) => {
     try {
-      await updateUser({
+      const resp = await updateUser({
         variables: {
           where: {
             id: searchParams?.fan,
@@ -157,12 +157,12 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
           },
         },
       });
-      await toast({
+      toast({
         title: "Profile successfully updated",
         description: `@${values?.username} profile has been successfully updated`,
         variant: "successfull",
       });
-      router.push(`/fan/${searchParams?.fan}`);
+      router.push(`/fan/${resp.data?.updateOneUser?.id}`);
     } catch (error: any) {
       toast({
         title: "Something went wrong.",
@@ -262,6 +262,7 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
               label="Email"
               className="bg-transparent"
               placeholder="Your Email"
+              readOnly={!!fetchFan}
               error={errors.email?.message}
               {...register("email", { required: true })}
             />

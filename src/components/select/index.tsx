@@ -2,7 +2,6 @@
 
 import { FC, ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { UserCircleIcon } from "@heroicons/react/outline";
 import { Select, SelectItem } from "@tremor/react";
 import { observer } from "mobx-react-lite";
 
@@ -15,11 +14,13 @@ interface SelectCardProps {
   defaultValue?: string;
   disabled?: boolean;
   enableClear?: boolean;
+  handleClick?: (e: any) => void;
 }
 
 type Items = {
   name: string;
-  value: string;
+  value: any;
+  label: string;
   icon?: ReactNode | JSX.Element;
 };
 
@@ -32,6 +33,7 @@ const SelectCard: FC<SelectCardProps> = ({
   placeholder,
   defaultValue,
   enableClear = false,
+  handleClick,
 }) => {
   return (
     <Select
@@ -47,8 +49,10 @@ const SelectCard: FC<SelectCardProps> = ({
         return (
           <SelectItem
             key={index}
-            value={a?.value}
-            // icon={a?.icon || UserCircleIcon}
+            value={a?.label}
+            onClick={() => {
+              handleClick ? handleClick(a.value) : null;
+            }}
             className="cursor-pointer"
           >
             {a?.name}
