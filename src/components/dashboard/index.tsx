@@ -69,16 +69,6 @@ const Dashboard: FC<DashboardProps> = () => {
   const [getUsers] = useGetUsersLazyQuery();
   const filteredParams = getURLParams(selectedOptions);
 
-  const { data: firebaseUser } = useGetUserQuery({
-    variables: {
-      where: {
-        email: "zaq09663+asake@gmail.com",
-      },
-    },
-  });
-
-  console.log("firebaseUser", firebaseUser);
-
   const {
     data: users,
     loading: loading,

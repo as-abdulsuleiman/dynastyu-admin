@@ -110,45 +110,45 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
 
   const handleConfirmPrompt = async (school: any) => {
     setIsDeletingSchool(true);
-    const athletesInterestedId = school?.school?.athletesInterested?.map(
-      (val: any) => ({
+    const athletesInterestedId =
+      school?.school?.athletesInterested?.map((val: any) => ({
         athleteId_schoolId: {
           athleteId: val?.athleteId,
           schoolId: school?.id,
         },
-      })
-    );
+      })) || [];
 
-    const athletesRecruitedId = school?.school?.athletesRecruited?.map(
-      (val: any) => ({
+    const athletesRecruitedId =
+      school?.school?.athletesRecruited?.map((val: any) => ({
         athleteId_schoolId: {
           athleteId: val?.athleteId,
           schoolId: school?.id,
         },
-      })
-    );
+      })) || [];
 
-    const athletesProspectedId = school?.school?.athletesProspected?.map(
-      (val: any) => ({
+    const athletesProspectedId =
+      school?.school?.athletesProspected?.map((val: any) => ({
         athleteId_schoolId: {
           athleteId: val?.athleteId,
           schoolId: school?.id,
         },
-      })
-    );
-    const schoolPostId = school?.school?.posts?.map((val: any) => ({
-      id: {
-        in: val?.id,
-      },
-    }));
+      })) || [];
+    const schoolPostId =
+      school?.school?.posts?.map((val: any) => ({
+        id: {
+          in: val?.id,
+        },
+      })) || [];
 
-    const athletesId = school?.athletes?.map((val: any) => ({
-      userId: val?.userId,
-    }));
+    const athletesId =
+      school?.athletes?.map((val: any) => ({
+        userId: val?.userId,
+      })) || [];
 
-    const coachesId = school?.coaches?.map((val: any) => ({
-      userId: val?.userId,
-    }));
+    const coachesId =
+      school?.coaches?.map((val: any) => ({
+        userId: val?.userId,
+      })) || [];
     try {
       await updateSchool({
         variables: {
@@ -157,26 +157,27 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           },
           data: {
             athletesProspected: {
-              disconnect: athletesProspectedId || [],
+              disconnect: athletesProspectedId,
             },
             athletesRecruited: {
-              disconnect: athletesRecruitedId || [],
+              disconnect: athletesRecruitedId,
             },
             athletesInterested: {
-              disconnect: athletesInterestedId || [],
+              disconnect: athletesInterestedId,
             },
             posts: {
-              deleteMany: schoolPostId || [],
+              deleteMany: schoolPostId,
             },
             athletes: {
-              disconnect: athletesId || [],
+              disconnect: athletesId,
             },
             coaches: {
-              disconnect: coachesId || [],
+              disconnect: coachesId,
             },
           },
         },
       });
+
       await deleteSchool({
         variables: {
           where: {

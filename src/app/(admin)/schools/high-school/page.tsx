@@ -2,12 +2,11 @@
 
 "use client";
 
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { Icons } from "@/components/Icons";
 import {
   GetSchoolsQuery,
   QueryMode,
-  SchoolWhereInput,
   SortOrder,
   useDeleteSchoolMutation,
   useGetSchoolLazyQuery,
@@ -15,10 +14,9 @@ import {
   useUpdateSchoolMutation,
 } from "@/services/graphql";
 import { useDebouncedValue } from "@mantine/hooks";
-import { Title, Text, Grid, Flex, TextInput } from "@tremor/react";
+import { Title, Text, Grid } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
-import SelectCard from "@/components/select";
 import SchoolStatCard from "@/components/stat-cards/school";
 import UniversalTable from "@/components/universal-table";
 import Pagination from "@/components/pagination";
@@ -27,7 +25,6 @@ import { Button } from "@/components/ui/button";
 import { observer } from "mobx-react-lite";
 import { SearchInput } from "@/components/search-input";
 import { useToast } from "@/hooks/use-toast";
-import { ToastAction } from "@/components/ui/toast";
 import { Separator } from "@/components/ui/separator";
 import MenubarCard from "@/components/menubar";
 import MoreHorizontal from "@/components/Icons/more-horizontal";
@@ -55,6 +52,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
   const [isDeletingSchool, setIsDeletingSchool] = useState(false);
   const [openDeleteSchoolPrompt, setOpenDeleteSchoolPrompt] = useState(false);
   const [activeSchool, setActiveSchool] = useState({});
+
   const {
     data: schools,
     loading,
@@ -68,6 +66,10 @@ const Schools: FC<SchoolsProps> = ({}) => {
             name: { equals: "High School" },
           },
         },
+        OR: [
+          { name: { contains: debounced, mode: QueryMode.Insensitive } },
+          { email: { contains: debounced, mode: QueryMode.Insensitive } },
+        ],
       },
       orderBy: {
         createdAt: SortOrder.Desc,
@@ -75,22 +77,6 @@ const Schools: FC<SchoolsProps> = ({}) => {
       take: 10,
     },
   });
-
-  useEffect(() => {
-    refetch({
-      where: {
-        schoolType: {
-          is: {
-            name: { equals: "High School" },
-          },
-        },
-        OR: [
-          { name: { contains: debounced, mode: QueryMode.Insensitive } },
-          { email: { contains: debounced, mode: QueryMode.Insensitive } },
-        ],
-      },
-    });
-  }, [debounced, refetch]);
 
   const lastUserId = useMemo(() => {
     const lastPostInResults = schools?.schools[schools?.schools?.length - 1];

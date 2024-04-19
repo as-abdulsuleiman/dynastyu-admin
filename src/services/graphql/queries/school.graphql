@@ -151,19 +151,19 @@ query getSchool($where: SchoolWhereUniqueInput!) {
         avatar
       }
     }
-    posts{
+    posts {
       id
       uuid
       userId
     }
-    athletes{
+    athletes {
       id
       uuid
       userId
     }
   }
 }
- 
+
 query getFindFirstSchool(
   $where: SchoolWhereInput
   $orderBy: [SchoolOrderByWithRelationInput!]
@@ -503,5 +503,11 @@ mutation deleteSchool($where: SchoolWhereUniqueInput!) {
     id
     uuid
     email
+  }
+}
+
+mutation deleteManyInterestedSchools($where: InterestedSchoolsWhereInput) {
+  deleteManyInterestedSchools(where: $where) {
+    count
   }
 }
