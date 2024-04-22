@@ -238,18 +238,14 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
     );
   };
 
-  const subHeaderItems: any[] = [
+  const subHeaderItems = [
     {
-      Email: (
-        <div className="text-sm font-TTHovesRegular">
-          {fanData?.user?.email ? fanData?.user?.email : ""}
-        </div>
-      ),
-      UserName: (
-        <div className="text-sm font-TTHovesRegular">
-          {fanData?.user?.username ? `@${fanData?.user?.username}` : ""}{" "}
-        </div>
-      ),
+      title: "Email:",
+      content: fanData?.user?.email || "N/A",
+    },
+    {
+      title: "Username:",
+      content: `@${fanData?.user?.username}` || "N/A",
     },
   ];
 

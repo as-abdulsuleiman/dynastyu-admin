@@ -535,29 +535,21 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     );
   };
 
-  const subHeaderItems: any[] = [
+  const subHeaderItems = [
     {
-      class: (
-        <div className="text-sm font-TTHovesRegular">
-          Class of:{" "}
-          {athleteData?.athleteProfile?.graduationYear
-            ? athleteData?.athleteProfile?.graduationYear
-            : "N/A"}
-        </div>
-      ),
-      school: (
-        <div className="text-sm font-TTHovesRegular">
-          {athleteData?.athleteProfile?.position?.name
-            ? `${athleteData?.athleteProfile?.position?.name} at`
-            : ""}{" "}
-          {athleteData?.athleteProfile?.school?.name}
-        </div>
-      ),
-      Username: (
-        <div className="text-sm font-TTHovesRegular">
-          {athleteData?.username ? `@${athleteData?.username}` : ""}
-        </div>
-      ),
+      title: "Class of:",
+
+      content: athleteData?.athleteProfile?.graduationYear || "N/A",
+    },
+    {
+      title: "School:",
+      content:
+        `${athleteData?.athleteProfile?.position?.name} at ${athleteData?.athleteProfile?.school?.name}` ||
+        "N/A",
+    },
+    {
+      title: "Username:",
+      content: `@${athleteData?.username}` || "N/A",
     },
   ];
 

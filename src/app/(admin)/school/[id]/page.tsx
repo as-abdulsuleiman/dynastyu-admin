@@ -278,28 +278,20 @@ const Page: FC<PageProps> = ({ params }) => {
     }
   }
 
-  const subheaderItems: any[] = [
+  const subHeaderItems = [
     {
-      address: (
-        <div className="text-sm font-TTHovesRegular">
-          <strong>Address:</strong>
-          <span className="ml-2">{data?.school?.address || "N/A"}</span>
-        </div>
-      ),
-      location: (
-        <div className="text-sm font-TTHovesRegular">
-          <strong>Location:</strong>
-          <span className="ml-2">{schoolLoaction || "N/A"}</span>
-        </div>
-      ),
-      schoolType: (
-        <div className="text-sm font-TTHovesRegular">
-          <strong>School Type:</strong>
-          <span className="ml-2">
-            {data?.school?.schoolType?.name || "N/A"}
-          </span>
-        </div>
-      ),
+      title: "Address:",
+
+      content: data?.school?.address || "N/A",
+    },
+    {
+      title: "Location:",
+      content: schoolLoaction || "N/A",
+    },
+    {
+      title: "School Type:",
+
+      content: data?.school?.schoolType?.name || "N/A",
     },
   ];
 
@@ -324,23 +316,9 @@ const Page: FC<PageProps> = ({ params }) => {
               <div className="flex flex-row items-center">
                 <ContentHeader
                   title={`${data?.school?.name || ""} `}
-                  subItems={subheaderItems}
+                  subItems={subHeaderItems}
                 />
               </div>
-              {/* <Text>
-                <strong className="font-TTHovesRegular">Address:</strong>
-                <span className="ml-2">{data?.school?.address || "N/A"}</span>
-              </Text>
-              <Text>
-                <strong className="font-TTHovesRegular">Location:</strong>
-                <span className="ml-2">{schoolLoaction || "N/A"}</span>
-              </Text>
-              <Text>
-                <strong className="font-TTHovesRegular">School Type:</strong>
-                <span className="ml-2">
-                  {data?.school?.schoolType?.name || "N/A"}
-                </span>
-              </Text> */}
             </div>
           </div>
         </div>

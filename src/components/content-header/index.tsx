@@ -2,12 +2,13 @@ import { cn } from "@/lib/utils";
 import { FC, ReactNode } from "react";
 
 interface SubItem {
-  [key: string]: ReactNode | string;
+  title: string;
+  content: string;
 }
 
 interface ContentHeaderProps {
   title: string;
-  subHeader?: string | ReactNode;
+  subHeader?: string;
   className?: string;
   icon?: ReactNode;
   subItems?: SubItem[];
@@ -26,22 +27,21 @@ const ContentHeader: FC<ContentHeaderProps> = ({
         <h3 className={`text-lg font-TTHovesDemiBold`}>{title}</h3>
         {icon ? <div className="">{icon}</div> : null}
       </div>
-      {subItems ? (
-        <div>
+      {subHeader ? (
+        <h1 className={`text-sm font-TTHovesRegular`}>{subHeader || ""}</h1>
+      ) : null}
+      {subItems?.length ? (
+        <div className="flex flex-col">
           {subItems?.map((item, index) => (
             <div key={index} className="text-sm font-TTHovesRegular">
-              {Object.entries(item).map(([key, value]) => (
-                <div key={key} className="flex">
-                  <strong>{key}:</strong>
-                  <span className="ml-2">{value}</span>
-                </div>
-              ))}
+              <div className="text-sm font-TTHovesRegular">
+                <strong>{item?.title}</strong>
+                <span className="ml-2">{item?.content}</span>
+              </div>
             </div>
           ))}
         </div>
-      ) : (
-        <h1 className={`text-sm font-TTHovesRegular`}>{subHeader || ""}</h1>
-      )}
+      ) : null}
     </div>
   );
 };

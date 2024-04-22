@@ -415,6 +415,19 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     return formattedName;
   }, [coachData?.coachProfile?.school]);
 
+  const formattedCoachTitle = useMemo(() => {
+    let formattedTitle;
+    if (coachData?.coachProfile?.title) {
+      if (coachData?.coachProfile?.school?.name) {
+        formattedTitle = coachData?.coachProfile?.title;
+      }
+      if (coachData?.coachProfile?.school?.name) {
+        formattedTitle = `${formattedTitle} at ${coachData?.coachProfile?.school?.city}`;
+      }
+    }
+    return formattedTitle;
+  }, [coachData?.coachProfile]);
+
   const renderBadges = () => {
     return (
       <>
@@ -553,13 +566,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                   icon={
                     <Icons.whistle className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
                   }
-                  subHeader={
-                    <div className="text-sm font-TTHovesRegular">
-                      {coachData?.coachProfile?.title}{" "}
-                      {coachData?.coachProfile?.school?.name ? "at" : ""}
-                      {""} {coachData?.coachProfile?.school?.name}
-                    </div>
-                  }
+                  subHeader={formattedCoachTitle}
                 />
               </div>
             </div>
