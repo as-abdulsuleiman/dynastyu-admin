@@ -28,6 +28,7 @@ import PromptAlert from "@/components/prompt-alert";
 import { toast } from "@/hooks/use-toast";
 import SchoolCoaches from "@/components/school-coaches";
 import { PromptStatusEnum } from "@/lib/enums/updating-profile.enum";
+import ContentHeader from "@/components/content-header";
 
 interface PageProps {
   params: {
@@ -277,6 +278,23 @@ const Page: FC<PageProps> = ({ params }) => {
     }
   }
 
+  const subHeaderItems = [
+    {
+      title: "Address:",
+
+      content: data?.school?.address || "N/A",
+    },
+    {
+      title: "Location:",
+      content: schoolLoaction || "N/A",
+    },
+    {
+      title: "School Type:",
+
+      content: data?.school?.schoolType?.name || "N/A",
+    },
+  ];
+
   return (
     <main className="w-full h-full relative">
       <Button
@@ -296,22 +314,11 @@ const Page: FC<PageProps> = ({ params }) => {
           <div className="flex flex-row items-center">
             <div className="ml-0">
               <div className="flex flex-row items-center">
-                <Title>{data?.school?.name}</Title>
+                <ContentHeader
+                  title={`${data?.school?.name || ""} `}
+                  subItems={subHeaderItems}
+                />
               </div>
-              <Text>
-                <strong className="font-TTHovesRegular">Address:</strong>
-                <span className="ml-2">{data?.school?.address || "N/A"}</span>
-              </Text>
-              <Text>
-                <strong className="font-TTHovesRegular">Location:</strong>
-                <span className="ml-2">{schoolLoaction || "N/A"}</span>
-              </Text>
-              <Text>
-                <strong className="font-TTHovesRegular">School Type:</strong>
-                <span className="ml-2">
-                  {data?.school?.schoolType?.name || "N/A"}
-                </span>
-              </Text>
             </div>
           </div>
         </div>

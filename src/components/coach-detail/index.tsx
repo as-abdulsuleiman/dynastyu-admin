@@ -42,6 +42,7 @@ import { cn } from "@/lib/utils";
 import PromptAlert from "../prompt-alert";
 import CalloutCard from "../callout";
 import BadgeCard from "../badge-card";
+import ContentHeader from "../content-header";
 
 interface CoachDetailProps {
   params: {
@@ -414,6 +415,19 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     return formattedName;
   }, [coachData?.coachProfile?.school]);
 
+  const formattedCoachTitle = useMemo(() => {
+    let formattedTitle;
+    if (coachData?.coachProfile?.title) {
+      if (coachData?.coachProfile?.school?.name) {
+        formattedTitle = coachData?.coachProfile?.title;
+      }
+      if (coachData?.coachProfile?.school?.name) {
+        formattedTitle = `${formattedTitle} at ${coachData?.coachProfile?.school?.city}`;
+      }
+    }
+    return formattedTitle;
+  }, [coachData?.coachProfile]);
+
   const renderBadges = () => {
     return (
       <>
@@ -547,16 +561,14 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
           <div className="flex flex-row items-center">
             <div className="ml-0">
               <div className="flex flex-row items-center">
-                <Title>
-                  {coachData?.firstname} {coachData?.surname}
-                </Title>
+                <ContentHeader
+                  title={`${coachData?.firstname} ${coachData?.surname}`}
+                  icon={
+                    <Icons.whistle className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+                  }
+                  subHeader={formattedCoachTitle}
+                />
               </div>
-              <Text>@{coachData?.username}</Text>
-              <Text>
-                {coachData?.coachProfile?.title}{" "}
-                {coachData?.coachProfile?.school?.name ? "at" : ""}
-                {""} {coachData?.coachProfile?.school?.name}
-              </Text>
             </div>
             <div className="ml-auto hidden">
               <Button

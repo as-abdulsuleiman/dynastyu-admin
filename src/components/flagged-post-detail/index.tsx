@@ -17,6 +17,7 @@ import { Icons } from "../Icons";
 import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
 import { generateProfilePath } from "@/lib/helpers";
+import ContentHeader from "../content-header";
 
 interface FlaggedPostDetailProps {
   params: {
@@ -110,10 +111,14 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
 
       <div className="flex flex-col">
         <div className="flex flex-row items-center">
-          <Title>Flagged Post</Title>
-          <FlagOffIcon className="h-4 w-4 ml-2 stroke-gray-700 dark:stroke-white" />
+          <ContentHeader
+            title="Flagged Post"
+            icon={
+              <FlagOffIcon className="h-4 w-4 ml-2 stroke-gray-700 dark:stroke-white" />
+            }
+            subHeader="Flagged Post Details"
+          />
         </div>
-        <Text>Flagged Post Details</Text>
       </div>
       <Separator className="my-6" />
 

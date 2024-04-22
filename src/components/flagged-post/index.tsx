@@ -29,6 +29,7 @@ import { Icons } from "../Icons";
 import { formatDate } from "@/lib/utils";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
+import ContentHeader from "../content-header";
 
 const filterItems = [
   { name: "Spam", value: "Spam" },
@@ -270,12 +271,15 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
   return (
     <main className="w-full h-full">
       <div className="flex flex-row items-center">
-        <Title>Flagged Posts</Title>
-        <div className="h-4 w-4 bg-[rgb(103, 114, 132)]">
-          <FlagOffIcon className="h-4 w-4 ml-2 stroke-gray-700 dark:stroke-white" />
-        </div>
+        <ContentHeader
+          title="Flagged Posts"
+          icon={
+            <FlagOffIcon className="h-4 w-4 ml-2 stroke-gray-700 dark:stroke-white" />
+          }
+          subHeader="Flagged Post Overview"
+        />
       </div>
-      <Text>Flagged Post Overview</Text>
+
       <Separator className="my-6" />
       <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
         <FlaggedPostStatCard />

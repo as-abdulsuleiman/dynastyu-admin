@@ -27,6 +27,7 @@ import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/utils";
 import { Separator } from "../ui/separator";
 import { useRootStore } from "@/mobx";
+import ContentHeader from "../content-header";
 
 type FormData = yup.InferType<typeof FanValidator>;
 
@@ -200,10 +201,14 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
       </Button>
       <div className="flex flex-col">
         <div className="flex flex-row items-center">
-          <Title>{fetchFan ? `Edit Fan Profile` : `Add New Fan`}</Title>
-          <Icons.circleUserRound className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+          <ContentHeader
+            title={`${fetchFan ? `Edit Fan Profile` : `Add New Fan`}`}
+            icon={
+              <Icons.circleUserRound className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            }
+            subHeader="Fan Details"
+          />
         </div>
-        <Text>Fan Overview</Text>
       </div>
       <Separator className="my-6" />
       <form id="create_fan" name="create_fan" onSubmit={handleSubmit(onSubmit)}>

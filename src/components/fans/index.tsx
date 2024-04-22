@@ -29,6 +29,7 @@ import { Button } from "../ui/button";
 import MoreHorizontal from "../Icons/more-horizontal";
 import { formatDate } from "@/lib/utils";
 import BadgeCard from "../badge-card";
+import ContentHeader from "../content-header";
 import MultiSelector from "../multi-selector";
 import { fanFilter } from "@/lib/filters";
 import { getURLParams } from "@/lib/helpers";
@@ -303,8 +304,15 @@ const Fans: FC<FansProps> = ({}) => {
 
   return (
     <main className="w-full h-full">
-      <Title>Fans</Title>
-      <Text>In Progress</Text>
+      <div className="flex flex-row items-center">
+        <ContentHeader
+          title="Fans"
+          icon={
+            <Icons.fans className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+          }
+          subHeader="Fans Overview"
+        />
+      </div>
       <Separator className="my-6" />
       <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
         <FanStatCard />

@@ -28,6 +28,7 @@ import StatusOfflineIcon from "@heroicons/react/outline/StatusOfflineIcon";
 import ProfileImage from "../profile-image";
 import CalloutCard from "../callout";
 import BadgeCard from "../badge-card";
+import ContentHeader from "../content-header";
 
 interface FanDetailProps {
   params: {
@@ -237,6 +238,17 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
     );
   };
 
+  const subHeaderItems = [
+    {
+      title: "Email:",
+      content: fanData?.user?.email || "N/A",
+    },
+    {
+      title: "Username:",
+      content: `@${fanData?.user?.username}` || "N/A",
+    },
+  ];
+
   return (
     <main className="w-full h-full relative">
       <Button
@@ -254,11 +266,16 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
       ) : (
         <div className="flex flex-col">
           <div className="flex flex-row items-center">
-            <Title>
-              {fanData?.user?.firstname} {fanData?.user?.surname}
-            </Title>
+            <ContentHeader
+              title={
+                `${fanData?.user?.firstname} ${fanData?.user?.surname}` || ""
+              }
+              icon={
+                <Icons.fans className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+              }
+              subItems={subHeaderItems}
+            />
           </div>
-          <Text>@{fanData?.user?.username}</Text>
         </div>
       )}
       <Separator className="my-6" />

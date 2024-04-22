@@ -34,6 +34,7 @@ import { Button } from "../ui/button";
 import { formatDate } from "@/lib/utils";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 import BadgeCard from "../badge-card";
+import ContentHeader from "../content-header";
 import { athleteFilter, athleteHeaderItems } from "@/lib/filters";
 import MultiSelector from "../multi-selector";
 import { getURLParams } from "@/lib/helpers";
@@ -531,10 +532,15 @@ const Athletes: FC<AthletesProps> = ({}) => {
   return (
     <main className="w-full h-full">
       <div className="flex flex-row items-center">
-        <Title>Athletes</Title>
-        <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+        <ContentHeader
+          title="Athletes"
+          icon={
+            <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+          }
+          subHeader="Athletes Overview"
+        />
       </div>
-      <Text>Athletes Overview</Text>
+
       <Separator className="my-6" />
       <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
         <AthleteStatCard />

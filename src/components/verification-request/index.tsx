@@ -25,6 +25,7 @@ import { Separator } from "../ui/separator";
 import MoreHorizontal from "../Icons/more-horizontal";
 import VerifiedIcon from "@/components/Icons/verified";
 import BadgeCard from "../badge-card";
+import ContentHeader from "../content-header";
 
 interface VerificationRequestProps {
   params: {
@@ -150,10 +151,14 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
       </Button>
       <div className="flex flex-col">
         <div className="flex flex-row items-center">
-          <Title>Verify Skill</Title>
-          <Icons.medal className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+          <ContentHeader
+            title="Verify Skill"
+            icon={
+              <Icons.medal className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            }
+            subHeader="Skill Verfication Details"
+          />
         </div>
-        <Text>Skill Overview</Text>
       </div>
       <Separator className="my-6" />
       <div className="flex-col hidden md:flex ">

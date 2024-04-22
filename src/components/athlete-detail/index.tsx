@@ -41,6 +41,7 @@ import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 import ProfileImage from "../profile-image";
 import CalloutCard from "../callout";
 import BadgeCard from "../badge-card";
+import ContentHeader from "../content-header";
 interface AthleteDetailProps {
   params: {
     id: number;
@@ -534,6 +535,24 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     );
   };
 
+  const subHeaderItems = [
+    {
+      title: "Class of:",
+
+      content: athleteData?.athleteProfile?.graduationYear || "N/A",
+    },
+    {
+      title: "School:",
+      content:
+        `${athleteData?.athleteProfile?.position?.name} at ${athleteData?.athleteProfile?.school?.name}` ||
+        "N/A",
+    },
+    {
+      title: "Username:",
+      content: `@${athleteData?.username}` || "N/A",
+    },
+  ];
+
   return (
     <main className="w-full h-full relative">
       <Button
@@ -551,24 +570,14 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
       ) : (
         <div className="flex flex-col">
           <div className="flex flex-row items-center">
-            <Title>
-              {athleteData?.firstname} {athleteData?.surname}
-            </Title>
-            <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            <ContentHeader
+              title={`${athleteData?.firstname} ${athleteData?.surname}`}
+              icon={
+                <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+              }
+              subItems={subHeaderItems}
+            />
           </div>
-          <Text>@{athleteData?.username}</Text>
-          <Text>
-            Class of:{" "}
-            {athleteData?.athleteProfile?.graduationYear
-              ? athleteData?.athleteProfile?.graduationYear
-              : "N/A"}
-          </Text>
-          <Text>
-            {athleteData?.athleteProfile?.position?.name
-              ? `${athleteData?.athleteProfile?.position?.name} at`
-              : ""}{" "}
-            {athleteData?.athleteProfile?.school?.name}
-          </Text>
         </div>
       )}
       <Separator className="my-6" />

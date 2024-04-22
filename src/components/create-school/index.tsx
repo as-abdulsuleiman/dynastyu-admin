@@ -36,6 +36,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/services/firebase/config";
 import { Separator } from "../ui/separator";
 import { useRootStore } from "@/mobx";
+import ContentHeader from "../content-header";
 
 type FormData = yup.InferType<typeof SchoolValidator>;
 
@@ -394,12 +395,16 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
       </Button>
       <div className="flex flex-col">
         <div className="flex flex-row items-center">
-          <Title>
-            {fetchSchool ? "Edit School Profile" : "Create New School"}{" "}
-          </Title>
-          <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+          <ContentHeader
+            title={`${
+              fetchSchool ? "Edit School Profile" : "Create New School"
+            }`}
+            icon={
+              <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            }
+            subHeader="School Details"
+          />
         </div>
-        <Text>School Overview</Text>
       </div>
       <Separator className="my-6" />
       <form
