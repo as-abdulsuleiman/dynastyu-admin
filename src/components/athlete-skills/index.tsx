@@ -628,18 +628,6 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
       where: {
         athleteId: { equals: athleteId },
       },
-      take: 10,
-      orderBy: {
-        createdAt: SortOrder.Desc,
-      },
-    },
-  });
-
-  useEffect(() => {
-    refetch({
-      // where: {
-      //   athleteId: { equals: athleteProfile?.id },
-      // },
       whereSkillType: {
         OR: [
           { name: { contains: debounced, mode: QueryMode.Insensitive } },
@@ -655,8 +643,8 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
       orderBy: {
         createdAt: SortOrder.Desc,
       },
-    });
-  }, [debounced, refetch]);
+    },
+  });
 
   const lastSkillTypeId = useMemo(() => {
     const lastPostInResults = data?.skillTypes[data?.skillTypes?.length - 1];
@@ -752,7 +740,7 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
     }
 
     return (
-      <TableRow key={item?.id} className="w-full">
+      <TableRow key={item?.id} className="w-full font-TTHovesRegular">
         <TableCell>
           <div className="text-base flex flex-row items-center justify-start">
             <span>{item?.name}</span>

@@ -6,7 +6,7 @@ import * as Yup from "yup";
 const hudlPattern = /^https:\/\/www\.hudl\.com\/video\/[a-zA-Z0-9]+$/;
 
 export const AthleteValidator = Yup.object({
-  email: Yup.string()
+  email: Yup.string().lowercase()
     .email("Invalid email address")
     .required("Email is required"),
   username: Yup.string().required("Username is required").min(2, "Minimum 2 symbols"),

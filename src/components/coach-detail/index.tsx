@@ -62,6 +62,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   const [debounced] = useDebouncedValue(searchValue, 300);
   const [promptStatus, setPromptStatus] = useState<PromptStatusEnum | null>();
   const [IsAddingSchool, setIsAddingSchool] = useState<boolean>(false);
+  const [deletingSkillType, setDeletingSkillType] = useState(false);
 
   const [deleteCoach] = useDeleteCoachMutation();
   const [updateCoach] = useUpdateCoachMutation();
@@ -133,31 +134,23 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     );
   }, [schoolData?.schools]);
 
-  const handleDeleteCoach = async (item: any) => {
-    setUpdatingProfile(StatusEnum.DELETING);
+  const handleDeleteCaochConfirmPrompt = async (userId: number) => {
+    setDeletingSkillType(true);
+
     try {
-      const response = await deleteCoach({
+      await deleteUser({
         variables: {
           where: {
-            id: item?.coachProfile?.id,
+            id: userId,
           },
         },
       });
-      if (response.data?.deleteOneCoachProfile) {
-        await deleteUser({
-          variables: {
-            where: {
-              id: item?.id,
-            },
-          },
-        });
-        await refetch();
-        toast({
-          title: "Profile successfully deleted.",
-          description: `@${item?.username} account has been deleted.`,
-          variant: "successfull",
-        });
-      }
+      toast({
+        title: "Profile successfully deleted.",
+        description: `@${coachData?.username} account has been deleted.`,
+        variant: "successfull",
+      });
+      router.push("/coaches");
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -168,7 +161,12 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       });
     } finally {
       setUpdatingProfile(null);
+      setDeletingSkillType(false);
     }
+  };
+
+  const handleDeleteCoach = () => {
+    setUpdatingProfile(StatusEnum.DELETING);
   };
 
   const handleActivateCoach = async (item: any) => {
@@ -319,7 +317,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     },
     // {
     //   name: "Delete Profile",
-    //   onClick: async () => await handleDeleteCoach(coachData),
+    //   onClick: handleDeleteCoach,
     // },
   ];
   if (coachData?.coachProfile?.schoolId) {
@@ -417,8 +415,8 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
 
   const formattedCoachTitle = useMemo(() => {
     let formattedTitle;
-    if (coachData?.coachProfile?.title) {
-      if (coachData?.coachProfile?.school?.name) {
+    if (coachData?.coachProfile) {
+      if (coachData?.coachProfile?.title) {
         formattedTitle = coachData?.coachProfile?.title;
       }
       if (coachData?.coachProfile?.school?.name) {
@@ -701,7 +699,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
               icon={() => (
                 <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
               )}
-              content={coachData?.email}
+              content={coachData?.email?.toLowerCase()}
             />
             <CalloutCard
               type="string"
@@ -794,6 +792,18 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
           setSelectedSchool({});
         }}
         handleConfirmPrompt={() => handleAddCoachToSchool(selectedSchool)}
+      />
+      <PromptAlert
+        title={`Are you absolutely sure?`}
+        loading={deletingSkillType}
+        content={`This will permanently delete ${coachData?.username} from our servers.`}
+        showPrompt={updatingProfile === StatusEnum.DELETING}
+        handleHidePrompt={() => {
+          setUpdatingProfile(null);
+        }}
+        handleConfirmPrompt={() =>
+          handleDeleteCaochConfirmPrompt(coachData?.id)
+        }
       />
     </main>
   );
