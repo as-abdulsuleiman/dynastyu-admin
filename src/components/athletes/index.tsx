@@ -3,7 +3,14 @@
 "use client";
 
 import { FC, useMemo, useState } from "react";
-import { Icons } from "@/components/Icons";
+import {
+  StarIcon,
+  MoreHorizontalIcon,
+  Loader2Icon,
+  BadgeCheckIcon,
+  BadgeAlertIcon,
+  AthleteIcon,
+} from "@/components/Icons";
 import { useRootStore } from "@/mobx";
 import { Title, Text, Grid } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
@@ -25,11 +32,9 @@ import { useRouter } from "next/navigation";
 import UserAvatar from "@/components/user-avatar";
 import { useToast } from "@/hooks/use-toast";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
-import StarIcon from "@/components/Icons/starIcon";
 import MenubarCard from "../menubar";
 import { Separator } from "../ui/separator";
 import { SearchInput } from "../search-input";
-import MoreHorizontal from "../Icons/more-horizontal";
 import { Button } from "../ui/button";
 import { formatDate } from "@/lib/utils";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
@@ -436,7 +441,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
           {item?.id === selectedUser &&
           updatingProfile === StatusEnum.ACTIVATING ? (
             <div className="text-center flex flex-row justify-center items-center">
-              <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin " />
+              <Loader2Icon className="mr-1 h-4 w-4 animate-spin " />
               {item?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (
@@ -455,7 +460,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
           {item?.id === selectedUser &&
           updatingProfile === StatusEnum.VERIFYING ? (
             <div className="text-center flex flex-row justify-center items-center">
-              <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin " />
+              <Loader2Icon className="mr-1 h-4 w-4 animate-spin " />
               {item?.athleteProfile?.verified
                 ? "Unverifying..."
                 : "Verifying..."}
@@ -467,9 +472,9 @@ const Athletes: FC<AthletesProps> = ({}) => {
               color={item?.athleteProfile?.verified ? "sky" : "rose"}
               icon={() => {
                 return item?.athleteProfile?.verified ? (
-                  <Icons.badgeCheck className="h-4 w-4 mr-1" color="sky" />
+                  <BadgeCheckIcon className="h-4 w-4 mr-1" color="sky" />
                 ) : (
-                  <Icons.badgeAlert className="h-4 w-4 mr-1" color="rose" />
+                  <BadgeAlertIcon className="h-4 w-4 mr-1" color="rose" />
                 );
               }}
               datatype="moderateDecrease"
@@ -482,7 +487,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
           {item?.id === selectedUser &&
           updatingProfile === StatusEnum.FEATURING ? (
             <div className="text-center flex flex-row justify-center items-center">
-              <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin" />
+              <Loader2Icon className="mr-1 h-4 w-4 animate-spin" />
               {"Loading..."}
             </div>
           ) : (
@@ -509,7 +514,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
             <MenubarCard
               trigger={
                 <Button size="icon" variant="outline">
-                  <MoreHorizontal className="cursor-pointer" />
+                  <MoreHorizontalIcon className="cursor-pointer" />
                 </Button>
               }
               items={athleteItems}
@@ -535,7 +540,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
         <ContentHeader
           title="Athletes"
           icon={
-            <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            <AthleteIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
           }
           subHeader="Athletes Overview"
         />

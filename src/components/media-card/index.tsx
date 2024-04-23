@@ -10,7 +10,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { Icons } from "../Icons";
+import { Loader2Icon, PlayCircleIcon } from "../Icons";
 import Image from "next/image";
 import { AspectRatio } from "../ui/aspect-ratio";
 import { Skeleton } from "../ui/skeleton";
@@ -35,7 +35,7 @@ const MediaCard: FC<MediaCardProps> = ({
         <Skeleton className="w-full min-h-[344px] xl:min-h-[742px] h-fit rounded-lg relative" />
         <Skeleton className="w-full h-[24px] mt-4" />
         <div className="absolute inset-0 flex flex-row items-center justify-center m-auto">
-          <Icons.Loader2 className="h-10 w-10 animate-spin" />
+          <Loader2Icon className="h-10 w-10 animate-spin" />
         </div>
       </div>
     );
@@ -59,7 +59,7 @@ const MediaCard: FC<MediaCardProps> = ({
             }
             // playing
             light={false}
-            playIcon={<Icons.playCircle />}
+            playIcon={<PlayCircleIcon />}
             // width={320}
             // height={240}
           />

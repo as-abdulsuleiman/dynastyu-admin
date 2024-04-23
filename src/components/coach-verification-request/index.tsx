@@ -26,7 +26,13 @@ import { useRouter } from "next/navigation";
 import { useDebouncedValue } from "@mantine/hooks";
 import { useToast } from "@/hooks/use-toast";
 import UserAvatar from "@/components/user-avatar";
-import { Icons } from "@/components/Icons";
+import {
+  BadgeAlertIcon,
+  BadgeCheckIcon,
+  Loader2Icon,
+  MoreHorizontalIcon,
+  WhistleIcon,
+} from "@/components/Icons";
 import { useRootStore } from "@/mobx";
 import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
@@ -34,7 +40,6 @@ import MenubarCard from "../menubar";
 import { observer } from "mobx-react-lite";
 import { Separator } from "../ui/separator";
 import { formatDate } from "@/lib/utils";
-import MoreHorizontal from "../Icons/more-horizontal";
 import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
 
@@ -458,7 +463,7 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
         <TableCell className="text-center text-sm">
           {item?.id === selectedUser && isVerifying ? (
             <div className="text-center flex flex-row justify-center items-center">
-              <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin " />
+              <Loader2Icon className="mr-1 h-4 w-4 animate-spin " />
               {item?.verified ? "Unverifying..." : "Verifying..."}
             </div>
           ) : (
@@ -468,9 +473,9 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
               color={item?.verified ? "sky" : "rose"}
               icon={() => {
                 return item.verified ? (
-                  <Icons.badgeCheck className="h-4 w-4 mr-1" color="sky" />
+                  <BadgeCheckIcon className="h-4 w-4 mr-1" color="sky" />
                 ) : (
-                  <Icons.badgeAlert className="h-4 w-4 mr-1" color="rose" />
+                  <BadgeAlertIcon className="h-4 w-4 mr-1" color="rose" />
                 );
               }}
               datatype="moderateDecrease"
@@ -484,7 +489,7 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
             <MenubarCard
               trigger={
                 <Button size="icon" variant="outline">
-                  <MoreHorizontal className="cursor-pointer" />
+                  <MoreHorizontalIcon className="cursor-pointer" />
                 </Button>
               }
               items={coacheItems}
@@ -503,7 +508,7 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
             <ContentHeader
               title="Coaches"
               icon={
-                <Icons.whistle className="h-4 w-4 ml-2 fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis" />
+                <WhistleIcon className="h-4 w-4 ml-2 fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis" />
               }
               subHeader="Coaches Verification Overview"
             />

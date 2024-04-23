@@ -21,12 +21,11 @@ import Pagination from "../pagination";
 import UserAvatar from "../user-avatar";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import { Icons } from "../Icons";
+import { FanIcon, Loader2Icon, MoreHorizontalIcon } from "../Icons";
 import MenubarCard from "../menubar";
 import { observer } from "mobx-react-lite";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
-import MoreHorizontal from "../Icons/more-horizontal";
 import { formatDate } from "@/lib/utils";
 import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
@@ -267,7 +266,7 @@ const Fans: FC<FansProps> = ({}) => {
         <TableCell className="text-center text-sm">
           {item?.id === selectedUser && isActivating ? (
             <div className="text-center flex flex-row justify-center items-center">
-              <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin" />
+              <Loader2Icon className="mr-1 h-4 w-4 animate-spin" />
               {item?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (
@@ -291,7 +290,7 @@ const Fans: FC<FansProps> = ({}) => {
             <MenubarCard
               trigger={
                 <Button size="icon" variant="outline">
-                  <MoreHorizontal className="cursor-pointer" />
+                  <MoreHorizontalIcon className="cursor-pointer" />
                 </Button>
               }
               items={fanItems}
@@ -308,7 +307,7 @@ const Fans: FC<FansProps> = ({}) => {
         <ContentHeader
           title="Fans"
           icon={
-            <Icons.fans className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            <FanIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
           }
           subHeader="Fans Overview"
         />

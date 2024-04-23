@@ -17,7 +17,7 @@ import { formatDate, getRandomString, noImage } from "@/lib/utils";
 import Image from "next/image";
 import { ProgressCircle } from "@tremor/react";
 import { observer } from "mobx-react-lite";
-import { Icons } from "../Icons";
+import { CameraIcon } from "../Icons";
 import Resizer from "react-image-file-resizer";
 
 interface AvatarUploaderProps {
@@ -164,7 +164,7 @@ const AvatarUploader: FC<AvatarUploaderProps> = ({
               }
             }}
           >
-            <Icons.camera className="stroke-dark-tremor-content-emphasis" />
+            <CameraIcon className="stroke-dark-tremor-content-emphasis" />
           </div>
         </div>
         <div>

@@ -11,12 +11,12 @@ import {
 } from "../ui/dropdown-menu";
 import { useRootStore } from "@/mobx";
 import UserAvatar from "../user-avatar";
-import { Icons } from "../Icons";
 import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
-import LogOut from "../Icons/log-out";
+import { LogOutIcon } from "../Icons";
 import { observer } from "mobx-react-lite";
+import { User } from "lucide-react";
 
 interface UserAccountNavProps {}
 
@@ -40,7 +40,7 @@ const UserAccountNav: FC<UserAccountNavProps> = ({}) => {
       <DropdownMenuTrigger>
         <UserAvatar
           className="shadow h-[49px] w-[49px]"
-          icon={<Icons.user className="h-5 w-5" />}
+          icon={<User className="h-5 w-5" />}
           fallbackType="icon"
           avatar={user?.avatar as string}
           fallback={`${user?.firstname?.charAt(0)} ${user?.surname?.charAt(0)}`}
@@ -74,7 +74,7 @@ const UserAccountNav: FC<UserAccountNavProps> = ({}) => {
           }}
           className="cursor-pointer"
         >
-          <LogOut className="mr-2 h-4 w-4" />
+          <LogOutIcon className="mr-2 h-4 w-4" />
           Sign out
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>

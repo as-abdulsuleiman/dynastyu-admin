@@ -10,14 +10,14 @@ import { useRouter } from "next/navigation";
 import { GetUserQuery, useGetPostFlagQuery } from "@/services/graphql";
 import { Title, Text } from "@tremor/react";
 import MediaCard from "../media-card";
-import FlagOffIcon from "@/components/Icons/flag-off";
 import TabCard from "../tab-card";
 import UserAvatar from "../user-avatar";
-import { Icons } from "../Icons";
+import { FlagOffIcon } from "../Icons";
 import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
 import { generateProfilePath } from "@/lib/helpers";
 import ContentHeader from "../content-header";
+import { User } from "lucide-react";
 
 interface FlaggedPostDetailProps {
   params: {
@@ -53,7 +53,7 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
             fallback={`${post?.user?.firstname?.charAt(
               0
             )} ${post?.user?.surname?.charAt(0)}`}
-            icon={<Icons.user className="h-8 w-8" />}
+            icon={<User className="h-8 w-8" />}
           />
           <div className="ml-3">
             <div>
@@ -82,7 +82,7 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
             fallback={`${user?.firstname?.charAt(0)} ${user?.surname?.charAt(
               0
             )}`}
-            icon={<Icons.user className="h-8 w-8" />}
+            icon={<User className="h-8 w-8" />}
           />
           <div className="ml-3">
             <div>

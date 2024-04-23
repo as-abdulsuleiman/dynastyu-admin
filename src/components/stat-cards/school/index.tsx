@@ -2,7 +2,7 @@
 
 "use client";
 
-import { Icons } from "@/components/Icons";
+import { SchoolIcon } from "@/components/Icons";
 import StatCard from "@/components/stat-card";
 import { useRootStore } from "@/mobx";
 import {
@@ -53,7 +53,7 @@ const SchoolStatCard: FC<indexProps> = ({ whereClause, title, path }) => {
       onClick={() => router.push("/schools/college")}
       showIcon={pathname === path}
       icon={
-        <Icons.school className="h-4 w-4 stroke-tremor-content-teal dark:stroke-dark-tremor-content-teal" />
+        <SchoolIcon className="h-4 w-4 stroke-tremor-content-teal dark:stroke-dark-tremor-content-teal" />
       }
     />
   );

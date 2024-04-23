@@ -23,7 +23,7 @@ import ComboBoxCard from "../combobox-card";
 import SchoolDropdown from "../school-dropdown";
 import { coachTitleOptions } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import { Icons } from "../Icons";
+import { Loader2Icon, SchoolIcon } from "../Icons";
 import { projectAuth } from "@/services/firebase/config";
 import { useRootStore } from "@/mobx";
 import { sendPasswordResetEmail } from "firebase/auth";
@@ -315,7 +315,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
           <ContentHeader
             title={`${fetchCoach ? `Edit Coach Profile` : " Add New Coach"}`}
             icon={
-              <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+              <SchoolIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
             }
             subHeader="Coach Details"
           />
@@ -586,7 +586,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
           >
             {isSubmitting ? (
               <div className="flex flex-row items-center justify-center">
-                <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
                 Loading...
               </div>
             ) : (

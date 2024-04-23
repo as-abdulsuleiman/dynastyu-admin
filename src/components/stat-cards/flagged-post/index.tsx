@@ -8,7 +8,7 @@ import { useRootStore } from "@/mobx";
 import { GetPostFlagsQuery, useGetPostFlagsQuery } from "@/services/graphql";
 import { observer } from "mobx-react-lite";
 import { useRouter, usePathname } from "next/navigation";
-import FlagOffIcon from "@/components/Icons/flag-off";
+import { FlagOffIcon } from "@/components/Icons";
 
 interface indexProps {}
 

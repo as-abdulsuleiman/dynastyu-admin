@@ -3,7 +3,7 @@
 "use client";
 
 import { FC, useMemo, useState } from "react";
-import { Icons } from "@/components/Icons";
+import { MoreHorizontalIcon, SchoolIcon } from "@/components/Icons";
 import {
   GetSchoolsQuery,
   QueryMode,
@@ -27,7 +27,6 @@ import { SearchInput } from "@/components/search-input";
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
 import MenubarCard from "@/components/menubar";
-import MoreHorizontal from "@/components/Icons/more-horizontal";
 import { formatDate } from "@/lib/utils";
 import PromptAlert from "@/components/prompt-alert";
 import ContentHeader from "@/components/content-header";
@@ -305,7 +304,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
             <MenubarCard
               trigger={
                 <Button size="icon" variant="outline">
-                  <MoreHorizontal className="cursor-pointer" />
+                  <MoreHorizontalIcon className="cursor-pointer" />
                 </Button>
               }
               items={userItems}
@@ -323,7 +322,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
             <ContentHeader
               title="Schools"
               icon={
-                <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+                <SchoolIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
               }
               subHeader="College Overview"
             />

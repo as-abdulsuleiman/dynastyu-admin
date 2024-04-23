@@ -8,13 +8,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Icons } from "../Icons";
+import { SkillIcon } from "../Icons";
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
 import { observer } from "mobx-react-lite";
 import { useUpdateAthleteMutation } from "@/services/graphql";
 import { useToast } from "@/hooks/use-toast";
-import SkillIcon from "../Icons/skill";
 import { useRouter } from "next/navigation";
 import { Card, CardContent } from "../ui/card";
 import MediaCard from "../media-card";

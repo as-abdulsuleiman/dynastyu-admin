@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useRootStore } from "@/mobx";
 import { observer } from "mobx-react-lite";
-import MenuIcon from "@/components/Icons/menu";
+import { MenuIcon } from "@/components/Icons";
 import {
   SortOrder,
   useGetSkillVerificationRequestsQuery,

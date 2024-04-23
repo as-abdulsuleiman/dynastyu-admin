@@ -6,7 +6,7 @@ import { FC, useCallback, useMemo, useState } from "react";
 import { Button } from "../ui/button";
 import { Title, Text } from "@tremor/react";
 import { useRouter } from "next/navigation";
-import { Icons } from "../Icons";
+import { AthleteIcon, Loader2Icon } from "../Icons";
 import AvatarUploader from "../avatar-uploader";
 import { observer } from "mobx-react-lite";
 import { Input } from "@/components/ui/input";
@@ -284,7 +284,7 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
               fetchAthlete ? `Edit Athlete Profile` : " Add New Athlete"
             }`}
             icon={
-              <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+              <AthleteIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
             }
             subHeader="Athletes Details"
           />
@@ -565,7 +565,7 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
           >
             {isSubmitting ? (
               <div className="flex flex-row items-center justify-center">
-                <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
                 Loading...
               </div>
             ) : (

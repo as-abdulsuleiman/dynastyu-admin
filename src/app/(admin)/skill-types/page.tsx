@@ -21,7 +21,7 @@ import Pagination from "@/components/pagination";
 import UniversalTable from "@/components/universal-table";
 import { useDebouncedValue } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
-import { Icons } from "@/components/Icons";
+import { MoreHorizontalIcon, SkillIcon } from "@/components/Icons";
 import { cn, formatDate } from "@/lib/utils";
 import Link from "next/link";
 import MenubarCard from "@/components/menubar";
@@ -31,7 +31,6 @@ import PromptAlert from "@/components/prompt-alert";
 import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
 import ContentHeader from "@/components/content-header";
-import SkillIcon from "@/components/Icons/skill";
 
 const headerItems = [
   { name: "Name" },
@@ -274,7 +273,7 @@ const Page: FC<pageProps> = ({}) => {
             <MenubarCard
               trigger={
                 <Button size="icon" variant="outline">
-                  <Icons.moreHorizontal className="cursor-pointer" />
+                  <MoreHorizontalIcon className="cursor-pointer" />
                 </Button>
               }
               items={skillTypeItems}

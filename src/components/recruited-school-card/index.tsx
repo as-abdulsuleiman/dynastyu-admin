@@ -2,7 +2,6 @@
 
 import { Title, Text } from "@tremor/react";
 import { FC } from "react";
-import { Icons } from "../Icons";
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
 import { useRouter } from "next/navigation";
@@ -15,6 +14,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
+import { SchoolIcon } from "../Icons";
 
 interface RecruitedSchoolCardProps {
   recruitedSchools: RecruitedSchool[];
@@ -111,7 +111,7 @@ const RecruitedSchoolCard: FC<RecruitedSchoolCardProps> = ({
       <CardContent className="p-6">
         <div className="flex flex-row items-center mb-3">
           <Title>Recruited Schools</Title>
-          <Icons.school className="ml-auto h-6 w-6 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+          <SchoolIcon className="ml-auto h-6 w-6 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
         </div>
         {loading ? (
           <> {renderLoader()}</>

@@ -16,7 +16,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { StatusOfflineIcon, StatusOnlineIcon } from "@heroicons/react/outline";
 import { observer } from "mobx-react-lite";
 import StarIcon from "@/components/Icons/starIcon";
-import { Icons } from "@/components/Icons";
+import { BadgeAlertIcon, BadgeCheckIcon } from "@/components/Icons";
 import { Card, CardContent } from "@/components/ui/card";
 import BadgeCard from "@/components/badge-card";
 
@@ -115,14 +115,14 @@ const UsersAnalytics: FC<indexProps> = ({
                     icon={() => {
                       if (isVerified) {
                         return (
-                          <Icons.badgeCheck
+                          <BadgeCheckIcon
                             className="h-4 w-4 mr-2"
                             color="sky"
                           />
                         );
                       } else {
                         return (
-                          <Icons.badgeAlert
+                          <BadgeAlertIcon
                             className="h-4 w-4 mr-2"
                             color="rose"
                           />

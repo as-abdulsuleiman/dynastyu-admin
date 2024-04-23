@@ -5,7 +5,6 @@
 import { FC, useState } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import SkillIcon from "@/components/Icons/skill";
 import { Input } from "../ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -13,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { SkillTypeValidator } from "@/lib/validators/skillType";
-import { Icons } from "../Icons";
+import { Loader2Icon, SkillIcon } from "../Icons";
 import { Textarea } from "../ui/textarea";
 import MultiTextInput from "../multi-text-input";
 import {
@@ -495,7 +494,7 @@ const CreateSkillType: FC<CreateSkillTypeProps> = ({
         >
           {isSubmitting ? (
             <div className="flex flex-row items-center justify-center">
-              <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
               Loading...
             </div>
           ) : (

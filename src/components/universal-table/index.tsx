@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { observer } from "mobx-react-lite";
-import { Icons } from "../Icons";
+import { Loader2Icon } from "../Icons";
 import { Card, CardContent } from "../ui/card";
 import { ScrollArea } from "../ui/scroll-area";
 
@@ -74,7 +74,7 @@ const UniversalTable: FC<UniversalTableProps> = ({
               <TableRow className="py-4">
                 <TableCell colSpan={headerItems?.length || 0}>
                   <div className="flex items-center justify-center h-full w-full mx-auto my-auto py-9">
-                    <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                    <Loader2Icon className="mr-1 h-4 w-4 animate-spin" />
                     <span className="text-sm font-normal">Loading...</span>
                   </div>
                 </TableCell>

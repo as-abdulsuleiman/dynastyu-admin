@@ -11,7 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Icons } from "../Icons";
+import { Loader2Icon } from "../Icons";
 
 interface PromptAlertProps {
   content?: string;
@@ -53,7 +53,7 @@ const PromptAlert: FC<PromptAlertProps> = ({
           >
             {loading ? (
               <div className="flex flex-row items-center justify-center">
-                <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
                 Loading...
               </div>
             ) : (

@@ -10,7 +10,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import PhoneIcon from "@/components/Icons/phone";
+import { PhoneIcon } from "@/components/Icons";
 interface AthleteRecruitingContactProps {
   loading: boolean;
   recruitingContact: RecruitingContact[];

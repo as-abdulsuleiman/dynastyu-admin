@@ -22,10 +22,8 @@ import {
 import Pagination from "../pagination";
 import UserAvatar from "../user-avatar";
 import { useDebouncedValue } from "@mantine/hooks";
-import FlagOffIcon from "@/components/Icons/flag-off";
-import MoreHorizontal from "@/components/Icons/more-horizontal";
 import MenubarCard from "../menubar";
-import { Icons } from "../Icons";
+import { FlagOffIcon, MoreHorizontalIcon } from "../Icons";
 import { formatDate } from "@/lib/utils";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
@@ -257,7 +255,7 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
             <MenubarCard
               trigger={
                 <Button size="icon" variant="outline">
-                  <MoreHorizontal className="cursor-pointer" />
+                  <MoreHorizontalIcon className="cursor-pointer" />
                 </Button>
               }
               items={flaggedPostItems}

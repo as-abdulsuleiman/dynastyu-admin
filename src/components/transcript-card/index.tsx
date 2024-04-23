@@ -2,7 +2,6 @@
 
 import { Title, Text } from "@tremor/react";
 import { FC } from "react";
-import { Icons } from "../Icons";
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
 import { Card, CardContent } from "../ui/card";
@@ -12,6 +11,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
+import { ScrollTextIcon } from "../Icons";
 
 interface TranscriptCardProps {
   transcripts: Transcripts[];
@@ -63,7 +63,7 @@ const TranscriptCard: FC<TranscriptCardProps> = ({ transcripts, loading }) => {
       <CardContent className="p-6">
         <div className="flex flex-row items-center mb-3">
           <Title>Transcripts</Title>
-          <Icons.scrollText className="ml-auto h-6 w-6 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+          <ScrollTextIcon className="ml-auto h-6 w-6 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
         </div>
         {loading ? (
           renderLoader()

@@ -5,7 +5,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import CloseCircleLineIcon from "@/components/Icons/close-circle-line";
+import { CloseCircleLineIcon } from "@/components/Icons";
 
 interface MultiTextInputProps {
   label?: string;

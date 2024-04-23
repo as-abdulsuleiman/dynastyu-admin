@@ -8,7 +8,7 @@ import { observer } from "mobx-react-lite";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import ArrowLeftIcon from "@/components/Icons/arrow-left";
+import { ArrowLeftIcon } from "@/components/Icons";
 import SidebarLinkGroup from "../sidebar-link-group";
 
 interface SideBarProps {

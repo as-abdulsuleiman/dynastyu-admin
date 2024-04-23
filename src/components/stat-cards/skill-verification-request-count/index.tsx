@@ -7,7 +7,7 @@ import StatCard from "@/components/stat-card";
 import { useRootStore } from "@/mobx";
 import { observer } from "mobx-react-lite";
 import { useRouter, usePathname } from "next/navigation";
-import FlagOffIcon from "@/components/Icons/flag-off";
+import { FlagOffIcon } from "@/components/Icons";
 
 interface indexProps {}
 

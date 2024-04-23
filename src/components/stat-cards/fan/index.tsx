@@ -2,7 +2,7 @@
 
 "use client";
 
-import { Icons } from "@/components/Icons";
+import { FanIcon } from "@/components/Icons";
 import StatCard from "@/components/stat-card";
 import { useRootStore } from "@/mobx";
 import { GetUsersQuery, useGetUsersQuery } from "@/services/graphql";
@@ -44,7 +44,7 @@ const FanStatCard: FC<indexProps> = ({}) => {
       onClick={() => router.push("/fans")}
       showIcon={pathname === "/fans"}
       icon={
-        <Icons.fans className="h-4 w-4 fill-tremor-content-teal dark:fill-dark-tremor-content-teal" />
+        <FanIcon className="h-4 w-4 fill-tremor-content-teal dark:fill-dark-tremor-content-teal" />
       }
     />
   );
