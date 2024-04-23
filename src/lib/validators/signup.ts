@@ -3,7 +3,7 @@
 import * as Yup from "yup";
 
 export const SignUpValidator = Yup.object({
-  email: Yup.string()
+  email: Yup.string().lowercase()
     .email("Invalid email address")
     .required("Email is required"),
   firstname: Yup.string().required("First Name is required"),

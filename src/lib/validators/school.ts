@@ -6,7 +6,7 @@ export const SchoolValidator = Yup.object({
     logo: Yup.string().url(),
     name: Yup.string().required("Name is required").min(2, "Minimum 2 symbols"),
     division: Yup.string().required("Division is required"),
-    email: Yup.string().email("Invalid email address").required("Email is required"),
+    email: Yup.string().lowercase().email("Invalid email address").required("Email is required"),
     description: Yup.string(),
     yearFounded: Yup.string(),
     yearlyTuition: Yup.string().nullable(),
