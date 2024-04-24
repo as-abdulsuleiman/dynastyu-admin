@@ -37,6 +37,7 @@ import ModalCard from "@/components/modal";
 import UsersAnalytics from "@/components/analytics/users";
 import CalloutCard from "../callout";
 import CardContainer from "../card-container";
+import { renderLoader } from "@/lib/loader-helper";
 
 interface SchoolCardProps {
   loading?: boolean;
@@ -233,6 +234,150 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       onClick: () => setViewAnalytics(true),
     },
   ];
+  const renderCallout = () => {
+    return (
+      <>
+        {" "}
+        <CalloutCard
+          color="teal"
+          type="string"
+          title={school?.schoolType?.name || ("High School" as string)}
+          className="mt-4 min-h-[75px]"
+          content={school?.name}
+          icon={() => (
+            <GraduationCapIcon
+              className="h-[20px] w-[20px] mr-2"
+              color="teal"
+            />
+          )}
+        />
+        <CalloutCard
+          color="teal"
+          type="string"
+          title="Address"
+          className="mt-4 min-h-[75px]"
+          content={school?.address}
+          icon={() => (
+            <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+        />
+        {isHighSchoolType ? (
+          <CalloutCard
+            color="teal"
+            type="string"
+            title="Classification"
+            className="mt-4 min-h-[75px]"
+            content={school?.division}
+            icon={() => (
+              <FolderDotIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+            )}
+          />
+        ) : (
+          <>
+            <CalloutCard
+              color="teal"
+              type="string"
+              className="mt-4 min-h-[75px]"
+              title="Division"
+              content={school?.division}
+              icon={() => (
+                <FolderDotIcon
+                  className="h-[20px] w-[20px] mr-2"
+                  color="teal"
+                />
+              )}
+            />
+          </>
+        )}
+        <CalloutCard
+          color="teal"
+          type="string"
+          className="mt-4 min-h-[75px]"
+          title="Conference"
+          content={school?.conference}
+          icon={() => (
+            <ActivitySquareIcon
+              className="h-[20px] w-[20px] mr-2"
+              color="teal"
+            />
+          )}
+        />
+        <CalloutCard
+          color="teal"
+          type="string"
+          className="mt-4 min-h-[75px]"
+          title="Description"
+          content={school?.description}
+          icon={() => (
+            <ScrollTextIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+        />
+        <CalloutCard
+          color="teal"
+          type="string"
+          className="mt-4 min-h-[75px]"
+          title="Yearly Tuition"
+          content={school?.yearlyTuition ? `$ ${school?.yearlyTuition}` : ""}
+          icon={() => (
+            <BadgeDollarSign className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+        />
+        <CalloutCard
+          color="teal"
+          type="string"
+          className="mt-4 min-h-[75px]"
+          title="Year Founded"
+          content={school?.yearFounded}
+          icon={() => (
+            <Calendar className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+        />
+        <CalloutCard
+          color="teal"
+          type="string"
+          className="mt-4 min-h-[75px]"
+          title="Undergrad Students"
+          content={school?.undergradStudents}
+          icon={() => (
+            <GraduationCapIcon
+              className="h-[20px] w-[20px] mr-2"
+              color="teal"
+            />
+          )}
+        />
+        <CalloutCard
+          color="teal"
+          type="flag"
+          className="mt-4 min-h-[75px]"
+          title="Country"
+          icon={() => (
+            <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+          content={school?.country?.name}
+          flagUrl={school?.country?.flag}
+        />
+        <CalloutCard
+          type="string"
+          title="State"
+          color="teal"
+          className="mt-4 min-h-[75px]"
+          icon={() => (
+            <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+          content={school?.state}
+        />
+        <CalloutCard
+          type="string"
+          title="City"
+          className="mt-4 min-h-[75px]"
+          icon={() => (
+            <LocateFixedIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+          content={school?.city}
+        />
+      </>
+    );
+  };
   return (
     <CardContainer className="p-4 md:p-4">
       <div className="flex flex-col justify-center items-center relative">
@@ -270,139 +415,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         </div>
       </div>
       <Separator className="my-6" />
-      <CalloutCard
-        color="teal"
-        type="string"
-        title={school?.schoolType?.name || ("High School" as string)}
-        className="mt-4 min-h-[75px]"
-        content={school?.name}
-        icon={() => (
-          <GraduationCapIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-        )}
-      />
-      <CalloutCard
-        color="teal"
-        type="string"
-        title="Address"
-        className="mt-4 min-h-[75px]"
-        content={school?.address}
-        icon={() => (
-          <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-        )}
-      />
-      {isHighSchoolType ? (
-        <CalloutCard
-          color="teal"
-          type="string"
-          title="Classification"
-          className="mt-4 min-h-[75px]"
-          content={school?.division}
-          icon={() => (
-            <FolderDotIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-          )}
-        />
-      ) : (
-        <>
-          <CalloutCard
-            color="teal"
-            type="string"
-            className="mt-4 min-h-[75px]"
-            title="Division"
-            content={school?.division}
-            icon={() => (
-              <FolderDotIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-            )}
-          />
-        </>
-      )}
-
-      <CalloutCard
-        color="teal"
-        type="string"
-        className="mt-4 min-h-[75px]"
-        title="Conference"
-        content={school?.conference}
-        icon={() => (
-          <ActivitySquareIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-        )}
-      />
-
-      <CalloutCard
-        color="teal"
-        type="string"
-        className="mt-4 min-h-[75px]"
-        title="Description"
-        content={school?.description}
-        icon={() => (
-          <ScrollTextIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-        )}
-      />
-
-      <CalloutCard
-        color="teal"
-        type="string"
-        className="mt-4 min-h-[75px]"
-        title="Yearly Tuition"
-        content={school?.yearlyTuition ? `$ ${school?.yearlyTuition}` : ""}
-        icon={() => (
-          <BadgeDollarSign className="h-[20px] w-[20px] mr-2" color="teal" />
-        )}
-      />
-
-      <CalloutCard
-        color="teal"
-        type="string"
-        className="mt-4 min-h-[75px]"
-        title="Year Founded"
-        content={school?.yearFounded}
-        icon={() => (
-          <Calendar className="h-[20px] w-[20px] mr-2" color="teal" />
-        )}
-      />
-
-      <CalloutCard
-        color="teal"
-        type="string"
-        className="mt-4 min-h-[75px]"
-        title="Undergrad Students"
-        content={school?.undergradStudents}
-        icon={() => (
-          <GraduationCapIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-        )}
-      />
-
-      <CalloutCard
-        color="teal"
-        type="flag"
-        className="mt-4 min-h-[75px]"
-        title="Country"
-        icon={() => (
-          <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-        )}
-        content={school?.country?.name}
-        flagUrl={school?.country?.flag}
-      />
-
-      <CalloutCard
-        type="string"
-        title="State"
-        color="teal"
-        className="mt-4 min-h-[75px]"
-        icon={() => (
-          <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-        )}
-        content={school?.state}
-      />
-
-      <CalloutCard
-        type="string"
-        title="City"
-        className="mt-4 min-h-[75px]"
-        icon={() => (
-          <LocateFixedIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-        )}
-        content={school?.city}
-      />
+      {loading ? renderLoader() : renderCallout()}
       <PromptAlert
         loading={isDeletingSchool}
         content={`This action cannot be undone. This will permanently delete this data from our servers.`}
