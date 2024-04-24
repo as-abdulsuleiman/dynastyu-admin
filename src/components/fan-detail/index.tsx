@@ -25,6 +25,7 @@ import {
   UserRoundXIcon,
   Users2Icon,
   UsersRoundIcon,
+  UserIcon,
 } from "../Icons";
 import UserAvatar from "../user-avatar";
 import UsersAnalytics from "@/components/analytics/users";
@@ -32,7 +33,6 @@ import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/utils";
 import MenubarCard from "../menubar";
 import ModalCard from "../modal";
-import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 import StatusOnlineIcon from "@heroicons/react/outline/StatusOnlineIcon";
@@ -41,7 +41,8 @@ import ProfileImage from "../profile-image";
 import CalloutCard from "../callout";
 import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
-import { User } from "lucide-react";
+import CardContainer from "../card-container";
+// import { User } from "lucide-react";
 
 interface FanDetailProps {
   params: {
@@ -292,139 +293,155 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
         </div>
       )}
       <Separator className="my-6" />
-      <Card className="mt-6 gap-6">
-        <CardContent className="p-6">
-          <div className="flex flex-col items-center justify-center relative">
-            <ModalCard
-              isModal={true}
-              isOpen={viewPlayerCardUrl}
-              onOpenChange={() => {
-                if (fanData?.user?.avatar) {
-                  setViewPlayerCardUrl(!viewPlayerCardUrl);
-                }
-              }}
-              trigger={
-                <UserAvatar
-                  className="h-[120px] w-[120px] shadow cursor-pointer"
-                  height={120}
-                  width={120}
-                  type="image"
-                  fallbackType="icon"
-                  fallbackClassName={"h-[120px] w-[120px]"}
-                  avatar={fanData?.user?.avatar as string}
-                  fallback={`${fanData?.user?.firstname?.charAt(
-                    0
-                  )} ${fanData?.user?.surname?.charAt(0)}`}
-                  icon={<User className="h-8 w-8" />}
-                />
+      <CardContainer className="p-4 md:p-4">
+        <div className="flex flex-col items-center justify-center relative">
+          <ModalCard
+            isModal={true}
+            isOpen={viewPlayerCardUrl}
+            onOpenChange={() => {
+              if (fanData?.user?.avatar) {
+                setViewPlayerCardUrl(!viewPlayerCardUrl);
               }
-            >
-              <ProfileImage
-                imageUrl={fanData?.user?.avatar as string}
-                alt={fanData?.user?.username as string}
+            }}
+            trigger={
+              <UserAvatar
+                className="h-[120px] w-[120px] shadow cursor-pointer"
+                height={120}
+                width={120}
+                type="image"
+                fallbackType="icon"
+                fallbackClassName={"h-[120px] w-[120px]"}
+                avatar={fanData?.user?.avatar as string}
+                fallback={`${fanData?.user?.firstname?.charAt(
+                  0
+                )} ${fanData?.user?.surname?.charAt(0)}`}
+                icon={<UserIcon className="h-8 w-8" />}
               />
-            </ModalCard>
-            {loading ? (
-              <div className="flex flex-row items-center">
-                <Skeleton className="w-[170px] h-[28px] mt-2 mr-1" />
-                <Skeleton className="w-[16.67px] h-[16.67px] mt-2 rounded-full" />
-              </div>
-            ) : (
-              <div className="flex flex-row items-center justify-center mt-1">
-                <Text className="text-sm relative mr-1">
-                  @{fanData?.user?.username}
-                </Text>
-              </div>
-            )}
-            <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
-              <div className="flex flex-row items-center">
-                {renderBadges()}
-                {loading ? (
-                  <Skeleton className="w-[40px] h-[20px]" />
-                ) : (
-                  <MenubarCard
-                    trigger={
-                      <Button size="icon" variant="outline">
-                        <MoreHorizontalIcon className="cursor-pointer" />
-                      </Button>
-                    }
-                    items={dropdownItems}
-                  />
-                )}
-              </div>
+            }
+          >
+            <ProfileImage
+              imageUrl={fanData?.user?.avatar as string}
+              alt={fanData?.user?.username as string}
+            />
+          </ModalCard>
+          {loading ? (
+            <div className="flex flex-row items-center">
+              <Skeleton className="w-[170px] h-[28px] mt-2 mr-1" />
+              <Skeleton className="w-[16.67px] h-[16.67px] mt-2 rounded-full" />
+            </div>
+          ) : (
+            <div className="flex flex-row items-center justify-center mt-1">
+              <Text className="text-sm relative mr-1">
+                @{fanData?.user?.username}
+              </Text>
+            </div>
+          )}
+          <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
+            <div className="flex flex-row items-center">
+              {renderBadges()}
+              {loading ? (
+                <Skeleton className="w-[40px] h-[20px]" />
+              ) : (
+                <MenubarCard
+                  trigger={
+                    <Button size="icon" variant="outline">
+                      <MoreHorizontalIcon className="cursor-pointer" />
+                    </Button>
+                  }
+                  items={dropdownItems}
+                />
+              )}
             </div>
           </div>
-          <Separator className="my-6" />
-          <CalloutCard
-            color="teal"
-            title="Name"
-            type="string"
-            className="mt-4 min-h-[75px]"
-            icon={() => (
-              <User className="h-[19px] w-[19px] mr-2" color="teal" />
-            )}
-            content={`${fanData?.user?.firstname} ${fanData?.user?.surname}`}
-          />
+        </div>
+        <Separator className="my-6" />
+        <CalloutCard
+          color="teal"
+          title="Name"
+          type="string"
+          className="mt-4 min-h-[75px]"
+          icon={() => (
+            <UserIcon className="h-[19px] w-[19px] mr-2" color="teal" />
+          )}
+          content={`${fanData?.user?.firstname} ${fanData?.user?.surname}`}
+        />
 
-          <CalloutCard
-            color="teal"
-            title="Email"
-            type="string"
-            className="mt-4 min-h-[75px]"
-            icon={() => (
-              <MailIcon className="h-[19px] w-[19px] mr-2" color="teal" />
-            )}
-            content={fanData?.user?.email}
-          />
+        <CalloutCard
+          color="teal"
+          title="Email"
+          type="string"
+          className="mt-4 min-h-[75px]"
+          icon={() => (
+            <MailIcon className="h-[19px] w-[19px] mr-2" color="teal" />
+          )}
+          content={fanData?.user?.email}
+        />
 
-          <CalloutCard
-            color="teal"
-            type="string"
-            title="Date of Birth"
-            className="mt-4 min-h-[75px]"
-            icon={() => (
-              <CakeIcon className="h-[19px] w-[19px] mr-2" color="teal" />
-            )}
-            content={fanData?.user?.dob && formatDate(fanData?.user?.dob)}
-          />
+        <CalloutCard
+          color="teal"
+          type="string"
+          title="Date of Birth"
+          className="mt-4 min-h-[75px]"
+          icon={() => (
+            <CakeIcon className="h-[19px] w-[19px] mr-2" color="teal" />
+          )}
+          content={fanData?.user?.dob && formatDate(fanData?.user?.dob)}
+        />
+        <CalloutCard
+          color="teal"
+          type="string"
+          title="Date of Birth"
+          className="mt-4 min-h-[75px]"
+          icon={() => (
+            <CakeIcon className="h-[19px] w-[19px] mr-2" color="teal" />
+          )}
+          content={fanData?.user?.dob && formatDate(fanData?.user?.dob)}
+        />
 
-          <CalloutCard
-            color="teal"
-            type="flag"
-            className="mt-4"
-            title="Country"
-            icon={() => (
-              <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-            )}
-            content={fanData?.user?.country?.name}
-            flagUrl={fanData?.user?.country?.flag}
-          />
+        <CalloutCard
+          color="teal"
+          type="flag"
+          className="mt-4"
+          title="Country"
+          icon={() => (
+            <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+          content={fanData?.user?.country?.name}
+          flagUrl={fanData?.user?.country?.flag}
+        />
+        <CalloutCard
+          color="teal"
+          type="flag"
+          className="mt-4"
+          title="Country"
+          icon={() => (
+            <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+          content={fanData?.user?.country?.name}
+          flagUrl={fanData?.user?.country?.flag}
+        />
 
-          <CalloutCard
-            type="string"
-            title="State"
-            color="teal"
-            className="mt-4"
-            icon={() => (
-              <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-            )}
-            content={fanData?.user?.state}
-          />
+        <CalloutCard
+          type="string"
+          title="State"
+          color="teal"
+          className="mt-4"
+          icon={() => (
+            <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+          content={fanData?.user?.state}
+        />
 
-          <CalloutCard
-            type="string"
-            title="City"
-            className="mt-4"
-            icon={() => (
-              <LocateFixedIcon
-                className="h-[20px] w-[20px] mr-2"
-                color="teal"
-              />
-            )}
-            content={fanData?.user?.city}
-          />
-        </CardContent>
-      </Card>
+        <CalloutCard
+          type="string"
+          title="City"
+          className="mt-4"
+          icon={() => (
+            <LocateFixedIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+          content={fanData?.user?.city}
+        />
+      </CardContainer>
       <ModalCard
         isModal={true}
         isOpen={viewAnalytics}
@@ -435,8 +452,6 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
             <UsersAnalytics
               loading={loading}
               data={dataList}
-              showStatus={true}
-              isActive={fanData?.user?.isActive || false}
               title={`${fanData?.user?.firstname} 
         ${fanData?.user?.surname} Analytics`}
             />

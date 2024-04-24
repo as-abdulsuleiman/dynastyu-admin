@@ -322,12 +322,11 @@ const Athletes: FC<AthletesProps> = ({}) => {
       },
     });
   };
-
   const fetchPrevious = () => {
     fetchMore({
       variables: {
         take: -10,
-        skip: athleteData?.users,
+        skip: athleteData?.users.length,
         cursor: {
           id: lastUserId,
         },
@@ -545,7 +544,6 @@ const Athletes: FC<AthletesProps> = ({}) => {
           subHeader="Athletes Overview"
         />
       </div>
-
       <Separator className="my-6" />
       <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
         <AthleteStatCard />

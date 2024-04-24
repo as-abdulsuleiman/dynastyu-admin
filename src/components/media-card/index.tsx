@@ -2,7 +2,6 @@
 
 import { FC, useState } from "react";
 import ReactPlayer from "react-player/lazy";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -14,6 +13,7 @@ import { Loader2Icon, PlayCircleIcon } from "../Icons";
 import Image from "next/image";
 import { AspectRatio } from "../ui/aspect-ratio";
 import { Skeleton } from "../ui/skeleton";
+import CardContainer from "../card-container";
 
 interface MediaCardProps {
   items: string[];
@@ -102,15 +102,15 @@ const MediaCard: FC<MediaCardProps> = ({
             {items?.map((val, index) => {
               return (
                 <CarouselItem key={index} className="">
-                  <Card className="p-2 border-0 lg:border">
-                    <CardContent className="flex items-center justify-center p-1">
-                      {type === "video" ? (
-                        <>{renderVideoSection(index, val)}</>
-                      ) : (
-                        <>{renderImageSection(index, val)}</>
-                      )}
-                    </CardContent>
-                  </Card>
+                  {/* <Card className="p-2 border-0 lg:border"> */}
+                  <CardContainer className="flex items-center justify-center p-1">
+                    {type === "video" ? (
+                      <>{renderVideoSection(index, val)}</>
+                    ) : (
+                      <>{renderImageSection(index, val)}</>
+                    )}
+                  </CardContainer>
+                  {/* </Card> */}
                 </CarouselItem>
               );
             })}

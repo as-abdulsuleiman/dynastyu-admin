@@ -35,13 +35,13 @@ import {
   BadgeCheckIcon,
   BadgeAlertIcon,
   WhistleIcon,
+  UserIcon,
 } from "@/components/Icons";
 import UserAvatar from "@/components/user-avatar";
 import TooltipCard from "@/components/tooltip-card";
 import { useToast } from "@/hooks/use-toast";
 import MenubarCard from "@/components/menubar";
 import ModalCard from "../modal";
-import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
 import {
   PromptStatusEnum,
@@ -59,6 +59,7 @@ import PromptAlert from "../prompt-alert";
 import CalloutCard from "../callout";
 import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
+import CardContainer from "../card-container";
 
 interface CoachDetailProps {
   params: {
@@ -78,6 +79,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   const [debounced] = useDebouncedValue(searchValue, 300);
   const [promptStatus, setPromptStatus] = useState<PromptStatusEnum | null>();
   const [IsAddingSchool, setIsAddingSchool] = useState<boolean>(false);
+  const [deletingSkillType, setDeletingSkillType] = useState(false);
 
   const [deleteCoach] = useDeleteCoachMutation();
   const [updateCoach] = useUpdateCoachMutation();
@@ -149,31 +151,23 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     );
   }, [schoolData?.schools]);
 
-  const handleDeleteCoach = async (item: any) => {
-    setUpdatingProfile(StatusEnum.DELETING);
+  const handleDeleteCaochConfirmPrompt = async (userId: number) => {
+    setDeletingSkillType(true);
+
     try {
-      const response = await deleteCoach({
+      await deleteUser({
         variables: {
           where: {
-            id: item?.coachProfile?.id,
+            id: userId,
           },
         },
       });
-      if (response.data?.deleteOneCoachProfile) {
-        await deleteUser({
-          variables: {
-            where: {
-              id: item?.id,
-            },
-          },
-        });
-        await refetch();
-        toast({
-          title: "Profile successfully deleted.",
-          description: `@${item?.username} account has been deleted.`,
-          variant: "successfull",
-        });
-      }
+      toast({
+        title: "Profile successfully deleted.",
+        description: `@${coachData?.username} account has been deleted.`,
+        variant: "successfull",
+      });
+      router.push("/coaches");
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -184,7 +178,12 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       });
     } finally {
       setUpdatingProfile(null);
+      setDeletingSkillType(false);
     }
+  };
+
+  const handleDeleteCoach = () => {
+    setUpdatingProfile(StatusEnum.DELETING);
   };
 
   const handleActivateCoach = async (item: any) => {
@@ -335,7 +334,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     },
     // {
     //   name: "Delete Profile",
-    //   onClick: async () => await handleDeleteCoach(coachData),
+    //   onClick: handleDeleteCoach,
     // },
   ];
   if (coachData?.coachProfile?.schoolId) {
@@ -433,8 +432,8 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
 
   const formattedCoachTitle = useMemo(() => {
     let formattedTitle;
-    if (coachData?.coachProfile?.title) {
-      if (coachData?.coachProfile?.school?.name) {
+    if (coachData?.coachProfile) {
+      if (coachData?.coachProfile?.title) {
         formattedTitle = coachData?.coachProfile?.title;
       }
       if (coachData?.coachProfile?.school?.name) {
@@ -579,9 +578,9 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
               <div className="flex flex-row items-center">
                 <ContentHeader
                   title={`${coachData?.firstname} ${coachData?.surname}`}
-                  icon={
-                    <WhistleIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
-                  }
+                  // icon={
+                  //   <Icons.whistle className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+                  // }
                   subHeader={formattedCoachTitle}
                 />
               </div>
@@ -632,154 +631,151 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
         )}
       </div>
       <Grid numItemsMd={1} numItemsLg={1} className="mt-6 gap-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex flex-col items-center justify-center relative">
-              <ModalCard
-                isModal={true}
-                isOpen={viewPlayerCardUrl}
-                onOpenChange={() => {
-                  if (coachData?.avatar) {
-                    setViewPlayerCardUrl(!viewPlayerCardUrl);
-                  }
-                }}
-                trigger={
-                  <UserAvatar
-                    className="h-[120px] w-[120px] shadow cursor-pointer"
-                    height={120}
-                    width={120}
-                    type="image"
-                    fallbackType="icon"
-                    fallbackClassName={"h-[120px] w-[120px]"}
-                    avatar={coachData?.avatar as string}
-                    fallback={`${coachData?.username?.charAt(
-                      0
-                    )} ${coachData?.firstname?.charAt(0)}`}
-                    icon={<User className="h-8 w-8" />}
-                  />
+        <CardContainer className="p-4 md:p-4">
+          <div className="flex flex-col items-center justify-center relative">
+            <ModalCard
+              isModal={true}
+              isOpen={viewPlayerCardUrl}
+              onOpenChange={() => {
+                if (coachData?.avatar) {
+                  setViewPlayerCardUrl(!viewPlayerCardUrl);
                 }
-              >
-                <ProfileImage
-                  imageUrl={coachData?.avatar as string}
-                  alt={coachData?.username as string}
+              }}
+              trigger={
+                <UserAvatar
+                  className="h-[120px] w-[120px] shadow cursor-pointer"
+                  height={120}
+                  width={120}
+                  type="image"
+                  fallbackType="icon"
+                  fallbackClassName={"h-[120px] w-[120px]"}
+                  avatar={coachData?.avatar as string}
+                  fallback={`${coachData?.username?.charAt(
+                    0
+                  )} ${coachData?.firstname?.charAt(0)}`}
+                  icon={<UserIcon className="h-8 w-8" />}
                 />
-              </ModalCard>
-              {loading ? (
-                <div className="flex flex-row items-center">
-                  <Skeleton className="w-[120px] h-[25px] mt-2 mr-1" />
-                  <Skeleton className="w-[24px] h-[24px] mt-2 rounded-full" />
-                </div>
-              ) : (
-                <div className="flex flex-row items-center justify-center">
-                  <Text className="text-sm relative mr-1">
-                    @{coachData?.username}
-                  </Text>
-                  {coachData?.coachProfile?.verified ? (
-                    <TooltipCard
-                      message="Verified"
-                      trigger={<VerifiedIcon className="cursor-pointer" />}
-                    />
-                  ) : null}
-                </div>
-              )}
-              <div className="ml-auto absolute right-0 top-0">
-                <div className="flex flex-row items-center">
-                  {renderBadges()}
-                  {loading ? (
-                    <Skeleton className="w-[40px] h-[20px]" />
-                  ) : (
-                    <MenubarCard
-                      trigger={
-                        <Button size="icon" variant="outline">
-                          <MoreHorizontalIcon className="cursor-pointer" />
-                        </Button>
-                      }
-                      items={dropdownItems}
-                    />
-                  )}
-                </div>
+              }
+            >
+              <ProfileImage
+                imageUrl={coachData?.avatar as string}
+                alt={coachData?.username as string}
+              />
+            </ModalCard>
+            {loading ? (
+              <div className="flex flex-row items-center">
+                <Skeleton className="w-[120px] h-[25px] mt-2 mr-1" />
+                <Skeleton className="w-[24px] h-[24px] mt-2 rounded-full" />
+              </div>
+            ) : (
+              <div className="flex flex-row items-center justify-center">
+                <Text className="text-sm relative mr-1">
+                  @{coachData?.username}
+                </Text>
+                {coachData?.coachProfile?.verified ? (
+                  <TooltipCard
+                    message="Verified"
+                    trigger={<VerifiedIcon className="cursor-pointer" />}
+                  />
+                ) : null}
+              </div>
+            )}
+            <div className="ml-auto absolute right-0 top-0">
+              <div className="flex flex-row items-center">
+                {renderBadges()}
+                {loading ? (
+                  <Skeleton className="w-[40px] h-[20px]" />
+                ) : (
+                  <MenubarCard
+                    trigger={
+                      <Button size="icon" variant="outline">
+                        <MoreHorizontalIcon className="cursor-pointer" />
+                      </Button>
+                    }
+                    items={dropdownItems}
+                  />
+                )}
               </div>
             </div>
-            <Separator className="my-6" />
-            <CalloutCard
-              color="teal"
-              title="Name"
-              type="string"
-              className="mt-4"
-              icon={() => <User className="h-5 w-5" color="teal" />}
-              content={`${coachData?.firstname} ${coachData?.surname}`}
-            />
-            <CalloutCard
-              title="Email"
-              type="string"
-              color="teal"
-              className="mt-4"
-              icon={() => (
-                <MailIcon className="h-[19px] w-[19px] mr-2" color="teal" />
-              )}
-              content={coachData?.email}
-            />
-            <CalloutCard
-              type="string"
-              color="teal"
-              className="mt-4"
-              title="Coach Title"
-              content={coachData?.coachProfile?.title}
-              icon={() => (
-                <TagsIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-              )}
-            />
+          </div>
+          <Separator className="my-6" />
+          <CalloutCard
+            color="teal"
+            title="Name"
+            type="string"
+            className="mt-4"
+            icon={() => <UserIcon className="h-5 w-5" color="teal" />}
+            content={`${coachData?.firstname} ${coachData?.surname}`}
+          />
+          <CalloutCard
+            title="Email"
+            type="string"
+            color="teal"
+            className="mt-4"
+            icon={() => (
+              <MailIcon className="h-[19px] w-[19px] mr-2" color="teal" />
+            )}
+            content={coachData?.email?.toLowerCase()}
+          />
+          <CalloutCard
+            type="string"
+            color="teal"
+            className="mt-4"
+            title="Coach Title"
+            content={coachData?.coachProfile?.title}
+            icon={() => (
+              <TagsIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+            )}
+          />
 
-            <CalloutCard
-              color="teal"
-              type="string"
-              className="mt-4"
-              title={
-                coachData?.coachProfile?.school?.schoolType?.name ||
-                "High Scool"
-              }
-              content={formattedSchoolName}
-              icon={() => (
-                <SchoolIcon className="h-[19px] w-[19px] mr-2" color="teal" />
-              )}
-            />
-            <CalloutCard
-              color="teal"
-              type="flag"
-              className="mt-4"
-              title="Country"
-              icon={() => (
-                <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-              )}
-              content={coachData?.coachProfile?.country?.name}
-              flagUrl={coachData?.coachProfile?.country?.flag}
-            />
+          <CalloutCard
+            color="teal"
+            type="string"
+            className="mt-4"
+            title={
+              coachData?.coachProfile?.school?.schoolType?.name || "High Scool"
+            }
+            content={formattedSchoolName}
+            icon={() => (
+              <SchoolIcon className="h-[19px] w-[19px] mr-2" color="teal" />
+            )}
+          />
+          <CalloutCard
+            color="teal"
+            type="flag"
+            className="mt-4"
+            title="Country"
+            icon={() => (
+              <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+            )}
+            content={coachData?.coachProfile?.country?.name}
+            flagUrl={coachData?.coachProfile?.country?.flag}
+          />
 
-            <CalloutCard
-              type="string"
-              title="State"
-              color="teal"
-              className="mt-4"
-              icon={() => (
-                <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-              )}
-              content={coachData?.coachProfile?.state}
-            />
+          <CalloutCard
+            type="string"
+            title="State"
+            color="teal"
+            className="mt-4"
+            icon={() => (
+              <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+            )}
+            content={coachData?.coachProfile?.state}
+          />
 
-            <CalloutCard
-              type="string"
-              title="City"
-              className="mt-4"
-              icon={() => (
-                <LocateFixedIcon
-                  className="h-[20px] w-[20px] mr-2"
-                  color="teal"
-                />
-              )}
-              content={coachData?.coachProfile?.city}
-            />
-          </CardContent>
-        </Card>
+          <CalloutCard
+            type="string"
+            title="City"
+            className="mt-4"
+            icon={() => (
+              <LocateFixedIcon
+                className="h-[20px] w-[20px] mr-2"
+                color="teal"
+              />
+            )}
+            content={coachData?.coachProfile?.city}
+          />
+        </CardContainer>
       </Grid>
       <ModalCard
         isModal={true}
@@ -791,10 +787,6 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
             <UsersAnalytics
               loading={loading}
               data={dataList}
-              showStatus={true}
-              showVerified
-              isVerified={coachData?.coachProfile?.verified || false}
-              isActive={coachData?.isActive || false}
               title={`${coachData?.firstname} 
           ${coachData?.surname} Analytics`}
             />
@@ -810,6 +802,18 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
           setSelectedSchool({});
         }}
         handleConfirmPrompt={() => handleAddCoachToSchool(selectedSchool)}
+      />
+      <PromptAlert
+        title={`Are you absolutely sure?`}
+        loading={deletingSkillType}
+        content={`This will permanently delete ${coachData?.username} from our servers.`}
+        showPrompt={updatingProfile === StatusEnum.DELETING}
+        handleHidePrompt={() => {
+          setUpdatingProfile(null);
+        }}
+        handleConfirmPrompt={() =>
+          handleDeleteCaochConfirmPrompt(coachData?.id)
+        }
       />
     </main>
   );

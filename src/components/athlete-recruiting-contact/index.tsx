@@ -3,7 +3,6 @@
 import { FC } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { Title, Text } from "@tremor/react";
-import { Card, CardContent } from "../ui/card";
 import {
   Accordion,
   AccordionContent,
@@ -11,6 +10,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { PhoneIcon } from "@/components/Icons";
+import CardContainer from "../card-container";
 interface AthleteRecruitingContactProps {
   loading: boolean;
   recruitingContact: RecruitingContact[];
@@ -66,34 +66,32 @@ const AthleteRecruitingContact: FC<AthleteRecruitingContactProps> = ({
   };
 
   return (
-    <Card>
-      <CardContent className="p-6">
-        <div className="flex flex-row items-center mb-3">
-          <Title>Recruiting Contact</Title>
-          <PhoneIcon className="ml-auto h-5 w-5 stroke-foreground dark:stroke-foreground" />
-        </div>
-        {loading ? (
-          <> {renderLoader()}</>
-        ) : !recruitingContact.length ? (
-          <>
-            <Text className="text-center h-full">No Result Found</Text>
-          </>
-        ) : (
-          <Accordion type="single" collapsible className="w-full">
-            {recruitingContact?.map((val: RecruitingContact, index: number) => {
-              return (
-                <AccordionItem value={`${"item"}-${index + 1}`} key={index}>
-                  <AccordionTrigger>
-                    {val?.recruitingContactName}
-                  </AccordionTrigger>
-                  <AccordionContent>{renderContent(val)}</AccordionContent>
-                </AccordionItem>
-              );
-            })}
-          </Accordion>
-        )}
-      </CardContent>
-    </Card>
+    <CardContainer className="p-4 md:p-6">
+      <div className="flex flex-row items-center mb-3">
+        <Title>Recruiting Contact</Title>
+        <PhoneIcon className="ml-auto h-5 w-5 stroke-foreground dark:stroke-foreground" />
+      </div>
+      {loading ? (
+        <> {renderLoader()}</>
+      ) : !recruitingContact.length ? (
+        <>
+          <Text className="text-center h-full">No Result Found</Text>
+        </>
+      ) : (
+        <Accordion type="single" collapsible className="w-full">
+          {recruitingContact?.map((val: RecruitingContact, index: number) => {
+            return (
+              <AccordionItem value={`${"item"}-${index + 1}`} key={index}>
+                <AccordionTrigger>
+                  {val?.recruitingContactName}
+                </AccordionTrigger>
+                <AccordionContent>{renderContent(val)}</AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
+      )}
+    </CardContainer>
   );
 };
 

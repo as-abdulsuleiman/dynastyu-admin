@@ -205,6 +205,7 @@ query getSkillTypes(
     unit
     options
     createdAt
+    position
     numberOfVideos
     secondFieldName
     description
@@ -251,6 +252,7 @@ query getSkillType($where: SkillTypeWhereUniqueInput!) {
     unit
     options
     numberOfVideos
+    position
     secondFieldName
     description
     secondValueOptions

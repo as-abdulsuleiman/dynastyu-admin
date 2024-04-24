@@ -8,16 +8,15 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { GetUserQuery, useGetPostFlagQuery } from "@/services/graphql";
-import { Title, Text } from "@tremor/react";
 import MediaCard from "../media-card";
 import TabCard from "../tab-card";
 import UserAvatar from "../user-avatar";
-import { FlagOffIcon } from "../Icons";
+import { FlagOffIcon, UserIcon } from "../Icons";
 import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
 import { generateProfilePath } from "@/lib/helpers";
 import ContentHeader from "../content-header";
-import { User } from "lucide-react";
+import CardContainer from "../card-container";
 
 interface FlaggedPostDetailProps {
   params: {
@@ -53,7 +52,7 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
             fallback={`${post?.user?.firstname?.charAt(
               0
             )} ${post?.user?.surname?.charAt(0)}`}
-            icon={<User className="h-8 w-8" />}
+            icon={<UserIcon className="h-8 w-8" />}
           />
           <div className="ml-3">
             <div>
@@ -82,7 +81,7 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
             fallback={`${user?.firstname?.charAt(0)} ${user?.surname?.charAt(
               0
             )}`}
-            icon={<User className="h-8 w-8" />}
+            icon={<UserIcon className="h-8 w-8" />}
           />
           <div className="ml-3">
             <div>
@@ -108,14 +107,13 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
       >
         Go Back
       </Button>
-
       <div className="flex flex-col">
         <div className="flex flex-row items-center">
           <ContentHeader
             title="Flagged Post"
-            icon={
-              <FlagOffIcon className="h-4 w-4 ml-2 stroke-gray-700 dark:stroke-white" />
-            }
+            // icon={
+            //   <FlagOffIcon className="h-4 w-4 ml-2 stroke-gray-700 dark:stroke-white" />
+            // }
             subHeader="Flagged Post Details"
           />
         </div>
@@ -137,20 +135,18 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
       >
         Disable Post
       </Button>
-      <Card>
-        <CardContent className="p-6">
-          <MediaCard
-            loading={loading}
-            caption={data?.postFlag?.post?.caption}
-            items={
-              (!isImageType
-                ? data?.postFlag?.post?.images
-                : data?.postFlag?.post?.videos) || []
-            }
-            type={!isImageType ? "image" : "video"}
-          />
-        </CardContent>
-      </Card>
+      <CardContainer className="p-4 md:p-6">
+        <MediaCard
+          loading={loading}
+          caption={data?.postFlag?.post?.caption}
+          items={
+            (!isImageType
+              ? data?.postFlag?.post?.images
+              : data?.postFlag?.post?.videos) || []
+          }
+          type={!isImageType ? "image" : "video"}
+        />
+      </CardContainer>
     </main>
   );
 };

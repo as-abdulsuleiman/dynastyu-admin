@@ -3,7 +3,7 @@
 "use client";
 
 import { FC, useEffect, useMemo, useState } from "react";
-import { Title, Text, Grid, Flex, TextInput } from "@tremor/react";
+import { Grid } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import {
   GetSkillTypesQuery,
@@ -16,14 +16,12 @@ import {
   useGetSkillTypesQuery,
 } from "@/services/graphql";
 import SkillTypeStatCard from "@/components/stat-cards/skillType";
-import SelectCard from "@/components/select";
 import Pagination from "@/components/pagination";
 import UniversalTable from "@/components/universal-table";
 import { useDebouncedValue } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { MoreHorizontalIcon, SkillIcon } from "@/components/Icons";
 import { cn, formatDate } from "@/lib/utils";
-import Link from "next/link";
 import MenubarCard from "@/components/menubar";
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
@@ -31,6 +29,8 @@ import PromptAlert from "@/components/prompt-alert";
 import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
 import ContentHeader from "@/components/content-header";
+
+import GripVertical from "@/components/Icons/grip-vertical";
 
 const headerItems = [
   { name: "Name" },

@@ -56,6 +56,7 @@ import { useRootStore } from "@/mobx";
 import { useDebouncedValue } from "@mantine/hooks";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "../ui/skeleton";
+import { useRouter } from "next/navigation";
 
 const headerItems = [
   { name: "Skill" },
@@ -604,6 +605,7 @@ const RenderEditSkillModal = ({
 
 const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
   // const [status, setStatus] = useState<string>("");
+  const router = useRouter();
   const [value, setValue] = useState<string>("");
   const [videos, setVideos] = useState<string[]>();
   const [skillId, setSkillId] = useState<string | null>("");
@@ -630,18 +632,6 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
       where: {
         athleteId: { equals: athleteId },
       },
-      take: 10,
-      orderBy: {
-        createdAt: SortOrder.Desc,
-      },
-    },
-  });
-
-  useEffect(() => {
-    refetch({
-      // where: {
-      //   athleteId: { equals: athleteProfile?.id },
-      // },
       whereSkillType: {
         OR: [
           { name: { contains: debounced, mode: QueryMode.Insensitive } },
@@ -657,8 +647,8 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
       orderBy: {
         createdAt: SortOrder.Desc,
       },
-    });
-  }, [debounced, refetch]);
+    },
+  });
 
   const lastSkillTypeId = useMemo(() => {
     const lastPostInResults = data?.skillTypes[data?.skillTypes?.length - 1];
@@ -754,7 +744,7 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
     }
 
     return (
-      <TableRow key={item?.id} className="w-full">
+      <TableRow key={item?.id} className="w-full font-TTHovesRegular">
         <TableCell>
           <div className="text-base flex flex-row items-center justify-start">
             <span>{item?.name}</span>
@@ -833,6 +823,13 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
 
   return (
     <main className="w-full h-full">
+      <Button
+        variant="destructive"
+        className="mb-6"
+        onClick={() => router.back()}
+      >
+        Go Back
+      </Button>
       <div className="flex flex-col items-start">
         {loadingAthlete ? (
           <>

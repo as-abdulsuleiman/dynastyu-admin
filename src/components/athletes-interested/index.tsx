@@ -6,18 +6,17 @@ import { FC } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { Title, Text } from "@tremor/react";
 import { AthleteIcon } from "../Icons";
-import AccordionCard from "../accordion-card";
 import { Button } from "../ui/button";
 import UserAvatar from "../user-avatar";
 import { useRouter } from "next/navigation";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { Card, CardContent } from "../ui/card";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
+import CardContainer from "../card-container";
 
 interface AthletesInterestedProps {
   loading: boolean;
@@ -104,36 +103,32 @@ const AthletesInterested: FC<AthletesInterestedProps> = ({
 }) => {
   const router = useRouter();
   return (
-    <Card>
-      <CardContent className="p-6">
-        <div className="flex flex-row items-center mb-3">
-          <Title>Athletes Interested</Title>
-          <AthleteIcon className="ml-auto h-6 w-6 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
-        </div>
-        {loading ? (
-          <> {renderLoader()}</>
-        ) : !athletesInterested.length ? (
-          <>
-            <Text className="text-center h-full">No Result Found</Text>
-          </>
-        ) : (
-          <Accordion type="single" collapsible className="w-full">
-            {athletesInterested?.map(
-              (val: AthletesInterested, index: number) => {
-                return (
-                  <AccordionItem value={`${"item"}-${index + 1}`} key={index}>
-                    <AccordionTrigger>{val?.User?.username}</AccordionTrigger>
-                    <AccordionContent>
-                      {renderContent(val, router)}
-                    </AccordionContent>
-                  </AccordionItem>
-                );
-              }
-            )}
-          </Accordion>
-        )}
-      </CardContent>
-    </Card>
+    <CardContainer className="p-4 md:p-6">
+      <div className="flex flex-row items-center mb-3">
+        <Title>Athletes Interested</Title>
+        <AthleteIcon className="ml-auto h-6 w-6 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+      </div>
+      {loading ? (
+        <> {renderLoader()}</>
+      ) : !athletesInterested.length ? (
+        <>
+          <Text className="text-center h-full">No Result Found</Text>
+        </>
+      ) : (
+        <Accordion type="single" collapsible className="w-full">
+          {athletesInterested?.map((val: AthletesInterested, index: number) => {
+            return (
+              <AccordionItem value={`${"item"}-${index + 1}`} key={index}>
+                <AccordionTrigger>{val?.User?.username}</AccordionTrigger>
+                <AccordionContent>
+                  {renderContent(val, router)}
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
+      )}
+    </CardContainer>
   );
 };
 

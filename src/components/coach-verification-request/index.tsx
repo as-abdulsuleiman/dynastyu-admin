@@ -426,12 +426,15 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
       //   onClick: async () => await handleDeleteCoach(item),
       // },
     ];
+
     return (
       <TableRow key={item?.id} className="">
         <TableCell>
           <div
             className="flex flex-row justify-start items-center"
-            onClick={() => router.push(`/coach/${item?.id}`, { scroll: true })}
+            onClick={() =>
+              router.push(`/coach/${item?.userId}`, { scroll: true })
+            }
           >
             <UserAvatar
               className="h-[79px] w-[79px] shadow cursor-pointer"

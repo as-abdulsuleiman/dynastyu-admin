@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { isValid, parse } from "date-fns";
 
 export const FanValidator = Yup.object({
-  email: Yup.string()
+  email: Yup.string().lowercase()
     .email("Invalid email address")
     .required("Email is required"),
   dob: Yup.string().required("Date is required"),
