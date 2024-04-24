@@ -2,7 +2,7 @@
 
 import { FC } from "react";
 import Multiselect from "multiselect-react-dropdown";
-import ChevronDown from "../Icons/chevron-down";
+import { ChevronDownIcon } from "../Icons";
 
 interface MultiSelectorProps {
   groupBy?: string;
@@ -56,7 +56,7 @@ const MultiSelector: FC<MultiSelectorProps> = ({
         avoidHighlightFirstOption={avoidHighlightFirstOption}
         hidePlaceholder={hidePlaceholder}
         showArrow
-        customArrow={<ChevronDown className="chevron-down_dir" />}
+        customArrow={<ChevronDownIcon className="chevron-down_dir" />}
         style={{
           chips: {
             background: "hsl(var(--primary))",

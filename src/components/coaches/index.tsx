@@ -24,14 +24,19 @@ import { useRouter } from "next/navigation";
 import { useDebouncedValue } from "@mantine/hooks";
 import { useToast } from "@/hooks/use-toast";
 import UserAvatar from "@/components/user-avatar";
-import { Icons } from "@/components/Icons";
+import {
+  BadgeAlertIcon,
+  BadgeCheckIcon,
+  Loader2Icon,
+  MoreHorizontalIcon,
+  WhistleIcon,
+} from "@/components/Icons";
 import { useRootStore } from "@/mobx";
 import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
 import MenubarCard from "../menubar";
 import { observer } from "mobx-react-lite";
 import { Separator } from "../ui/separator";
-import MoreHorizontal from "../Icons/more-horizontal";
 import { formatDate } from "@/lib/utils";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 import BadgeCard from "../badge-card";
@@ -385,7 +390,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
           {item?.id === selectedUser &&
           updatingProfile === StatusEnum.ACTIVATING ? (
             <div className="text-center flex flex-row justify-center items-center">
-              <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin " />
+              <Loader2Icon className="mr-1 h-4 w-4 animate-spin " />
               {item?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (
@@ -406,7 +411,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
           {item?.id === selectedUser &&
           updatingProfile === StatusEnum.VERIFYING ? (
             <div className="text-center flex flex-row justify-center items-center">
-              <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin " />
+              <Loader2Icon className="mr-1 h-4 w-4 animate-spin " />
               {item?.coachProfile?.verified ? "Unverifying..." : "Verifying..."}
             </div>
           ) : (
@@ -417,9 +422,9 @@ const Coaches: FC<CoachesProps> = ({}) => {
                 // tooltip={item?.verified ? "Verified" : "Not Verified"}
                 icon={() => {
                   return item?.coachProfile?.verified ? (
-                    <Icons.badgeCheck className="h-4 w-4 mr-1" color="sky" />
+                    <BadgeCheckIcon className="h-4 w-4 mr-1" color="sky" />
                   ) : (
-                    <Icons.badgeAlert className="h-4 w-4 mr-1" color="rose" />
+                    <BadgeAlertIcon className="h-4 w-4 mr-1" color="rose" />
                   );
                 }}
                 datatype="moderateDecrease"
@@ -439,7 +444,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
             <MenubarCard
               trigger={
                 <Button size="icon" variant="outline">
-                  <MoreHorizontal className="cursor-pointer" />
+                  <MoreHorizontalIcon className="cursor-pointer" />
                 </Button>
               }
               items={coacheItems}
@@ -458,7 +463,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
             <ContentHeader
               title="Coaches"
               icon={
-                <Icons.whistle className="h-4 w-4 ml-2 fill-foreground dark:fill-foreground" />
+                <WhistleIcon className="h-4 w-4 ml-2 fill-foreground dark:fill-foreground" />
               }
               subHeader="Coaches Overview"
             />

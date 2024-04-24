@@ -2,7 +2,7 @@
 
 "use client";
 
-import { Icons } from "@/components/Icons";
+import { UsersIcon } from "@/components/Icons";
 import StatCard from "@/components/stat-card";
 import { useRootStore } from "@/mobx";
 import { GetUsersQuery, SortOrder, useGetUsersQuery } from "@/services/graphql";
@@ -35,7 +35,7 @@ const UserStatCard: FC<indexProps> = ({}) => {
       categories={["Users"]}
       onClick={() => router.push("/users")}
       showIcon={pathname === "/users"}
-      icon={<Icons.users className="h-4 w-4" />}
+      icon={<UsersIcon className="h-4 w-4" />}
     />
   );
 };

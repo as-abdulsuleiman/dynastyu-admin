@@ -12,7 +12,21 @@ import { Title, Text } from "@tremor/react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "../ui/skeleton";
-import { Icons } from "../Icons";
+import {
+  CakeIcon,
+  FanIcon,
+  FileImageIcon,
+  FlagOffIcon,
+  LocateFixedIcon,
+  MailIcon,
+  MapPinIcon,
+  MessageSquareMoreIcon,
+  MoreHorizontalIcon,
+  UserRoundXIcon,
+  Users2Icon,
+  UsersRoundIcon,
+  UserIcon,
+} from "../Icons";
 import UserAvatar from "../user-avatar";
 import UsersAnalytics from "@/components/analytics/users";
 import { useToast } from "@/hooks/use-toast";
@@ -20,7 +34,6 @@ import { formatDate } from "@/lib/utils";
 import MenubarCard from "../menubar";
 import ModalCard from "../modal";
 import { Separator } from "../ui/separator";
-import MoreHorizontal from "../Icons/more-horizontal";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 import StatusOnlineIcon from "@heroicons/react/outline/StatusOnlineIcon";
 import StatusOfflineIcon from "@heroicons/react/outline/StatusOfflineIcon";
@@ -155,7 +168,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
       value: fanData?.user?._count?.following || 0,
       color: "teal",
       icon: () => (
-        <Icons.users2 className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+        <Users2Icon className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
     {
@@ -163,7 +176,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
       value: fanData?.user?._count?.followedBy || 0,
       color: "teal",
       icon: () => (
-        <Icons.usersRound className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+        <UsersRoundIcon className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
     {
@@ -171,7 +184,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
       color: "teal",
       value: fanData?.user?._count?.posts || 0,
       icon: () => (
-        <Icons.fileImage className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+        <FileImageIcon className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
     {
@@ -179,21 +192,21 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
       color: "teal",
       value: fanData?.user?._count?.comments || 0,
       icon: () => (
-        <Icons.messageSquareMore className="mr-2.5 mb-[-6px] h-5 w-5 stroke-teal-600" />
+        <MessageSquareMoreIcon className="mr-2.5 mb-[-6px] h-5 w-5 stroke-teal-600" />
       ),
     },
     {
       name: "Post Flag",
       value: fanData?.user?._count?.postFlag || 0,
       icon: () => (
-        <Icons.flagOff className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+        <FlagOffIcon className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
     {
       name: "Blocked Users",
       value: fanData?.user?._count?.blockedUsers || 0,
       icon: () => (
-        <Icons.userRoundX className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+        <UserRoundXIcon className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
   ];
@@ -207,7 +220,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
           type="string"
           className="mt-4 min-h-[75px]"
           icon={() => (
-            <Icons.user className="h-[19px] w-[19px] mr-2" color="teal" />
+            <UserIcon className="h-[19px] w-[19px] mr-2" color="teal" />
           )}
           content={`${fanData?.user?.firstname} ${fanData?.user?.surname}`}
         />
@@ -218,7 +231,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
           type="string"
           className="mt-4 min-h-[75px]"
           icon={() => (
-            <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
+            <MailIcon className="h-[19px] w-[19px] mr-2" color="teal" />
           )}
           content={fanData?.user?.email}
         />
@@ -229,7 +242,17 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
           title="Date of Birth"
           className="mt-4 min-h-[75px]"
           icon={() => (
-            <Icons.cake className="h-[19px] w-[19px] mr-2" color="teal" />
+            <CakeIcon className="h-[19px] w-[19px] mr-2" color="teal" />
+          )}
+          content={fanData?.user?.dob && formatDate(fanData?.user?.dob)}
+        />
+        <CalloutCard
+          color="teal"
+          type="string"
+          title="Date of Birth"
+          className="mt-4 min-h-[75px]"
+          icon={() => (
+            <CakeIcon className="h-[19px] w-[19px] mr-2" color="teal" />
           )}
           content={fanData?.user?.dob && formatDate(fanData?.user?.dob)}
         />
@@ -240,7 +263,18 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
           className="mt-4"
           title="Country"
           icon={() => (
-            <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+            <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+          content={fanData?.user?.country?.name}
+          flagUrl={fanData?.user?.country?.flag}
+        />
+        <CalloutCard
+          color="teal"
+          type="flag"
+          className="mt-4"
+          title="Country"
+          icon={() => (
+            <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
           )}
           content={fanData?.user?.country?.name}
           flagUrl={fanData?.user?.country?.flag}
@@ -252,7 +286,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
           color="teal"
           className="mt-4"
           icon={() => (
-            <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+            <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
           )}
           content={fanData?.user?.state}
         />
@@ -262,10 +296,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
           title="City"
           className="mt-4"
           icon={() => (
-            <Icons.locateFixed
-              className="h-[20px] w-[20px] mr-2"
-              color="teal"
-            />
+            <LocateFixedIcon className="h-[20px] w-[20px] mr-2" color="teal" />
           )}
           content={fanData?.user?.city}
         />
@@ -346,9 +377,9 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
               title={
                 `${fanData?.user?.firstname} ${fanData?.user?.surname}` || ""
               }
-              // icon={
-              //   <Icons.fans className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
-              // }
+              icon={
+                <FanIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+              }
               subItems={subHeaderItems}
             />
           </div>
@@ -377,7 +408,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
                 fallback={`${fanData?.user?.firstname?.charAt(
                   0
                 )} ${fanData?.user?.surname?.charAt(0)}`}
-                icon={<Icons.user className="h-8 w-8" />}
+                icon={<UserIcon className="h-8 w-8" />}
               />
             }
           >
@@ -407,7 +438,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
                 <MenubarCard
                   trigger={
                     <Button size="icon" variant="outline">
-                      <MoreHorizontal className="cursor-pointer" />
+                      <MoreHorizontalIcon className="cursor-pointer" />
                     </Button>
                   }
                   items={dropdownItems}

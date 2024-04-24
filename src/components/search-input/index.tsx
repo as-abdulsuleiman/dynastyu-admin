@@ -1,7 +1,7 @@
 /** @format */
 
 import { FC, forwardRef } from "react";
-import { Icons } from "../Icons";
+import { SearchIcon } from "../Icons";
 import { Label } from "../ui/label";
 import { cn } from "@/lib/utils";
 import { Input } from "../ui/input";
@@ -18,7 +18,7 @@ const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         <Label className="relative block">
           <span className="sr-only">Search</span>
           <span className="absolute inset-y-0 left-0 flex items-center">
-            <Icons.search className="h-4 w-4 ml-2.5" />
+            <SearchIcon className="h-4 w-4 ml-2.5" />
           </span>
           <Input
             className={cn(

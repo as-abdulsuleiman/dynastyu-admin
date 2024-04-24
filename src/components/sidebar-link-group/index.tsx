@@ -3,18 +3,22 @@
 import { FC } from "react";
 import { Bell, FolderRoot, Home, Medal, Settings } from "lucide-react";
 import { usePathname, useParams, useRouter } from "next/navigation";
-import { Icons } from "../Icons";
-import SkillIcon from "../Icons/skill";
 import { useRootStore } from "@/mobx";
 import { observer } from "mobx-react-lite";
-import FlagOffIcon from "@/components/Icons/flag-off";
-import ChevronDownIcon from "@/components/Icons/chevron-down";
 import { cn } from "@/lib/utils";
 import UseThemeColor from "@/hooks/useThemeColor";
 import Link from "next/link";
-import LayoutGridIcon from "@/components/Icons/layout-grid";
+import {
+  AthleteIcon,
+  FanIcon,
+  SchoolIcon,
+  WhistleIcon,
+  FlagOffIcon,
+  ChevronDownIcon,
+  SkillIcon,
+  LayoutGridIcon,
+} from "../Icons";
 // import Notification from "../Icons/notification";
-
 interface SidebarItemsProps {
   handleNavigation: (val: string) => void;
   sidebarExpanded: boolean;
@@ -69,7 +73,7 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       hasBadge: false,
       count: 0,
       icon: ({ className, color }: IconProps) => (
-        <Icons.athlete className={className} color={color} />
+        <AthleteIcon className={className} color={color} />
       ),
     },
     {
@@ -86,7 +90,7 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
         { name: "Verification Request", path: "/coaches/verification-request" },
       ],
       icon: ({ className, color }: IconProps) => (
-        <Icons.whistle className={className} color={color} />
+        <WhistleIcon className={className} color={color} />
       ),
     },
     {
@@ -102,7 +106,7 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       //   },
       // ],
       icon: ({ className, color }: IconProps) => (
-        <Icons.fans className={className} color={color} />
+        <FanIcon className={className} color={color} />
       ),
     },
     {
@@ -132,7 +136,7 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
         },
       ],
       icon: ({ className, color }: IconProps) => (
-        <Icons.school className={className} color={color} />
+        <SchoolIcon className={className} color={color} />
       ),
     },
     {

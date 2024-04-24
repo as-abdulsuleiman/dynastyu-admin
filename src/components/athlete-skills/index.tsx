@@ -27,7 +27,14 @@ import {
 } from "@/services/graphql";
 import ContentHeader from "../content-header";
 import { Separator } from "../ui/separator";
-import SkillIcon from "@/components/Icons/skill";
+import {
+  SkillIcon,
+  VerifiedIcon,
+  TrashIcon,
+  PlayIcon,
+  MoreHorizontalIcon,
+  Loader2Icon,
+} from "@/components/Icons";
 import { SearchInput } from "../search-input";
 import SelectCard from "@/components/select";
 import { Title, Text, Grid } from "@tremor/react";
@@ -35,10 +42,6 @@ import UniversalTable from "../universal-table";
 import Pagination from "../pagination";
 import { TableCell, TableRow } from "../ui/table";
 import MenubarCard from "../menubar";
-import MoreHorizontal from "@/components/Icons/more-horizontal";
-import PlayIcon from "@/components/Icons/play";
-import TrashIcon from "@/components/Icons/trash";
-import VerifiedIcon from "@/components/Icons/verified";
 import UseThemeColor from "@/hooks/useThemeColor";
 import ModalCard from "../modal";
 import MediaCard from "../media-card";
@@ -50,7 +53,6 @@ import { Input } from "../ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useStorage } from "@/hooks/use-storage";
 import { useRootStore } from "@/mobx";
-import { Icons } from "../Icons";
 import { useDebouncedValue } from "@mantine/hooks";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "../ui/skeleton";
@@ -485,7 +487,7 @@ const RenderEditSkillModal = ({
                           (item?.videosLabels[i] || "Skill") ===
                             activeUpload ? (
                             <div className="flex flex-row items-center justify-center text-sm font-TTHovesRegular">
-                              <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
                               Uploading...
                             </div>
                           ) : (
@@ -784,7 +786,7 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
             <MenubarCard
               trigger={
                 <Button size="icon" variant="outline">
-                  <MoreHorizontal className="cursor-pointer" />
+                  <MoreHorizontalIcon className="cursor-pointer" />
                 </Button>
               }
               items={skillItems}

@@ -19,7 +19,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "../ui/scroll-area";
-import { Icons } from "../Icons";
+import { Loader2Icon } from "../Icons";
 
 interface ComboBoxCardProps {
   scrollAreaClass?: string;
@@ -139,7 +139,7 @@ const ComboBoxCard: FC<ComboBoxCardProps> = ({
               <CommandGroup className="w-[100%] max-w-[100%] min-w-[100%]">
                 {loading ? (
                   <div className="flex items-center justify-center py-3">
-                    <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
                     Loading...
                   </div>
                 ) : (

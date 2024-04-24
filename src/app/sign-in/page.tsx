@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import * as yup from "yup";
-import { Icons } from "@/components/Icons";
+import { Loader2Icon } from "@/components/Icons";
 
 interface SignInProps {}
 
@@ -96,7 +96,7 @@ const Page: FC<SignInProps> = ({}) => {
           >
             {isSubmitting ? (
               <div className="flex flex-row items-center justify-center">
-                <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
                 Loading...
               </div>
             ) : (

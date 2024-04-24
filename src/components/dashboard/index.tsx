@@ -18,7 +18,7 @@ import UserAvatar from "@/components/user-avatar";
 import { useToast } from "@/hooks/use-toast";
 import { observer } from "mobx-react-lite";
 import { useRootStore } from "@/mobx";
-import { Icons } from "@/components/Icons";
+import { Loader2Icon, MoreHorizontalIcon } from "@/components/Icons";
 import {
   GetUserQuery,
   GetUsersQuery,
@@ -34,7 +34,6 @@ import MenubarCard from "@/components/menubar";
 import { Separator } from "../ui/separator";
 import { SearchInput } from "../search-input";
 import { Button } from "../ui/button";
-import MoreHorizontal from "../Icons/more-horizontal";
 import { formatDate } from "@/lib/utils";
 import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
@@ -279,7 +278,7 @@ const Dashboard: FC<DashboardProps> = () => {
         <TableCell className="text-center text-sm">
           {item?.id === selectedUser && isActivating ? (
             <div className="text-center flex flex-row justify-center items-center">
-              <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin" />
+              <Loader2Icon className="mr-1 h-4 w-4 animate-spin" />
               {item?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (
@@ -304,7 +303,7 @@ const Dashboard: FC<DashboardProps> = () => {
             <MenubarCard
               trigger={
                 <Button size="icon" variant="outline">
-                  <MoreHorizontal className="cursor-pointer" />
+                  <MoreHorizontalIcon className="cursor-pointer" />
                 </Button>
               }
               items={userItems}

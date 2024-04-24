@@ -13,8 +13,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { observer } from "mobx-react-lite";
-import { Icons } from "../Icons";
 import CardContainer from "../card-container";
+import { Loader2Icon } from "../Icons";
+import { Card, CardContent } from "../ui/card";
 
 interface UniversalTableProps {
   items: any[];
@@ -78,7 +79,7 @@ const UniversalTable: FC<UniversalTableProps> = ({
                 className="p-0 font-TTHovesRegular"
               >
                 <div className="flex items-center justify-center h-full w-full mx-auto my-auto py-9">
-                  <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                  <Loader2Icon className="mr-1 h-4 w-4 animate-spin" />
                   <span className="text-sm font-normal">Loading...</span>
                 </div>
               </TableCell>

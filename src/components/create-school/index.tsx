@@ -5,7 +5,7 @@
 import { FC, useCallback, useMemo, useState, useEffect } from "react";
 import { observer } from "mobx-react-lite";
 import { Title, Text } from "@tremor/react";
-import { Icons } from "@/components/Icons";
+import { Loader2Icon, SchoolIcon } from "@/components/Icons";
 import { Button } from "@/components/ui/button";
 import {
   SortOrder,
@@ -400,7 +400,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
               fetchSchool ? "Edit School Profile" : "Create New School"
             }`}
             icon={
-              <Icons.school className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+              <SchoolIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
             }
             subHeader="School Details"
           />
@@ -720,7 +720,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
         >
           {isSubmitting ? (
             <div className="flex flex-row items-center justify-center">
-              <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
               Loading...
             </div>
           ) : (

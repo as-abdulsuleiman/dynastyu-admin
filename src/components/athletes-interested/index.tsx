@@ -5,7 +5,7 @@
 import { FC } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { Title, Text } from "@tremor/react";
-import { Icons } from "../Icons";
+import { AthleteIcon } from "../Icons";
 import { Button } from "../ui/button";
 import UserAvatar from "../user-avatar";
 import { useRouter } from "next/navigation";
@@ -106,7 +106,7 @@ const AthletesInterested: FC<AthletesInterestedProps> = ({
     <CardContainer className="p-4 md:p-6">
       <div className="flex flex-row items-center mb-3">
         <Title>Athletes Interested</Title>
-        <Icons.athlete className="ml-auto h-6 w-6 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+        <AthleteIcon className="ml-auto h-6 w-6 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
       </div>
       {loading ? (
         <> {renderLoader()}</>

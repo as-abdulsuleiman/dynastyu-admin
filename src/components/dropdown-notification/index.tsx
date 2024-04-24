@@ -16,7 +16,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useRootStore } from "@/mobx";
-import Notification from "../Icons/notification";
 import {
   SortOrder,
   useGetPostFlagsQuery,
@@ -31,7 +30,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import UserAvatar from "../user-avatar";
 import { buttonVariants } from "../ui/button";
-import FlagOffIcon from "@/components/Icons/flag-off";
+import { FlagOffIcon, NotificationIcon } from "@/components/Icons";
 
 interface DropdownProps {}
 
@@ -96,7 +95,7 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
         >
           <span className="absolute -z-1 inline-flex h-full border border-1 w-full animate-ping rounded-full bg-[#DC3545] opacity-75"></span>
         </span>
-        <Notification
+        <NotificationIcon
           className="h-[19px] w-[19px] cursor-pointer"
           color={"#fff"}
         />

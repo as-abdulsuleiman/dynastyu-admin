@@ -6,7 +6,7 @@ import { FC, useCallback, useMemo, useState } from "react";
 import { Button } from "../ui/button";
 import { Title, Text } from "@tremor/react";
 import { useRouter } from "next/navigation";
-import { Icons } from "../Icons";
+import { CircleUserRoundIcon, Loader2Icon } from "../Icons";
 import { observer } from "mobx-react-lite";
 import { Input } from "@/components/ui/input";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -204,7 +204,7 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
           <ContentHeader
             title={`${fetchFan ? `Edit Fan Profile` : `Add New Fan`}`}
             icon={
-              <Icons.circleUserRound className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+              <CircleUserRoundIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
             }
             subHeader="Fan Details"
           />
@@ -385,7 +385,7 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
           >
             {isSubmitting ? (
               <div className="flex flex-row items-center justify-center">
-                <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
                 Loading...
               </div>
             ) : (

@@ -9,7 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import PhoneIcon from "@/components/Icons/phone";
+import { PhoneIcon } from "@/components/Icons";
 import CardContainer from "../card-container";
 interface AthleteRecruitingContactProps {
   loading: boolean;

@@ -17,15 +17,32 @@ import { Title, Text, Grid } from "@tremor/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import UsersAnalytics from "@/components/analytics/users";
-import { Icons } from "@/components/Icons";
+import {
+  VerifiedIcon,
+  MoreHorizontalIcon,
+  Users2Icon,
+  UsersRoundIcon,
+  FileImageIcon,
+  AthleteIcon,
+  SwitchCameraIcon,
+  SchoolIcon,
+  ClipboardEditIcon,
+  MessageCircleCodeIcon,
+  MailIcon,
+  TagsIcon,
+  MapPinIcon,
+  LocateFixedIcon,
+  BadgeCheckIcon,
+  BadgeAlertIcon,
+  WhistleIcon,
+  UserIcon,
+} from "@/components/Icons";
 import UserAvatar from "@/components/user-avatar";
 import TooltipCard from "@/components/tooltip-card";
 import { useToast } from "@/hooks/use-toast";
 import MenubarCard from "@/components/menubar";
 import ModalCard from "../modal";
 import { Separator } from "../ui/separator";
-import MoreHorizontal from "../Icons/more-horizontal";
-import VerifiedIcon from "@/components/Icons/verified";
 import {
   PromptStatusEnum,
   StatusEnum,
@@ -35,7 +52,7 @@ import StatusOfflineIcon from "@heroicons/react/outline/StatusOfflineIcon";
 import ProfileImage from "../profile-image";
 import ComboboxCard from "../combobox-card";
 import { useDebouncedValue } from "@mantine/hooks";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, User } from "lucide-react";
 import { CommandItem } from "../ui/command";
 import { cn } from "@/lib/utils";
 import PromptAlert from "../prompt-alert";
@@ -337,7 +354,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       value: coachData?._count?.following || 0,
       color: "teal",
       icon: () => (
-        <Icons.users2 className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+        <Users2Icon className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
 
@@ -346,7 +363,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       value: coachData?._count?.followedBy || 0,
       color: "teal",
       icon: () => (
-        <Icons.usersRound className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+        <UsersRoundIcon className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
     {
@@ -354,7 +371,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       color: "teal",
       value: coachData?._count?.posts || 0,
       icon: () => (
-        <Icons.fileImage className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+        <FileImageIcon className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
     {
@@ -362,7 +379,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       color: "teal",
       value: coachData?.coachProfile?._count?.verifiedAthletes || 0,
       icon: () => (
-        <Icons.athlete className="mr-2.5 mb-[-6px] h-5 w-5 stroke-teal-600" />
+        <AthleteIcon className="mr-2.5 mb-[-6px] h-5 w-5 stroke-teal-600" />
       ),
     },
 
@@ -370,14 +387,14 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       name: "Reposts",
       value: coachData?._count?.reposts || 0,
       icon: () => (
-        <Icons.switchCamera className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+        <SwitchCameraIcon className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
     {
       name: "Interested Schools",
       value: coachData?._count?.interestedSchools || 0,
       icon: () => (
-        <Icons.school className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+        <SchoolIcon className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
     {
@@ -385,7 +402,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       color: "teal",
       value: coachData?._count?.evaluationsCreated || 0,
       icon: () => (
-        <Icons.clipboardEdit className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+        <ClipboardEditIcon className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
     {
@@ -393,7 +410,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       color: "teal",
       value: coachData?._count?.comments || 0,
       icon: () => (
-        <Icons.messageCircleCode className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+        <MessageCircleCodeIcon className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
   ];
@@ -430,13 +447,12 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   const renderCallout = () => {
     return (
       <>
-        {" "}
         <CalloutCard
           color="teal"
           title="Name"
           type="string"
           className="mt-4"
-          icon={() => <Icons.user className="h-5 w-5" color="teal" />}
+          icon={() => <UserIcon className="h-5 w-5" color="teal" />}
           content={`${coachData?.firstname} ${coachData?.surname}`}
         />
         <CalloutCard
@@ -445,7 +461,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
           color="teal"
           className="mt-4"
           icon={() => (
-            <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
+            <MailIcon className="h-[19px] w-[19px] mr-2" color="teal" />
           )}
           content={coachData?.email?.toLowerCase()}
         />
@@ -456,9 +472,10 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
           title="Coach Title"
           content={coachData?.coachProfile?.title}
           icon={() => (
-            <Icons.tags className="h-[20px] w-[20px] mr-2" color="teal" />
+            <TagsIcon className="h-[20px] w-[20px] mr-2" color="teal" />
           )}
         />
+
         <CalloutCard
           color="teal"
           type="string"
@@ -468,7 +485,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
           }
           content={formattedSchoolName}
           icon={() => (
-            <Icons.school className="h-[19px] w-[19px] mr-2" color="teal" />
+            <SchoolIcon className="h-[19px] w-[19px] mr-2" color="teal" />
           )}
         />
         <CalloutCard
@@ -477,30 +494,29 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
           className="mt-4"
           title="Country"
           icon={() => (
-            <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+            <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
           )}
           content={coachData?.coachProfile?.country?.name}
           flagUrl={coachData?.coachProfile?.country?.flag}
         />
+
         <CalloutCard
           type="string"
           title="State"
           color="teal"
           className="mt-4"
           icon={() => (
-            <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+            <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
           )}
           content={coachData?.coachProfile?.state}
         />
+
         <CalloutCard
           type="string"
           title="City"
           className="mt-4"
           icon={() => (
-            <Icons.locateFixed
-              className="h-[20px] w-[20px] mr-2"
-              color="teal"
-            />
+            <LocateFixedIcon className="h-[20px] w-[20px] mr-2" color="teal" />
           )}
           content={coachData?.coachProfile?.city}
         />
@@ -558,11 +574,11 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                   return undefined;
                 } else if (coachData?.coachProfile?.verified) {
                   return (
-                    <Icons.badgeCheck className="h-4 w-4 mr-2" color="sky" />
+                    <BadgeCheckIcon className="h-4 w-4 mr-2" color="sky" />
                   );
                 } else {
                   return (
-                    <Icons.badgeAlert className="h-4 w-4 mr-2" color="rose" />
+                    <BadgeAlertIcon className="h-4 w-4 mr-2" color="rose" />
                   );
                 }
               }}
@@ -717,7 +733,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                   fallback={`${coachData?.username?.charAt(
                     0
                   )} ${coachData?.firstname?.charAt(0)}`}
-                  icon={<Icons.user className="h-8 w-8" />}
+                  icon={<UserIcon className="h-8 w-8" />}
                 />
               }
             >
@@ -753,7 +769,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                   <MenubarCard
                     trigger={
                       <Button size="icon" variant="outline">
-                        <MoreHorizontal className="cursor-pointer" />
+                        <MoreHorizontalIcon className="cursor-pointer" />
                       </Button>
                     }
                     items={dropdownItems}

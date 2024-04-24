@@ -12,20 +12,18 @@ import {
   SortOrder,
   useGetSkillVerificationRequestsQuery,
 } from "@/services/graphql";
-import { Icons } from "../Icons";
+import { SkillIcon, MoreHorizontalIcon, BadgeAlertIcon } from "../Icons";
 import UniversalTable from "@/components/universal-table";
 import UserAvatar from "../user-avatar";
 import Pagination from "../pagination";
 import { useDebouncedValue } from "@mantine/hooks";
 import MenubarCard from "../menubar";
-import SkillIcon from "../Icons/skill";
 import { observer } from "mobx-react-lite";
 import SkillVerificationRequestCountStatCard from "@/components/stat-cards/skill-verification-request-count";
 import { formatDate } from "@/lib/utils";
 import { Separator } from "../ui/separator";
 import { SearchInput } from "../search-input";
 import { Button } from "../ui/button";
-import MoreHorizontal from "../Icons/more-horizontal";
 import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
 
@@ -224,7 +222,7 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
             color={item?.verified ? "sky" : "rose"}
             // tooltip="decrease"
             icon={() => {
-              return <Icons.badgeAlert className="h-4 w-4 mr-1" color="rose" />;
+              return <BadgeAlertIcon className="h-4 w-4 mr-1" color="rose" />;
             }}
             datatype="moderateDecrease"
           >
@@ -241,7 +239,7 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
             <MenubarCard
               trigger={
                 <Button size="icon" variant="outline">
-                  <MoreHorizontal className="cursor-pointer" />
+                  <MoreHorizontalIcon className="cursor-pointer" />
                 </Button>
               }
               items={verificationItems}

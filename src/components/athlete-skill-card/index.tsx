@@ -8,10 +8,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { SkillIcon } from "../Icons";
+import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
 import { useUpdateAthleteMutation } from "@/services/graphql";
 import { useToast } from "@/hooks/use-toast";
-import SkillIcon from "../Icons/skill";
 import { useRouter } from "next/navigation";
 import CardContainer from "../card-container";
 

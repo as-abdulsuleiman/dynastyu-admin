@@ -7,7 +7,7 @@ import { Text, Title } from "@tremor/react";
 import { Skeleton } from "../ui/skeleton";
 import { Button } from "../ui/button";
 import UserAvatar from "../user-avatar";
-import { Icons } from "../Icons";
+import { WhistleIcon } from "../Icons";
 import { useRouter } from "next/navigation";
 import { observer } from "mobx-react-lite";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
@@ -116,7 +116,7 @@ const SchoolCoaches: FC<SchoolCoachesProps> = ({
     <CardContainer className="p-4 md:p-6">
       <div className="flex flex-row items-center mb-3">
         <Title>Coaches</Title>
-        <Icons.whistle className="ml-auto h-6 w-6 fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis" />
+        <WhistleIcon className="ml-auto h-6 w-6 fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis" />
       </div>
       {loading ? (
         <> {renderLoader()}</>

@@ -8,7 +8,7 @@ import { useRootStore } from "@/mobx";
 import { GetSkillTypesQuery, useGetSkillTypesQuery } from "@/services/graphql";
 import { observer } from "mobx-react-lite";
 import { usePathname, useRouter } from "next/navigation";
-import SkillIcon from "../../Icons/skill";
+import { SkillIcon } from "../../Icons";
 interface indexProps {
   title: string;
 }
