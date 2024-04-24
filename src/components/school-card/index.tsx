@@ -14,7 +14,6 @@ import {
 } from "@/services/graphql";
 import { useToast } from "@/hooks/use-toast";
 import MenubarCard from "../menubar";
-import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
 import MoreHorizontal from "../Icons/more-horizontal";
 import { Button } from "../ui/button";
@@ -23,6 +22,7 @@ import PromptAlert from "../prompt-alert";
 import ModalCard from "@/components/modal";
 import UsersAnalytics from "@/components/analytics/users";
 import CalloutCard from "../callout";
+import CardContainer from "../card-container";
 import { renderLoader } from "@/lib/loader-helper";
 
 interface SchoolCardProps {
@@ -224,6 +224,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   const renderCallout = () => {
     return (
       <>
+        {" "}
         <CalloutCard
           color="teal"
           type="string"
@@ -278,7 +279,6 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
             />
           </>
         )}
-
         <CalloutCard
           color="teal"
           type="string"
@@ -292,7 +292,6 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
             />
           )}
         />
-
         <CalloutCard
           color="teal"
           type="string"
@@ -303,7 +302,6 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
             <Icons.scrollText className="h-[20px] w-[20px] mr-2" color="teal" />
           )}
         />
-
         <CalloutCard
           color="teal"
           type="string"
@@ -314,7 +312,6 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
             <BadgeDollarSign className="h-[20px] w-[20px] mr-2" color="teal" />
           )}
         />
-
         <CalloutCard
           color="teal"
           type="string"
@@ -325,7 +322,6 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
             <Calendar className="h-[20px] w-[20px] mr-2" color="teal" />
           )}
         />
-
         <CalloutCard
           color="teal"
           type="string"
@@ -339,7 +335,6 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
             />
           )}
         />
-
         <CalloutCard
           color="teal"
           type="flag"
@@ -351,7 +346,6 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           content={school?.country?.name}
           flagUrl={school?.country?.flag}
         />
-
         <CalloutCard
           type="string"
           title="State"
@@ -362,7 +356,6 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           )}
           content={school?.state}
         />
-
         <CalloutCard
           type="string"
           title="City"
@@ -379,72 +372,69 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
     );
   };
   return (
-    <Card>
-      <CardContent className="p-6">
-        <div className="flex flex-col justify-center items-center relative">
-          <UserAvatar
-            className="h-[120px] w-[120px] shadow"
-            height={120}
-            width={120}
-            fallbackType="icon"
-            avatar={school?.logo as string}
-            fallbackClassName={"h-[120px] w-[120px]"}
-            fallback={`${school?.name?.charAt(0)} `}
-            icon={<Icons.school className="h-8 w-8" />}
-          />
-          {loading ? (
-            <Skeleton className="w-[120px] h-[25px] mt-2" />
-          ) : (
-            <Text className="text-sm font-TTHovesRegular mt-2">
-              {school?.name}
-            </Text>
-          )}
+    <CardContainer className="p-4 md:p-4">
+      <div className="flex flex-col justify-center items-center relative">
+        <UserAvatar
+          className="h-[120px] w-[120px] shadow"
+          height={120}
+          width={120}
+          fallbackType="icon"
+          avatar={school?.logo as string}
+          fallbackClassName={"h-[120px] w-[120px]"}
+          fallback={`${school?.name?.charAt(0)} `}
+          icon={<Icons.school className="h-8 w-8" />}
+        />
+        {loading ? (
+          <Skeleton className="w-[120px] h-[25px] mt-2" />
+        ) : (
+          <Text className="text-sm font-TTHovesRegular mt-2">
+            {school?.name}
+          </Text>
+        )}
 
-          <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
-            {loading ? (
-              <Skeleton className="w-[40px] h-[20px]" />
-            ) : (
-              <MenubarCard
-                trigger={
-                  <Button size="icon" variant="outline">
-                    <MoreHorizontal className="cursor-pointer" />
-                  </Button>
-                }
-                items={dropdownItems}
-              />
-            )}
+        <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
+          {loading ? (
+            <Skeleton className="w-[40px] h-[20px]" />
+          ) : (
+            <MenubarCard
+              trigger={
+                <Button size="icon" variant="outline">
+                  <MoreHorizontal className="cursor-pointer" />
+                </Button>
+              }
+              items={dropdownItems}
+            />
+          )}
+        </div>
+      </div>
+      <Separator className="my-6" />
+
+      {loading ? renderLoader() : renderCallout()}
+      <PromptAlert
+        loading={isDeletingSchool}
+        content={`This action cannot be undone. This will permanently delete this data from our servers.`}
+        showPrompt={openDeleteSchoolPrompt}
+        handleHidePrompt={() => {
+          setOpenDeleteSchoolPrompt(false);
+        }}
+        handleConfirmPrompt={() => handleConfirmPrompt(school)}
+      />
+      <ModalCard
+        isModal={true}
+        isOpen={viewAnalytics}
+        onOpenChange={() => setViewAnalytics(!viewAnalytics)}
+      >
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12">
+            <UsersAnalytics
+              loading={loading}
+              data={dataList}
+              title={`${school?.name} Analytics`}
+            />
           </div>
         </div>
-        <Separator className="my-6" />
-        {loading ? renderLoader() : renderCallout()}
-        <PromptAlert
-          loading={isDeletingSchool}
-          content={`This action cannot be undone. This will permanently delete this data from our servers.`}
-          showPrompt={openDeleteSchoolPrompt}
-          handleHidePrompt={() => {
-            setOpenDeleteSchoolPrompt(false);
-          }}
-          handleConfirmPrompt={() => handleConfirmPrompt(school)}
-        />
-        <ModalCard
-          isModal={true}
-          isOpen={viewAnalytics}
-          onOpenChange={() => setViewAnalytics(!viewAnalytics)}
-        >
-          <div className="grid grid-cols-12 gap-6">
-            <div className="col-span-12">
-              <UsersAnalytics
-                loading={loading}
-                data={dataList}
-                showStatus={false}
-                // isActive={data?.school?.user?.isActive || false}
-                title={`${school?.name} Analytics`}
-              />
-            </div>
-          </div>
-        </ModalCard>
-      </CardContent>
-    </Card>
+      </ModalCard>
+    </CardContainer>
   );
 };
 

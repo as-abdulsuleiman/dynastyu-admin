@@ -3,7 +3,7 @@
 "use client";
 
 import { FC, useMemo, useState } from "react";
-import { Title, Text, Grid } from "@tremor/react";
+import { Text, Grid } from "@tremor/react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import {
@@ -29,7 +29,6 @@ import TwitterIcon from "@/components/Icons/twitter";
 import InstagramIcon from "@/components/Icons/instagram";
 import TiktokIcon from "@/components/Icons/tiktok";
 import ModalCard from "../modal";
-import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
 import VerifiedIcon from "@/components/Icons/verified";
 import MoreHorizontal from "../Icons/more-horizontal";
@@ -42,6 +41,8 @@ import ProfileImage from "../profile-image";
 import CalloutCard from "../callout";
 import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
+import CardContainer from "../card-container";
+import AthleteSkillCard from "../athlete-skill-card";
 import { renderLoader } from "@/lib/loader-helper";
 interface AthleteDetailProps {
   params: {
@@ -561,7 +562,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     );
   };
 
-  const renderBadges = () => {
+  const renderBadges = (className: string) => {
     return (
       <>
         {loading ? (
@@ -578,10 +579,10 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
             })}
           </>
         ) : (
-          <div className="hidden lg:flex lg:flex-row lg:items-center">
+          <div className={className}>
             <BadgeCard
               datatype={athleteData?.isActive ? "increase" : "decrease"}
-              className="ml-3"
+              className="mb-2 xl:mb-0 ml-0 xl:ml-3"
               color={athleteData?.isActive ? "teal" : "rose"}
               icon={
                 updatingProfile === StatusEnum.ACTIVATING
@@ -606,7 +607,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                   ? "increase"
                   : "decrease"
               }
-              className="ml-3"
+              className="mb-2 xl:mb-0 ml-0 xl:ml-3"
               color={athleteData?.athleteProfile?.verified ? "sky" : "rose"}
               icon={() => {
                 if (updatingProfile === StatusEnum.VERIFYING) {
@@ -633,7 +634,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               datatype={
                 athleteData?.athleteProfile?.featured ? "increase" : "decrease"
               }
-              className="ml-3 mr-3"
+              className="ml-0 mr-0 xl:ml-3 xl:mr-3"
               color={athleteData?.athleteProfile?.featured ? "yellow" : "rose"}
               icon={() => {
                 if (updatingProfile === StatusEnum.FEATURING) {
@@ -692,9 +693,9 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
           <div className="flex flex-row items-center">
             <ContentHeader
               title={`${athleteData?.firstname} ${athleteData?.surname}`}
-              icon={
-                <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
-              }
+              // icon={
+              //   <Icons.athlete className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+              // }
               subItems={subHeaderItems}
             />
           </div>
@@ -720,90 +721,100 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
           loading={loading}
           transcripts={(athleteData?.athleteProfile?.transcripts as any) || []}
         />
-        <AthleteRecruitingContact
+        <AthleteSkillCard
+          athleteId={params?.id}
+          loading={loading}
+          athleteSkills={(data?.user?.athleteProfile?.skills as any) || []}
+        />
+        {/* <AthleteRecruitingContact
           loading={false}
           recruitingContact={recruitingContact}
-        />
+        /> */}
       </Grid>
       <Grid numItemsMd={1} numItemsLg={1} className="mt-6 gap-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex flex-col items-center justify-start relative">
-              <ModalCard
-                isModal={true}
-                isOpen={viewPlayerCardUrl}
-                onOpenChange={() => {
-                  if (athleteData?.avatar) {
-                    setViewPlayerCardUrl(!viewPlayerCardUrl);
-                  }
-                }}
-                trigger={
-                  <UserAvatar
-                    className="h-[120px] w-[120px] shadow cursor-pointer"
-                    height={120}
-                    width={120}
-                    type="image"
-                    fallbackType="icon"
-                    fallbackClassName={"h-[120px] w-[120px]"}
-                    avatar={athleteData?.avatar as string}
-                    fallback={`${athleteData?.firstname?.charAt(
-                      0
-                    )} ${athleteData?.surname?.charAt(0)}`}
-                    icon={<Icons.user className="h-8 w-8" />}
-                  />
+        <CardContainer className="p-2 md:p-4">
+          <div className="flex flex-col items-center justify-start relative">
+            <ModalCard
+              isModal={true}
+              isOpen={viewPlayerCardUrl}
+              contentClass=" "
+              onOpenChange={() => {
+                if (athleteData?.avatar) {
+                  setViewPlayerCardUrl(!viewPlayerCardUrl);
                 }
-              >
-                <ProfileImage
-                  imageUrl={athleteData?.avatar as string}
-                  alt={athleteData?.username as string}
+              }}
+              trigger={
+                <UserAvatar
+                  className="h-[120px] w-[120px] shadow cursor-pointer"
+                  height={120}
+                  width={120}
+                  type="image"
+                  fallbackType="icon"
+                  fallbackClassName={"h-[120px] w-[120px]"}
+                  avatar={athleteData?.avatar as string}
+                  fallback={`${athleteData?.firstname?.charAt(
+                    0
+                  )} ${athleteData?.surname?.charAt(0)}`}
+                  icon={<Icons.user className="h-8 w-8" />}
                 />
-              </ModalCard>
-              {loading ? (
-                <div className="flex flex-row items-center">
-                  <Skeleton className="w-[170px] h-[28px] mt-2 mr-1" />
-                  <Skeleton className="w-[16.67px] h-[16.67px] mt-2 rounded-full" />
+              }
+            >
+              <ProfileImage
+                imageUrl={athleteData?.avatar as string}
+                alt={athleteData?.username as string}
+              />
+            </ModalCard>
+            {loading ? (
+              <div className="flex flex-row items-center">
+                <Skeleton className="w-[170px] h-[28px] mt-2 mr-1" />
+                <Skeleton className="w-[16.67px] h-[16.67px] mt-2 rounded-full" />
+              </div>
+            ) : (
+              <div className="flex flex-row items-center justify-center mt-1">
+                <Text className="text-base relative mr-1">
+                  @{athleteData?.username}
+                </Text>
+                {athleteData?.athleteProfile?.verified ? (
+                  <HoverCard
+                    content={renderVerifiedBy(
+                      athleteData?.athleteProfile?.verifiedBy
+                    )}
+                    trigger={<VerifiedIcon className="cursor-pointer" />}
+                  />
+                ) : null}
+              </div>
+            )}
+            <div className="xl:hidden ml-0 absolute left-0 top-0">
+              <>{renderBadges("flex flex-col")}</>
+            </div>
+            <div className="ml-auto absolute right-0 top-0">
+              <div className="flex flex-row items-center">
+                <div className="hidden xl:flex xl:flex-row">
+                  {renderBadges("flex flex-row items-center")}
                 </div>
-              ) : (
-                <div className="flex flex-row items-center justify-center mt-1">
-                  <Text className="text-base relative mr-1">
-                    @{athleteData?.username}
-                  </Text>
-                  {athleteData?.athleteProfile?.verified ? (
-                    <HoverCard
-                      content={renderVerifiedBy(
-                        athleteData?.athleteProfile?.verifiedBy
-                      )}
-                      trigger={<VerifiedIcon className="cursor-pointer" />}
-                    />
-                  ) : null}
-                </div>
-              )}
-              <div className="ml-auto absolute right-0 top-0">
-                <div className="flex flex-row items-center">
-                  <>{renderBadges()}</>
-                  {loading ? (
-                    <Skeleton className="w-[40px] h-[35px]" />
-                  ) : (
-                    <MenubarCard
-                      trigger={
-                        <Button size="icon" variant="outline">
-                          <MoreHorizontal className="cursor-pointer" />
-                        </Button>
-                      }
-                      items={dropdownItems}
-                    />
-                  )}
-                </div>
+                {loading ? (
+                  <Skeleton className="w-[40px] h-[35px]" />
+                ) : (
+                  <MenubarCard
+                    trigger={
+                      <Button size="icon" variant="outline">
+                        <MoreHorizontal className="cursor-pointer" />
+                      </Button>
+                    }
+                    items={dropdownItems}
+                  />
+                )}
               </div>
             </div>
-            <Separator className="my-6" />
-            {loading ? renderLoader() : renderCallout()}
-          </CardContent>
-        </Card>
+          </div>
+          <Separator className="my-6" />
+          {loading ? renderLoader() : renderCallout()}
+        </CardContainer>
       </Grid>
       <ModalCard
         isModal={true}
         isOpen={viewAnalytics}
+        contentClass="md:max-w-3xl lg:max-w-3xl xl:max-w-4xl"
         onOpenChange={() => setViewAnalytics(!viewAnalytics)}
       >
         <div className="grid grid-cols-12 gap-6">
@@ -811,12 +822,6 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
             <UsersAnalytics
               loading={loading}
               data={dataList}
-              showStatus={true}
-              showFeatured={true}
-              showVerified
-              isVerified={athleteData?.athleteProfile?.verified || false}
-              featured={athleteData?.athleteProfile?.featured || false}
-              isActive={athleteData?.isActive || false}
               title={`${athleteData?.firstname} 
             ${athleteData?.surname} Analytics`}
             />

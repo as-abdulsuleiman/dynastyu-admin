@@ -19,7 +19,6 @@ import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/utils";
 import MenubarCard from "../menubar";
 import ModalCard from "../modal";
-import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
 import MoreHorizontal from "../Icons/more-horizontal";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
@@ -29,6 +28,7 @@ import ProfileImage from "../profile-image";
 import CalloutCard from "../callout";
 import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
+import CardContainer from "../card-container";
 import { renderLoader } from "@/lib/loader-helper";
 
 interface FanDetailProps {
@@ -346,81 +346,79 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
               title={
                 `${fanData?.user?.firstname} ${fanData?.user?.surname}` || ""
               }
-              icon={
-                <Icons.fans className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
-              }
+              // icon={
+              //   <Icons.fans className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+              // }
               subItems={subHeaderItems}
             />
           </div>
         </div>
       )}
       <Separator className="my-6" />
-      <Card className="mt-6 gap-6">
-        <CardContent className="p-6">
-          <div className="flex flex-col items-center justify-center relative">
-            <ModalCard
-              isModal={true}
-              isOpen={viewPlayerCardUrl}
-              onOpenChange={() => {
-                if (fanData?.user?.avatar) {
-                  setViewPlayerCardUrl(!viewPlayerCardUrl);
-                }
-              }}
-              trigger={
-                <UserAvatar
-                  className="h-[120px] w-[120px] shadow cursor-pointer"
-                  height={120}
-                  width={120}
-                  type="image"
-                  fallbackType="icon"
-                  fallbackClassName={"h-[120px] w-[120px]"}
-                  avatar={fanData?.user?.avatar as string}
-                  fallback={`${fanData?.user?.firstname?.charAt(
-                    0
-                  )} ${fanData?.user?.surname?.charAt(0)}`}
-                  icon={<Icons.user className="h-8 w-8" />}
-                />
+      <CardContainer className="p-4 md:p-4">
+        <div className="flex flex-col items-center justify-center relative">
+          <ModalCard
+            isModal={true}
+            isOpen={viewPlayerCardUrl}
+            onOpenChange={() => {
+              if (fanData?.user?.avatar) {
+                setViewPlayerCardUrl(!viewPlayerCardUrl);
               }
-            >
-              <ProfileImage
-                imageUrl={fanData?.user?.avatar as string}
-                alt={fanData?.user?.username as string}
+            }}
+            trigger={
+              <UserAvatar
+                className="h-[120px] w-[120px] shadow cursor-pointer"
+                height={120}
+                width={120}
+                type="image"
+                fallbackType="icon"
+                fallbackClassName={"h-[120px] w-[120px]"}
+                avatar={fanData?.user?.avatar as string}
+                fallback={`${fanData?.user?.firstname?.charAt(
+                  0
+                )} ${fanData?.user?.surname?.charAt(0)}`}
+                icon={<Icons.user className="h-8 w-8" />}
               />
-            </ModalCard>
-            {loading ? (
-              <div className="flex flex-row items-center">
-                <Skeleton className="w-[170px] h-[28px] mt-2 mr-1" />
-                <Skeleton className="w-[16.67px] h-[16.67px] mt-2 rounded-full" />
-              </div>
-            ) : (
-              <div className="flex flex-row items-center justify-center mt-1">
-                <Text className="text-sm relative mr-1">
-                  @{fanData?.user?.username}
-                </Text>
-              </div>
-            )}
-            <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
-              <div className="flex flex-row items-center">
-                {renderBadges()}
-                {loading ? (
-                  <Skeleton className="w-[40px] h-[20px]" />
-                ) : (
-                  <MenubarCard
-                    trigger={
-                      <Button size="icon" variant="outline">
-                        <MoreHorizontal className="cursor-pointer" />
-                      </Button>
-                    }
-                    items={dropdownItems}
-                  />
-                )}
-              </div>
+            }
+          >
+            <ProfileImage
+              imageUrl={fanData?.user?.avatar as string}
+              alt={fanData?.user?.username as string}
+            />
+          </ModalCard>
+          {loading ? (
+            <div className="flex flex-row items-center">
+              <Skeleton className="w-[170px] h-[28px] mt-2 mr-1" />
+              <Skeleton className="w-[16.67px] h-[16.67px] mt-2 rounded-full" />
+            </div>
+          ) : (
+            <div className="flex flex-row items-center justify-center mt-1">
+              <Text className="text-sm relative mr-1">
+                @{fanData?.user?.username}
+              </Text>
+            </div>
+          )}
+          <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
+            <div className="flex flex-row items-center">
+              {renderBadges()}
+              {loading ? (
+                <Skeleton className="w-[40px] h-[20px]" />
+              ) : (
+                <MenubarCard
+                  trigger={
+                    <Button size="icon" variant="outline">
+                      <MoreHorizontal className="cursor-pointer" />
+                    </Button>
+                  }
+                  items={dropdownItems}
+                />
+              )}
             </div>
           </div>
-          <Separator className="my-6" />
-          {loading ? renderLoader() : renderCallout()}
-        </CardContent>
-      </Card>
+        </div>
+        <Separator className="my-6" />
+        {loading ? renderLoader() : renderCallout()}
+      </CardContainer>
       <ModalCard
         isModal={true}
         isOpen={viewAnalytics}
@@ -431,8 +429,6 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
             <UsersAnalytics
               loading={loading}
               data={dataList}
-              showStatus={true}
-              isActive={fanData?.user?.isActive || false}
               title={`${fanData?.user?.firstname} 
         ${fanData?.user?.surname} Analytics`}
             />

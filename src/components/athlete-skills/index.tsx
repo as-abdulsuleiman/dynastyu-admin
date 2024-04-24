@@ -54,6 +54,7 @@ import { Icons } from "../Icons";
 import { useDebouncedValue } from "@mantine/hooks";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "../ui/skeleton";
+import { useRouter } from "next/navigation";
 
 const headerItems = [
   { name: "Skill" },
@@ -602,6 +603,7 @@ const RenderEditSkillModal = ({
 
 const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
   // const [status, setStatus] = useState<string>("");
+  const router = useRouter();
   const [value, setValue] = useState<string>("");
   const [videos, setVideos] = useState<string[]>();
   const [skillId, setSkillId] = useState<string | null>("");
@@ -819,6 +821,13 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
 
   return (
     <main className="w-full h-full">
+      <Button
+        variant="destructive"
+        className="mb-6"
+        onClick={() => router.back()}
+      >
+        Go Back
+      </Button>
       <div className="flex flex-col items-start">
         {loadingAthlete ? (
           <>

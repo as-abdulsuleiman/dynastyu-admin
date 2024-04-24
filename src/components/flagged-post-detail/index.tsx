@@ -8,16 +8,15 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { GetUserQuery, useGetPostFlagQuery } from "@/services/graphql";
-import { Title, Text } from "@tremor/react";
 import MediaCard from "../media-card";
 import FlagOffIcon from "@/components/Icons/flag-off";
 import TabCard from "../tab-card";
 import UserAvatar from "../user-avatar";
 import { Icons } from "../Icons";
-import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
 import { generateProfilePath } from "@/lib/helpers";
 import ContentHeader from "../content-header";
+import CardContainer from "../card-container";
 
 interface FlaggedPostDetailProps {
   params: {
@@ -108,14 +107,13 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
       >
         Go Back
       </Button>
-
       <div className="flex flex-col">
         <div className="flex flex-row items-center">
           <ContentHeader
             title="Flagged Post"
-            icon={
-              <FlagOffIcon className="h-4 w-4 ml-2 stroke-gray-700 dark:stroke-white" />
-            }
+            // icon={
+            //   <FlagOffIcon className="h-4 w-4 ml-2 stroke-gray-700 dark:stroke-white" />
+            // }
             subHeader="Flagged Post Details"
           />
         </div>
@@ -137,20 +135,18 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
       >
         Disable Post
       </Button>
-      <Card>
-        <CardContent className="p-6">
-          <MediaCard
-            loading={loading}
-            caption={data?.postFlag?.post?.caption}
-            items={
-              (!isImageType
-                ? data?.postFlag?.post?.images
-                : data?.postFlag?.post?.videos) || []
-            }
-            type={!isImageType ? "image" : "video"}
-          />
-        </CardContent>
-      </Card>
+      <CardContainer className="p-4 md:p-6">
+        <MediaCard
+          loading={loading}
+          caption={data?.postFlag?.post?.caption}
+          items={
+            (!isImageType
+              ? data?.postFlag?.post?.images
+              : data?.postFlag?.post?.videos) || []
+          }
+          type={!isImageType ? "image" : "video"}
+        />
+      </CardContainer>
     </main>
   );
 };
