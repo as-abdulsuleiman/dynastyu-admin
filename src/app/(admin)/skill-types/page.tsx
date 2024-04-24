@@ -242,7 +242,19 @@ const Page: FC<pageProps> = ({}) => {
       },
     ];
     return (
-      <TableRow key={item?.id} className="text-base">
+      <TableRow
+        key={item?.id}
+        className="text-base"
+        draggable
+        onDrag={(e) => {
+          e.preventDefault();
+          console.log("e", e);
+        }}
+        onDrop={(event) => {
+          event.preventDefault();
+          console.log("event", event);
+        }}
+      >
         <TableCell>
           <div
             className="flex flex-row items-center justify- cursor-pointer text-base"
