@@ -9,7 +9,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import ReactPlayer from "react-player/lazy";
-import { Icons } from "../Icons";
+import { PlayCircleIcon } from "../Icons";
 import CardContainer from "../card-container";
 
 interface CarouselCardProps {
@@ -34,7 +34,7 @@ const CarouselCard: FC<CarouselCardProps> = ({ videos }) => {
                   fallback={<div>Loading...</div>}
                   // playing
                   light={false}
-                  playIcon={<Icons.playCircle />}
+                  playIcon={<PlayCircleIcon />}
                   // width={320}
                   // height={240}
                 />

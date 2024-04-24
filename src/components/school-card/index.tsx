@@ -5,7 +5,22 @@
 import { FC, useState } from "react";
 import { Text } from "@tremor/react";
 import UserAvatar from "../user-avatar";
-import { Icons } from "../Icons";
+import {
+  ActivitySquareIcon,
+  AthleteIcon,
+  ClipboardEditIcon,
+  FileImageIcon,
+  FolderDotIcon,
+  GraduationCapIcon,
+  LocateFixedIcon,
+  MapPinIcon,
+  MoreHorizontalIcon,
+  SchoolIcon,
+  ScrollTextIcon,
+  Users2Icon,
+  UsersRoundIcon,
+  WhistleIcon,
+} from "../Icons";
 import { Skeleton } from "../ui/skeleton";
 import { useRouter } from "next/navigation";
 import {
@@ -15,7 +30,6 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import MenubarCard from "../menubar";
 import { Separator } from "../ui/separator";
-import MoreHorizontal from "../Icons/more-horizontal";
 import { Button } from "../ui/button";
 import { BadgeDollarSign, Calendar } from "lucide-react";
 import PromptAlert from "../prompt-alert";
@@ -46,7 +60,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       value: school?._count?.athletesInterested || 0,
       color: "teal",
       icon: () => (
-        <Icons.users2 className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+        <Users2Icon className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
 
@@ -55,7 +69,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       value: school?._count?.athletesProspected || 0,
       color: "teal",
       icon: () => (
-        <Icons.usersRound className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+        <UsersRoundIcon className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
     {
@@ -63,7 +77,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       color: "teal",
       value: school?._count?.athletesRecruited || 0,
       icon: () => (
-        <Icons.athlete className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+        <AthleteIcon className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
 
@@ -72,7 +86,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       color: "teal",
       value: school?._count?.coaches || 0,
       icon: () => (
-        <Icons.whistle className="mr-2.5 mb-[-6px] h-5 w-5 fill-teal-600" />
+        <WhistleIcon className="mr-2.5 mb-[-6px] h-5 w-5 fill-teal-600" />
       ),
     },
 
@@ -80,14 +94,14 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       name: "Evaluations",
       value: school?._count?.evaluations || 0,
       icon: () => (
-        <Icons.clipboardEdit className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+        <ClipboardEditIcon className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
     {
       name: "Posts",
       value: school?._count?.posts || 0,
       icon: () => (
-        <Icons.fileImage className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
+        <FileImageIcon className="mr-2.5 mb-[-6px] h-5 w-5  stroke-teal-600" />
       ),
     },
     // {
@@ -230,7 +244,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           avatar={school?.logo as string}
           fallbackClassName={"h-[120px] w-[120px]"}
           fallback={`${school?.name?.charAt(0)} `}
-          icon={<Icons.school className="h-8 w-8" />}
+          icon={<SchoolIcon className="h-8 w-8" />}
         />
         {loading ? (
           <Skeleton className="w-[120px] h-[25px] mt-2" />
@@ -247,7 +261,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
             <MenubarCard
               trigger={
                 <Button size="icon" variant="outline">
-                  <MoreHorizontal className="cursor-pointer" />
+                  <MoreHorizontalIcon className="cursor-pointer" />
                 </Button>
               }
               items={dropdownItems}
@@ -263,10 +277,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         className="mt-4 min-h-[75px]"
         content={school?.name}
         icon={() => (
-          <Icons.graduationCap
-            className="h-[20px] w-[20px] mr-2"
-            color="teal"
-          />
+          <GraduationCapIcon className="h-[20px] w-[20px] mr-2" color="teal" />
         )}
       />
       <CalloutCard
@@ -276,7 +287,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         className="mt-4 min-h-[75px]"
         content={school?.address}
         icon={() => (
-          <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+          <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
         )}
       />
       {isHighSchoolType ? (
@@ -287,7 +298,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           className="mt-4 min-h-[75px]"
           content={school?.division}
           icon={() => (
-            <Icons.folderDot className="h-[20px] w-[20px] mr-2" color="teal" />
+            <FolderDotIcon className="h-[20px] w-[20px] mr-2" color="teal" />
           )}
         />
       ) : (
@@ -299,10 +310,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
             title="Division"
             content={school?.division}
             icon={() => (
-              <Icons.folderDot
-                className="h-[20px] w-[20px] mr-2"
-                color="teal"
-              />
+              <FolderDotIcon className="h-[20px] w-[20px] mr-2" color="teal" />
             )}
           />
         </>
@@ -315,10 +323,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         title="Conference"
         content={school?.conference}
         icon={() => (
-          <Icons.activitySquare
-            className="h-[20px] w-[20px] mr-2"
-            color="teal"
-          />
+          <ActivitySquareIcon className="h-[20px] w-[20px] mr-2" color="teal" />
         )}
       />
 
@@ -329,7 +334,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         title="Description"
         content={school?.description}
         icon={() => (
-          <Icons.scrollText className="h-[20px] w-[20px] mr-2" color="teal" />
+          <ScrollTextIcon className="h-[20px] w-[20px] mr-2" color="teal" />
         )}
       />
 
@@ -362,10 +367,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         title="Undergrad Students"
         content={school?.undergradStudents}
         icon={() => (
-          <Icons.graduationCap
-            className="h-[20px] w-[20px] mr-2"
-            color="teal"
-          />
+          <GraduationCapIcon className="h-[20px] w-[20px] mr-2" color="teal" />
         )}
       />
 
@@ -375,7 +377,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         className="mt-4 min-h-[75px]"
         title="Country"
         icon={() => (
-          <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+          <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
         )}
         content={school?.country?.name}
         flagUrl={school?.country?.flag}
@@ -387,7 +389,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         color="teal"
         className="mt-4 min-h-[75px]"
         icon={() => (
-          <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+          <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
         )}
         content={school?.state}
       />
@@ -397,7 +399,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         title="City"
         className="mt-4 min-h-[75px]"
         icon={() => (
-          <Icons.locateFixed className="h-[20px] w-[20px] mr-2" color="teal" />
+          <LocateFixedIcon className="h-[20px] w-[20px] mr-2" color="teal" />
         )}
         content={school?.city}
       />

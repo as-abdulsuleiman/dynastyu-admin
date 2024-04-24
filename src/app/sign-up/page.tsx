@@ -10,7 +10,7 @@ import { SignUpValidator } from "@/lib/validators/signup";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Icons } from "@/components/Icons";
+import { Loader2Icon } from "@/components/Icons";
 
 interface SignUpProps {}
 
@@ -125,7 +125,7 @@ const Page: FC<SignUpProps> = ({}) => {
           type="button"
         >
           {loading ? (
-            <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
           ) : (
             "Sign Up"
           )}

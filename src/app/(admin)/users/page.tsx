@@ -12,7 +12,7 @@ import UserStatCard from "@/components/stat-cards/user";
 import Pagination from "@/components/pagination";
 import UniversalTable from "@/components/universal-table";
 import { observer } from "mobx-react-lite";
-import { Icons } from "@/components/Icons";
+import { Loader2Icon, MoreHorizontalIcon } from "@/components/Icons";
 import UserAvatar from "@/components/user-avatar";
 import { AccountType } from "@/lib/enums/account-type.enum";
 import { useToast } from "@/hooks/use-toast";
@@ -29,7 +29,7 @@ import {
 } from "@/services/graphql";
 import { SearchInput } from "@/components/search-input";
 import MenubarCard from "@/components/menubar";
-import MoreHorizontal from "@/components/Icons/more-horizontal";
+
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import BadgeCard from "@/components/badge-card";
@@ -278,7 +278,7 @@ const Users: FC<UsersProps> = ({}) => {
         <TableCell className="text-center text-sm">
           {item?.id === selectedUser && isActivating ? (
             <div className="text-center flex flex-row justify-center items-center">
-              <Icons.Loader2 className="mr-1 h-4 w-4 animate-spin" />
+              <Loader2Icon className="mr-1 h-4 w-4 animate-spin" />
               {item?.isActive ? "Deactivating..." : "Activating..."}
             </div>
           ) : (
@@ -297,7 +297,7 @@ const Users: FC<UsersProps> = ({}) => {
             <MenubarCard
               trigger={
                 <Button size="icon" variant="outline">
-                  <MoreHorizontal className="cursor-pointer" />
+                  <MoreHorizontalIcon className="cursor-pointer" />
                 </Button>
               }
               items={userItems}

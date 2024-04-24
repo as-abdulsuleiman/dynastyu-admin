@@ -2,7 +2,7 @@
 
 "use client";
 
-import { Icons } from "@/components/Icons";
+import { WhistleIcon } from "@/components/Icons";
 import StatCard from "@/components/stat-card";
 import { useRootStore } from "@/mobx";
 import { GetCoachesQuery, useGetCoachesQuery } from "@/services/graphql";
@@ -37,7 +37,7 @@ const CoacheStatCard: FC<indexProps> = ({}) => {
       onClick={() => router.push("/coaches")}
       showIcon={pathname === "/coaches"}
       icon={
-        <Icons.whistle className="h-4 w-4 fill-tremor-content-teal dark:fill-dark-tremor-content-teal" />
+        <WhistleIcon className="h-4 w-4 fill-tremor-content-teal dark:fill-dark-tremor-content-teal" />
       }
     />
   );

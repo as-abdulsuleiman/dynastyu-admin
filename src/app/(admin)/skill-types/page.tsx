@@ -20,7 +20,7 @@ import Pagination from "@/components/pagination";
 import UniversalTable from "@/components/universal-table";
 import { useDebouncedValue } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
-import { Icons } from "@/components/Icons";
+import { MoreHorizontalIcon, SkillIcon } from "@/components/Icons";
 import { cn, formatDate } from "@/lib/utils";
 import MenubarCard from "@/components/menubar";
 import { useToast } from "@/hooks/use-toast";
@@ -29,7 +29,7 @@ import PromptAlert from "@/components/prompt-alert";
 import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
 import ContentHeader from "@/components/content-header";
-import SkillIcon from "@/components/Icons/skill";
+
 import GripVertical from "@/components/Icons/grip-vertical";
 
 const headerItems = [
@@ -226,7 +226,6 @@ const Page: FC<pageProps> = ({}) => {
   };
 
   const renderItems = ({ item, id }: { item: any; id: any }) => {
-    console.log("item", item);
     const skillTypeItems = [
       {
         name: "Edit Skill Type",
@@ -274,7 +273,7 @@ const Page: FC<pageProps> = ({}) => {
             <MenubarCard
               trigger={
                 <Button size="icon" variant="outline">
-                  <Icons.moreHorizontal className="cursor-pointer" />
+                  <MoreHorizontalIcon className="cursor-pointer" />
                 </Button>
               }
               items={skillTypeItems}

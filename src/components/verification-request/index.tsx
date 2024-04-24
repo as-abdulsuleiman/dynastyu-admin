@@ -4,7 +4,7 @@
 
 import { FC, useState } from "react";
 import { Title, Text, Card, Badge } from "@tremor/react";
-import { Icons } from "../Icons";
+import { MedalIcon, ShieldIcon } from "../Icons";
 import {
   SortOrder,
   useGetSkillVerificationRequestQuery,
@@ -26,6 +26,7 @@ import MoreHorizontal from "../Icons/more-horizontal";
 import VerifiedIcon from "@/components/Icons/verified";
 import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
+import { User } from "lucide-react";
 
 interface VerificationRequestProps {
   params: {
@@ -154,7 +155,7 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
           <ContentHeader
             title="Verify Skill"
             icon={
-              <Icons.medal className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+              <MedalIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
             }
             subHeader="Skill Verfication Details"
           />
@@ -193,7 +194,7 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
             fallback={`${data?.skillVerificationRequest?.user?.firstname?.charAt(
               0
             )} ${data?.skillVerificationRequest?.user?.surname?.charAt(0)}`}
-            icon={<Icons.user className="h-8 w-8" />}
+            icon={<User className="h-8 w-8" />}
           />
           {loading ? (
             <div className="flex flex-row items-center">
@@ -256,7 +257,7 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
                   <BadgeCard>
                     <span className="flex flex-row items-center text-tremor-default">
                       {data?.skillVerificationRequest?.verified ? (
-                        <Icons.shield
+                        <ShieldIcon
                           className="h-4 w-4 stroke-[1.5px]"
                           color="teal"
                         />

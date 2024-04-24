@@ -28,7 +28,12 @@ import {
 import { useDebouncedValue } from "@mantine/hooks";
 import { ScrollArea } from "../ui/scroll-area";
 import { observer } from "mobx-react-lite";
-import { Icons } from "../Icons";
+import {
+  CheckIcon,
+  ChevronsUpDownIcon,
+  Loader2Icon,
+  SchoolIcon,
+} from "../Icons";
 import UserAvatar from "../user-avatar";
 
 interface SchoolDropdownProps {
@@ -162,7 +167,7 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
                 <>{placeholder || "Select school..."}</>
               )}
             </div>
-            <Icons.chevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent side={side} className="PopoverContent p-0">
@@ -181,7 +186,7 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
               <CommandGroup className="cursor-pointer">
                 {loading ? (
                   <div className="flex items-center justify-center py-3">
-                    <Icons.Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
                     Loading...
                   </div>
                 ) : (
@@ -208,7 +213,7 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
                                 className="h-[55px] w-[55px] shadow"
                                 fallbackType="icon"
                                 avatar={school?.logo as string}
-                                icon={<Icons.school className="h-5 w-5" />}
+                                icon={<SchoolIcon className="h-5 w-5" />}
                                 fallback={`${school?.label?.charAt(0)}`}
                               />
                               <div className="ml-3 mb-1">
@@ -219,7 +224,7 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
                                 </div>
                               </div>
                               <div className="ml-auto">
-                                <Icons.check
+                                <CheckIcon
                                   className={cn(
                                     "mr-2 h-4 w-4",
                                     selectedValue?.id === school?.id

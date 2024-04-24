@@ -12,7 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Icons } from "../Icons";
+import { CalenderDaysIcon } from "../Icons";
 import { ChangeHandler } from "react-hook-form";
 import { SelectSingleEventHandler } from "react-day-picker";
 
@@ -67,7 +67,7 @@ const DatePicker = forwardRef<HTMLDivElement, DatePickerProps>(
                 !value && "text-muted-foreground"
               )}
             >
-              <Icons.calendarDays className="mr-2 h-4 w-4 " />
+              <CalenderDaysIcon className="mr-2 h-4 w-4 " />
               {value ? format(value, dateFormat) : <span>Pick a date</span>}
             </div>
             {touched && error ? (
