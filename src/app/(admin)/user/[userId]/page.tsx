@@ -33,7 +33,7 @@ const Page: FC<pageProps> = ({ params }) => {
   const { data, loading } = useGetUserQuery({
     variables: {
       where: {
-        id: params?.userId
+        id: params?.userId,
       },
     },
   });
@@ -122,7 +122,6 @@ const Page: FC<pageProps> = ({ params }) => {
       <Separator className="my-6" />
       <UsersAnalytics
         loading={loading}
-        showStatus={data?.user?.isActive}
         data={dataList}
         title={`$ {data?.user?.firstname} ${data?.user?.surname} Analytics`}
       />

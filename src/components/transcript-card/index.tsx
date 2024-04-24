@@ -5,13 +5,13 @@ import { FC } from "react";
 import { Icons } from "../Icons";
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
-import { Card, CardContent } from "../ui/card";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
+import CardContainer from "../card-container";
 
 interface TranscriptCardProps {
   transcripts: Transcripts[];
@@ -59,36 +59,34 @@ const renderLoader = () => {
 
 const TranscriptCard: FC<TranscriptCardProps> = ({ transcripts, loading }) => {
   return (
-    <Card>
-      <CardContent className="p-6">
-        <div className="flex flex-row items-center mb-3">
-          <Title>Transcripts</Title>
-          <Icons.scrollText className="ml-auto h-6 w-6 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
-        </div>
-        {loading ? (
-          renderLoader()
-        ) : !transcripts.length ? (
-          <>
-            <Text className="text-center h-full">No Result Found</Text>
-          </>
-        ) : (
-          <>
-            <Accordion type="single" collapsible className="w-full">
-              {transcripts?.map((val: Transcripts, index: number) => {
-                return (
-                  <AccordionItem value={`${"item"}-${index + 1}`} key={index}>
-                    <AccordionTrigger>{`${"Transcript"} ${
-                      index + 1
-                    }`}</AccordionTrigger>
-                    <AccordionContent>{renderContent(val)}</AccordionContent>
-                  </AccordionItem>
-                );
-              })}
-            </Accordion>
-          </>
-        )}
-      </CardContent>
-    </Card>
+    <CardContainer className="p-4 md:p-6">
+      <div className="flex flex-row items-center mb-3">
+        <Title>Transcripts</Title>
+        <Icons.scrollText className="ml-auto h-6 w-6 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+      </div>
+      {loading ? (
+        renderLoader()
+      ) : !transcripts.length ? (
+        <>
+          <Text className="text-center h-full">No Result Found</Text>
+        </>
+      ) : (
+        <>
+          <Accordion type="single" collapsible className="w-full">
+            {transcripts?.map((val: Transcripts, index: number) => {
+              return (
+                <AccordionItem value={`${"item"}-${index + 1}`} key={index}>
+                  <AccordionTrigger>{`${"Transcript"} ${
+                    index + 1
+                  }`}</AccordionTrigger>
+                  <AccordionContent>{renderContent(val)}</AccordionContent>
+                </AccordionItem>
+              );
+            })}
+          </Accordion>
+        </>
+      )}
+    </CardContainer>
   );
 };
 
