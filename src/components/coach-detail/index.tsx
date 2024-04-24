@@ -43,6 +43,7 @@ import PromptAlert from "../prompt-alert";
 import CalloutCard from "../callout";
 import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
+import { renderLoader } from "@/lib/loader-helper";
 
 interface CoachDetailProps {
   params: {
@@ -426,6 +427,86 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     return formattedTitle;
   }, [coachData?.coachProfile]);
 
+  const renderCallout = () => {
+    return (
+      <>
+        {" "}
+        <CalloutCard
+          color="teal"
+          title="Name"
+          type="string"
+          className="mt-4"
+          icon={() => <Icons.user className="h-5 w-5" color="teal" />}
+          content={`${coachData?.firstname} ${coachData?.surname}`}
+        />
+        <CalloutCard
+          title="Email"
+          type="string"
+          color="teal"
+          className="mt-4"
+          icon={() => (
+            <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
+          )}
+          content={coachData?.email?.toLowerCase()}
+        />
+        <CalloutCard
+          type="string"
+          color="teal"
+          className="mt-4"
+          title="Coach Title"
+          content={coachData?.coachProfile?.title}
+          icon={() => (
+            <Icons.tags className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+        />
+        <CalloutCard
+          color="teal"
+          type="string"
+          className="mt-4"
+          title={
+            coachData?.coachProfile?.school?.schoolType?.name || "High Scool"
+          }
+          content={formattedSchoolName}
+          icon={() => (
+            <Icons.school className="h-[19px] w-[19px] mr-2" color="teal" />
+          )}
+        />
+        <CalloutCard
+          color="teal"
+          type="flag"
+          className="mt-4"
+          title="Country"
+          icon={() => (
+            <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+          content={coachData?.coachProfile?.country?.name}
+          flagUrl={coachData?.coachProfile?.country?.flag}
+        />
+        <CalloutCard
+          type="string"
+          title="State"
+          color="teal"
+          className="mt-4"
+          icon={() => (
+            <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+          content={coachData?.coachProfile?.state}
+        />
+        <CalloutCard
+          type="string"
+          title="City"
+          className="mt-4"
+          icon={() => (
+            <Icons.locateFixed
+              className="h-[20px] w-[20px] mr-2"
+              color="teal"
+            />
+          )}
+          content={coachData?.coachProfile?.city}
+        />
+      </>
+    );
+  };
   const renderBadges = () => {
     return (
       <>
@@ -683,83 +764,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
               </div>
             </div>
             <Separator className="my-6" />
-            <CalloutCard
-              color="teal"
-              title="Name"
-              type="string"
-              className="mt-4"
-              icon={() => <Icons.user className="h-5 w-5" color="teal" />}
-              content={`${coachData?.firstname} ${coachData?.surname}`}
-            />
-            <CalloutCard
-              title="Email"
-              type="string"
-              color="teal"
-              className="mt-4"
-              icon={() => (
-                <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
-              )}
-              content={coachData?.email?.toLowerCase()}
-            />
-            <CalloutCard
-              type="string"
-              color="teal"
-              className="mt-4"
-              title="Coach Title"
-              content={coachData?.coachProfile?.title}
-              icon={() => (
-                <Icons.tags className="h-[20px] w-[20px] mr-2" color="teal" />
-              )}
-            />
-
-            <CalloutCard
-              color="teal"
-              type="string"
-              className="mt-4"
-              title={
-                coachData?.coachProfile?.school?.schoolType?.name ||
-                "High Scool"
-              }
-              content={formattedSchoolName}
-              icon={() => (
-                <Icons.school className="h-[19px] w-[19px] mr-2" color="teal" />
-              )}
-            />
-            <CalloutCard
-              color="teal"
-              type="flag"
-              className="mt-4"
-              title="Country"
-              icon={() => (
-                <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
-              )}
-              content={coachData?.coachProfile?.country?.name}
-              flagUrl={coachData?.coachProfile?.country?.flag}
-            />
-
-            <CalloutCard
-              type="string"
-              title="State"
-              color="teal"
-              className="mt-4"
-              icon={() => (
-                <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
-              )}
-              content={coachData?.coachProfile?.state}
-            />
-
-            <CalloutCard
-              type="string"
-              title="City"
-              className="mt-4"
-              icon={() => (
-                <Icons.locateFixed
-                  className="h-[20px] w-[20px] mr-2"
-                  color="teal"
-                />
-              )}
-              content={coachData?.coachProfile?.city}
-            />
+            {loading ? renderLoader() : renderCallout()}
           </CardContent>
         </Card>
       </Grid>

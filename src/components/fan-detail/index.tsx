@@ -29,6 +29,7 @@ import ProfileImage from "../profile-image";
 import CalloutCard from "../callout";
 import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
+import { renderLoader } from "@/lib/loader-helper";
 
 interface FanDetailProps {
   params: {
@@ -197,6 +198,81 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
     },
   ];
 
+  const renderCallout = () => {
+    return (
+      <>
+        <CalloutCard
+          color="teal"
+          title="Name"
+          type="string"
+          className="mt-4 min-h-[75px]"
+          icon={() => (
+            <Icons.user className="h-[19px] w-[19px] mr-2" color="teal" />
+          )}
+          content={`${fanData?.user?.firstname} ${fanData?.user?.surname}`}
+        />
+
+        <CalloutCard
+          color="teal"
+          title="Email"
+          type="string"
+          className="mt-4 min-h-[75px]"
+          icon={() => (
+            <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
+          )}
+          content={fanData?.user?.email}
+        />
+
+        <CalloutCard
+          color="teal"
+          type="string"
+          title="Date of Birth"
+          className="mt-4 min-h-[75px]"
+          icon={() => (
+            <Icons.cake className="h-[19px] w-[19px] mr-2" color="teal" />
+          )}
+          content={fanData?.user?.dob && formatDate(fanData?.user?.dob)}
+        />
+
+        <CalloutCard
+          color="teal"
+          type="flag"
+          className="mt-4"
+          title="Country"
+          icon={() => (
+            <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+          content={fanData?.user?.country?.name}
+          flagUrl={fanData?.user?.country?.flag}
+        />
+
+        <CalloutCard
+          type="string"
+          title="State"
+          color="teal"
+          className="mt-4"
+          icon={() => (
+            <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+          content={fanData?.user?.state}
+        />
+
+        <CalloutCard
+          type="string"
+          title="City"
+          className="mt-4"
+          icon={() => (
+            <Icons.locateFixed
+              className="h-[20px] w-[20px] mr-2"
+              color="teal"
+            />
+          )}
+          content={fanData?.user?.city}
+        />
+      </>
+    );
+  };
+
   const renderBadges = () => {
     return (
       <>
@@ -342,74 +418,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
             </div>
           </div>
           <Separator className="my-6" />
-          <CalloutCard
-            color="teal"
-            title="Name"
-            type="string"
-            className="mt-4 min-h-[75px]"
-            icon={() => (
-              <Icons.user className="h-[19px] w-[19px] mr-2" color="teal" />
-            )}
-            content={`${fanData?.user?.firstname} ${fanData?.user?.surname}`}
-          />
-
-          <CalloutCard
-            color="teal"
-            title="Email"
-            type="string"
-            className="mt-4 min-h-[75px]"
-            icon={() => (
-              <Icons.mail className="h-[19px] w-[19px] mr-2" color="teal" />
-            )}
-            content={fanData?.user?.email}
-          />
-
-          <CalloutCard
-            color="teal"
-            type="string"
-            title="Date of Birth"
-            className="mt-4 min-h-[75px]"
-            icon={() => (
-              <Icons.cake className="h-[19px] w-[19px] mr-2" color="teal" />
-            )}
-            content={fanData?.user?.dob && formatDate(fanData?.user?.dob)}
-          />
-
-          <CalloutCard
-            color="teal"
-            type="flag"
-            className="mt-4"
-            title="Country"
-            icon={() => (
-              <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
-            )}
-            content={fanData?.user?.country?.name}
-            flagUrl={fanData?.user?.country?.flag}
-          />
-
-          <CalloutCard
-            type="string"
-            title="State"
-            color="teal"
-            className="mt-4"
-            icon={() => (
-              <Icons.mapPin className="h-[20px] w-[20px] mr-2" color="teal" />
-            )}
-            content={fanData?.user?.state}
-          />
-
-          <CalloutCard
-            type="string"
-            title="City"
-            className="mt-4"
-            icon={() => (
-              <Icons.locateFixed
-                className="h-[20px] w-[20px] mr-2"
-                color="teal"
-              />
-            )}
-            content={fanData?.user?.city}
-          />
+          {loading ? renderLoader() : renderCallout()}
         </CardContent>
       </Card>
       <ModalCard

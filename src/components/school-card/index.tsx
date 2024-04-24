@@ -23,6 +23,7 @@ import PromptAlert from "../prompt-alert";
 import ModalCard from "@/components/modal";
 import UsersAnalytics from "@/components/analytics/users";
 import CalloutCard from "../callout";
+import { renderLoader } from "@/lib/loader-helper";
 
 interface SchoolCardProps {
   loading?: boolean;
@@ -219,44 +220,10 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       onClick: () => setViewAnalytics(true),
     },
   ];
-  return (
-    <Card>
-      <CardContent className="p-6">
-        <div className="flex flex-col justify-center items-center relative">
-          <UserAvatar
-            className="h-[120px] w-[120px] shadow"
-            height={120}
-            width={120}
-            fallbackType="icon"
-            avatar={school?.logo as string}
-            fallbackClassName={"h-[120px] w-[120px]"}
-            fallback={`${school?.name?.charAt(0)} `}
-            icon={<Icons.school className="h-8 w-8" />}
-          />
-          {loading ? (
-            <Skeleton className="w-[120px] h-[25px] mt-2" />
-          ) : (
-            <Text className="text-sm font-TTHovesRegular mt-2">
-              {school?.name}
-            </Text>
-          )}
 
-          <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
-            {loading ? (
-              <Skeleton className="w-[40px] h-[20px]" />
-            ) : (
-              <MenubarCard
-                trigger={
-                  <Button size="icon" variant="outline">
-                    <MoreHorizontal className="cursor-pointer" />
-                  </Button>
-                }
-                items={dropdownItems}
-              />
-            )}
-          </div>
-        </div>
-        <Separator className="my-6" />
+  const renderCallout = () => {
+    return (
+      <>
         <CalloutCard
           color="teal"
           type="string"
@@ -408,6 +375,48 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           )}
           content={school?.city}
         />
+      </>
+    );
+  };
+  return (
+    <Card>
+      <CardContent className="p-6">
+        <div className="flex flex-col justify-center items-center relative">
+          <UserAvatar
+            className="h-[120px] w-[120px] shadow"
+            height={120}
+            width={120}
+            fallbackType="icon"
+            avatar={school?.logo as string}
+            fallbackClassName={"h-[120px] w-[120px]"}
+            fallback={`${school?.name?.charAt(0)} `}
+            icon={<Icons.school className="h-8 w-8" />}
+          />
+          {loading ? (
+            <Skeleton className="w-[120px] h-[25px] mt-2" />
+          ) : (
+            <Text className="text-sm font-TTHovesRegular mt-2">
+              {school?.name}
+            </Text>
+          )}
+
+          <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
+            {loading ? (
+              <Skeleton className="w-[40px] h-[20px]" />
+            ) : (
+              <MenubarCard
+                trigger={
+                  <Button size="icon" variant="outline">
+                    <MoreHorizontal className="cursor-pointer" />
+                  </Button>
+                }
+                items={dropdownItems}
+              />
+            )}
+          </div>
+        </div>
+        <Separator className="my-6" />
+        {loading ? renderLoader() : renderCallout()}
         <PromptAlert
           loading={isDeletingSchool}
           content={`This action cannot be undone. This will permanently delete this data from our servers.`}
