@@ -1,7 +1,6 @@
 /** @format */
 
 import { FC } from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
@@ -11,6 +10,7 @@ import {
 } from "@/components/ui/carousel";
 import ReactPlayer from "react-player/lazy";
 import { Icons } from "../Icons";
+import CardContainer from "../card-container";
 
 interface CarouselCardProps {
   videos: string[];
@@ -23,24 +23,22 @@ const CarouselCard: FC<CarouselCardProps> = ({ videos }) => {
         {videos?.map((val, index) => (
           <CarouselItem key={index}>
             <div className="p-1">
-              <Card>
-                <CardContent className="flex aspect-square items-center justify-center p-6">
-                  <ReactPlayer
-                    key={index}
-                    url={val}
-                    controls
-                    width="100%"
-                    height="100%"
-                    previewTabIndex={0}
-                    fallback={<div>Loading...</div>}
-                    // playing
-                    light={false}
-                    playIcon={<Icons.playCircle />}
-                    // width={320}
-                    // height={240}
-                  />
-                </CardContent>
-              </Card>
+              <CardContainer className="flex aspect-square items-center justify-center p-4 md:p-6">
+                <ReactPlayer
+                  key={index}
+                  url={val}
+                  controls
+                  width="100%"
+                  height="100%"
+                  previewTabIndex={0}
+                  fallback={<div>Loading...</div>}
+                  // playing
+                  light={false}
+                  playIcon={<Icons.playCircle />}
+                  // width={320}
+                  // height={240}
+                />
+              </CardContainer>
             </div>
           </CarouselItem>
         ))}

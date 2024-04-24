@@ -8,16 +8,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Icons } from "../Icons";
-import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
-import { observer } from "mobx-react-lite";
 import { useUpdateAthleteMutation } from "@/services/graphql";
 import { useToast } from "@/hooks/use-toast";
 import SkillIcon from "../Icons/skill";
 import { useRouter } from "next/navigation";
-import { Card, CardContent } from "../ui/card";
-import MediaCard from "../media-card";
+import CardContainer from "../card-container";
 
 interface AthleteSkillsCardProps {
   athleteSkills: AthleteSkill[];
@@ -159,35 +155,33 @@ const AthleteSkillCard: FC<AthleteSkillsCardProps> = ({
   };
 
   return (
-    <Card>
-      <CardContent className="p-6">
-        <div className="flex flex-row items-center mb-3">
-          <Title>Skills</Title>
-          <SkillIcon
-            className="ml-auto h-6 w-6 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis"
-            color="#374151"
-          />
-        </div>
-        {loading ? (
-          <> {renderLoader()}</>
-        ) : !athleteSkills.length ? (
-          <>
-            <Text className="text-center h-full">No Result Found</Text>
-          </>
-        ) : (
-          <Accordion type="single" collapsible className="w-full">
-            {athleteSkills?.map((val: AthleteSkill, index: number) => {
-              return (
-                <AccordionItem value={`${"item"}-${index + 1}`} key={index}>
-                  <AccordionTrigger>{val?.skillType?.name}</AccordionTrigger>
-                  <AccordionContent>{renderContent(val)}</AccordionContent>
-                </AccordionItem>
-              );
-            })}
-          </Accordion>
-        )}
-      </CardContent>
-    </Card>
+    <CardContainer className="p-4 md:p-6">
+      <div className="flex flex-row items-center mb-3">
+        <Title>Skills</Title>
+        <SkillIcon
+          className="ml-auto h-6 w-6 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis"
+          color="#374151"
+        />
+      </div>
+      {loading ? (
+        <> {renderLoader()}</>
+      ) : !athleteSkills.length ? (
+        <>
+          <Text className="text-center h-full">No Result Found</Text>
+        </>
+      ) : (
+        <Accordion type="single" collapsible className="w-full">
+          {athleteSkills?.map((val: AthleteSkill, index: number) => {
+            return (
+              <AccordionItem value={`${"item"}-${index + 1}`} key={index}>
+                <AccordionTrigger>{val?.skillType?.name}</AccordionTrigger>
+                <AccordionContent>{renderContent(val)}</AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
+      )}
+    </CardContainer>
   );
 };
 

@@ -3,7 +3,7 @@
 "use client";
 
 import { FC, useEffect, useMemo, useState } from "react";
-import { Title, Text, Grid, Flex, TextInput } from "@tremor/react";
+import { Grid } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import {
   GetSkillTypesQuery,
@@ -16,14 +16,12 @@ import {
   useGetSkillTypesQuery,
 } from "@/services/graphql";
 import SkillTypeStatCard from "@/components/stat-cards/skillType";
-import SelectCard from "@/components/select";
 import Pagination from "@/components/pagination";
 import UniversalTable from "@/components/universal-table";
 import { useDebouncedValue } from "@mantine/hooks";
 import { useRouter } from "next/navigation";
 import { Icons } from "@/components/Icons";
 import { cn, formatDate } from "@/lib/utils";
-import Link from "next/link";
 import MenubarCard from "@/components/menubar";
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
@@ -32,6 +30,7 @@ import { SearchInput } from "@/components/search-input";
 import { Button } from "@/components/ui/button";
 import ContentHeader from "@/components/content-header";
 import SkillIcon from "@/components/Icons/skill";
+import GripVertical from "@/components/Icons/grip-vertical";
 
 const headerItems = [
   { name: "Name" },
@@ -227,6 +226,7 @@ const Page: FC<pageProps> = ({}) => {
   };
 
   const renderItems = ({ item, id }: { item: any; id: any }) => {
+    console.log("item", item);
     const skillTypeItems = [
       {
         name: "Edit Skill Type",
@@ -242,19 +242,7 @@ const Page: FC<pageProps> = ({}) => {
       },
     ];
     return (
-      <TableRow
-        key={item?.id}
-        className="text-base"
-        draggable
-        onDrag={(e) => {
-          e.preventDefault();
-          console.log("e", e);
-        }}
-        onDrop={(event) => {
-          event.preventDefault();
-          console.log("event", event);
-        }}
-      >
+      <TableRow key={item?.id} className="text-base">
         <TableCell>
           <div
             className="flex flex-row items-center justify- cursor-pointer text-base"

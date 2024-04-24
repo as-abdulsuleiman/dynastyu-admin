@@ -26347,14 +26347,14 @@ export type GetSkillTypesQueryVariables = Exact<{
 }>;
 
 
-export type GetSkillTypesQuery = { __typename?: 'Query', skillTypes: Array<{ __typename?: 'SkillType', name: string, id: any, uuid: string, mask: Array<string>, unit: string, options: Array<string>, createdAt: any, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, _count?: { __typename?: 'SkillTypeCount', skills: number } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, skillId: any, secondValue?: string | null, value: string, athleteId?: any | null, verified: boolean, createdAt: any, skillHistory: Array<{ __typename?: 'SkillHistory', id: any, uuid: string, skillId: any, value: string, secondValue?: string | null, athleteId: any }>, skillVerificationRequests: Array<{ __typename?: 'SkillVerificationRequest', id: any, uuid: string, userId: any, skillId: any, campId?: any | null }> }> }> };
+export type GetSkillTypesQuery = { __typename?: 'Query', skillTypes: Array<{ __typename?: 'SkillType', name: string, id: any, uuid: string, mask: Array<string>, unit: string, options: Array<string>, createdAt: any, position?: number | null, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, _count?: { __typename?: 'SkillTypeCount', skills: number } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, skillId: any, secondValue?: string | null, value: string, athleteId?: any | null, verified: boolean, createdAt: any, skillHistory: Array<{ __typename?: 'SkillHistory', id: any, uuid: string, skillId: any, value: string, secondValue?: string | null, athleteId: any }>, skillVerificationRequests: Array<{ __typename?: 'SkillVerificationRequest', id: any, uuid: string, userId: any, skillId: any, campId?: any | null }> }> }> };
 
 export type GetSkillTypeQueryVariables = Exact<{
   where: SkillTypeWhereUniqueInput;
 }>;
 
 
-export type GetSkillTypeQuery = { __typename?: 'Query', skillType?: { __typename?: 'SkillType', id: any, uuid: string, name: string, mask: Array<string>, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, createdAt: any, position?: number | null, icon?: string | null, isPrimaryForRecruitment: boolean, _count?: { __typename?: 'SkillTypeCount', skills: number } | null } | null };
+export type GetSkillTypeQuery = { __typename?: 'Query', skillType?: { __typename?: 'SkillType', id: any, uuid: string, name: string, mask: Array<string>, unit: string, options: Array<string>, numberOfVideos: number, position?: number | null, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, createdAt: any, icon?: string | null, isPrimaryForRecruitment: boolean, _count?: { __typename?: 'SkillTypeCount', skills: number } | null } | null };
 
 export type GetSkillHistoriesQueryVariables = Exact<{
   where?: InputMaybe<SkillHistoryWhereInput>;
@@ -30276,6 +30276,7 @@ export const GetSkillTypesDocument = gql`
     unit
     options
     createdAt
+    position
     numberOfVideos
     secondFieldName
     description
@@ -30361,6 +30362,7 @@ export const GetSkillTypeDocument = gql`
     unit
     options
     numberOfVideos
+    position
     secondFieldName
     description
     secondValueOptions
