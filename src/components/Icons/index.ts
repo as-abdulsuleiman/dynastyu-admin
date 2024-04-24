@@ -68,4 +68,4 @@ export { default as Users2Icon } from "./users2";
 export { default as VerifiedIcon } from "./verified";
 export { default as WarehouseIcon } from "./warehouse";
 export { default as WhistleIcon } from "./whistle";
-export { default as UserIcon } from "lucide-react";
+export { default as UserIcon } from "./user";

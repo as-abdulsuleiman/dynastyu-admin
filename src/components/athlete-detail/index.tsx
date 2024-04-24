@@ -24,7 +24,6 @@ import { useToast } from "@/hooks/use-toast";
 import { useRootStore } from "@/mobx";
 import RecruitedSchoolCard from "@/components/recruited-school-card";
 import MenubarCard from "@/components/menubar";
-
 import {
   TiktokIcon,
   InstagramIcon,
@@ -44,6 +43,7 @@ import {
   LinkIcon,
   CakeIcon,
   MapPinIcon,
+  UserIcon,
 } from "@/components/Icons/index";
 import ModalCard from "../modal";
 import { Card, CardContent } from "../ui/card";
@@ -59,7 +59,7 @@ import ProfileImage from "../profile-image";
 import CalloutCard from "../callout";
 import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
-import { User } from "lucide-react";
+// import { User } from "lucide-react";
 interface AthleteDetailProps {
   params: {
     id: number;
@@ -647,7 +647,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                     fallback={`${athleteData?.firstname?.charAt(
                       0
                     )} ${athleteData?.surname?.charAt(0)}`}
-                    icon={<User className="h-8 w-8" />}
+                    icon={<UserIcon className="h-8 w-8" />}
                   />
                 }
               >
@@ -701,7 +701,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               title="Name"
               className="mt-4 min-h-[75px]"
               icon={() => (
-                <User className="h-[19px] w-[19px] mr-2" color="teal" />
+                <UserIcon className="h-[19px] w-[19px] mr-2" color="teal" />
               )}
               content={`${athleteData?.firstname} ${athleteData?.surname}`}
             />
