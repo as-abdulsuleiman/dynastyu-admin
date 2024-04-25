@@ -61,6 +61,7 @@ import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
 import CardContainer from "../card-container";
 import { renderLoader } from "@/lib/loader-helper";
+import { ICallOutOptions } from "../interface/calloutOptions";
 
 interface CoachDetailProps {
   params: {
@@ -444,82 +445,92 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     return formattedTitle;
   }, [coachData?.coachProfile]);
 
+  const calloutOptions: ICallOutOptions[] = [
+    {
+      color: "teal",
+      type: "string",
+      title: "Name",
+      className: "mt-4",
+      icon: () => <UserIcon className="h-5 w-5" color="teal" />,
+      content: `${coachData?.firstname} ${coachData?.surname}`,
+    },
+    {
+      color: "teal",
+      type: "string",
+      title: "Email",
+      className: "mt-4",
+      icon: () => <MailIcon className="h-[19px] w-[19px] mr-2" color="teal" />,
+      content: coachData?.email?.toLowerCase(),
+    },
+    {
+      color: "teal",
+      type: "string",
+      title: "Coach Title",
+      className: "mt-4",
+      icon: () => <TagsIcon className="h-[20px] w-[20px] mr-2" color="teal" />,
+      content: coachData?.coachProfile?.title,
+    },
+    {
+      color: "teal",
+      type: "string",
+      title: coachData?.coachProfile?.school?.schoolType?.name || "High School",
+      className: "mt-4",
+      icon: () => (
+        <SchoolIcon className="h-[19px] w-[19px] mr-2" color="teal" />
+      ),
+      content: formattedSchoolName,
+    },
+    {
+      color: "teal",
+      type: "flag",
+      title: "Country",
+      className: "mt-4",
+      icon: () => (
+        <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+      ),
+      content: coachData?.coachProfile?.country?.name,
+      flagUrl: coachData?.coachProfile?.country?.flag,
+    },
+    {
+      color: "teal",
+      type: "string",
+      title: "State",
+      className: "mt-4",
+      icon: () => (
+        <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+      ),
+      content: coachData?.coachProfile?.state,
+    },
+    {
+      color: "teal",
+      type: "string",
+      title: "City",
+      className: "mt-4",
+      icon: () => (
+        <LocateFixedIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+      ),
+      content: coachData?.coachProfile?.city,
+    },
+  ];
+
   const renderCallout = () => {
     return (
       <>
-        <CalloutCard
-          color="teal"
-          title="Name"
-          type="string"
-          className="mt-4"
-          icon={() => <UserIcon className="h-5 w-5" color="teal" />}
-          content={`${coachData?.firstname} ${coachData?.surname}`}
-        />
-        <CalloutCard
-          title="Email"
-          type="string"
-          color="teal"
-          className="mt-4"
-          icon={() => (
-            <MailIcon className="h-[19px] w-[19px] mr-2" color="teal" />
-          )}
-          content={coachData?.email?.toLowerCase()}
-        />
-        <CalloutCard
-          type="string"
-          color="teal"
-          className="mt-4"
-          title="Coach Title"
-          content={coachData?.coachProfile?.title}
-          icon={() => (
-            <TagsIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-          )}
-        />
-
-        <CalloutCard
-          color="teal"
-          type="string"
-          className="mt-4"
-          title={
-            coachData?.coachProfile?.school?.schoolType?.name || "High Scool"
-          }
-          content={formattedSchoolName}
-          icon={() => (
-            <SchoolIcon className="h-[19px] w-[19px] mr-2" color="teal" />
-          )}
-        />
-        <CalloutCard
-          color="teal"
-          type="flag"
-          className="mt-4"
-          title="Country"
-          icon={() => (
-            <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-          )}
-          content={coachData?.coachProfile?.country?.name}
-          flagUrl={coachData?.coachProfile?.country?.flag}
-        />
-
-        <CalloutCard
-          type="string"
-          title="State"
-          color="teal"
-          className="mt-4"
-          icon={() => (
-            <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-          )}
-          content={coachData?.coachProfile?.state}
-        />
-
-        <CalloutCard
-          type="string"
-          title="City"
-          className="mt-4"
-          icon={() => (
-            <LocateFixedIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-          )}
-          content={coachData?.coachProfile?.city}
-        />
+        {calloutOptions.map((item, id) => {
+          return (
+            <div key={id}>
+              <CalloutCard
+                color={item?.color as any}
+                type={item?.type}
+                title={item?.title}
+                className={item?.className}
+                icon={item?.icon as any}
+                content={item?.content}
+                flagUrl={item?.flagUrl}
+              />
+            </div>
+          );
+        })}
       </>
     );
   };
