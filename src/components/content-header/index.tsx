@@ -1,3 +1,5 @@
+/** @format */
+
 import { cn } from "@/lib/utils";
 import { FC, ReactNode } from "react";
 
@@ -34,9 +36,11 @@ const ContentHeader: FC<ContentHeaderProps> = ({
         <div className="flex flex-col">
           {subItems?.map((item, index) => (
             <div key={index} className="text-sm font-TTHovesRegular">
-              <div className="text-sm font-TTHovesRegular">
-                <strong>{item?.title}</strong>
-                <span className="ml-2">{item?.content}</span>
+              <div className="text-sm  font-TTHovesRegular">
+                <span className="font-semibold">{item?.title}</span>
+                <span className="ml-2 font-normal font-TTHovesRegular">
+                  {item?.content}
+                </span>
               </div>
             </div>
           ))}

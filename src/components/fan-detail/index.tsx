@@ -256,7 +256,6 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
           )}
           content={fanData?.user?.dob && formatDate(fanData?.user?.dob)}
         />
-
         <CalloutCard
           color="teal"
           type="flag"
@@ -268,18 +267,6 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
           content={fanData?.user?.country?.name}
           flagUrl={fanData?.user?.country?.flag}
         />
-        <CalloutCard
-          color="teal"
-          type="flag"
-          className="mt-4"
-          title="Country"
-          icon={() => (
-            <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
-          )}
-          content={fanData?.user?.country?.name}
-          flagUrl={fanData?.user?.country?.flag}
-        />
-
         <CalloutCard
           type="string"
           title="State"
@@ -304,7 +291,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
     );
   };
 
-  const renderBadges = () => {
+  const renderBadges = (className: string) => {
     return (
       <>
         {loading ? (
@@ -321,7 +308,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
             })}
           </>
         ) : (
-          <div className="hidden lg:flex lg:flex-row lg:items-center mr-3">
+          <div className={className}>
             <BadgeCard
               datatype={fanData?.user?.isActive ? "increase" : "decrease"}
               color={fanData?.user?.isActive ? "teal" : "rose"}
@@ -377,9 +364,9 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
               title={
                 `${fanData?.user?.firstname} ${fanData?.user?.surname}` || ""
               }
-              icon={
-                <FanIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
-              }
+              // icon={
+              //   <FanIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+              // }
               subItems={subHeaderItems}
             />
           </div>
@@ -429,9 +416,14 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
               </Text>
             </div>
           )}
+          <div className="xl:hidden ml-0 absolute left-0 top-0">
+            <>{renderBadges("flex flex-col")}</>
+          </div>
           <div className="ml-auto absolute flex flex-row items-center right-0 top-0">
             <div className="flex flex-row items-center">
-              {renderBadges()}
+              <div className="hidden xl:flex xl:flex-row">
+                {renderBadges("flex flex-row items-center mr-3")}
+              </div>
               {loading ? (
                 <Skeleton className="w-[40px] h-[20px]" />
               ) : (

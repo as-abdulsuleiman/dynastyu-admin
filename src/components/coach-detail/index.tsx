@@ -523,7 +523,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       </>
     );
   };
-  const renderBadges = () => {
+  const renderBadges = (className: string) => {
     return (
       <>
         {loading ? (
@@ -540,10 +540,10 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
             })}
           </>
         ) : (
-          <div className="hidden lg:flex lg:flex-row lg:items-center">
+          <div className={className}>
             <BadgeCard
               datatype={coachData?.isActive ? "increase" : "decrease"}
-              className="pl-3"
+              className="mb-2 xl:mb-0 pl-3 xl:pl-3"
               color={coachData?.isActive ? "teal" : "rose"}
               icon={
                 updatingProfile === StatusEnum.ACTIVATING
@@ -567,7 +567,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                   ? "increase"
                   : "decrease"
               }
-              className="ml-3 mr-3"
+              className="ml-0 xl:ml-3  xl:mr-3 "
               color={coachData?.coachProfile?.verified ? "sky" : "rose"}
               icon={() => {
                 if (updatingProfile === StatusEnum.VERIFYING) {
@@ -760,9 +760,15 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                 ) : null}
               </div>
             )}
+            <div className="xl:hidden ml-0 absolute left-0 top-0">
+              <>{renderBadges("flex flex-col")}</>
+            </div>
             <div className="ml-auto absolute right-0 top-0">
               <div className="flex flex-row items-center">
-                {renderBadges()}
+                <div className="hidden xl:flex xl:flex-row">
+                  {renderBadges("flex flex-row items-center")}
+                </div>
+
                 {loading ? (
                   <Skeleton className="w-[40px] h-[20px]" />
                 ) : (
