@@ -47,6 +47,7 @@ import {
   VerifiedIcon,
   MoreHorizontalIcon,
   StarIcon,
+  LocateFixedIcon,
 } from "@/components/Icons/index";
 import ModalCard from "../modal";
 import { Separator } from "../ui/separator";
@@ -572,6 +573,25 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
           content={athleteData?.athleteProfile?.country?.name}
           flagUrl={athleteData?.athleteProfile?.country?.flag}
         />
+        <CalloutCard
+          type="string"
+          title="State"
+          color="teal"
+          className="mt-4"
+          icon={() => (
+            <MapPinIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+          content={athleteData?.state}
+        />
+        <CalloutCard
+          type="string"
+          title="City"
+          className="mt-4"
+          icon={() => (
+            <LocateFixedIcon className="h-[20px] w-[20px] mr-2" color="teal" />
+          )}
+          content={athleteData?.city}
+        />
       </>
     );
   };
@@ -707,9 +727,9 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
           <div className="flex flex-row items-center">
             <ContentHeader
               title={`${athleteData?.firstname} ${athleteData?.surname}`}
-              icon={
-                <AthleteIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
-              }
+              // icon={
+              //   <AthleteIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+              // }
               subItems={subHeaderItems}
             />
           </div>
