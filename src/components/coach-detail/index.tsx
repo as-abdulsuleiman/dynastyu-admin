@@ -739,7 +739,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
             >
               <ProfileImage
                 imageUrl={coachData?.avatar as string}
-                alt={coachData?.username as string}
+                alt={coachData?.username?.toLowerCase() as string}
               />
             </ModalCard>
             {loading ? (

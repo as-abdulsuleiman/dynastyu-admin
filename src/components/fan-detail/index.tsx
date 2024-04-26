@@ -412,7 +412,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
           ) : (
             <div className="flex flex-row items-center justify-center mt-1">
               <Text className="text-sm relative mr-1">
-                @{fanData?.user?.username}
+                @{fanData?.user?.username?.toLowerCase()}
               </Text>
             </div>
           )}
