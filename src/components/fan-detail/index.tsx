@@ -273,7 +273,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
   const renderCallout = () => {
     return (
       <>
-        {calloutOptions.map((item: ICallOutOptions, id) => {
+        {calloutOptions?.map((item: ICallOutOptions, id) => {
           return (
             <div key={id}>
               <CalloutCard

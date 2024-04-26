@@ -572,7 +572,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
   const renderCallout = () => {
     return (
       <>
-        {calloutOptions.map((item: ICallOutOptions, id) => {
+        {calloutOptions?.map((item: ICallOutOptions, id) => {
           return (
             <div key={id}>
               <CalloutCard
