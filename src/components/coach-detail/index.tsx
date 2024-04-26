@@ -516,7 +516,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   const renderCallout = () => {
     return (
       <>
-        {calloutOptions.map((item: ICallOutOptions, id) => {
+        {calloutOptions?.map((item: ICallOutOptions, id) => {
           return (
             <div key={id}>
               <CalloutCard

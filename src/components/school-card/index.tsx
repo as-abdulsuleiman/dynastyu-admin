@@ -341,7 +341,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   const renderCallout = () => {
     return (
       <>
-        {calloutOptions.map((item: ICallOutOptions, id) => {
+        {calloutOptions?.map((item: ICallOutOptions, id) => {
           return (
             <div key={id}>
               <CalloutCard
