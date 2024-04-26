@@ -236,7 +236,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
     },
   ];
 
-  const calloutOptions: ICallOutOptions[] = [
+  const calloutOptions: CalloutCardProps[] = [
     {
       color: "teal",
       type: "string",
@@ -341,7 +341,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   const renderCallout = () => {
     return (
       <>
-        {calloutOptions?.map((item: ICallOutOptions, id) => {
+        {calloutOptions?.map((item: CalloutCardProps, id) => {
           return (
             <div key={id}>
               <CalloutCard

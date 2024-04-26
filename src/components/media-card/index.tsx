@@ -73,7 +73,7 @@ const MediaCard: FC<MediaCardProps> = ({
       <AspectRatio ratio={16 / 16} className="cursor-pointer">
         <Image
           key={index}
-          onLoadingComplete={() => setLoadingImage(false)}
+          onLoad={() => setLoadingImage(false)}
           priority
           fill
           sizes="100vw"

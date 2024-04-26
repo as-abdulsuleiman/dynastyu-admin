@@ -15,7 +15,7 @@ const ProfileImage: FC<ProfileImageProps> = ({ imageUrl, alt }) => {
     <div className="relative">
       {/* <AspectRatio ratio={16 / 16} className="cursor-pointer rounded-2xl"> */}
       <Image
-        onLoadingComplete={() => setLoadingImage(false)}
+        onLoad={() => setLoadingImage(false)}
         priority
         width={400}
         height={100}

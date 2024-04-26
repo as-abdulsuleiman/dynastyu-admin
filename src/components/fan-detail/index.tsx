@@ -212,7 +212,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
     },
   ];
 
-  const calloutOptions: ICallOutOptions[] = [
+  const calloutOptions: CalloutCardProps[] = [
     {
       color: "teal",
       type: "string",
@@ -273,7 +273,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
   const renderCallout = () => {
     return (
       <>
-        {calloutOptions?.map((item: ICallOutOptions, id) => {
+        {calloutOptions?.map((item: CalloutCardProps, id) => {
           return (
             <div key={id}>
               <CalloutCard

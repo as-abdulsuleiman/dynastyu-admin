@@ -1,22 +1,13 @@
 /** @format */
 
 import { FC } from "react";
-import { Callout, CalloutProps } from "@tremor/react";
+import { Callout } from "@tremor/react";
 import { cn } from "@/lib/utils";
 import Flag from "../flag";
-
-interface CalloutCardProps {
-  title: string;
-  className?: string;
-  icon?: CalloutProps["icon"];
-  color?: CalloutProps["color"];
-  type: "link" | "string" | "flag";
-  flagUrl?: string;
-  content: string | null | undefined;
-}
+import { CalloutCardProps } from "../interface/calloutOptions";
 
 const CalloutCard: FC<CalloutCardProps> = ({
-  type,
+  type = "string",
   icon,
   color,
   title,

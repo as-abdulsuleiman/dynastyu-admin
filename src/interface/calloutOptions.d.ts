@@ -1,9 +1,13 @@
-export interface ICallOutOptions {
+/** @format */
+
+import { CalloutProps } from "@tremor/react";
+
+export interface CalloutCardProps {
   title: string;
-  type: string | any;
-  color: string;
-  className: string;
-  icon?: () => void;
-  content?: string | null | undefined;
+  className?: string;
+  icon?: CalloutProps["icon"];
+  color?: CalloutProps["color"];
+  type: "link" | "string" | "flag";
   flagUrl?: string;
+  content: string | null | undefined;
 }
