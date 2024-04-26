@@ -4,7 +4,7 @@ import { FC } from "react";
 import { Callout } from "@tremor/react";
 import { cn } from "@/lib/utils";
 import Flag from "../flag";
-import { CalloutCardProps } from "../interface/calloutOptions";
+import { CalloutCardProps } from "@/interface/calloutOptions";
 
 const CalloutCard: FC<CalloutCardProps> = ({
   type = "string",

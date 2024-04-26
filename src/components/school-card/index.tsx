@@ -38,7 +38,7 @@ import UsersAnalytics from "@/components/analytics/users";
 import CalloutCard from "../callout";
 import CardContainer from "../card-container";
 import { renderLoader } from "@/lib/loader-helper";
-import { ICallOutOptions } from "@/interface/calloutOptions";
+import { CalloutCardProps } from "@/interface/calloutOptions";
 
 interface SchoolCardProps {
   loading?: boolean;
