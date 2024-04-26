@@ -572,7 +572,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
   const renderCallout = () => {
     return (
       <>
-        {calloutOptions.map((item, id) => {
+        {calloutOptions.map((item: ICallOutOptions, id) => {
           return (
             <div key={id}>
               <CalloutCard
@@ -580,7 +580,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                 type={item?.type}
                 title={item?.title}
                 className={item?.className}
-                icon={item?.icon as any}
+                icon={() => <>{item?.icon}</>}
                 content={item?.content}
                 flagUrl={item?.flagUrl}
               />
