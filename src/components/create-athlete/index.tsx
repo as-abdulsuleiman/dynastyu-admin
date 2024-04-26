@@ -118,9 +118,10 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
       graduationYear: athleteData?.athleteProfile?.graduationYear || "",
       avatar: athleteData?.athleteProfile?.user?.avatar || "",
       firstName: athleteData?.athleteProfile?.user?.firstname || "",
-      email: athleteData?.athleteProfile?.user?.email || "",
+      email: athleteData?.athleteProfile?.user?.email?.toLowerCase() || "",
       lastName: athleteData?.athleteProfile?.user?.surname || "",
-      username: athleteData?.athleteProfile?.user?.username || "",
+      username:
+        athleteData?.athleteProfile?.user?.username?.toLowerCase() || "",
       position: athleteData?.athleteProfile?.position?.id || "",
       country: athleteData?.athleteProfile?.country?.abbreviation || "",
       state: athleteData?.athleteProfile?.user?.state || "",
@@ -235,7 +236,7 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
                 email: { set: payload?.email?.toLowerCase() },
                 firstname: { set: payload?.firstName },
                 surname: { set: payload?.lastName },
-                username: { set: payload?.username },
+                username: { set: payload?.username?.toLowerCase() },
                 city: { set: payload?.city },
                 state: { set: payload?.state },
                 accountType: {
@@ -283,9 +284,9 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
             title={`${
               fetchAthlete ? `Edit Athlete Profile` : " Add New Athlete"
             }`}
-            icon={
-              <AthleteIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
-            }
+            // icon={
+            //   <AthleteIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            // }
             subHeader="Athletes Details"
           />
         </div>
@@ -343,7 +344,12 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
               autoComplete="null"
               className="bg-transparent"
               error={errors?.username?.message}
-              {...register("username", { required: true })}
+              {...register("username", {
+                required: true,
+                onChange(event) {
+                  setValue("username", event?.target?.value?.toLowerCase());
+                },
+              })}
             />
           </div>
           <div className="col-span-12 sm:col-span-6">
@@ -355,7 +361,12 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
               className="bg-transparent"
               placeholder="Email"
               error={errors.email?.message}
-              {...register("email", { required: true })}
+              {...register("email", {
+                required: true,
+                onChange(event) {
+                  setValue("email", event?.target?.value?.toLowerCase());
+                },
+              })}
             />
           </div>
         </div>

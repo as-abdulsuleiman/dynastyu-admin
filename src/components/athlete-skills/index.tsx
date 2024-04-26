@@ -57,6 +57,8 @@ import { useDebouncedValue } from "@mantine/hooks";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "../ui/skeleton";
 import { useRouter } from "next/navigation";
+import axios, { AxiosError } from "axios";
+import { useGoogleCloudStorage } from "@/lib/actions";
 
 const headerItems = [
   { name: "Skill" },
@@ -89,8 +91,8 @@ interface CampProps {
 }
 
 const getFileName = (url: string) => {
-  const splittedUrl = url.split("/");
-  return splittedUrl[splittedUrl.length - 2];
+  const splittedUrl = url?.split("/");
+  return splittedUrl[splittedUrl?.length - 2];
 };
 
 const RenderSkillHistory = ({
@@ -194,7 +196,7 @@ const RenderEditSkillModal = ({
   const [isSubmiting, setIsSubmiting] = useState(false);
 
   const inputRef = useRef<ElementRef<"input">>(null);
-  const { uploadFiles } = useStorage({
+  const { uploadFiles } = useGoogleCloudStorage({
     userId: userId,
     folder: "skills",
   });
@@ -381,7 +383,7 @@ const RenderEditSkillModal = ({
           />
         </div>
       ) : null}
-      {videos?.length ? (
+      {videos?.length > 0 ? (
         <div className="col-span-12 gap-6">
           {videos?.map((video: string, index: number) => {
             return (
@@ -414,7 +416,7 @@ const RenderEditSkillModal = ({
           })}
         </div>
       ) : null}
-      {newVideos?.length ? (
+      {newVideos?.length > 0 ? (
         <div className="col-span-12 sm:col-span-12 gap-6">
           {newVideos?.map((video: any, index: number) => {
             return (
@@ -425,7 +427,7 @@ const RenderEditSkillModal = ({
                     color={themeColor === "dark" ? "#fafafa" : "#0a0a0a"}
                   />
                   <div className="text-sm ml-2">
-                    {item.videosLabels?.length
+                    {item?.videosLabels?.length
                       ? item?.videosLabels[index]
                       : getFileName(video)}
                   </div>
@@ -510,7 +512,7 @@ const RenderEditSkillModal = ({
           <div className="text-base font-TTHovesDemiBold">
             Request Verification
           </div>
-          <div className="grid grid-cols-12 gap-12 mt-2">
+          <div className="grid grid-cols-12 gap-x-4 mt-2">
             <div className="col-span-6 sm:col-span-6">
               <ComboBoxCard
                 valueKey="value"
@@ -530,11 +532,12 @@ const RenderEditSkillModal = ({
                 }}
               />
             </div>
-            <div className="col-span-4 sm:col-span-6 self-center">
+            <div className="col-span-6 sm:col-span-6 self-center">
               <Button
                 size="default"
                 variant="destructive"
                 className="w-full"
+                disabled={!selectedCamp?.value}
                 onClick={async () => {
                   try {
                     setLoadingRequest(true);
@@ -566,7 +569,7 @@ const RenderEditSkillModal = ({
           <div className="text-base font-TTHovesDemiBold mb-2">Requests</div>
           {verificationData?.skillVerificationRequests?.map((request: any) => {
             return (
-              <div key={request?.id} className="flex flex-row">
+              <div key={request?.id} className="flex flex-row mb-3">
                 <div>
                   <div className="text-sm font-TTHovesRegular">
                     {request?.camp?.name}
@@ -795,6 +798,7 @@ const AthleteSkill: FC<AthleteSkillProps> = ({ params, searchParams }) => {
         </TableCell>
         <ModalCard
           isModal={true}
+          contentClass=""
           isOpen={openSkillHistory === fieldValues?.id}
           onOpenChange={() => {
             setOpenSkillHistory(null);

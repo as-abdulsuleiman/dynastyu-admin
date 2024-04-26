@@ -13,7 +13,7 @@ import {
   useGetUserQuery,
   useUpdateCoachMutation,
 } from "@/services/graphql";
-import { Title, Text, Grid } from "@tremor/react";
+import { Text, Grid } from "@tremor/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import UsersAnalytics from "@/components/analytics/users";

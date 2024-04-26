@@ -100,9 +100,9 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
     values: {
       avatar: fanData?.user?.avatar || "",
       firstName: fanData?.user?.firstname || "",
-      email: fanData?.user?.email || "",
+      email: fanData?.user?.email?.toLowerCase() || "",
       lastName: fanData?.user?.surname || "",
-      username: fanData?.user?.username || "",
+      username: fanData?.user?.username?.toLowerCase() || "",
       dob: fanData?.user?.dob || "",
       state: fanData?.user?.state || "",
       city: fanData?.user?.city || "",
@@ -138,7 +138,8 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
             avatar: { set: values?.avatar },
             firstname: { set: values?.firstName },
             surname: { set: values?.lastName },
-            username: { set: values?.username },
+            username: { set: values?.username?.toLowerCase() },
+            email: { set: values?.email?.toLowerCase() },
             country: {
               connect: {
                 abbreviation: values?.country?.toLowerCase(),
@@ -203,9 +204,9 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
         <div className="flex flex-row items-center">
           <ContentHeader
             title={`${fetchFan ? `Edit Fan Profile` : `Add New Fan`}`}
-            icon={
-              <CircleUserRoundIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
-            }
+            // icon={
+            //   <CircleUserRoundIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            // }
             subHeader="Fan Details"
           />
         </div>
@@ -258,7 +259,12 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
               type="text"
               className="bg-transparent"
               error={errors?.username?.message}
-              {...register("username", { required: true })}
+              {...register("username", {
+                required: true,
+                onChange(event) {
+                  setValue("username", event?.target?.value?.toLowerCase());
+                },
+              })}
             />
           </div>
           <div className="col-span-12 sm:col-span-6">
@@ -269,7 +275,12 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
               placeholder="Your Email"
               readOnly={!!fetchFan}
               error={errors.email?.message}
-              {...register("email", { required: true })}
+              {...register("email", {
+                required: true,
+                onChange(event) {
+                  setValue("email", event?.target?.value?.toLowerCase());
+                },
+              })}
             />
           </div>
         </div>

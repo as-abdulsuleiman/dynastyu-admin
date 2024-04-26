@@ -269,12 +269,14 @@ const Dashboard: FC<DashboardProps> = () => {
           </div>
         </TableCell>
         <TableCell className="text-center text-sm">
-          {item?.username ? `@${item?.username}` : ""}
+          {item?.username ? `@${item?.username?.toLowerCase()}` : ""}
         </TableCell>
         <TableCell className="text-center text-sm">
           {item?.accountType?.role?.title}
         </TableCell>
-        <TableCell className="text-center text-sm">{item?.email}</TableCell>
+        <TableCell className="text-center text-sm">
+          {item?.email?.toLowerCase()}
+        </TableCell>
         <TableCell className="text-center text-sm">
           {item?.id === selectedUser && isActivating ? (
             <div className="text-center flex flex-row justify-center items-center">

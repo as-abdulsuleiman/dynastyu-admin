@@ -704,7 +704,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     },
     {
       title: "Username:",
-      content: `@${athleteData?.username}` || "N/A",
+      content: `@${athleteData?.username?.toLowerCase()}` || "N/A",
     },
   ];
 

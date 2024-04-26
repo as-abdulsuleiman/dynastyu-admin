@@ -189,7 +189,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
         where: { id: searchParams?.school },
         data: {
           name: { set: payload?.name },
-          email: { set: payload?.email },
+          email: { set: payload?.email?.toLowerCase() },
           description: { set: payload?.description },
           primaryColor: { set: payload?.primaryColor },
           secondaryColor: { set: payload?.secondaryColor },
@@ -222,7 +222,7 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
       variables: {
         data: {
           name: payload?.name,
-          email: payload?.email,
+          email: payload?.email?.toLowerCase(),
           logo: payload?.logo,
           yearFounded: payload?.yearFounded,
           undergradStudents: payload?.undergradStudents,
@@ -399,9 +399,9 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
             title={`${
               fetchSchool ? "Edit School Profile" : "Create New School"
             }`}
-            icon={
-              <SchoolIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
-            }
+            // icon={
+            //   <SchoolIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            // }
             subHeader="School Details"
           />
         </div>
@@ -445,7 +445,12 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
               className="bg-transparent"
               placeholder="School Email"
               error={errors?.email?.message}
-              {...register("email", { required: true })}
+              {...register("email", {
+                required: true,
+                onChange(event) {
+                  setValue("email", event?.target?.value?.toLowerCase());
+                },
+              })}
             />
           </div>
         </div>

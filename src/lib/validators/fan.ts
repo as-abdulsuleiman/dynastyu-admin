@@ -8,7 +8,7 @@ export const FanValidator = Yup.object({
     .email("Invalid email address")
     .required("Email is required"),
   dob: Yup.string().required("Date is required"),
-  username: Yup.string()
+  username: Yup.string().lowercase()
     .required("Username is required")
     .min(2, "Minimum 2 symbols"),
   firstName: Yup.string()

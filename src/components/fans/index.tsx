@@ -258,10 +258,10 @@ const Fans: FC<FansProps> = ({}) => {
           </div>
         </TableCell>
         <TableCell className="text-center text-sm">
-          <div>{item?.username ? `@${item?.username}` : ""}</div>
+          <div>{item?.username ? `@${item?.username?.toLowerCase()}` : ""}</div>
         </TableCell>
         <TableCell className="text-center text-sm">
-          <div>{item?.email}</div>
+          <div>{item?.email?.toLowerCase()}</div>
         </TableCell>
         <TableCell className="text-center text-sm">
           {item?.id === selectedUser && isActivating ? (

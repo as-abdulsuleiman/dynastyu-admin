@@ -289,7 +289,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
           <div>{item?.schoolType?.name}</div>
         </TableCell>
         <TableCell className="text-center text-sm">
-          <div>{item?.email}</div>
+          <div>{item?.email?.toLowerCase()}</div>
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">

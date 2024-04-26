@@ -40,9 +40,11 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
     const userPath = generateProfilePath(post?.user as GetUserQuery["user"]);
     return (
       <div className="flex flex-col justify-center mt-8">
-        <div className="flex flex-row items-center">
+        <div
+          className="flex flex-row items-center cursor-pointer"
+          onClick={() => router.push(userPath)}
+        >
           <UserAvatar
-            onClick={() => router.push(userPath)}
             className="h-[90px] w-[90px] shadow cursor-pointer"
             height={90}
             width={90}
@@ -54,8 +56,8 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
             )} ${post?.user?.surname?.charAt(0)}`}
             icon={<UserIcon className="h-8 w-8" />}
           />
-          <div className="ml-3">
-            <div>
+          <div className="ml-3  font-TTHovesRegular text-base">
+            <div className="cursor-pointer font-TTHovesRegular text-base">
               {post?.user?.firstname} {""}
               {post?.user?.surname}
             </div>
@@ -69,9 +71,11 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
     const userPath = generateProfilePath(user as GetUserQuery["user"]);
     return (
       <div className="flex flex-col justify-center mt-8">
-        <div className="flex flex-row items-center">
+        <div
+          className="flex flex-row items-center cursor-pointer"
+          onClick={() => router.push(userPath)}
+        >
           <UserAvatar
-            onClick={() => router.push(userPath)}
             className="h-[90px] w-[90px] shadow cursor-pointer"
             height={90}
             width={90}
@@ -83,13 +87,14 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
             )}`}
             icon={<UserIcon className="h-8 w-8" />}
           />
-          <div className="ml-3">
-            <div>
-              {" "}
+          <div className="ml-3 cursor-pointer font-TTHovesRegular text-base">
+            <div className="cursor-pointer font-TTHovesRegular text-base">
               {user?.firstname} {""}
               {user?.surname}
             </div>
-            <div>@{user?.username}</div>
+            <div className="cursor-pointer font-TTHovesRegular text-base">
+              @{user?.username}
+            </div>
           </div>
         </div>
       </div>
