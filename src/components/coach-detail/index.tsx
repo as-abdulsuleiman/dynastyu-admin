@@ -13,7 +13,7 @@ import {
   useGetUserQuery,
   useUpdateCoachMutation,
 } from "@/services/graphql";
-import { Title, Text, Grid } from "@tremor/react";
+import { Text, Grid } from "@tremor/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import UsersAnalytics from "@/components/analytics/users";
@@ -750,7 +750,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
             >
               <ProfileImage
                 imageUrl={coachData?.avatar as string}
-                alt={coachData?.username as string}
+                alt={coachData?.username?.toLowerCase() as string}
               />
             </ModalCard>
             {loading ? (
@@ -761,7 +761,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
             ) : (
               <div className="flex flex-row items-center justify-center">
                 <Text className="text-sm relative mr-1">
-                  @{coachData?.username}
+                  @{coachData?.username?.toLowerCase()}
                 </Text>
                 {coachData?.coachProfile?.verified ? (
                   <TooltipCard

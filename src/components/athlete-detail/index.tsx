@@ -712,7 +712,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     },
     {
       title: "Username:",
-      content: `@${athleteData?.username}` || "N/A",
+      content: `@${athleteData?.username?.toLowerCase()}` || "N/A",
     },
   ];
 
@@ -803,7 +803,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
             >
               <ProfileImage
                 imageUrl={athleteData?.avatar as string}
-                alt={athleteData?.username as string}
+                alt={athleteData?.username?.toLowerCase() as string}
               />
             </ModalCard>
             {loading ? (
@@ -814,7 +814,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
             ) : (
               <div className="flex flex-row items-center justify-center mt-1">
                 <Text className="text-base relative mr-1">
-                  @{athleteData?.username}
+                  @{athleteData?.username?.toLowerCase()}
                 </Text>
                 {athleteData?.athleteProfile?.verified ? (
                   <HoverCard

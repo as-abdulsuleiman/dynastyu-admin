@@ -336,11 +336,11 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
   const subHeaderItems = [
     {
       title: "Email:",
-      content: fanData?.user?.email || "N/A",
+      content: fanData?.user?.email?.toLowerCase() || "N/A",
     },
     {
       title: "Username:",
-      content: `@${fanData?.user?.username}` || "N/A",
+      content: `@${fanData?.user?.username?.toLowerCase()}` || "N/A",
     },
   ];
 
@@ -413,7 +413,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
           ) : (
             <div className="flex flex-row items-center justify-center mt-1">
               <Text className="text-sm relative mr-1">
-                @{fanData?.user?.username}
+                @{fanData?.user?.username?.toLowerCase()}
               </Text>
             </div>
           )}

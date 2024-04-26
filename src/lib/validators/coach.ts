@@ -6,7 +6,7 @@ export const CoachValidator = Yup.object({
   email: Yup.string().lowercase()
     .email("Invalid email address")
     .required("Email is required"),
-  username: Yup.string().required("Username is required").min(2, "Minimum 2 symbols"),
+  username: Yup.string().lowercase().required("Username is required").min(2, "Minimum 2 symbols"),
   firstName: Yup.string().required("First Name is required").min(2, "Minimum 2 symbols"),
   lastName: Yup.string().required("Last Name is required").min(2, "Minimum 2 symbols"),
   accountType: Yup.object().shape({

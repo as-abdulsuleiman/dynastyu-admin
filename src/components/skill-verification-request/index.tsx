@@ -207,7 +207,7 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
           </div>
         </TableCell>
         <TableCell className="text-center text-sm">
-          @{item?.user?.username}
+          @{item?.user?.username?.toLowerCase()}
         </TableCell>
         <TableCell className="text-center text-sm">
           {item?.skill?.skillType?.name}
