@@ -112,9 +112,9 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
     values: {
       avatar: coachData?.coachProfile?.user?.avatar || "",
       firstName: coachData?.coachProfile?.user?.firstname || "",
-      email: coachData?.coachProfile?.user?.email || "",
+      email: coachData?.coachProfile?.user?.email?.toLowerCase() || "",
       lastName: coachData?.coachProfile?.user?.surname || "",
-      username: coachData?.coachProfile?.user?.username || "",
+      username: coachData?.coachProfile?.user?.username?.toLowerCase() || "",
       title: coachData?.coachProfile?.title || "",
       canReceiveMessages: coachData?.coachProfile?.canReceiveMessages || false,
       country: coachData?.coachProfile?.country?.abbreviation || "",
@@ -186,8 +186,8 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
             update: {
               firstname: { set: values?.firstName },
               surname: { set: values?.lastName },
-              email: { set: values?.email },
-              username: { set: values?.username },
+              email: { set: values?.email?.toLowerCase() },
+              username: { set: values?.username?.toLowerCase() },
               avatar: { set: values?.avatar },
               accountType: {
                 connect: {
@@ -221,8 +221,8 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
           firebaseUid: "",
           firstname: values?.firstName,
           surname: values?.lastName,
-          email: values?.email,
-          username: values?.username,
+          email: values?.email?.toLowerCase(),
+          username: values?.username.toLowerCase(),
           avatar: values?.avatar,
           accountType: {
             connect: {
@@ -314,9 +314,9 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
         <div className="flex flex-row items-center">
           <ContentHeader
             title={`${fetchCoach ? `Edit Coach Profile` : " Add New Coach"}`}
-            icon={
-              <SchoolIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
-            }
+            // icon={
+            //   <SchoolIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            // }
             subHeader="Coach Details"
           />
         </div>
@@ -371,7 +371,12 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               type="text"
               className="bg-transparent"
               error={errors?.username?.message}
-              {...register("username", { required: true })}
+              {...register("username", {
+                required: true,
+                onChange(event) {
+                  setValue("username", event?.target?.value?.toLowerCase());
+                },
+              })}
             />
           </div>
           <div className="col-span-12 sm:col-span-6">
@@ -382,7 +387,12 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
               className="bg-transparent"
               placeholder="Your Email"
               error={errors.email?.message}
-              {...register("email", { required: true })}
+              {...register("email", {
+                required: true,
+                onChange(event) {
+                  setValue("email", event?.target?.value?.toLowerCase());
+                },
+              })}
             />
           </div>
         </div>

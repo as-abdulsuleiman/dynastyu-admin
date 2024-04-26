@@ -6,17 +6,11 @@ import { useState, useEffect } from "react";
 import {
   UploadTask,
   getDownloadURL,
-  uploadBytes,
   uploadBytesResumable,
-  getStorage,
   ref,
 } from "firebase/storage";
 import { useToast } from "./use-toast";
 import { projectStorage, firebaseApp } from "@/services/firebase/config";
-import { useProcessVideoMutation } from "@/services/graphql";
-
-const uploadBucket = getStorage(undefined, "gs://dynastyu-files");
-const readBucket = getStorage(undefined, "gs://dynastyu-9de03.appspot.com");
 
 type useStorageProps = {
   file?: Blob | Uint8Array | ArrayBuffer | null;
@@ -34,7 +28,6 @@ export const useStorage = ({
   const [uploading, setUploading] = useState<boolean>(false);
   const [url, setUrl] = useState("");
   const [progress, setProgress] = useState<number | null>(0);
-  const [processVideo] = useProcessVideoMutation();
 
   let uploadTask: UploadTask | null;
 
@@ -138,80 +131,5 @@ export const useStorage = ({
     };
   }, [file]);
 
-  const uploadFiles = async (
-    images?: File[],
-    videos?: File[],
-    // promise?: boolean,
-    files?: File[]
-  ) => {
-    const imagesPromises = images?.map((image: any) => {
-      return uploadFile(image, image?.name, "image");
-    });
-    const videosPromises = videos?.map((video: any) => {
-      return uploadFile(video, video?.name, "video");
-    });
-
-    const filesPromises = files?.map((file: any) => {
-      return uploadFile(file, file?.name, "file");
-    });
-    const imagesResult = images ? await Promise.all<any>(imagesPromises) : [];
-    const filesResults = files ? await Promise.all<any>(filesPromises) : [];
-    const videosResult = videos ? await Promise.all<any>(videosPromises) : [];
-
-    const imagesUrls = imagesResult?.map((a: any) => a.url);
-    const videosUrls = videosResult?.map((a: any) => a.url);
-    const filesUrls = filesResults?.map((a: any) => ({
-      url: a.url,
-      name: a.name,
-    }));
-    const aspectRatios = videosResult?.map((a: any) => a.aspectRatio);
-    // if (!promise) {
-    //   onComplete(imagesUrls, videosUrls, aspectRatios, filesUrls)
-    // }
-
-    setProgress(0);
-    return {
-      images: imagesUrls,
-      videos: videosUrls,
-      videosAspectRatios: aspectRatios,
-      files: filesUrls,
-    };
-  };
-
-  const uploadFile = async (
-    file: File,
-    fileName?: string,
-    type?: "image" | "video" | "file"
-  ): Promise<any> => {
-    const folderName = folder || "profile_files";
-    const storageRef =
-      type === "video"
-        ? ref(uploadBucket, `Documents/${userId}/${folderName}/${fileName}`)
-        : ref(readBucket, `Documents/${userId}/${folderName}/${fileName}`);
-  
-    await uploadBytes(storageRef, file);
-    let url = "";
-    let job;
-    if (type === "video") {
-      // if (process?.env?.NODE_ENV === "production") {
-       https://firebasestorage.googleapis.com/v0/b/dynastyu-files/o
-      // }
-      job = await processVideo({
-        variables: {
-          data: { filePath: `Documents/${userId}/${folderName}/${fileName}` },
-        },
-      });
-      console.log("job", job?.data?.processVideo);
-      url = `https://firebasestorage.googleapis.com/v0/b/dynastyu-files/o/Documents/${userId}/${folderName}/${fileName}/master.m3u8`;
-      // url = await getDownloadURL(storageRef);
-    } else {
-      url = await getDownloadURL(storageRef);
-    }
-    return {
-      url,
-      aspectRatio: job?.data?.processVideo?.aspectRatio || 1,
-      name: fileName,
-    };
-  };
-  return { uploading, progress, url, uploadFiles };
+  return { uploading, progress, url };
 };

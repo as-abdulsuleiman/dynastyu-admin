@@ -80,7 +80,7 @@ const MediaCard: FC<MediaCardProps> = ({
           quality={100}
           src={value as string}
           alt="profile_picture"
-          className={`rounded-2xl object-cover bg-background bg-opacity-30 backdrop-filter backdrop-blur-lg relative ${
+          className={`rounded-2xl object-cover  relative  ${
             loadingImage ? "blur-sm " : "blur-none"
           }`}
         />
@@ -94,7 +94,7 @@ const MediaCard: FC<MediaCardProps> = ({
       opts={{ align: "center", loop: false }}
       className="w-full max-w-3xl mx-auto"
     >
-      <CarouselContent className="min-h-[unset] h-full xl:min-h-[769px]">
+      <CarouselContent className="min-h-[unset] h-full ">
         {loading ? (
           <>{renderSkeleton()}</>
         ) : (

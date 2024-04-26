@@ -451,10 +451,14 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
           </div>
         </TableCell>
         <TableCell className="text-center text-sm">
-          <div>{item?.user?.username ? `@${item?.user?.username}` : ""}</div>
+          <div>
+            {item?.user?.username
+              ? `@${item?.user?.username?.toLowerCase()}`
+              : ""}
+          </div>
         </TableCell>
         <TableCell className="text-center text-sm">
-          <div>{item?.user?.email}</div>
+          <div>{item?.user?.email?.toLowerCase()}</div>
         </TableCell>
         <TableCell className="text-center text-sm">
           <div>{item?.title}</div>
