@@ -750,7 +750,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
             ) : (
               <div className="flex flex-row items-center justify-center">
                 <Text className="text-sm relative mr-1">
-                  @{coachData?.username}
+                  @{coachData?.username?.toLowerCase()}
                 </Text>
                 {coachData?.coachProfile?.verified ? (
                   <TooltipCard
