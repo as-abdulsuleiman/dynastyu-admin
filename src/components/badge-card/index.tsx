@@ -21,20 +21,18 @@ const BadgeCard: FC<BadgeCardProps> = ({
   children,
 }) => {
   return (
-    <div>
-      <Badge
-        size={size}
-        datatype={datatype}
-        className={cn(
-          "cursor-pointer flex text-sm font-TTHovesRegular",
-          className
-        )}
-        color={color}
-        icon={icon}
-      >
-        {children}
-      </Badge>
-    </div>
+    <Badge
+      size={size}
+      datatype={datatype}
+      className={cn(
+        "cursor-pointer flex text-sm font-TTHovesRegular",
+        className
+      )}
+      color={color}
+      icon={icon}
+    >
+      {children}
+    </Badge>
   );
 };
 

@@ -62,7 +62,7 @@ import ContentHeader from "../content-header";
 import CardContainer from "../card-container";
 import AthleteSkillCard from "../athlete-skill-card";
 import { renderLoader } from "@/lib/loader-helper";
-import { CalloutCardProps } from "../interface/calloutOptions";
+import { CalloutCardProps } from "@/interface/calloutOptions";
 interface AthleteDetailProps {
   params: {
     id: number;
@@ -713,8 +713,18 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
       title: "Username:",
       content: `@${athleteData?.username?.toLowerCase()}` || "N/A",
     },
+    {
+      title: "UpdatedAt:",
+      content:
+        `${
+          athleteData?.updatedAt
+            ? formatDate(new Date(athleteData?.updatedAt), "MMMM dd yyyy")
+            : ""
+        }` || "N/A",
+    },
   ];
 
+  console.log("athleteData", athleteData);
   return (
     <main className="w-full h-full relative">
       <Button

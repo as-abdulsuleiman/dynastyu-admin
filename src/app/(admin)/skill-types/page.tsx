@@ -38,6 +38,7 @@ const headerItems = [
   { name: "Unit" },
   { name: "Number Of Videos" },
   { name: "Created At" },
+  { name: "Updated At" },
   { name: "Action" },
 ];
 
@@ -265,7 +266,16 @@ const Page: FC<pageProps> = ({}) => {
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
-            {formatDate(new Date(item?.createdAt), "MMMM dd yyyy")}
+            {item.createdAt
+              ? formatDate(new Date(item?.createdAt), "MMMM dd yyyy")
+              : ""}
+          </div>
+        </TableCell>
+        <TableCell className="text-center cursor-pointer text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {item?.updatedAt
+              ? formatDate(new Date(item?.updatedAt), "MMMM dd yyyy")
+              : ""}
           </div>
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">

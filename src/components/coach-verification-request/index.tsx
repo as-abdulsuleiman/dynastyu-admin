@@ -58,6 +58,7 @@ const headerItems = [
   { name: "Email" },
   { name: "Coach Title" },
   { name: "Created At" },
+  { name: "Updated At" },
   { name: "Verified" },
   { name: "Actions" },
 ];
@@ -468,28 +469,35 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
           </div>
         </TableCell>
         <TableCell className="text-center text-sm">
-          {item?.id === selectedUser && isVerifying ? (
-            <div className="text-center flex flex-row justify-center items-center">
-              <Loader2Icon className="mr-1 h-4 w-4 animate-spin " />
-              {item?.verified ? "Unverifying..." : "Verifying..."}
-            </div>
-          ) : (
-            <BadgeCard
-              size="xs"
-              className="px-[8px]"
-              color={item?.verified ? "sky" : "rose"}
-              icon={() => {
-                return item.verified ? (
-                  <BadgeCheckIcon className="h-4 w-4 mr-1" color="sky" />
-                ) : (
-                  <BadgeAlertIcon className="h-4 w-4 mr-1" color="rose" />
-                );
-              }}
-              datatype="moderateDecrease"
-            >
-              {item?.verified ? "Verified" : "Not Verified"}
-            </BadgeCard>
-          )}
+          <div>
+            {item?.updatedAt ? formatDate(item?.updatedAt, "dd MMM yyyy") : ""}
+          </div>
+        </TableCell>
+        <TableCell className="text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {item?.id === selectedUser && isVerifying ? (
+              <div className="text-center flex flex-row justify-center items-center">
+                <Loader2Icon className="mr-1 h-4 w-4 animate-spin " />
+                {item?.verified ? "Unverifying..." : "Verifying..."}
+              </div>
+            ) : (
+              <BadgeCard
+                size="xs"
+                className="px-[8px]"
+                color={item?.verified ? "sky" : "rose"}
+                icon={() => {
+                  return item.verified ? (
+                    <BadgeCheckIcon className="h-4 w-4 mr-1" color="sky" />
+                  ) : (
+                    <BadgeAlertIcon className="h-4 w-4 mr-1" color="rose" />
+                  );
+                }}
+                datatype="moderateDecrease"
+              >
+                {item?.verified ? "Verified" : "Not Verified"}
+              </BadgeCard>
+            )}
+          </div>
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">

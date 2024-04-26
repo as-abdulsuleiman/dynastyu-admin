@@ -23,7 +23,7 @@ import { CheckIcon } from "lucide-react";
 import { CommandItem } from "@/components/ui/command";
 import UserAvatar from "@/components/user-avatar";
 import { useDebouncedValue } from "@mantine/hooks";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import PromptAlert from "@/components/prompt-alert";
 import { toast } from "@/hooks/use-toast";
 import SchoolCoaches from "@/components/school-coaches";
@@ -292,6 +292,16 @@ const Page: FC<PageProps> = ({ params }) => {
       title: "School Type:",
 
       content: data?.school?.schoolType?.name || "N/A",
+    },
+    {
+      title: "Updated at:",
+
+      content:
+        `${
+          data?.school?.updatedAt
+            ? formatDate(new Date(data?.school?.updatedAt))
+            : ""
+        }` || "N/A",
     },
   ];
 

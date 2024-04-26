@@ -436,76 +436,88 @@ const Athletes: FC<AthletesProps> = ({}) => {
             <div>({item?.athleteProfile?.position?.shortName})</div>
           </div>
         </TableCell>
-        <TableCell className="text-center">
-          {item?.id === selectedUser &&
-          updatingProfile === StatusEnum.ACTIVATING ? (
-            <div className="text-center flex flex-row justify-center items-center">
-              <Loader2Icon className="mr-1 h-4 w-4 animate-spin " />
-              {item?.isActive ? "Deactivating..." : "Activating..."}
-            </div>
-          ) : (
-            <BadgeCard
-              size="xs"
-              color={item?.isActive ? "teal" : "rose"}
-              // tooltip={item?.user?.isActive ? "Active" : "Deactivated"}
-              icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
-              datatype="moderateDecrease"
-            >
-              {item?.isActive ? "Active" : "Deactivated"}
-            </BadgeCard>
-          )}
-        </TableCell>
-        <TableCell className="text-center text-sm">
-          {item?.id === selectedUser &&
-          updatingProfile === StatusEnum.VERIFYING ? (
-            <div className="text-center flex flex-row justify-center items-center">
-              <Loader2Icon className="mr-1 h-4 w-4 animate-spin " />
-              {item?.athleteProfile?.verified
-                ? "Unverifying..."
-                : "Verifying..."}
-            </div>
-          ) : (
-            <BadgeCard
-              size="xs"
-              className="px-[8px]"
-              color={item?.athleteProfile?.verified ? "sky" : "rose"}
-              icon={() => {
-                return item?.athleteProfile?.verified ? (
-                  <BadgeCheckIcon className="h-4 w-4 mr-1" color="sky" />
-                ) : (
-                  <BadgeAlertIcon className="h-4 w-4 mr-1" color="rose" />
-                );
-              }}
-              datatype="moderateDecrease"
-            >
-              {item?.athleteProfile?.verified ? "Verified" : "Not Verified"}
-            </BadgeCard>
-          )}
-        </TableCell>
-        <TableCell className="text-center text-sm">
-          {item?.id === selectedUser &&
-          updatingProfile === StatusEnum.FEATURING ? (
-            <div className="text-center flex flex-row justify-center items-center">
-              <Loader2Icon className="mr-1 h-4 w-4 animate-spin" />
-              {"Loading..."}
-            </div>
-          ) : (
-            <BadgeCard
-              size="xs"
-              className="px-[8px]"
-              color={item?.athleteProfile?.featured ? "yellow" : "rose"}
-              icon={() => {
-                return <StarIcon className="h-4 w-4 mr-1" />;
-              }}
-              datatype="moderateDecrease"
-            >
-              {item?.athleteProfile?.featured ? "Featured" : "Not Featured"}
-            </BadgeCard>
-          )}
-        </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             {formatDate(new Date(item?.createdAt), "MMMM dd yyyy")}
+          </div>
+        </TableCell>
+        <TableCell className="text-center cursor-pointer text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {formatDate(new Date(item?.updatedAt), "MMMM dd yyyy")}
+          </div>
+        </TableCell>
+        <TableCell className="text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {item?.id === selectedUser &&
+            updatingProfile === StatusEnum.ACTIVATING ? (
+              <div className="text-center flex flex-row justify-center items-center">
+                <Loader2Icon className="mr-1 h-4 w-4 animate-spin " />
+                {item?.isActive ? "Deactivating..." : "Activating..."}
+              </div>
+            ) : (
+              <BadgeCard
+                size="xs"
+                color={item?.isActive ? "teal" : "rose"}
+                // tooltip={item?.user?.isActive ? "Active" : "Deactivated"}
+                icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
+                datatype="moderateDecrease"
+              >
+                {item?.isActive ? "Active" : "Deactivated"}
+              </BadgeCard>
+            )}
+          </div>
+        </TableCell>
+        <TableCell className="text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {item?.id === selectedUser &&
+            updatingProfile === StatusEnum.VERIFYING ? (
+              <div className="text-center flex flex-row justify-center items-center">
+                <Loader2Icon className="mr-1 h-4 w-4 animate-spin " />
+                {item?.athleteProfile?.verified
+                  ? "Unverifying..."
+                  : "Verifying..."}
+              </div>
+            ) : (
+              <BadgeCard
+                size="xs"
+                className="px-[8px]"
+                color={item?.athleteProfile?.verified ? "sky" : "rose"}
+                icon={() => {
+                  return item?.athleteProfile?.verified ? (
+                    <BadgeCheckIcon className="h-4 w-4 mr-1" color="sky" />
+                  ) : (
+                    <BadgeAlertIcon className="h-4 w-4 mr-1" color="rose" />
+                  );
+                }}
+                datatype="moderateDecrease"
+              >
+                {item?.athleteProfile?.verified ? "Verified" : "Not Verified"}
+              </BadgeCard>
+            )}
+          </div>
+        </TableCell>
+
+        <TableCell className="text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {item?.id === selectedUser &&
+            updatingProfile === StatusEnum.FEATURING ? (
+              <div className="text-center flex flex-row justify-center items-center">
+                <Loader2Icon className="mr-1 h-4 w-4 animate-spin" />
+                {"Loading..."}
+              </div>
+            ) : (
+              <BadgeCard
+                size="xs"
+                className="px-[8px]"
+                color={item?.athleteProfile?.featured ? "yellow" : "rose"}
+                icon={() => {
+                  return <StarIcon className="h-4 w-4 mr-1" />;
+                }}
+                datatype="moderateDecrease"
+              >
+                {item?.athleteProfile?.featured ? "Featured" : "Not Featured"}
+              </BadgeCard>
+            )}
           </div>
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">

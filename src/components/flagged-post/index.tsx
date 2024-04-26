@@ -52,6 +52,7 @@ const headerItems = [
   { name: "Flagged By" },
   { name: "Reason" },
   { name: "Created At" },
+  { name: "Updated At" },
   { name: "Actions" },
 ];
 
@@ -248,6 +249,11 @@ const FlaggedPosts: FC<FlagPostProps> = ({}) => {
         <TableCell className="text-center text-sm">
           <div>
             {item.createdAt ? formatDate(item?.createdAt, "dd MMM yyyy") : ""}
+          </div>
+        </TableCell>
+        <TableCell className="text-center text-sm">
+          <div>
+            {item.updatedAt ? formatDate(item?.updatedAt, "dd MMM yyyy") : ""}
           </div>
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">

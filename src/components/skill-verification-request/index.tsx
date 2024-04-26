@@ -34,8 +34,9 @@ const headerItems = [
   { name: "Username" },
   { name: "Skill" },
   { name: "Email" },
-  { name: "Verified" },
   { name: "Created At" },
+  { name: "Updated At" },
+  { name: "Verified" },
   { name: "Actions" },
 ];
 
@@ -215,23 +216,31 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
         <TableCell className="text-center text-sm">
           {item?.user?.email}
         </TableCell>
-        <TableCell className="text-center text-sm">
-          <BadgeCard
-            size="xs"
-            className="cursor-pointer"
-            color={item?.verified ? "sky" : "rose"}
-            // tooltip="decrease"
-            icon={() => {
-              return <BadgeAlertIcon className="h-4 w-4 mr-1" color="rose" />;
-            }}
-            datatype="moderateDecrease"
-          >
-            {item?.verified ? "DU Verified" : "Not Verified"}
-          </BadgeCard>
-        </TableCell>
+
         <TableCell className="text-center text-sm">
           <div>
             {item.createdAt ? formatDate(item?.createdAt, "dd MMM yyyy") : ""}
+          </div>
+        </TableCell>
+        <TableCell className="text-center text-sm">
+          <div>
+            {item.updatedAt ? formatDate(item?.updatedAt, "dd MMM yyyy") : ""}
+          </div>
+        </TableCell>
+        <TableCell className="text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            <BadgeCard
+              size="xs"
+              className="cursor-pointer"
+              color={item?.verified ? "sky" : "rose"}
+              // tooltip="decrease"
+              icon={() => {
+                return <BadgeAlertIcon className="h-4 w-4 mr-1" color="rose" />;
+              }}
+              datatype="moderateDecrease"
+            >
+              {item?.verified ? "DU Verified" : "Not Verified"}
+            </BadgeCard>
           </div>
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">

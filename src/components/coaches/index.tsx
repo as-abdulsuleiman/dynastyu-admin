@@ -50,9 +50,10 @@ const headerItems = [
   { name: "Username" },
   { name: "Email" },
   { name: "Coach Title" },
+  { name: "Created At" },
+  { name: "Updated At" },
   { name: "Status" },
   { name: "Verified" },
-  { name: "Created At" },
   { name: "Actions" },
 ];
 
@@ -386,57 +387,70 @@ const Coaches: FC<CoachesProps> = ({}) => {
         <TableCell className="text-center text-sm">
           <div>{item?.coachProfile?.title}</div>
         </TableCell>
-        <TableCell className="text-center text-sm">
-          {item?.id === selectedUser &&
-          updatingProfile === StatusEnum.ACTIVATING ? (
-            <div className="text-center flex flex-row justify-center items-center">
-              <Loader2Icon className="mr-1 h-4 w-4 animate-spin " />
-              {item?.isActive ? "Deactivating..." : "Activating..."}
-            </div>
-          ) : (
-            <div className="flex justify-center">
-              <BadgeCard
-                size="xs"
-                color={item?.isActive ? "teal" : "rose"}
-                // tooltip={item?.user?.isActive ? "Active" : "Deactivated"}
-                icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
-                datatype="moderateDecrease"
-              >
-                {item?.isActive ? "Active" : "Deactivated"}
-              </BadgeCard>
-            </div>
-          )}
-        </TableCell>
-        <TableCell className="text-center text-sm">
-          {item?.id === selectedUser &&
-          updatingProfile === StatusEnum.VERIFYING ? (
-            <div className="text-center flex flex-row justify-center items-center">
-              <Loader2Icon className="mr-1 h-4 w-4 animate-spin " />
-              {item?.coachProfile?.verified ? "Unverifying..." : "Verifying..."}
-            </div>
-          ) : (
-            <div className="flex justify-center">
-              <BadgeCard
-                size="xs"
-                color={item?.coachProfile?.verified ? "sky" : "rose"}
-                // tooltip={item?.verified ? "Verified" : "Not Verified"}
-                icon={() => {
-                  return item?.coachProfile?.verified ? (
-                    <BadgeCheckIcon className="h-4 w-4 mr-1" color="sky" />
-                  ) : (
-                    <BadgeAlertIcon className="h-4 w-4 mr-1" color="rose" />
-                  );
-                }}
-                datatype="moderateDecrease"
-              >
-                {item?.coachProfile?.verified ? "Verified" : "Not Verified"}
-              </BadgeCard>
-            </div>
-          )}
-        </TableCell>
+
         <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             {formatDate(new Date(item?.createdAt), "MMMM dd yyyy")}
+          </div>
+        </TableCell>
+        <TableCell className="text-center cursor-pointer text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {formatDate(new Date(item?.updatedAt), "MMMM dd yyyy")}
+          </div>
+        </TableCell>
+
+        <TableCell className="text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {item?.id === selectedUser &&
+            updatingProfile === StatusEnum.ACTIVATING ? (
+              <div className="text-center flex flex-row justify-center items-center">
+                <Loader2Icon className="mr-1 h-4 w-4 animate-spin " />
+                {item?.isActive ? "Deactivating..." : "Activating..."}
+              </div>
+            ) : (
+              <div className="flex justify-center">
+                <BadgeCard
+                  size="xs"
+                  color={item?.isActive ? "teal" : "rose"}
+                  // tooltip={item?.user?.isActive ? "Active" : "Deactivated"}
+                  icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
+                  datatype="moderateDecrease"
+                >
+                  {item?.isActive ? "Active" : "Deactivated"}
+                </BadgeCard>
+              </div>
+            )}
+          </div>
+        </TableCell>
+        <TableCell className="text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {item?.id === selectedUser &&
+            updatingProfile === StatusEnum.VERIFYING ? (
+              <div className="text-center flex flex-row justify-center items-center">
+                <Loader2Icon className="mr-1 h-4 w-4 animate-spin " />
+                {item?.coachProfile?.verified
+                  ? "Unverifying..."
+                  : "Verifying..."}
+              </div>
+            ) : (
+              <div className="flex justify-center">
+                <BadgeCard
+                  size="xs"
+                  color={item?.coachProfile?.verified ? "sky" : "rose"}
+                  // tooltip={item?.verified ? "Verified" : "Not Verified"}
+                  icon={() => {
+                    return item?.coachProfile?.verified ? (
+                      <BadgeCheckIcon className="h-4 w-4 mr-1" color="sky" />
+                    ) : (
+                      <BadgeAlertIcon className="h-4 w-4 mr-1" color="rose" />
+                    );
+                  }}
+                  datatype="moderateDecrease"
+                >
+                  {item?.coachProfile?.verified ? "Verified" : "Not Verified"}
+                </BadgeCard>
+              </div>
+            )}
           </div>
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">

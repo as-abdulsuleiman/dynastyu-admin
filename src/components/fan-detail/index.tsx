@@ -43,7 +43,7 @@ import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
 import CardContainer from "../card-container";
 import { renderLoader } from "@/lib/loader-helper";
-import { CalloutCardProps } from "../interface/calloutOptions";
+import { CalloutCardProps } from "@/interface/calloutOptions";
 
 interface FanDetailProps {
   params: {
@@ -342,7 +342,18 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
       title: "Username:",
       content: `@${fanData?.user?.username?.toLowerCase()}` || "N/A",
     },
+    {
+      title: "Updated at:",
+      content:
+        `${
+          fanData?.user?.updatedAt
+            ? formatDate(new Date(fanData?.user?.updatedAt))
+            : ""
+        }` || "N/A",
+    },
   ];
+
+  console.log("fanDsta", fanData);
 
   return (
     <main className="w-full h-full relative">

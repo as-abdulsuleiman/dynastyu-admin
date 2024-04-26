@@ -6,6 +6,7 @@ fragment SchoolCommonParts on School {
   name
   email
   createdAt
+  updatedAt
   schoolType {
     id
     name
