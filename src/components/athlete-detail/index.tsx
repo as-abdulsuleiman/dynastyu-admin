@@ -62,7 +62,7 @@ import ContentHeader from "../content-header";
 import CardContainer from "../card-container";
 import AthleteSkillCard from "../athlete-skill-card";
 import { renderLoader } from "@/lib/loader-helper";
-import { ICallOutOptions } from "../interface/calloutOptions";
+import { ICallOutOptions } from "@/interface/calloutOptions";
 interface AthleteDetailProps {
   params: {
     id: number;

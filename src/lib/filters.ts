@@ -263,10 +263,10 @@ export const athleteHeaderItems = [
   { name: "Username" },
   { name: "Email" },
   { name: "Position" },
+  { name: "Created At" },
+  { name: "Updated At" },
   { name: "Status" },
   { name: "Verified" },
   { name: "Featured" },
-  { name: "Created At" },
-  { name: "Updated At" },
   { name: "Actions" },
 ];

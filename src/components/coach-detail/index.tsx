@@ -62,7 +62,7 @@ import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
 import CardContainer from "../card-container";
 import { renderLoader } from "@/lib/loader-helper";
-import { ICallOutOptions } from "../interface/calloutOptions";
+import { ICallOutOptions } from "@/interface/calloutOptions";
 
 interface CoachDetailProps {
   params: {

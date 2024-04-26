@@ -46,8 +46,8 @@ const headerItems = [
   { name: "Username" },
   { name: "Role" },
   { name: "Email" },
-  { name: "Status" },
   { name: "Created At" },
+  { name: "Status" },
   { name: "Actions" },
 ];
 
@@ -277,27 +277,29 @@ const Dashboard: FC<DashboardProps> = () => {
         <TableCell className="text-center text-sm">
           {item?.email?.toLowerCase()}
         </TableCell>
-        <TableCell className="text-center text-sm">
-          {item?.id === selectedUser && isActivating ? (
-            <div className="text-center flex flex-row justify-center items-center">
-              <Loader2Icon className="mr-1 h-4 w-4 animate-spin" />
-              {item?.isActive ? "Deactivating..." : "Activating..."}
-            </div>
-          ) : (
-            <BadgeCard
-              size="xs"
-              className="cursor-pointer text-sm"
-              color={item?.isActive ? "teal" : "rose"}
-              icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
-              datatype="moderateDecrease"
-            >
-              {item?.isActive ? "Active" : "Deactivated"}
-            </BadgeCard>
-          )}
-        </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             {formatDate(new Date(item?.createdAt), "MMMM dd yyyy")}
+          </div>
+        </TableCell>
+        <TableCell className="text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {item?.id === selectedUser && isActivating ? (
+              <div className="text-center flex flex-row justify-center items-center">
+                <Loader2Icon className="mr-1 h-4 w-4 animate-spin" />
+                {item?.isActive ? "Deactivating..." : "Activating..."}
+              </div>
+            ) : (
+              <BadgeCard
+                size="xs"
+                className="cursor-pointer text-sm"
+                color={item?.isActive ? "teal" : "rose"}
+                icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
+                datatype="moderateDecrease"
+              >
+                {item?.isActive ? "Active" : "Deactivated"}
+              </BadgeCard>
+            )}
           </div>
         </TableCell>
         <TableCell className="text-sm">

@@ -279,22 +279,24 @@ const Users: FC<UsersProps> = ({}) => {
         <TableCell className="text-center text-sm">
           {item?.email.toLowerCase()}
         </TableCell>
-        <TableCell className="text-center text-sm">
-          {item?.id === selectedUser && isActivating ? (
-            <div className="text-center flex flex-row justify-center items-center">
-              <Loader2Icon className="mr-1 h-4 w-4 animate-spin" />
-              {item?.isActive ? "Deactivating..." : "Activating..."}
-            </div>
-          ) : (
-            <BadgeCard
-              size="xs"
-              color={item?.isActive ? "teal" : "rose"}
-              icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
-              datatype="moderateDecrease"
-            >
-              {item?.isActive ? "Active" : "Deactivated"}
-            </BadgeCard>
-          )}
+        <TableCell className="text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {item?.id === selectedUser && isActivating ? (
+              <div className="text-center flex flex-row justify-center items-center">
+                <Loader2Icon className="mr-1 h-4 w-4 animate-spin" />
+                {item?.isActive ? "Deactivating..." : "Activating..."}
+              </div>
+            ) : (
+              <BadgeCard
+                size="xs"
+                color={item?.isActive ? "teal" : "rose"}
+                icon={item?.isActive ? StatusOnlineIcon : StatusOfflineIcon}
+                datatype="moderateDecrease"
+              >
+                {item?.isActive ? "Active" : "Deactivated"}
+              </BadgeCard>
+            )}
+          </div>
         </TableCell>
         <TableCell className="text-sm">
           <div className="text-right w-100 flex flex-row items-center justify-center">
