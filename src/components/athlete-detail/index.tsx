@@ -706,8 +706,18 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
       title: "Username:",
       content: `@${athleteData?.username}` || "N/A",
     },
+    {
+      title: "UpdatedAt:",
+      content:
+        `${
+          athleteData?.updatedAt
+            ? formatDate(new Date(athleteData?.updatedAt), "MMMM dd yyyy")
+            : ""
+        }` || "N/A",
+    },
   ];
 
+  console.log("athleteData", athleteData);
   return (
     <main className="w-full h-full relative">
       <Button

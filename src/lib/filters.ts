@@ -60,7 +60,6 @@ export const athleteFilter = [
   // },
 ];
 
-
 export const coachFilter = [
   {
     id: 1,
@@ -120,7 +119,6 @@ export const coachFilter = [
   //   },
   // },
 ];
-
 
 export const fanFilter = [
   {
@@ -217,7 +215,6 @@ export const usersFilter = [
           },
         },
       },
-      
     },
   },
   {
@@ -231,7 +228,6 @@ export const usersFilter = [
           },
         },
       },
-      
     },
   },
   {
@@ -245,7 +241,6 @@ export const usersFilter = [
           },
         },
       },
-      
     },
   },
   // {
@@ -263,8 +258,6 @@ export const usersFilter = [
   // },
 ];
 
-
-
 export const athleteHeaderItems = [
   { name: "Name" },
   { name: "Username" },
@@ -274,5 +267,6 @@ export const athleteHeaderItems = [
   { name: "Verified" },
   { name: "Featured" },
   { name: "Created At" },
+  { name: "Updated At" },
   { name: "Actions" },
 ];

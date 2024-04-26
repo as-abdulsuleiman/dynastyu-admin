@@ -36,6 +36,7 @@ const headerItems = [
   { name: "Email" },
   { name: "Verified" },
   { name: "Created At" },
+  { name: "Updated At" },
   { name: "Actions" },
 ];
 
@@ -232,6 +233,11 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
         <TableCell className="text-center text-sm">
           <div>
             {item.createdAt ? formatDate(item?.createdAt, "dd MMM yyyy") : ""}
+          </div>
+        </TableCell>
+        <TableCell className="text-center text-sm">
+          <div>
+            {item.updatedAt ? formatDate(item?.updatedAt, "dd MMM yyyy") : ""}
           </div>
         </TableCell>
         <TableCell className="text-center cursor-pointer text-sm">

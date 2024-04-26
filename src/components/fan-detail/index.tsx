@@ -341,7 +341,18 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
       title: "Username:",
       content: `@${fanData?.user?.username}` || "N/A",
     },
+    {
+      title: "Updated at:",
+      content:
+        `${
+          fanData?.user?.updatedAt
+            ? formatDate(new Date(fanData?.user?.updatedAt))
+            : ""
+        }` || "N/A",
+    },
   ];
+
+  console.log("fanDsta", fanData);
 
   return (
     <main className="w-full h-full relative">

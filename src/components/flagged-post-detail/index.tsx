@@ -17,6 +17,7 @@ import { Separator } from "../ui/separator";
 import { generateProfilePath } from "@/lib/helpers";
 import ContentHeader from "../content-header";
 import CardContainer from "../card-container";
+import { formatDate } from "@/lib/utils";
 
 interface FlaggedPostDetailProps {
   params: {
@@ -96,6 +97,36 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
     );
   };
 
+  const subHeaderItems = [
+    {
+      title: "Created at:",
+      content:
+        `${
+          data?.postFlag?.createdAt
+            ? formatDate(new Date(data?.postFlag?.createdAt))
+            : ""
+        }` || "N/A",
+    },
+    {
+      title: "Updated at:",
+      content:
+        `${
+          data?.postFlag?.updatedAt
+            ? formatDate(new Date(data?.postFlag?.updatedAt))
+            : ""
+        }` || "N/A",
+    },
+    {
+      title: "Posted at:",
+      content:
+        `${
+          data?.postFlag?.post?.createdAt
+            ? formatDate(new Date(data?.postFlag?.post?.createdAt))
+            : ""
+        }` || "N/A",
+    },
+  ];
+
   const isImageType =
     data?.postFlag?.post?.videos && data?.postFlag?.post?.videos?.length;
   return (
@@ -114,7 +145,8 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
             // icon={
             //   <FlagOffIcon className="h-4 w-4 ml-2 stroke-gray-700 dark:stroke-white" />
             // }
-            subHeader="Flagged Post Details"
+            // subHeader="Flagged Post Details"
+            subItems={subHeaderItems}
           />
         </div>
       </div>

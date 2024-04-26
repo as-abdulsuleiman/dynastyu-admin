@@ -145,13 +145,13 @@ query getAthleteSkillTypes(
       secondValue
       value
       athleteId
-       athlete {
+      athlete {
         id
         userId
       }
       verified
       createdAt
-      skillHistory{
+      skillHistory {
         id
         value
         secondValue
@@ -173,7 +173,7 @@ query getAthleteSkillTypes(
         createdAt
         updatedAt
         dateOfVerfication
-        camp{
+        camp {
           id
           name
         }
@@ -205,6 +205,7 @@ query getSkillTypes(
     unit
     options
     createdAt
+    updatedAt
     position
     numberOfVideos
     secondFieldName
@@ -223,6 +224,7 @@ query getSkillTypes(
       athleteId
       verified
       createdAt
+      updatedAt
       skillId
       skillHistory {
         id
@@ -258,6 +260,7 @@ query getSkillType($where: SkillTypeWhereUniqueInput!) {
     secondValueOptions
     videosLabels
     createdAt
+    updatedAt
     position
     icon
     isPrimaryForRecruitment
@@ -274,7 +277,7 @@ query getSkillHistories(
   $take: Int
   $skip: Int
   $distinct: [SkillHistoryScalarFieldEnum!]
-){
+) {
   skillHistories(
     where: $where
     orderBy: $orderBy
@@ -282,8 +285,8 @@ query getSkillHistories(
     skip: $skip
     distinct: $distinct
     cursor: $cursor
-  ){
-     id
+  ) {
+    id
     uuid
     createdAt
     updatedAt
@@ -294,7 +297,7 @@ query getSkillHistories(
     verified
     verifiedAt
     athleteId
-    skill{
+    skill {
       id
       value
       secondValue
@@ -302,7 +305,7 @@ query getSkillHistories(
       verified
       createdAt
       updatedAt
-      skillType{
+      skillType {
         id
         uuid
         name

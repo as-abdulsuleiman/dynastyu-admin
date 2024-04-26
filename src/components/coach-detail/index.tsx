@@ -38,6 +38,7 @@ import {
   UserIcon,
 } from "@/components/Icons";
 import UserAvatar from "@/components/user-avatar";
+import { formatDate } from "@/lib/utils";
 import TooltipCard from "@/components/tooltip-card";
 import { useToast } from "@/hooks/use-toast";
 import MenubarCard from "@/components/menubar";
@@ -662,6 +663,20 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                   //   <Icons.whistle className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
                   // }
                   subHeader={formattedCoachTitle}
+                  subItems={[
+                    {
+                      title: "Updated at:",
+                      content:
+                        `${
+                          coachData?.updatedAt
+                            ? formatDate(
+                                new Date(coachData?.updatedAt),
+                                "MMMM dd yyyy"
+                              )
+                            : ""
+                        }` || "N/A",
+                    },
+                  ]}
                 />
               </div>
             </div>

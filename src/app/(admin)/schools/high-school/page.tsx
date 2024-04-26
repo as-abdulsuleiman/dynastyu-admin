@@ -36,6 +36,7 @@ const headerItems = [
   { name: "School Type" },
   { name: "Email" },
   { name: "Created At" },
+  { name: "Updated At" },
   { name: "Action" },
 ];
 
@@ -295,6 +296,13 @@ const Schools: FC<SchoolsProps> = ({}) => {
           <div className="text-right w-100 flex flex-row items-center justify-center">
             {item?.createdAt
               ? formatDate(new Date(item?.createdAt), "MMMM dd yyyy")
+              : ""}
+          </div>
+        </TableCell>
+        <TableCell className="text-center cursor-pointer text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {item?.createdAt
+              ? formatDate(new Date(item?.updatedAt), "MMMM dd yyyy")
               : ""}
           </div>
         </TableCell>

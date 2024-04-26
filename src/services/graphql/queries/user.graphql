@@ -13,6 +13,7 @@ fragment UserCommonParts on User {
   firebaseUid
   city
   state
+  updatedAt
   createdAt
   country {
     name
@@ -60,6 +61,7 @@ fragment UserCommonParts on User {
     coachContactPhoneNumber
     coachContactTitle
     createdAt
+    updatedAt
     playerCardUrl
     verified
     gpa

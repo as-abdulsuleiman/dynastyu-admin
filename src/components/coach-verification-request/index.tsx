@@ -58,6 +58,7 @@ const headerItems = [
   { name: "Email" },
   { name: "Coach Title" },
   { name: "Created At" },
+  { name: "Updated At" },
   { name: "Verified" },
   { name: "Actions" },
 ];
@@ -461,6 +462,11 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
         <TableCell className="text-center text-sm">
           <div>
             {item?.createdAt ? formatDate(item?.createdAt, "dd MMM yyyy") : ""}
+          </div>
+        </TableCell>
+        <TableCell className="text-center text-sm">
+          <div>
+            {item?.updatedAt ? formatDate(item?.updatedAt, "dd MMM yyyy") : ""}
           </div>
         </TableCell>
         <TableCell className="text-center text-sm">

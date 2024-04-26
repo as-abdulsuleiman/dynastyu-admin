@@ -257,6 +257,7 @@ query getPostFlag($where: PostFlagWhereUniqueInput!) {
       caption
       visibility
       createdAt
+      updatedAt
       videosAspectRatio
       user {
         id
