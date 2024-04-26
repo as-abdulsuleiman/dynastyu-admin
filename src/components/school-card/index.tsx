@@ -38,7 +38,7 @@ import UsersAnalytics from "@/components/analytics/users";
 import CalloutCard from "../callout";
 import CardContainer from "../card-container";
 import { renderLoader } from "@/lib/loader-helper";
-import { ICallOutOptions } from "../interface/calloutOptions";
+import { CalloutCardProps } from "../interface/calloutOptions";
 
 interface SchoolCardProps {
   loading?: boolean;
@@ -236,7 +236,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
     },
   ];
 
-  const calloutOptions: ICallOutOptions[] = [
+  const calloutOptions: CalloutCardProps[] = [
     {
       color: "teal",
       type: "string",
@@ -341,7 +341,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   const renderCallout = () => {
     return (
       <>
-        {calloutOptions?.map((item: ICallOutOptions, id) => {
+        {calloutOptions?.map((item: CalloutCardProps, id) => {
           return (
             <div key={id}>
               <CalloutCard

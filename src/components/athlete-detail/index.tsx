@@ -62,7 +62,7 @@ import ContentHeader from "../content-header";
 import CardContainer from "../card-container";
 import AthleteSkillCard from "../athlete-skill-card";
 import { renderLoader } from "@/lib/loader-helper";
-import { ICallOutOptions } from "../interface/calloutOptions";
+import { CalloutCardProps } from "../interface/calloutOptions";
 interface AthleteDetailProps {
   params: {
     id: number;
@@ -462,7 +462,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     return formattedName;
   }, [athleteData?.athleteProfile]);
 
-  const calloutOptions: ICallOutOptions[] = [
+  const calloutOptions: CalloutCardProps[] = [
     {
       color: "teal",
       type: "string",
@@ -572,19 +572,18 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
   const renderCallout = () => {
     return (
       <>
-        {calloutOptions?.map((item: ICallOutOptions, id) => {
+        {calloutOptions?.map((item: CalloutCardProps, id: number) => {
           return (
-            <div key={id}>
-              <CalloutCard
-                color={item?.color as any}
-                type={item?.type}
-                title={item?.title}
-                className={item?.className}
-                icon={() => <>{item?.icon}</>}
-                content={item?.content}
-                flagUrl={item?.flagUrl}
-              />
-            </div>
+            <CalloutCard
+              key={id}
+              color={item?.color as any}
+              type={item?.type}
+              title={item?.title}
+              className={item?.className}
+              icon={() => <>{item?.icon}</>}
+              content={item?.content}
+              flagUrl={item?.flagUrl}
+            />
           );
         })}
         {socialAccounts?.map((val, index) => {
@@ -593,7 +592,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               key={index}
               className="mt-4 min-h-[75px]"
               title={val?.name}
-              icon={() => <> {val?.icon}</>}
+              icon={() => <>{val?.icon}</>}
               color="teal"
               type="link"
               content={val?.link}

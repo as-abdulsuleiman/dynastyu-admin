@@ -61,7 +61,7 @@ import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
 import CardContainer from "../card-container";
 import { renderLoader } from "@/lib/loader-helper";
-import { ICallOutOptions } from "../interface/calloutOptions";
+import { CalloutCardProps } from "../interface/calloutOptions";
 
 interface CoachDetailProps {
   params: {
@@ -445,7 +445,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     return formattedTitle;
   }, [coachData?.coachProfile]);
 
-  const calloutOptions: ICallOutOptions[] = [
+  const calloutOptions: CalloutCardProps[] = [
     {
       color: "teal",
       type: "string",
@@ -516,7 +516,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   const renderCallout = () => {
     return (
       <>
-        {calloutOptions?.map((item: ICallOutOptions, id) => {
+        {calloutOptions?.map((item, id) => {
           return (
             <div key={id}>
               <CalloutCard
