@@ -446,7 +446,6 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     return formattedTitle;
   }, [coachData?.coachProfile]);
 
-  console.log("coachData", coachData);
   const calloutOptions: CalloutCardProps[] = [
     {
       color: "teal",
