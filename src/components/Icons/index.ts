@@ -69,3 +69,4 @@ export { default as VerifiedIcon } from "./verified";
 export { default as WarehouseIcon } from "./warehouse";
 export { default as WhistleIcon } from "./whistle";
 export { default as UserIcon } from "./user";
+export { default as RefreshIcon } from "./refresh";

@@ -724,7 +724,6 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     },
   ];
 
-  console.log("athleteData", athleteData);
   return (
     <main className="w-full h-full relative">
       <Button

@@ -278,8 +278,8 @@ const RenderEditSkillModal = ({
   };
 
   const handleSubmit = async () => {
+    setIsSubmiting(true);
     try {
-      setIsSubmiting(true);
       const { videos: newUploadedVideo } = await uploadFiles([], newVideos, []);
       if (skillData?.id) {
         const resp = await updateSkill({

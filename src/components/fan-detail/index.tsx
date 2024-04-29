@@ -261,7 +261,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
     {
       color: "teal",
       type: "string",
-      title: "city",
+      title: "City",
       className: "mt-4",
       icon: () => (
         <LocateFixedIcon className="h-[20px] w-[20px] mr-2" color="teal" />
@@ -352,8 +352,6 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
         }` || "N/A",
     },
   ];
-
-  console.log("fanDsta", fanData);
 
   return (
     <main className="w-full h-full relative">
