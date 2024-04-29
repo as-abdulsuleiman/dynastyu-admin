@@ -446,6 +446,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     return formattedTitle;
   }, [coachData?.coachProfile]);
 
+  console.log("coachData", coachData);
   const calloutOptions: CalloutCardProps[] = [
     {
       color: "teal",
@@ -480,6 +481,18 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
         <SchoolIcon className="h-[19px] w-[19px] mr-2" color="teal" />
       ),
       content: formattedSchoolName,
+    },
+    {
+      color: "teal",
+      type: "string",
+      title: "Date of Birth",
+      className: "mt-4",
+      icon: () => (
+        <SchoolIcon className="h-[19px] w-[19px] mr-2" color="teal" />
+      ),
+      content: coachData?.dob
+        ? formatDate(new Date(coachData?.dob), "MMMM dd yyyy")
+        : "",
     },
     {
       color: "teal",
