@@ -36,6 +36,7 @@ import {
   BadgeAlertIcon,
   WhistleIcon,
   UserIcon,
+  CakeIcon,
 } from "@/components/Icons";
 import UserAvatar from "@/components/user-avatar";
 import { formatDate } from "@/lib/utils";
@@ -466,6 +467,14 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     {
       color: "teal",
       type: "string",
+      title: "Date of Birth",
+      className: "mt-4 min-h-[75px]",
+      icon: () => <CakeIcon className="h-[19px] w-[19px] mr-2" color="teal" />,
+      content: coachData?.dob && formatDate(coachData?.dob),
+    },
+    {
+      color: "teal",
+      type: "string",
       title: "Coach Title",
       className: "mt-4",
       icon: () => <TagsIcon className="h-[20px] w-[20px] mr-2" color="teal" />,
@@ -481,6 +490,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       ),
       content: formattedSchoolName,
     },
+
     {
       color: "teal",
       type: "flag",

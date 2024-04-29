@@ -27,4 +27,6 @@ const firebaseApp = app;
 const projectAuth = getAuth(app);
 const db = getFirestore(app);
 const projectStorage = getStorage(app);
-export { projectStorage, db, projectAuth, ref, firebaseApp,};
+const uploadBucket = getStorage(app, "gs://dynastyu-files");
+const readBucket = getStorage(app, "gs://dynastyu-9de03.appspot.com");
+export { projectStorage, db, projectAuth, ref, firebaseApp, uploadBucket, readBucket};
