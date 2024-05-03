@@ -176,22 +176,22 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       ),
     },
 
-    // {
-    //   name: "Notifications",
-    //   hasFill: false,
-    //   path: "/notifications",
-    //   hasBadge: false,
-    //   count: 0,
-    //   // items: [
-    //   //   {
-    //   //     name: "Create Fan",
-    //   //     path: "/fans/new",
-    //   //   },
-    //   // ],
-    //   icon: ({ className, color }: IconProps) => (
-    //     <Bell className={className} color={color} />
-    //   ),
-    // },
+    {
+      name: "Notifications",
+      hasFill: false,
+      path: "/notifications",
+      hasBadge: false,
+      count: 0,
+      // items: [
+      //   {
+      //     name: "Create Fan",
+      //     path: "/fans/new",
+      //   },
+      // ],
+      icon: ({ className, color }: IconProps) => (
+        <Bell className={className} color={color} />
+      ),
+    },
 
     {
       name: "Settings",

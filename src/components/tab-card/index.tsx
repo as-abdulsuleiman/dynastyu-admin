@@ -2,11 +2,13 @@
 
 import { FC } from "react";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@tremor/react";
+import { cn } from "@/lib/utils";
 
 interface TabCardProps {
-  variant?: "solid" | "line";
   tabs: Tabs[];
+  variant?: "solid" | "line";
   tabContent: TabContent[];
+  className?: string;
 }
 
 type TabContent = {
@@ -17,14 +19,22 @@ type Tabs = {
   name: string;
 };
 
-const TabCard: FC<TabCardProps> = ({ variant = "line", tabs, tabContent }) => {
+const TabCard: FC<TabCardProps> = ({
+  variant = "line",
+  tabs,
+  tabContent,
+  className,
+}) => {
   return (
     <TabGroup defaultIndex={0}>
       <TabList className="mt-8" color="teal" defaultValue={0} variant={variant}>
         {tabs?.map((tab: Tabs, index: number) => {
           return (
             <Tab
-              className=" ui-selected:text-accent-foreground dark:ui-selected:text-accent-foreground"
+              className={cn(
+                "ui-selected:text-accent-foreground dark:ui-selected:text-accent-foreground font-TTHovesDemiBold",
+                className
+              )}
               value={index}
               key={index}
             >
