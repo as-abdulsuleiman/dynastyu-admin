@@ -62,6 +62,25 @@ query getSchools(
     distinct: $distinct
   ) {
     ...SchoolCommonParts
+    athletes {
+      userId
+      id
+      user {
+        firstname
+        surname
+        id
+      }
+    }
+    coaches {
+      userId
+      id
+      title
+      user {
+        firstname
+        surname
+        id
+      }
+    }
   }
 }
 

@@ -1,6 +1,6 @@
 /** @format */
 
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,6 +9,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogOverlay,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Loader2Icon } from "../Icons";
@@ -20,6 +21,7 @@ interface PromptAlertProps {
   handleHidePrompt: () => void;
   handleConfirmPrompt?: () => void;
   loading?: boolean;
+  customElement?: ReactNode;
 }
 
 const PromptAlert: FC<PromptAlertProps> = ({
@@ -29,6 +31,7 @@ const PromptAlert: FC<PromptAlertProps> = ({
   showPrompt,
   handleHidePrompt,
   handleConfirmPrompt,
+  customElement,
 }) => {
   return (
     <AlertDialog defaultOpen={false} open={showPrompt}>
@@ -42,6 +45,11 @@ const PromptAlert: FC<PromptAlertProps> = ({
               "This action cannot be undone. This will permanently delete your account and remove your data from our servers."}
           </AlertDialogDescription>
         </AlertDialogHeader>
+
+        <div>
+          {customElement ? <div className="w-full">{customElement}</div> : null}
+        </div>
+
         <AlertDialogFooter className="flex flex-row items-end ml-auto">
           <AlertDialogCancel disabled={loading} onClick={handleHidePrompt}>
             Cancel

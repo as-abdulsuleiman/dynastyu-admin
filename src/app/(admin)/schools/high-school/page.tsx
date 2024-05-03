@@ -3,7 +3,7 @@
 "use client";
 
 import { FC, useMemo, useState } from "react";
-import { MoreHorizontalIcon, SchoolIcon } from "@/components/Icons";
+import { CheckIcon, MoreHorizontalIcon, SchoolIcon } from "@/components/Icons";
 import {
   GetSchoolsQuery,
   QueryMode,
@@ -27,9 +27,11 @@ import { SearchInput } from "@/components/search-input";
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
 import MenubarCard from "@/components/menubar";
-import { formatDate } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import PromptAlert from "@/components/prompt-alert";
 import ContentHeader from "@/components/content-header";
+import { CommandItem } from "@/components/ui/command";
+import ComboBoxCard from "@/components/combobox-card";
 
 const headerItems = [
   { name: "Name" },
@@ -52,7 +54,10 @@ const Schools: FC<SchoolsProps> = ({}) => {
   const [getSchool] = useGetSchoolLazyQuery();
   const [isDeletingSchool, setIsDeletingSchool] = useState(false);
   const [openDeleteSchoolPrompt, setOpenDeleteSchoolPrompt] = useState(false);
-  const [activeSchool, setActiveSchool] = useState({});
+  const [activeSchool, setActiveSchool] = useState<any>({});
+  const [openSchool, setOpenSchool] = useState<boolean>(false);
+  const [selectedSchool, setSelectedSchool] = useState<any | number>({});
+  const [searchValue, setSearchValue] = useState<string>("");
 
   const {
     data: schools,
@@ -147,43 +152,6 @@ const Schools: FC<SchoolsProps> = ({}) => {
   const handleConfirmPrompt = async (school: any) => {
     try {
       setIsDeletingSchool(true);
-      const { data: schoolData } = await getSchool({
-        variables: {
-          where: {
-            id: school?.id,
-          },
-        },
-      });
-      const athletesInterestedId = schoolData?.school?.athletesInterested?.map(
-        (val: any) => ({
-          athleteId_schoolId: {
-            athleteId: val?.athleteId,
-            schoolId: school?.id,
-          },
-        })
-      );
-
-      const athletesRecruitedId = schoolData?.school?.athletesRecruited?.map(
-        (val: any) => ({
-          athleteId_schoolId: {
-            athleteId: val?.athleteId,
-            schoolId: school?.id,
-          },
-        })
-      );
-      const athletesProspectedId = schoolData?.school?.athletesProspected?.map(
-        (val: any) => ({
-          athleteId_schoolId: {
-            athleteId: val?.athleteId,
-            schoolId: school?.id,
-          },
-        })
-      );
-      const schoolPostId = schoolData?.school?.posts?.map((val: any) => ({
-        id: {
-          in: val?.id,
-        },
-      }));
 
       const athletesId = school?.athletes?.map((val: any) => ({
         userId: val?.userId,
@@ -193,41 +161,40 @@ const Schools: FC<SchoolsProps> = ({}) => {
         userId: val?.userId,
       }));
 
-      await updateSchool({
+      const res = await updateSchool({
         variables: {
           where: {
-            id: school?.id,
+            id: selectedSchool?.id,
           },
           data: {
-            athletesProspected: {
-              disconnect: athletesProspectedId || [],
-            },
-            athletesRecruited: {
-              disconnect: athletesRecruitedId || [],
-            },
-            athletesInterested: {
-              disconnect: athletesInterestedId || [],
-            },
-            posts: {
-              deleteMany: schoolPostId || [],
-            },
             athletes: {
-              disconnect: athletesId || [],
+              connect: athletesId || [],
             },
             coaches: {
-              disconnect: coachesId || [],
+              connect: coachesId || [],
             },
           },
         },
       });
-      await deleteSchool({
-        variables: {
-          where: {
-            id: schoolData?.school?.id,
+
+      if (res?.data?.updateOneSchool) {
+        const response = await deleteSchool({
+          variables: {
+            where: {
+              id: school?.id,
+            },
           },
-        },
-      });
-      refetch();
+        });
+
+        if (response?.data?.deleteOneSchool) {
+          toast({
+            title: "School successfully Deleted.",
+            description: `${school?.name} has been successfully deleted`,
+            variant: "successfull",
+          });
+        }
+        refetch();
+      }
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -238,6 +205,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
       });
     } finally {
       setActiveSchool({});
+      setSelectedSchool({});
       setIsDeletingSchool(false);
       setOpenDeleteSchoolPrompt(false);
     }
@@ -245,6 +213,107 @@ const Schools: FC<SchoolsProps> = ({}) => {
 
   const handleEditSchool = (item: any) => {
     router.push(`/schools/edit?school=${item?.id}`);
+  };
+
+  const schoolsDataOptions = useMemo(() => {
+    return (
+      schools?.schools.map((school: any) => {
+        let schoolLoaction;
+        if (school) {
+          if (school?.city) {
+            schoolLoaction = school?.city;
+          }
+          if (school?.state) {
+            schoolLoaction = `${schoolLoaction}, ${school?.state}`;
+          }
+        }
+        return {
+          label: `${school?.name}${schoolLoaction ? "," : ""} ${
+            schoolLoaction || ""
+          }`,
+          value: school?.name,
+          id: school?.id,
+          logo: school?.logo,
+          city: school?.city,
+          state: school?.state,
+        };
+      }) || []
+    );
+  }, [schools?.schools]);
+
+  const filteredSchoolsData = schoolsDataOptions.filter(
+    (m) => m?.id !== activeSchool?.id
+  );
+
+  const CustomSchoolItems = ({ item, id }: { item: any; id: number }) => {
+    let schoolLoaction;
+    if (item) {
+      if (item?.city) {
+        schoolLoaction = item?.city;
+      }
+      if (item?.state) {
+        schoolLoaction = `${schoolLoaction}, ${item?.state}`;
+      }
+    }
+    return (
+      <CommandItem
+        className="capitalize cursor-pointer"
+        key={item?.id || id}
+        value={selectedSchool}
+        onSelect={() => {
+          setSelectedSchool({ value: item?.value, id: item?.id });
+          setOpenSchool(false);
+        }}
+      >
+        <div className="flex items-center">
+          <UserAvatar
+            fallbackClassName="h-[55px] w-[55px]"
+            className="h-[55px] w-[55px] shadow mr-4 "
+            fallbackType="name"
+            avatar={item?.avatar as string}
+            fallback={`${item?.label?.charAt(0)} `}
+          />
+          <div>
+            <div className="text-sm mb-0.5">{item?.label}</div>
+            <div className="text-sm text-primary">{schoolLoaction || ""}</div>
+          </div>
+        </div>
+        <CheckIcon
+          className={cn(
+            "ml-auto h-4 w-4",
+            selectedSchool?.id === item?.id ? "opacity-100" : "opacity-0"
+          )}
+        />
+      </CommandItem>
+    );
+  };
+
+  const renderSelectSchool = () => {
+    return (
+      <div>
+        <div className="mb-6 w-full ml-auto flex flex-col">
+          <ComboBoxCard
+            valueKey="value"
+            displayKey="label"
+            IdKey="value"
+            label="Select School to Migrate data to"
+            id="school-add"
+            placeholder={"Select School"}
+            isOpen={openSchool}
+            scrollAreaClass="h-72"
+            hasSearch
+            shouldFilter={false}
+            searchValue={searchValue}
+            handleSearch={(search) => setSearchValue(search)}
+            loading={loading}
+            onClose={() => setOpenSchool(!openSchool)}
+            items={filteredSchoolsData as any}
+            selectedValue={selectedSchool}
+            customRenderItems={CustomSchoolItems}
+          />
+        </div>
+      </div>
+    );
   };
 
   const renderItems = ({ item, id }: { item: any; id: any }) => {
@@ -380,7 +449,9 @@ const Schools: FC<SchoolsProps> = ({}) => {
         handleHidePrompt={() => {
           setActiveSchool({});
           setOpenDeleteSchoolPrompt(false);
+          setSelectedSchool({});
         }}
+        customElement={renderSelectSchool()}
         handleConfirmPrompt={() => handleConfirmPrompt(activeSchool)}
       />
     </main>

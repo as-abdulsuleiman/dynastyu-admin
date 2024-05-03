@@ -148,6 +148,7 @@ const Page: FC<PageProps> = ({ params }) => {
       if (res?.data?.updateOneSchool) {
         setPromptStatus(null);
         setSelectedCoach({});
+        await refetchSchool();
         await refetchSchoolCoach({});
         await refetchCoaches({
           where: {
@@ -203,6 +204,7 @@ const Page: FC<PageProps> = ({ params }) => {
       if (response?.data?.updateOneSchool) {
         setPromptStatus(null);
         setSelectedCoach({});
+        await refetchSchool();
         await refetchSchoolCoach({});
         await refetchCoaches({
           where: {

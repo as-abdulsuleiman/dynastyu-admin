@@ -2,12 +2,13 @@
 
 "use client";
 
-import { FC, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { Text } from "@tremor/react";
 import UserAvatar from "../user-avatar";
 import {
   ActivitySquareIcon,
   AthleteIcon,
+  CheckIcon,
   ClipboardEditIcon,
   FileImageIcon,
   FolderDotIcon,
@@ -23,9 +24,13 @@ import {
 } from "../Icons";
 import { Skeleton } from "../ui/skeleton";
 import { useRouter } from "next/navigation";
+import { useDebouncedValue } from "@mantine/hooks";
 import {
   useDeleteSchoolMutation,
+  useGetSchoolsQuery,
   useUpdateSchoolMutation,
+  QueryMode,
+  SortOrder,
 } from "@/services/graphql";
 import { useToast } from "@/hooks/use-toast";
 import MenubarCard from "../menubar";
@@ -39,7 +44,9 @@ import CalloutCard from "../callout";
 import CardContainer from "../card-container";
 import { renderLoader } from "@/lib/loader-helper";
 import { CalloutCardProps } from "@/interface/calloutOptions";
-
+import { CommandItem } from "../ui/command";
+import ComboBoxCard from "../combobox-card";
+import { cn } from "@/lib/utils";
 interface SchoolCardProps {
   loading?: boolean;
   school: any;
@@ -52,8 +59,11 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   const [updateSchool] = useUpdateSchoolMutation();
   const [isDeletingSchool, setIsDeletingSchool] = useState(false);
   const [openDeleteSchoolPrompt, setOpenDeleteSchoolPrompt] = useState(false);
+  const [searchValue, setSearchValue] = useState<string>("");
   const [viewAnalytics, setViewAnalytics] = useState(false);
-
+  const [openSchool, setOpenSchool] = useState<boolean>(false);
+  const [selectedSchool, setSelectedSchool] = useState<any | number>({});
+  const [debounced] = useDebouncedValue(searchValue, 300);
   const isHighSchoolType = school?.schoolType?.name === "High School" ?? false;
 
   const dataList: any = [
@@ -124,37 +134,28 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
     // },
   ];
 
+  const { data: schoolsData, loading: loadingSchools } = useGetSchoolsQuery({
+    variables: {
+      where: {
+        id: {
+          not: {
+            equals: school?.id,
+          },
+        },
+        OR: [
+          { name: { contains: debounced, mode: QueryMode.Insensitive } },
+          { email: { contains: debounced, mode: QueryMode.Insensitive } },
+        ],
+      },
+      take: 10,
+      orderBy: {
+        createdAt: SortOrder.Desc,
+      },
+    },
+  });
+
   const handleConfirmPrompt = async (school: any) => {
     setIsDeletingSchool(true);
-    const athletesInterestedId =
-      school?.school?.athletesInterested?.map((val: any) => ({
-        athleteId_schoolId: {
-          athleteId: val?.athleteId,
-          schoolId: school?.id,
-        },
-      })) || [];
-
-    const athletesRecruitedId =
-      school?.school?.athletesRecruited?.map((val: any) => ({
-        athleteId_schoolId: {
-          athleteId: val?.athleteId,
-          schoolId: school?.id,
-        },
-      })) || [];
-
-    const athletesProspectedId =
-      school?.school?.athletesProspected?.map((val: any) => ({
-        athleteId_schoolId: {
-          athleteId: val?.athleteId,
-          schoolId: school?.id,
-        },
-      })) || [];
-    const schoolPostId =
-      school?.school?.posts?.map((val: any) => ({
-        id: {
-          in: val?.id,
-        },
-      })) || [];
 
     const athletesId =
       school?.athletes?.map((val: any) => ({
@@ -165,45 +166,45 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       school?.coaches?.map((val: any) => ({
         userId: val?.userId,
       })) || [];
+
     try {
-      await updateSchool({
+      const res = await updateSchool({
         variables: {
           where: {
-            id: school?.id,
+            id: selectedSchool?.id,
           },
           data: {
-            athletesProspected: {
-              disconnect: athletesProspectedId,
-            },
-            athletesRecruited: {
-              disconnect: athletesRecruitedId,
-            },
-            athletesInterested: {
-              disconnect: athletesInterestedId,
-            },
-            posts: {
-              deleteMany: schoolPostId,
-            },
             athletes: {
-              disconnect: athletesId,
+              connect: athletesId,
             },
             coaches: {
-              disconnect: coachesId,
+              connect: coachesId,
             },
           },
         },
       });
 
-      await deleteSchool({
-        variables: {
-          where: {
-            id: school?.id,
+      if (res?.data?.updateOneSchool) {
+        const response = await deleteSchool({
+          variables: {
+            where: {
+              id: school?.id,
+            },
           },
-        },
-      });
-      router.push(
-        isHighSchoolType ? `/schools/high-school` : `/schools/college`
-      );
+        });
+
+        if (response?.data?.deleteOneSchool) {
+          toast({
+            title: "School successfully Deleted.",
+            description: `${school?.name} has been successfully deleted`,
+            variant: "successfull",
+          });
+
+          router.push(
+            isHighSchoolType ? `/schools/high-school` : `/schools/college`
+          );
+        }
+      }
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -219,6 +220,103 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   };
   const handleDeleteSchoolPrompt = () => {
     setOpenDeleteSchoolPrompt(true);
+  };
+
+  const schoolsDataOptions = useMemo(() => {
+    return (
+      schoolsData?.schools.map((school: any) => {
+        let schoolLoaction;
+        if (school) {
+          if (school?.city) {
+            schoolLoaction = school?.city;
+          }
+          if (school?.state) {
+            schoolLoaction = `${schoolLoaction}, ${school?.state}`;
+          }
+        }
+        return {
+          label: `${school?.name}${schoolLoaction ? "," : ""} ${
+            schoolLoaction || ""
+          }`,
+          value: school?.name,
+          id: school?.id,
+          logo: school?.logo,
+          city: school?.city,
+          state: school?.state,
+        };
+      }) || []
+    );
+  }, [schoolsData?.schools]);
+
+  const CustomSchoolItems = ({ item, id }: { item: any; id: number }) => {
+    let schoolLoaction;
+    if (item) {
+      if (item?.city) {
+        schoolLoaction = item?.city;
+      }
+      if (item?.state) {
+        schoolLoaction = `${schoolLoaction}, ${item?.state}`;
+      }
+    }
+    return (
+      <CommandItem
+        className="capitalize cursor-pointer"
+        key={item?.id || id}
+        value={selectedSchool}
+        onSelect={() => {
+          setSelectedSchool({ value: item?.value, id: item?.id });
+          setOpenSchool(false);
+        }}
+      >
+        <div className="flex items-center">
+          <UserAvatar
+            fallbackClassName="h-[55px] w-[55px]"
+            className="h-[55px] w-[55px] shadow mr-4 "
+            fallbackType="name"
+            avatar={item?.avatar as string}
+            fallback={`${item?.label?.charAt(0)} `}
+          />
+          <div>
+            <div className="text-sm mb-0.5">{item?.label}</div>
+            <div className="text-sm text-primary">{schoolLoaction || ""}</div>
+          </div>
+        </div>
+        <CheckIcon
+          className={cn(
+            "ml-auto h-4 w-4",
+            selectedSchool?.id === item?.id ? "opacity-100" : "opacity-0"
+          )}
+        />
+      </CommandItem>
+    );
+  };
+
+  const renderSelectSchool = () => {
+    return (
+      <div>
+        <div className="mb-6 w-full ml-auto flex flex-col">
+          <ComboBoxCard
+            valueKey="value"
+            displayKey="label"
+            IdKey="value"
+            label="Select School to Migrate data to"
+            id="school-add"
+            placeholder={"Select School"}
+            isOpen={openSchool}
+            scrollAreaClass="h-72"
+            hasSearch
+            shouldFilter={false}
+            searchValue={searchValue}
+            handleSearch={(search) => setSearchValue(search)}
+            loading={loadingSchools}
+            onClose={() => setOpenSchool(!openSchool)}
+            items={schoolsDataOptions as any}
+            selectedValue={selectedSchool}
+            customRenderItems={CustomSchoolItems}
+          />
+        </div>
+      </div>
+    );
   };
 
   const dropdownItems = [
@@ -431,7 +529,9 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         showPrompt={openDeleteSchoolPrompt}
         handleHidePrompt={() => {
           setOpenDeleteSchoolPrompt(false);
+          setSelectedSchool({});
         }}
+        customElement={renderSelectSchool()}
         handleConfirmPrompt={() => handleConfirmPrompt(school)}
       />
       <ModalCard
