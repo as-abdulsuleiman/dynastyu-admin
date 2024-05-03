@@ -300,14 +300,13 @@ const Page: FC<PageProps> = ({}) => {
             <>
               <div key={id} className="flex mb-4">
                 <UserAvatar
-                  className="h-[59px] w-[59px] shadow"
+                  className="h-[79px] w-[79px] shadow cursor-pointer"
                   fallbackType="name"
                   avatar={value?.user?.avatar as string}
                   fallback={`${value?.user?.firstname?.charAt(
                     0
                   )} ${value?.user?.surname?.charAt(0)}`}
                 />
-
                 <div className="flex item-center flex-col justify-center  ml-8">
                   <div key={value?.id} className="cursor-pointer mt-2">
                     <span>@{value?.user?.username}</span> has flagged a post
@@ -353,7 +352,7 @@ const Page: FC<PageProps> = ({}) => {
             <>
               <div key={id} className="flex mb-4">
                 <UserAvatar
-                  className="h-[59px] w-[59px] shadow"
+                  className="h-[79px] w-[79px] shadow cursor-pointer"
                   fallbackType="name"
                   avatar={value?.user?.avatar as string}
                   fallback={`${value?.user?.firstname?.charAt(
@@ -448,7 +447,7 @@ const Page: FC<PageProps> = ({}) => {
             <>
               <div key={id} className="flex mb-4 justify-center">
                 <UserAvatar
-                  className="h-[59px] w-[59px] shadow"
+                  className="h-[79px] w-[79px] shadow cursor-pointer"
                   fallbackType="name"
                   avatar={value?.user?.avatar as string}
                   fallback={`${value?.user?.firstname?.charAt(
@@ -528,10 +527,11 @@ const Page: FC<PageProps> = ({}) => {
 
       <Separator className="my-6" />
       <TabCard
+        className="text-lg font-TTHovesDemiBold"
         tabs={[
-          { name: "Flagged Post Notifcations" },
-          { name: "Skill Verfication Notifications" },
-          { name: "Coach Verification Notifications" },
+          { name: "Flagged Post" },
+          { name: "Skill Verfication" },
+          { name: "Coach Verification" },
         ]}
         tabContent={[
           { content: renderFlaggedPostRequest() },
