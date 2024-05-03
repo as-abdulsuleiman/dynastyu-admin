@@ -2,7 +2,7 @@
 
 "use client";
 
-import { NotificationIcon } from "@/components/Icons";
+import { FlagOffIcon, NotificationIcon } from "@/components/Icons";
 import ContentHeader from "@/components/content-header";
 import { FC, useMemo, useState } from "react";
 import { Separator } from "@/components/ui/separator";
@@ -299,14 +299,20 @@ const Page: FC<PageProps> = ({}) => {
           return (
             <>
               <div key={id} className="flex mb-4">
-                <UserAvatar
-                  className="h-[79px] w-[79px] shadow cursor-pointer"
-                  fallbackType="name"
-                  avatar={value?.user?.avatar as string}
-                  fallback={`${value?.user?.firstname?.charAt(
-                    0
-                  )} ${value?.user?.surname?.charAt(0)}`}
-                />
+                <div className="relative">
+                  <UserAvatar
+                    className="h-[79px] w-[79px] shadow cursor-pointer"
+                    fallbackType="name"
+                    avatar={value?.user?.avatar as string}
+                    fallback={`${value?.user?.firstname?.charAt(
+                      0
+                    )} ${value?.user?.surname?.charAt(0)}`}
+                  />
+                  <div className="absolute right-[-2px] bottom-1.5 z-10 bg-[#FF4747] h-6 w-6 rounded-full flex flex-row items-center justify-center">
+                    <FlagOffIcon className="h-4 w-4" color="#fff" />
+                  </div>
+                  <div className="absolute h-[20px] rounded-full w-[20px] bg-primary top-1 border border-1 left-0"></div>
+                </div>
                 <div className="flex item-center flex-col justify-center  ml-8">
                   <div key={value?.id} className="cursor-pointer mt-2">
                     <span>@{value?.user?.username}</span> has flagged a post
@@ -351,14 +357,17 @@ const Page: FC<PageProps> = ({}) => {
           return (
             <>
               <div key={id} className="flex mb-4">
-                <UserAvatar
-                  className="h-[79px] w-[79px] shadow cursor-pointer"
-                  fallbackType="name"
-                  avatar={value?.user?.avatar as string}
-                  fallback={`${value?.user?.firstname?.charAt(
-                    0
-                  )} ${value?.user?.surname?.charAt(0)}`}
-                />
+                <div className="relative">
+                  <UserAvatar
+                    className="h-[79px] w-[79px] shadow cursor-pointer"
+                    fallbackType="name"
+                    avatar={value?.user?.avatar as string}
+                    fallback={`${value?.user?.firstname?.charAt(
+                      0
+                    )} ${value?.user?.surname?.charAt(0)}`}
+                  />
+                  <div className="absolute h-[20px] rounded-full w-[20px] bg-primary top-1 border border-1 left-0"></div>
+                </div>
 
                 <div className="flex item-center flex-col justify-center  ml-8">
                   <div key={value?.id} className="cursor-pointer">
@@ -446,14 +455,17 @@ const Page: FC<PageProps> = ({}) => {
           return (
             <>
               <div key={id} className="flex mb-4 justify-center">
-                <UserAvatar
-                  className="h-[79px] w-[79px] shadow cursor-pointer"
-                  fallbackType="name"
-                  avatar={value?.user?.avatar as string}
-                  fallback={`${value?.user?.firstname?.charAt(
-                    0
-                  )} ${value?.user?.surname?.charAt(0)}`}
-                />
+                <div className="relative">
+                  <UserAvatar
+                    className="h-[79px] w-[79px] shadow cursor-pointer"
+                    fallbackType="name"
+                    avatar={value?.user?.avatar as string}
+                    fallback={`${value?.user?.firstname?.charAt(
+                      0
+                    )} ${value?.user?.surname?.charAt(0)}`}
+                  />
+                  <div className="absolute h-[20px] rounded-full w-[20px] bg-primary top-1 border border-1 left-0"></div>
+                </div>
 
                 <div className="flex item-center flex-col justify-center ml-8">
                   <div key={value?.id} className="cursor-pointer">
