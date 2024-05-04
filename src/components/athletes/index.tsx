@@ -21,6 +21,7 @@ import {
   QueryMode,
   SortOrder,
   useDeleteAthleteMutation,
+  useDeleteFirebaseUserMutation,
   useDeleteUserMutation,
   useGetUsersLazyQuery,
   useGetUsersQuery,
@@ -43,6 +44,7 @@ import ContentHeader from "../content-header";
 import { athleteFilter, athleteHeaderItems } from "@/lib/filters";
 import MultiSelector from "../multi-selector";
 import { getURLParams } from "@/lib/helpers";
+import PromptAlert from "../prompt-alert";
 
 interface AthletesProps {}
 
@@ -58,9 +60,12 @@ const Athletes: FC<AthletesProps> = ({}) => {
   const [value, setValue] = useState<string>("");
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
+  const [ActiveUser, setActiveUser] = useState<any>({});
+  const [deletingProfile, setDeletingProfile] = useState<boolean>(false);
   const [debounced] = useDebouncedValue(value, 300);
   const [updateAthlete] = useUpdateAthleteMutation();
   const [deleteUser] = useDeleteUserMutation();
+  const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
   const [deleteAthlete] = useDeleteAthleteMutation();
   const [getUsers] = useGetUsersLazyQuery();
   const [getAthletes] = useGetUsersLazyQuery();
@@ -122,43 +127,50 @@ const Athletes: FC<AthletesProps> = ({}) => {
     return lastPostInResults?.id;
   }, [athleteData?.users]);
 
-  const handleDeleteAthlete = async (item: any) => {
+  const handleDeleteAthleteConfirmPrompt = async (item: any) => {
+    setDeletingProfile(true);
     try {
-      const response = await deleteAthlete({
+      const response = await deleteUser({
         variables: {
           where: {
             id: item?.id,
           },
         },
       });
-      if (response.data?.deleteOneAthleteProfile) {
-        await deleteUser({
+      if (response.data?.deleteOneUser) {
+        await deleteFirebaseUser({
           variables: {
-            where: {
-              id: item?.user?.id,
+            data: {
+              email: item?.email,
             },
           },
         });
-        const athleteResp = await getAthletes({});
-        const usersResponse = await getUsers({});
-        await refetch();
-        setUsers(usersResponse.data?.users as any);
-        setAthletes(athleteResp.data?.users as any);
+
         toast({
           title: "Athlete successfully deleted.",
-          description: `@${item?.username} account has been deleted.`,
-          variant: "default",
+          description: ` @${item?.username} profile has been deleted`,
+          variant: "successfull",
         });
+        refetch();
       }
     } catch (error) {
       toast({
         title: "Something went wrong.",
         description: `${
-          error || "Could not successfully update Athlete. Please try again."
+          error || "Could not delete athlete profile. Please try again."
         }`,
         variant: "destructive",
       });
+    } finally {
+      setDeletingProfile(false);
+      setActiveUser({});
+      setUpdatingProfile(null);
     }
+  };
+
+  const handleDeleteAthlete = (item: any) => {
+    setUpdatingProfile(StatusEnum.DELETING);
+    setActiveUser(item);
   };
 
   const handleActivateAthlete = async (item: any) => {
@@ -394,10 +406,10 @@ const Athletes: FC<AthletesProps> = ({}) => {
         }`,
         onClick: () => handleFeaturedAthlete(item),
       },
-      // {
-      //   name: "Delete Profile",
-      //   onclick: async () => await handleDeleteAthlete(item),
-      // },
+      {
+        name: "Delete Profile",
+        onClick: () => handleDeleteAthlete(item),
+      },
     ];
 
     return (
@@ -587,6 +599,17 @@ const Athletes: FC<AthletesProps> = ({}) => {
       {loading || !athleteData?.users?.length ? null : (
         <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
       )}
+
+      <PromptAlert
+        loading={deletingProfile}
+        content={`This action will permanently delete @${ActiveUser?.username} from our servers.`}
+        showPrompt={updatingProfile === StatusEnum.DELETING}
+        handleHidePrompt={() => {
+          setUpdatingProfile(null);
+          setActiveUser({});
+        }}
+        handleConfirmPrompt={() => handleDeleteAthleteConfirmPrompt(ActiveUser)}
+      />
     </main>
   );
 };

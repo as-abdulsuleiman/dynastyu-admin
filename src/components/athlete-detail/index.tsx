@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import {
   useDeleteAthleteMutation,
+  useDeleteFirebaseUserMutation,
   useDeleteUserMutation,
   useGetUserQuery,
   useUpdateAthleteMutation,
@@ -63,6 +64,7 @@ import CardContainer from "../card-container";
 import AthleteSkillCard from "../athlete-skill-card";
 import { renderLoader } from "@/lib/loader-helper";
 import { CalloutCardProps } from "@/interface/calloutOptions";
+import PromptAlert from "../prompt-alert";
 interface AthleteDetailProps {
   params: {
     id: number;
@@ -78,8 +80,10 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
   const [viewPlayerCardUrl, setViewPlayerCardUrl] = useState(false);
   const [viewAnalytics, setViewAnalytics] = useState(false);
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
+  const [deletingProfile, setDeletingProfile] = useState<boolean>(false);
   const [updateAthlete] = useUpdateAthleteMutation();
   const [deleteUser] = useDeleteUserMutation();
+  const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
   const [deleteAthlete] = useDeleteAthleteMutation();
   const [updateUser] = useUpdateUserMutation();
 
@@ -90,7 +94,6 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
       },
     },
   });
-
   const athleteData = data?.user;
 
   const socialAccounts = useMemo(() => {
@@ -222,6 +225,51 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
       setUpdatingProfile(null);
     }
   };
+
+  const handleDeleteAthleteConfirmPrompt = async (item: any) => {
+    setDeletingProfile(true);
+    try {
+      const res = await deleteUser({
+        variables: {
+          where: {
+            id: item?.id,
+          },
+        },
+      });
+      if (res?.data?.deleteOneUser) {
+        await deleteFirebaseUser({
+          variables: {
+            data: {
+              email: item?.email,
+            },
+          },
+        });
+
+        toast({
+          title: "Athlete successfully deleted.",
+          description: ` @${item?.username} profile has been deleted`,
+          variant: "successfull",
+        });
+        router.push("/athletes");
+      }
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not delete athlete profile. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    } finally {
+      setDeletingProfile(false);
+      setUpdatingProfile(null);
+    }
+  };
+
+  const handleDeleteAthlete = () => {
+    setUpdatingProfile(StatusEnum.DELETING);
+  };
+
   const followingId = athleteData?.following?.map((val: any) => {
     return {
       followerId_followingId: {
@@ -250,58 +298,58 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     return loading ? [] : newecruitingContact;
   }, [athleteData?.athleteProfile, loading]);
 
-  const handleDeleteAthlete = async (item: any) => {
-    try {
-      await updateUser({
-        variables: {
-          where: {
-            id: item?.userId,
-          },
-          data: {
-            followedBy: {
-              delete: followById,
-            },
-            following: {
-              delete: followingId,
-            },
-          },
-        },
-      });
-      const response = await deleteAthlete({
-        variables: {
-          where: {
-            id: params?.id,
-          },
-        },
-      });
-      if (response.data?.deleteOneAthleteProfile) {
-        const userRes = await deleteUser({
-          variables: {
-            where: {
-              id: item?.userId,
-            },
-          },
-        });
-        await refetch();
-        if (userRes.data?.deleteOneUser) {
-          router.push(`/athletes`);
-        }
-        toast({
-          title: "Athlete successfully deleted.",
-          description: `@${item?.user?.username} account has been deleted.`,
-          variant: "successfull",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Something went wrong.",
-        description: `${
-          error || "Could not delete athlete profile. Please try again."
-        }`,
-        variant: "destructive",
-      });
-    }
-  };
+  // const handleDeleteAthlete = async (item: any) => {
+  //   try {
+  //     await updateUser({
+  //       variables: {
+  //         where: {
+  //           id: item?.userId,
+  //         },
+  //         data: {
+  //           followedBy: {
+  //             delete: followById,
+  //           },
+  //           following: {
+  //             delete: followingId,
+  //           },
+  //         },
+  //       },
+  //     });
+  //     const response = await deleteAthlete({
+  //       variables: {
+  //         where: {
+  //           id: params?.id,
+  //         },
+  //       },
+  //     });
+  //     if (response.data?.deleteOneAthleteProfile) {
+  //       const userRes = await deleteUser({
+  //         variables: {
+  //           where: {
+  //             id: item?.userId,
+  //           },
+  //         },
+  //       });
+  //       await refetch();
+  //       if (userRes.data?.deleteOneUser) {
+  //         router.push(`/athletes`);
+  //       }
+  //       toast({
+  //         title: "Athlete successfully deleted.",
+  //         description: `@${item?.user?.username} account has been deleted.`,
+  //         variant: "successfull",
+  //       });
+  //     }
+  //   } catch (error) {
+  //     toast({
+  //       title: "Something went wrong.",
+  //       description: `${
+  //         error || "Could not delete athlete profile. Please try again."
+  //       }`,
+  //       variant: "destructive",
+  //     });
+  //   }
+  // };
 
   const handleVerifyAthlete = async (item: any) => {
     setUpdatingProfile(StatusEnum.VERIFYING);
@@ -422,10 +470,10 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
       name: "View Analytics",
       onClick: () => setViewAnalytics(true),
     },
-    // {
-    //   name: "Delete Profile",
-    //   onClick: async () => await handleDeleteAthlete(data?.athleteProfile),
-    // },
+    {
+      name: "Delete Profile",
+      onClick: handleDeleteAthlete,
+    },
     {
       name: "View Profile",
       onClick: () => {
@@ -878,6 +926,17 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
           </div>
         </div>
       </ModalCard>
+      <PromptAlert
+        loading={deletingProfile}
+        content={`This action will permanently delete @${athleteData?.username} from our servers.`}
+        showPrompt={updatingProfile === StatusEnum.DELETING}
+        handleHidePrompt={() => {
+          setUpdatingProfile(null);
+        }}
+        handleConfirmPrompt={() =>
+          handleDeleteAthleteConfirmPrompt(athleteData)
+        }
+      />
     </main>
   );
 };

@@ -8,6 +8,7 @@ import {
   QueryMode,
   SortOrder,
   useDeleteCoachMutation,
+  useDeleteFirebaseUserMutation,
   useDeleteUserMutation,
   useGetSchoolsQuery,
   useGetUserQuery,
@@ -83,11 +84,12 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   const [debounced] = useDebouncedValue(searchValue, 300);
   const [promptStatus, setPromptStatus] = useState<PromptStatusEnum | null>();
   const [IsAddingSchool, setIsAddingSchool] = useState<boolean>(false);
-  const [deletingSkillType, setDeletingSkillType] = useState(false);
+  const [deletingCoach, setDeletingCoach] = useState(false);
 
   const [deleteCoach] = useDeleteCoachMutation();
   const [updateCoach] = useUpdateCoachMutation();
   const [deleteUser] = useDeleteUserMutation();
+  const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
 
   const { data, loading, refetch } = useGetUserQuery({
     variables: {
@@ -155,20 +157,30 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     );
   }, [schoolData?.schools]);
 
-  const handleDeleteCaochConfirmPrompt = async (userId: number) => {
-    setDeletingSkillType(true);
+  const handleDeleteCaochConfirmPrompt = async (user: any) => {
+    setDeletingCoach(true);
 
     try {
-      await deleteUser({
+      const res = await deleteUser({
         variables: {
           where: {
-            id: userId,
+            id: user?.id,
           },
         },
       });
+
+      if (res?.data?.deleteOneUser) {
+        await deleteFirebaseUser({
+          variables: {
+            data: {
+              email: user?.email,
+            },
+          },
+        });
+      }
       toast({
         title: "Profile successfully deleted.",
-        description: `@${coachData?.username} account has been deleted.`,
+        description: `@${coachData?.username} profile has been deleted.`,
         variant: "successfull",
       });
       router.push("/coaches");
@@ -176,13 +188,13 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       toast({
         title: "Something went wrong.",
         description: `${
-          error || "Could not successfully created a coach. Please try again."
+          error || "Could not delete coach profile. Please try again."
         }`,
         variant: "destructive",
       });
     } finally {
       setUpdatingProfile(null);
-      setDeletingSkillType(false);
+      setDeletingCoach(false);
     }
   };
 
@@ -336,10 +348,10 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       name: "View Analytics",
       onClick: () => setViewAnalytics(true),
     },
-    // {
-    //   name: "Delete Profile",
-    //   onClick: handleDeleteCoach,
-    // },
+    {
+      name: "Delete Profile",
+      onClick: handleDeleteCoach,
+    },
   ];
   if (coachData?.coachProfile?.schoolId) {
     dropdownItems.push({
@@ -864,15 +876,13 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       />
       <PromptAlert
         title={`Are you absolutely sure?`}
-        loading={deletingSkillType}
+        loading={deletingCoach}
         content={`This will permanently delete ${coachData?.username} from our servers.`}
         showPrompt={updatingProfile === StatusEnum.DELETING}
         handleHidePrompt={() => {
           setUpdatingProfile(null);
         }}
-        handleConfirmPrompt={() =>
-          handleDeleteCaochConfirmPrompt(coachData?.id)
-        }
+        handleConfirmPrompt={() => handleDeleteCaochConfirmPrompt(coachData)}
       />
     </main>
   );
