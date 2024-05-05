@@ -12,7 +12,7 @@ import {
   AthleteIcon,
 } from "@/components/Icons";
 import { useRootStore } from "@/mobx";
-import { Title, Text, Grid } from "@tremor/react";
+import { Grid } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import AthleteStatCard from "@/components/stat-cards/athlete";
 import { useDebouncedValue } from "@mantine/hooks";
@@ -20,10 +20,8 @@ import {
   GetUsersQuery,
   QueryMode,
   SortOrder,
-  useDeleteAthleteMutation,
   useDeleteFirebaseUserMutation,
   useDeleteUserMutation,
-  useGetUsersLazyQuery,
   useGetUsersQuery,
   useUpdateAthleteMutation,
 } from "@/services/graphql";
@@ -66,9 +64,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
   const [updateAthlete] = useUpdateAthleteMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
-  const [deleteAthlete] = useDeleteAthleteMutation();
-  const [getUsers] = useGetUsersLazyQuery();
-  const [getAthletes] = useGetUsersLazyQuery();
+
   const filteredParams = getURLParams(selectedOptions);
 
   const {
@@ -145,13 +141,12 @@ const Athletes: FC<AthletesProps> = ({}) => {
             },
           },
         });
-
+        refetch();
         toast({
           title: "Athlete successfully deleted.",
           description: ` @${item?.username} profile has been deleted`,
           variant: "successfull",
         });
-        refetch();
       }
     } catch (error) {
       toast({
@@ -599,7 +594,6 @@ const Athletes: FC<AthletesProps> = ({}) => {
       {loading || !athleteData?.users?.length ? null : (
         <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
       )}
-
       <PromptAlert
         loading={deletingProfile}
         content={`This action will permanently delete @${ActiveUser?.username} from our servers.`}

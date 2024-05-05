@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import {
   QueryMode,
   SortOrder,
-  useDeleteCoachMutation,
   useDeleteFirebaseUserMutation,
   useDeleteUserMutation,
   useGetSchoolsQuery,
@@ -85,8 +84,6 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   const [promptStatus, setPromptStatus] = useState<PromptStatusEnum | null>();
   const [IsAddingSchool, setIsAddingSchool] = useState<boolean>(false);
   const [deletingCoach, setDeletingCoach] = useState(false);
-
-  const [deleteCoach] = useDeleteCoachMutation();
   const [updateCoach] = useUpdateCoachMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();

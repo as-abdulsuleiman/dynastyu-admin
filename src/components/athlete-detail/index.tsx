@@ -7,12 +7,10 @@ import { Text, Grid } from "@tremor/react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import {
-  useDeleteAthleteMutation,
   useDeleteFirebaseUserMutation,
   useDeleteUserMutation,
   useGetUserQuery,
   useUpdateAthleteMutation,
-  useUpdateUserMutation,
 } from "@/services/graphql";
 import { Skeleton } from "@/components/ui/skeleton";
 import UsersAnalytics from "@/components/analytics/users";
@@ -84,8 +82,6 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
   const [updateAthlete] = useUpdateAthleteMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
-  const [deleteAthlete] = useDeleteAthleteMutation();
-  const [updateUser] = useUpdateUserMutation();
 
   const { data, loading, refetch } = useGetUserQuery({
     variables: {
@@ -244,7 +240,6 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
             },
           },
         });
-
         toast({
           title: "Athlete successfully deleted.",
           description: ` @${item?.username} profile has been deleted`,
@@ -270,23 +265,6 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     setUpdatingProfile(StatusEnum.DELETING);
   };
 
-  const followingId = athleteData?.following?.map((val: any) => {
-    return {
-      followerId_followingId: {
-        followerId: val?.followerId,
-        followingId: val?.followingId,
-      },
-    };
-  });
-  const followById = athleteData?.followedBy?.map((val: any) => {
-    return {
-      followerId_followingId: {
-        followerId: val?.followerId,
-        followingId: val?.followingId,
-      },
-    };
-  });
-
   const recruitingContact = useMemo(() => {
     let newecruitingContact = [];
     newecruitingContact?.push({
@@ -297,59 +275,6 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     });
     return loading ? [] : newecruitingContact;
   }, [athleteData?.athleteProfile, loading]);
-
-  // const handleDeleteAthlete = async (item: any) => {
-  //   try {
-  //     await updateUser({
-  //       variables: {
-  //         where: {
-  //           id: item?.userId,
-  //         },
-  //         data: {
-  //           followedBy: {
-  //             delete: followById,
-  //           },
-  //           following: {
-  //             delete: followingId,
-  //           },
-  //         },
-  //       },
-  //     });
-  //     const response = await deleteAthlete({
-  //       variables: {
-  //         where: {
-  //           id: params?.id,
-  //         },
-  //       },
-  //     });
-  //     if (response.data?.deleteOneAthleteProfile) {
-  //       const userRes = await deleteUser({
-  //         variables: {
-  //           where: {
-  //             id: item?.userId,
-  //           },
-  //         },
-  //       });
-  //       await refetch();
-  //       if (userRes.data?.deleteOneUser) {
-  //         router.push(`/athletes`);
-  //       }
-  //       toast({
-  //         title: "Athlete successfully deleted.",
-  //         description: `@${item?.user?.username} account has been deleted.`,
-  //         variant: "successfull",
-  //       });
-  //     }
-  //   } catch (error) {
-  //     toast({
-  //       title: "Something went wrong.",
-  //       description: `${
-  //         error || "Could not delete athlete profile. Please try again."
-  //       }`,
-  //       variant: "destructive",
-  //     });
-  //   }
-  // };
 
   const handleVerifyAthlete = async (item: any) => {
     setUpdatingProfile(StatusEnum.VERIFYING);
@@ -391,7 +316,6 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
 
   const handleFeaturedAthlete = async (item: any) => {
     setUpdatingProfile(StatusEnum.FEATURING);
-
     try {
       const isAthleteFeatured = item?.athleteProfile?.featured;
       const resp = await updateAthlete({

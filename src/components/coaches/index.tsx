@@ -2,8 +2,8 @@
 
 "use client";
 
-import { FC, useEffect, useMemo, useState } from "react";
-import { Title, Text, Grid } from "@tremor/react";
+import { FC, useMemo, useState } from "react";
+import { Grid } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 import CoacheStatCard from "@/components/stat-cards/coache";
@@ -11,11 +11,8 @@ import {
   GetUsersQuery,
   QueryMode,
   SortOrder,
-  useDeleteCoachMutation,
   useDeleteFirebaseUserMutation,
   useDeleteUserMutation,
-  useGetCoachesLazyQuery,
-  useGetUsersLazyQuery,
   useGetUsersQuery,
   useUpdateCoachMutation,
 } from "@/services/graphql";
@@ -75,11 +72,8 @@ const Coaches: FC<CoachesProps> = ({}) => {
   const [debounced] = useDebouncedValue(value, 300);
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
-  const [deleteCoach] = useDeleteCoachMutation();
   const [updateCoach] = useUpdateCoachMutation();
   const [deleteUser] = useDeleteUserMutation();
-  const [getUsers] = useGetUsersLazyQuery();
-  const [getCoaches] = useGetCoachesLazyQuery();
   const [ActiveUser, setActiveUser] = useState<any>({});
   const [deletingProfile, setDeletingProfile] = useState<boolean>(false);
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
