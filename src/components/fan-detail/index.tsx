@@ -4,6 +4,7 @@
 
 import { FC, useState } from "react";
 import {
+  useDeleteFirebaseUserMutation,
   useDeleteUserMutation,
   useGetUserQuery,
   useUpdateUserMutation,
@@ -44,6 +45,7 @@ import ContentHeader from "../content-header";
 import CardContainer from "../card-container";
 import { renderLoader } from "@/lib/loader-helper";
 import { CalloutCardProps } from "@/interface/calloutOptions";
+import PromptAlert from "../prompt-alert";
 
 interface FanDetailProps {
   params: {
@@ -57,8 +59,10 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
   const [viewPlayerCardUrl, setViewPlayerCardUrl] = useState(false);
   const [viewAnalytics, setViewAnalytics] = useState(false);
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
+  const [deletingFan, setDeletingFan] = useState(false);
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
+  const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
 
   const {
     data: fanData,
@@ -73,21 +77,31 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
     },
   });
 
-  const handleDeleteProfile = async (item: any) => {
+  const handleDeleteFanConfirmPrompt = async (item: any) => {
+    setDeletingFan(true);
     try {
-      await deleteUser({
+      const res = await deleteUser({
         variables: {
           where: {
             id: item?.id,
           },
         },
       });
-      toast({
-        title: "Fan successfully deleted.",
-        description: `@${item?.username} account has been deleted.`,
-        variant: "default",
-      });
-      router.push(`/fans`);
+      if (res?.data?.deleteOneUser) {
+        await deleteFirebaseUser({
+          variables: {
+            data: {
+              email: item?.email,
+            },
+          },
+        });
+        toast({
+          title: "Fan successfully deleted.",
+          description: `@${item?.username} profile has been deleted.`,
+          variant: "successfull",
+        });
+        router.push(`/fans`);
+      }
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -96,7 +110,14 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
         }`,
         variant: "destructive",
       });
+    } finally {
+      setDeletingFan(false);
+      setUpdatingProfile(null);
     }
+  };
+
+  const handleDeleteFan = () => {
+    setUpdatingProfile(StatusEnum.DELETING);
   };
 
   const handleActivateProfile = async (item: any) => {
@@ -157,10 +178,10 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
       name: "View Analytics",
       onClick: () => setViewAnalytics(true),
     },
-    // {
-    //   name: "Delete Profile",
-    //   onClick: async () => await handleDeleteProfile(fanData?.user),
-    // },
+    {
+      name: "Delete Profile",
+      onClick: handleDeleteFan,
+    },
   ];
 
   const dataList: any = [
@@ -261,7 +282,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
     {
       color: "teal",
       type: "string",
-      title: "city",
+      title: "City",
       className: "mt-4",
       icon: () => (
         <LocateFixedIcon className="h-[20px] w-[20px] mr-2" color="teal" />
@@ -352,8 +373,6 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
         }` || "N/A",
     },
   ];
-
-  console.log("fanDsta", fanData);
 
   return (
     <main className="w-full h-full relative">
@@ -470,6 +489,16 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
           </div>
         </div>
       </ModalCard>
+      <PromptAlert
+        title={`Are you absolutely sure?`}
+        loading={deletingFan}
+        content={`This will permanently delete ${fanData?.user?.username} from our servers.`}
+        showPrompt={updatingProfile === StatusEnum.DELETING}
+        handleHidePrompt={() => {
+          setUpdatingProfile(null);
+        }}
+        handleConfirmPrompt={() => handleDeleteFanConfirmPrompt(fanData?.user)}
+      />
     </main>
   );
 };

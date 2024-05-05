@@ -6,15 +6,12 @@ import { useState } from "react";
 import {
   getDownloadURL,
   uploadBytesResumable,
-  getStorage,
   ref,
 } from "firebase/storage";
-import { firebaseApp } from "@/services/firebase/config";
+import { uploadBucket, readBucket } from "@/services/firebase/config";
 import { useProcessVideoMutation } from "@/services/graphql";
 import { useToast } from "@/hooks/use-toast";
 
-const uploadBucket = getStorage(firebaseApp, "gs://dynastyu-files");
-const readBucket = getStorage(firebaseApp, "gs://dynastyu-9de03.appspot.com");
 
 type useStorageProps = {
   file?: Blob | Uint8Array | ArrayBuffer | null;
@@ -25,6 +22,7 @@ type useStorageProps = {
 export const useGoogleCloudStorage = ({ folder, userId }: useStorageProps) => {
   const { toast } = useToast();
   //   const [url, setUrl] = useState("");
+
   const [uploading, setUploading] = useState<boolean>(false);
   const [progress, setProgress] = useState<number | null>(0);
   const [processVideo] = useProcessVideoMutation();
@@ -89,7 +87,6 @@ export const useGoogleCloudStorage = ({ folder, userId }: useStorageProps) => {
         ? ref(uploadBucket, `Documents/${userId}/${folderName}/${fileName}`)
         : ref(readBucket, `Documents/${userId}/${folderName}/${fileName}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
-
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -151,21 +148,21 @@ export const useGoogleCloudStorage = ({ folder, userId }: useStorageProps) => {
       //       });
       //   }
     );
-    await uploadTask;
+    // await uploadTask;
     const url = await getDownloadURL(uploadTask.snapshot.ref);
-
     let job;
     let newUrl = "";
-
     if (type === "video") {
       if (process?.env?.NODE_ENV === "production") {
         job = await processVideo({
           variables: {
-            data: { filePath: `Documents/${userId}/${folderName}/${fileName}` },
+            data: { filePath: `Documents/${userId}/${folderName}/${fileName}`},
           },
         });
       }
-      newUrl = url;
+      // const test = `https://storage.googleapis.com/dynastyu-files/Documents/${userId}/${folderName}/${fileName}/master.m3u8`
+      // console.log("test",test)
+      newUrl =  url;
     } else {
       newUrl = url;
     }

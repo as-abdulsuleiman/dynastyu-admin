@@ -2,8 +2,8 @@
 
 "use client";
 
-import { FC, useEffect, useMemo, useState } from "react";
-import { Title, Text, Grid } from "@tremor/react";
+import { FC, useMemo, useState } from "react";
+import { Grid } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 import CoacheStatCard from "@/components/stat-cards/coache";
@@ -11,10 +11,8 @@ import {
   GetUsersQuery,
   QueryMode,
   SortOrder,
-  useDeleteCoachMutation,
+  useDeleteFirebaseUserMutation,
   useDeleteUserMutation,
-  useGetCoachesLazyQuery,
-  useGetUsersLazyQuery,
   useGetUsersQuery,
   useUpdateCoachMutation,
 } from "@/services/graphql";
@@ -44,6 +42,7 @@ import ContentHeader from "../content-header";
 import { getURLParams } from "@/lib/helpers";
 import MultiSelector from "../multi-selector";
 import { coachFilter } from "@/lib/filters";
+import PromptAlert from "../prompt-alert";
 
 const headerItems = [
   { name: "Name" },
@@ -73,11 +72,11 @@ const Coaches: FC<CoachesProps> = ({}) => {
   const [debounced] = useDebouncedValue(value, 300);
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
-  const [deleteCoach] = useDeleteCoachMutation();
   const [updateCoach] = useUpdateCoachMutation();
   const [deleteUser] = useDeleteUserMutation();
-  const [getUsers] = useGetUsersLazyQuery();
-  const [getCoaches] = useGetCoachesLazyQuery();
+  const [ActiveUser, setActiveUser] = useState<any>({});
+  const [deletingProfile, setDeletingProfile] = useState<boolean>(false);
+  const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
   const filteredParams = getURLParams(selectedOptions);
 
   const {
@@ -136,43 +135,49 @@ const Coaches: FC<CoachesProps> = ({}) => {
     return lastPostInResults?.id;
   }, [coachesData?.users]);
 
-  const handleDeleteCoach = async (item: any) => {
+  const handleDeleteCoachConfirmPrompt = async (item: any) => {
+    setDeletingProfile(true);
     try {
-      const response = await deleteCoach({
+      const response = await deleteUser({
         variables: {
           where: {
-            id: item?.coachProfile?.id,
+            id: item?.id,
           },
         },
       });
-      if (response.data?.deleteOneCoachProfile) {
-        await deleteUser({
+      if (response.data?.deleteOneUser) {
+        await deleteFirebaseUser({
           variables: {
-            where: {
-              id: item?.id,
+            data: {
+              email: item?.email,
             },
           },
         });
-        const caochesResponse = await getCoaches({});
-        const usersResponse = await getUsers({});
-        await refetch();
-        setUsers(usersResponse.data?.users as any);
-        setCoaches(caochesResponse.data?.coachProfiles as any);
         toast({
           title: "Coach successfully deleted.",
-          description: `@${item?.username} account has been deleted.`,
-          variant: "default",
+          description: `@${item?.username} profile has been deleted.`,
+          variant: "successfull",
         });
+        refetch();
       }
     } catch (error) {
       toast({
         title: "Something went wrong.",
         description: `${
-          error || "Could not successfully created a coach. Please try again."
+          error || "Could not delete coach profile. Please try again."
         }`,
         variant: "destructive",
       });
+    } finally {
+      setDeletingProfile(false);
+      setActiveUser({});
+      setUpdatingProfile(null);
     }
+  };
+
+  const handleDeleteCoach = (item: any) => {
+    setUpdatingProfile(StatusEnum.DELETING);
+    setActiveUser(item);
   };
 
   const handleActivateCoach = async (item: any) => {
@@ -353,10 +358,10 @@ const Coaches: FC<CoachesProps> = ({}) => {
         name: `${item?.isActive ? "Deactivate" : "Activate"} Profile`,
         onClick: async () => await handleActivateCoach(item),
       },
-      // {
-      //   name: "Delete Coach",
-      //   onClick: async () => await handleDeleteCoach(item),
-      // },
+      {
+        name: "Delete Coach",
+        onClick: () => handleDeleteCoach(item),
+      },
     ];
     return (
       <TableRow key={item?.id}>
@@ -515,6 +520,16 @@ const Coaches: FC<CoachesProps> = ({}) => {
       {loading || !coachesData?.users?.length ? null : (
         <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
       )}
+      <PromptAlert
+        loading={deletingProfile}
+        content={`This action will permanently delete @${ActiveUser?.username} from our servers.`}
+        showPrompt={updatingProfile === StatusEnum.DELETING}
+        handleHidePrompt={() => {
+          setUpdatingProfile(null);
+          setActiveUser({});
+        }}
+        handleConfirmPrompt={() => handleDeleteCoachConfirmPrompt(ActiveUser)}
+      />
     </main>
   );
 };

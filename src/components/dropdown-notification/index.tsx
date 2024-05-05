@@ -263,9 +263,11 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
       >
         <DropdownMenuLabel className="flex flex-row items-center text-lg">
           Notifications
-          {/* <div className="ml-auto bg-secondary py-1 px-2 rounded-md cursor-pointer font-TTHovesDemiBold text-xs">
-            <Link href="/notifications">View All</Link>
-          </div> */}
+          <div className="ml-auto bg-secondary py-1 px-2 rounded-md cursor-pointer font-TTHovesDemiBold text-xs">
+            <Link onClick={() => setOpen(false)} href="/notifications">
+              View All
+            </Link>
+          </div>
         </DropdownMenuLabel>
         {renderSkillVerificationRequests()}
         <DropdownMenuSeparator />
