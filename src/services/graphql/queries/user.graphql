@@ -585,6 +585,12 @@ mutation deleteUser($where: UserWhereUniqueInput!) {
   }
 }
 
+mutation DeleteFirebaseUser($data: CreateUserInput!) {
+  findAndDeleteExistingUsers(data: $data) {
+    success
+  }
+}
+
 mutation createUser($data: CreateUserInput!) {
   createUser(data: $data) {
     tempPassword

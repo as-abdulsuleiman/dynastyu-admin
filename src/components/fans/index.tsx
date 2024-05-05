@@ -10,6 +10,8 @@ import {
   GetUsersQuery,
   QueryMode,
   SortOrder,
+  useDeleteFirebaseUserMutation,
+  useDeleteUserMutation,
   useGetUsersQuery,
   useUpdateUserMutation,
 } from "@/services/graphql";
@@ -32,6 +34,8 @@ import ContentHeader from "../content-header";
 import MultiSelector from "../multi-selector";
 import { fanFilter } from "@/lib/filters";
 import { getURLParams } from "@/lib/helpers";
+import PromptAlert from "../prompt-alert";
+import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 
 const headerItems = [
   { name: "Name" },
@@ -58,6 +62,14 @@ const Fans: FC<FansProps> = ({}) => {
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [updateUser] = useUpdateUserMutation();
   const filteredParams = getURLParams(selectedOptions);
+  const [ActiveUser, setActiveUser] = useState<any>({});
+  const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
+  const [openFanDeletePrompt, setOpenFanDeletePrompt] =
+    useState<boolean>(false);
+  const [deletingProfile, setDeletingProfile] = useState<boolean>(false);
+  const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
+  const [deleteUser] = useDeleteUserMutation();
+  useState<boolean>(false);
 
   const {
     data: fansData,
@@ -108,6 +120,51 @@ const Fans: FC<FansProps> = ({}) => {
       },
     },
   });
+
+  const handleDeleteFanConfirmPrompt = async (item: any) => {
+    setDeletingProfile(true);
+    try {
+      const response = await deleteUser({
+        variables: {
+          where: {
+            id: item?.id,
+          },
+        },
+      });
+      if (response.data?.deleteOneUser) {
+        await deleteFirebaseUser({
+          variables: {
+            data: {
+              email: item?.email,
+            },
+          },
+        });
+      }
+      toast({
+        title: "Fan successfully deleted.",
+        description: `@${item?.username} profile has been deleted.`,
+        variant: "successfull",
+      });
+      refetch();
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not delete fan profile. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    } finally {
+      setDeletingProfile(false);
+      setActiveUser({});
+      setUpdatingProfile(null);
+    }
+  };
+
+  const handleDeleteFan = (item: any) => {
+    setUpdatingProfile(StatusEnum.DELETING);
+    setActiveUser(item);
+  };
 
   const handleActiveUser = async (item: any) => {
     setSelectedUser(item?.id);
@@ -233,10 +290,10 @@ const Fans: FC<FansProps> = ({}) => {
         onClick: async () => await handleActiveUser(item),
       },
 
-      // {
-      //   name: "Delete User",
-      //   onClick: async () => await handleDeleteUser(item),
-      // },
+      {
+        name: "Delete Profile",
+        onClick: () => handleDeleteFan(item),
+      },
     ];
     return (
       <TableRow key={item?.id}>
@@ -352,6 +409,16 @@ const Fans: FC<FansProps> = ({}) => {
       {loading || !fansData?.users?.length ? null : (
         <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
       )}
+      <PromptAlert
+        loading={deletingProfile}
+        content={`This action will permanently delete @${ActiveUser?.username} from our servers.`}
+        showPrompt={updatingProfile === StatusEnum.DELETING}
+        handleHidePrompt={() => {
+          setUpdatingProfile(null);
+          setActiveUser({});
+        }}
+        handleConfirmPrompt={() => handleDeleteFanConfirmPrompt(ActiveUser)}
+      />
     </main>
   );
 };

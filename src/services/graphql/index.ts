@@ -6718,6 +6718,11 @@ export type EvaluationWhereUniqueInput = {
   id?: InputMaybe<Scalars['BigInt']['input']>;
 };
 
+export type FindAndDeleteExistingUsersReturn = {
+  __typename?: 'FindAndDeleteExistingUsersReturn';
+  success: Scalars['Boolean']['output'];
+};
+
 export type FloatNullableFilter = {
   equals?: InputMaybe<Scalars['Float']['input']>;
   gt?: InputMaybe<Scalars['Float']['input']>;
@@ -8085,6 +8090,7 @@ export type Mutation = {
   deleteOneSocialAccount?: Maybe<SocialAccount>;
   deleteOneTranscripts?: Maybe<Transcripts>;
   deleteOneUser?: Maybe<User>;
+  findAndDeleteExistingUsers?: Maybe<FindAndDeleteExistingUsersReturn>;
   processVideo?: Maybe<Return>;
   registerCoach: RegisterCoachReturn;
   sendPushNotificationToUser?: Maybe<SendPushNotificationToUserReturn>;
@@ -8862,6 +8868,11 @@ export type MutationDeleteOneTranscriptsArgs = {
 
 export type MutationDeleteOneUserArgs = {
   where: UserWhereUniqueInput;
+};
+
+
+export type MutationFindAndDeleteExistingUsersArgs = {
+  data: CreateUserInput;
 };
 
 
@@ -26584,6 +26595,13 @@ export type DeleteUserMutationVariables = Exact<{
 
 export type DeleteUserMutation = { __typename?: 'Mutation', deleteOneUser?: { __typename?: 'User', id: any } | null };
 
+export type DeleteFirebaseUserMutationVariables = Exact<{
+  data: CreateUserInput;
+}>;
+
+
+export type DeleteFirebaseUserMutation = { __typename?: 'Mutation', findAndDeleteExistingUsers?: { __typename?: 'FindAndDeleteExistingUsersReturn', success: boolean } | null };
+
 export type CreateUserMutationVariables = Exact<{
   data: CreateUserInput;
 }>;
@@ -31931,6 +31949,39 @@ export function useDeleteUserMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
 export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
 export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
+export const DeleteFirebaseUserDocument = gql`
+    mutation DeleteFirebaseUser($data: CreateUserInput!) {
+  findAndDeleteExistingUsers(data: $data) {
+    success
+  }
+}
+    `;
+export type DeleteFirebaseUserMutationFn = Apollo.MutationFunction<DeleteFirebaseUserMutation, DeleteFirebaseUserMutationVariables>;
+
+/**
+ * __useDeleteFirebaseUserMutation__
+ *
+ * To run a mutation, you first call `useDeleteFirebaseUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteFirebaseUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteFirebaseUserMutation, { data, loading, error }] = useDeleteFirebaseUserMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useDeleteFirebaseUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteFirebaseUserMutation, DeleteFirebaseUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteFirebaseUserMutation, DeleteFirebaseUserMutationVariables>(DeleteFirebaseUserDocument, options);
+      }
+export type DeleteFirebaseUserMutationHookResult = ReturnType<typeof useDeleteFirebaseUserMutation>;
+export type DeleteFirebaseUserMutationResult = Apollo.MutationResult<DeleteFirebaseUserMutation>;
+export type DeleteFirebaseUserMutationOptions = Apollo.BaseMutationOptions<DeleteFirebaseUserMutation, DeleteFirebaseUserMutationVariables>;
 export const CreateUserDocument = gql`
     mutation createUser($data: CreateUserInput!) {
   createUser(data: $data) {
