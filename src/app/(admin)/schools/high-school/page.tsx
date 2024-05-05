@@ -32,6 +32,7 @@ import PromptAlert from "@/components/prompt-alert";
 import ContentHeader from "@/components/content-header";
 import { CommandItem } from "@/components/ui/command";
 import ComboBoxCard from "@/components/combobox-card";
+import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 
 const headerItems = [
   { name: "Name" },
@@ -53,11 +54,11 @@ const Schools: FC<SchoolsProps> = ({}) => {
   const [updateSchool] = useUpdateSchoolMutation();
   const [getSchool] = useGetSchoolLazyQuery();
   const [isDeletingSchool, setIsDeletingSchool] = useState(false);
-  const [openDeleteSchoolPrompt, setOpenDeleteSchoolPrompt] = useState(false);
   const [activeSchool, setActiveSchool] = useState<any>({});
   const [openSchool, setOpenSchool] = useState<boolean>(false);
   const [selectedSchool, setSelectedSchool] = useState<any | number>({});
   const [searchValue, setSearchValue] = useState<string>("");
+  const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
 
   const {
     data: schools,
@@ -146,7 +147,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
   };
   const handleDeleteSchoolPrompt = (item: any) => {
     setActiveSchool(item);
-    setOpenDeleteSchoolPrompt(true);
+    setUpdatingProfile(StatusEnum.DELETING);
   };
 
   const handleConfirmPrompt = async (school: any) => {
@@ -178,7 +179,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
       });
 
       if (res?.data?.updateOneSchool) {
-        const response = await deleteSchool({
+        await deleteSchool({
           variables: {
             where: {
               id: school?.id,
@@ -186,14 +187,12 @@ const Schools: FC<SchoolsProps> = ({}) => {
           },
         });
 
-        if (response?.data?.deleteOneSchool) {
-          toast({
-            title: "School successfully Deleted.",
-            description: `${school?.name} has been successfully deleted`,
-            variant: "successfull",
-          });
-        }
         refetch();
+        toast({
+          title: "School successfully Deleted.",
+          description: `${school?.name} has been successfully deleted`,
+          variant: "successfull",
+        });
       }
     } catch (error) {
       toast({
@@ -207,7 +206,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
       setActiveSchool({});
       setSelectedSchool({});
       setIsDeletingSchool(false);
-      setOpenDeleteSchoolPrompt(false);
+      setUpdatingProfile(null);
     }
   };
 
@@ -445,11 +444,11 @@ const Schools: FC<SchoolsProps> = ({}) => {
       <PromptAlert
         loading={isDeletingSchool}
         content={`This action cannot be undone. This will permanently delete this data from our servers.`}
-        showPrompt={openDeleteSchoolPrompt}
+        showPrompt={updatingProfile === StatusEnum.DELETING}
         handleHidePrompt={() => {
           setActiveSchool({});
-          setOpenDeleteSchoolPrompt(false);
           setSelectedSchool({});
+          setUpdatingProfile(null);
         }}
         customElement={renderSelectSchool()}
         handleConfirmPrompt={() => handleConfirmPrompt(activeSchool)}

@@ -47,6 +47,7 @@ import { CalloutCardProps } from "@/interface/calloutOptions";
 import { CommandItem } from "../ui/command";
 import ComboBoxCard from "../combobox-card";
 import { cn } from "@/lib/utils";
+import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 interface SchoolCardProps {
   loading?: boolean;
   school: any;
@@ -58,13 +59,13 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   const [deleteSchool] = useDeleteSchoolMutation();
   const [updateSchool] = useUpdateSchoolMutation();
   const [isDeletingSchool, setIsDeletingSchool] = useState(false);
-  const [openDeleteSchoolPrompt, setOpenDeleteSchoolPrompt] = useState(false);
   const [searchValue, setSearchValue] = useState<string>("");
   const [viewAnalytics, setViewAnalytics] = useState(false);
   const [openSchool, setOpenSchool] = useState<boolean>(false);
   const [selectedSchool, setSelectedSchool] = useState<any | number>({});
   const [debounced] = useDebouncedValue(searchValue, 300);
   const isHighSchoolType = school?.schoolType?.name === "High School" ?? false;
+  const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
 
   const dataList: any = [
     {
@@ -185,7 +186,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       });
 
       if (res?.data?.updateOneSchool) {
-        const response = await deleteSchool({
+        await deleteSchool({
           variables: {
             where: {
               id: school?.id,
@@ -193,17 +194,15 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           },
         });
 
-        if (response?.data?.deleteOneSchool) {
-          toast({
-            title: "School successfully Deleted.",
-            description: `${school?.name} has been successfully deleted`,
-            variant: "successfull",
-          });
+        toast({
+          title: "School successfully Deleted.",
+          description: `${school?.name} has been successfully deleted`,
+          variant: "successfull",
+        });
 
-          router.push(
-            isHighSchoolType ? `/schools/high-school` : `/schools/college`
-          );
-        }
+        router.push(
+          isHighSchoolType ? `/schools/high-school` : `/schools/college`
+        );
       }
     } catch (error) {
       toast({
@@ -215,11 +214,11 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       });
     } finally {
       setIsDeletingSchool(false);
-      setOpenDeleteSchoolPrompt(false);
+      setUpdatingProfile(null);
     }
   };
   const handleDeleteSchoolPrompt = () => {
-    setOpenDeleteSchoolPrompt(true);
+    setUpdatingProfile(StatusEnum.DELETING);
   };
 
   const schoolsDataOptions = useMemo(() => {
@@ -526,10 +525,10 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       <PromptAlert
         loading={isDeletingSchool}
         content={`This action cannot be undone. This will permanently delete this data from our servers.`}
-        showPrompt={openDeleteSchoolPrompt}
+        showPrompt={updatingProfile === StatusEnum.DELETING}
         handleHidePrompt={() => {
-          setOpenDeleteSchoolPrompt(false);
           setSelectedSchool({});
+          setUpdatingProfile(null);
         }}
         customElement={renderSelectSchool()}
         handleConfirmPrompt={() => handleConfirmPrompt(school)}
