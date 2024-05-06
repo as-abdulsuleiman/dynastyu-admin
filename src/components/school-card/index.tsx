@@ -233,6 +233,11 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         placeholder={`Select ${isHighSchoolType ? "High School" : "College"}`}
         label="Select School to Migrate data to"
         whereClause={{
+          id: {
+            not: {
+              equals: school?.id,
+            },
+          },
           schoolType: {
             is: {
               name: {

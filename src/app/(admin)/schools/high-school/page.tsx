@@ -222,13 +222,18 @@ const Schools: FC<SchoolsProps> = ({}) => {
         onSelectValue={(school) => {
           setSelectedSchool({ value: school?.value, id: school?.id });
         }}
-        placeholder="Select College"
+        placeholder="Select High School"
         label="Select School to Migrate data to"
         whereClause={{
+          id: {
+            not: {
+              equals: activeSchool?.id,
+            },
+          },
           schoolType: {
             is: {
               name: {
-                equals: "College",
+                equals: "High School",
               },
             },
           },

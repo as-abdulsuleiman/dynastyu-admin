@@ -220,6 +220,11 @@ const Schools: FC<SchoolsProps> = ({}) => {
         placeholder="Select College"
         label="Select School to Migrate data to"
         whereClause={{
+          id: {
+            not: {
+              equals: activeSchool?.id,
+            },
+          },
           schoolType: {
             is: {
               name: {
