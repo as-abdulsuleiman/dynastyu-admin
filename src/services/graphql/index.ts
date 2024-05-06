@@ -26136,7 +26136,7 @@ export type GetSchoolsQueryVariables = Exact<{
 }>;
 
 
-export type GetSchoolsQuery = { __typename?: 'Query', schools: Array<{ __typename?: 'School', id: any, uuid: string, name: string, email: string, createdAt: any, updatedAt: any, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, state?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', id: any, name: string } }> };
+export type GetSchoolsQuery = { __typename?: 'Query', schools: Array<{ __typename?: 'School', id: any, uuid: string, name: string, email: string, createdAt: any, updatedAt: any, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, state?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, athletes: Array<{ __typename?: 'AthleteProfile', userId: any, id: any, user: { __typename?: 'User', firstname: string, surname: string, id: any } }>, coaches: Array<{ __typename?: 'CoachProfile', userId: any, id: any, title?: string | null, user: { __typename?: 'User', firstname: string, surname: string, id: any } }>, schoolType: { __typename?: 'SchoolType', id: any, name: string } }> };
 
 export type GetSchoolQueryVariables = Exact<{
   where: SchoolWhereUniqueInput;
@@ -28975,6 +28975,25 @@ export const GetSchoolsDocument = gql`
     distinct: $distinct
   ) {
     ...SchoolCommonParts
+    athletes {
+      userId
+      id
+      user {
+        firstname
+        surname
+        id
+      }
+    }
+    coaches {
+      userId
+      id
+      title
+      user {
+        firstname
+        surname
+        id
+      }
+    }
   }
 }
     ${SchoolCommonPartsFragmentDoc}`;

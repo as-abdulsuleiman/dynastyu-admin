@@ -9,12 +9,11 @@ import {
   QueryMode,
   SortOrder,
   useDeleteSchoolMutation,
-  useGetSchoolLazyQuery,
   useGetSchoolsQuery,
   useUpdateSchoolMutation,
 } from "@/services/graphql";
 import { useDebouncedValue } from "@mantine/hooks";
-import { Title, Text, Grid } from "@tremor/react";
+import { Grid } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
 import SchoolStatCard from "@/components/stat-cards/school";
@@ -30,6 +29,8 @@ import MenubarCard from "@/components/menubar";
 import { formatDate } from "@/lib/utils";
 import PromptAlert from "@/components/prompt-alert";
 import ContentHeader from "@/components/content-header";
+import { StatusEnum } from "@/lib/enums/updating-profile.enum";
+import SchoolDropdown from "@/components/school-dropdown";
 
 const headerItems = [
   { name: "Name" },
@@ -49,10 +50,11 @@ const Schools: FC<SchoolsProps> = ({}) => {
   const [debounced] = useDebouncedValue(value, 300);
   const [deleteSchool] = useDeleteSchoolMutation();
   const [updateSchool] = useUpdateSchoolMutation();
-  const [getSchool] = useGetSchoolLazyQuery();
   const [isDeletingSchool, setIsDeletingSchool] = useState(false);
-  const [openDeleteSchoolPrompt, setOpenDeleteSchoolPrompt] = useState(false);
-  const [activeSchool, setActiveSchool] = useState({});
+  const [activeSchool, setActiveSchool] = useState<any>({});
+  const [openSchool, setOpenSchool] = useState<boolean>(false);
+  const [selectedSchool, setSelectedSchool] = useState<any | number>({});
+  const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
 
   const {
     data: schools,
@@ -141,49 +143,12 @@ const Schools: FC<SchoolsProps> = ({}) => {
   };
   const handleDeleteSchoolPrompt = (item: any) => {
     setActiveSchool(item);
-    setOpenDeleteSchoolPrompt(true);
+    setUpdatingProfile(StatusEnum.DELETING);
   };
 
   const handleConfirmPrompt = async (school: any) => {
     try {
       setIsDeletingSchool(true);
-      const { data: schoolData } = await getSchool({
-        variables: {
-          where: {
-            id: school?.id,
-          },
-        },
-      });
-      const athletesInterestedId = schoolData?.school?.athletesInterested?.map(
-        (val: any) => ({
-          athleteId_schoolId: {
-            athleteId: val?.athleteId,
-            schoolId: school?.id,
-          },
-        })
-      );
-
-      const athletesRecruitedId = schoolData?.school?.athletesRecruited?.map(
-        (val: any) => ({
-          athleteId_schoolId: {
-            athleteId: val?.athleteId,
-            schoolId: school?.id,
-          },
-        })
-      );
-      const athletesProspectedId = schoolData?.school?.athletesProspected?.map(
-        (val: any) => ({
-          athleteId_schoolId: {
-            athleteId: val?.athleteId,
-            schoolId: school?.id,
-          },
-        })
-      );
-      const schoolPostId = schoolData?.school?.posts?.map((val: any) => ({
-        id: {
-          in: val?.id,
-        },
-      }));
 
       const athletesId = school?.athletes?.map((val: any) => ({
         userId: val?.userId,
@@ -193,41 +158,38 @@ const Schools: FC<SchoolsProps> = ({}) => {
         userId: val?.userId,
       }));
 
-      await updateSchool({
+      const res = await updateSchool({
         variables: {
           where: {
-            id: school?.id,
+            id: selectedSchool?.id,
           },
           data: {
-            athletesProspected: {
-              disconnect: athletesProspectedId || [],
-            },
-            athletesRecruited: {
-              disconnect: athletesRecruitedId || [],
-            },
-            athletesInterested: {
-              disconnect: athletesInterestedId || [],
-            },
-            posts: {
-              deleteMany: schoolPostId || [],
-            },
             athletes: {
-              disconnect: athletesId || [],
+              connect: athletesId || [],
             },
             coaches: {
-              disconnect: coachesId || [],
+              connect: coachesId || [],
             },
           },
         },
       });
-      await deleteSchool({
-        variables: {
-          where: {
-            id: schoolData?.school?.id,
+
+      if (res?.data?.updateOneSchool) {
+        await deleteSchool({
+          variables: {
+            where: {
+              id: school?.id,
+            },
           },
-        },
-      });
-      refetch();
+        });
+
+        refetch();
+        toast({
+          title: "School successfully Deleted.",
+          description: `${school?.name} has been successfully deleted`,
+          variant: "successfull",
+        });
+      }
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -238,13 +200,41 @@ const Schools: FC<SchoolsProps> = ({}) => {
       });
     } finally {
       setActiveSchool({});
+      setSelectedSchool({});
       setIsDeletingSchool(false);
-      setOpenDeleteSchoolPrompt(false);
+      setUpdatingProfile(null);
     }
   };
 
   const handleEditSchool = (item: any) => {
     router.push(`/schools/edit?school=${item?.id}`);
+  };
+
+  const renderSelectSchool = () => {
+    return (
+      <SchoolDropdown
+        scrollAreaClass="h-72"
+        hasSearch={true}
+        id="migrate-highschool"
+        onClose={() => setOpenSchool(!openSchool)}
+        isOpen={openSchool}
+        selectedValue={selectedSchool}
+        onSelectValue={(school) => {
+          setSelectedSchool({ value: school?.value, id: school?.id });
+        }}
+        placeholder="Select College"
+        label="Select School to Migrate data to"
+        whereClause={{
+          schoolType: {
+            is: {
+              name: {
+                equals: "College",
+              },
+            },
+          },
+        }}
+      />
+    );
   };
 
   const renderItems = ({ item, id }: { item: any; id: any }) => {
@@ -376,11 +366,13 @@ const Schools: FC<SchoolsProps> = ({}) => {
       <PromptAlert
         loading={isDeletingSchool}
         content={`This action cannot be undone. This will permanently delete this data from our servers.`}
-        showPrompt={openDeleteSchoolPrompt}
+        showPrompt={updatingProfile === StatusEnum.DELETING}
         handleHidePrompt={() => {
           setActiveSchool({});
-          setOpenDeleteSchoolPrompt(false);
+          setSelectedSchool({});
+          setUpdatingProfile(null);
         }}
+        customElement={renderSelectSchool()}
         handleConfirmPrompt={() => handleConfirmPrompt(activeSchool)}
       />
     </main>

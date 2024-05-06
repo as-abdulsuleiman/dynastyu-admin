@@ -23,9 +23,13 @@ import {
 } from "../Icons";
 import { Skeleton } from "../ui/skeleton";
 import { useRouter } from "next/navigation";
+import { useDebouncedValue } from "@mantine/hooks";
 import {
   useDeleteSchoolMutation,
+  useGetSchoolsQuery,
   useUpdateSchoolMutation,
+  QueryMode,
+  SortOrder,
 } from "@/services/graphql";
 import { useToast } from "@/hooks/use-toast";
 import MenubarCard from "../menubar";
@@ -39,7 +43,8 @@ import CalloutCard from "../callout";
 import CardContainer from "../card-container";
 import { renderLoader } from "@/lib/loader-helper";
 import { CalloutCardProps } from "@/interface/calloutOptions";
-
+import { StatusEnum } from "@/lib/enums/updating-profile.enum";
+import SchoolDropdown from "../school-dropdown";
 interface SchoolCardProps {
   loading?: boolean;
   school: any;
@@ -51,10 +56,13 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   const [deleteSchool] = useDeleteSchoolMutation();
   const [updateSchool] = useUpdateSchoolMutation();
   const [isDeletingSchool, setIsDeletingSchool] = useState(false);
-  const [openDeleteSchoolPrompt, setOpenDeleteSchoolPrompt] = useState(false);
+  const [searchValue, setSearchValue] = useState<string>("");
   const [viewAnalytics, setViewAnalytics] = useState(false);
-
+  const [openSchool, setOpenSchool] = useState<boolean>(false);
+  const [selectedSchool, setSelectedSchool] = useState<any | number>({});
+  const [debounced] = useDebouncedValue(searchValue, 300);
   const isHighSchoolType = school?.schoolType?.name === "High School" ?? false;
+  const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
 
   const dataList: any = [
     {
@@ -124,37 +132,28 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
     // },
   ];
 
+  const { data: schoolsData, loading: loadingSchools } = useGetSchoolsQuery({
+    variables: {
+      where: {
+        id: {
+          not: {
+            equals: school?.id,
+          },
+        },
+        OR: [
+          { name: { contains: debounced, mode: QueryMode.Insensitive } },
+          { email: { contains: debounced, mode: QueryMode.Insensitive } },
+        ],
+      },
+      take: 10,
+      orderBy: {
+        createdAt: SortOrder.Desc,
+      },
+    },
+  });
+
   const handleConfirmPrompt = async (school: any) => {
     setIsDeletingSchool(true);
-    const athletesInterestedId =
-      school?.school?.athletesInterested?.map((val: any) => ({
-        athleteId_schoolId: {
-          athleteId: val?.athleteId,
-          schoolId: school?.id,
-        },
-      })) || [];
-
-    const athletesRecruitedId =
-      school?.school?.athletesRecruited?.map((val: any) => ({
-        athleteId_schoolId: {
-          athleteId: val?.athleteId,
-          schoolId: school?.id,
-        },
-      })) || [];
-
-    const athletesProspectedId =
-      school?.school?.athletesProspected?.map((val: any) => ({
-        athleteId_schoolId: {
-          athleteId: val?.athleteId,
-          schoolId: school?.id,
-        },
-      })) || [];
-    const schoolPostId =
-      school?.school?.posts?.map((val: any) => ({
-        id: {
-          in: val?.id,
-        },
-      })) || [];
 
     const athletesId =
       school?.athletes?.map((val: any) => ({
@@ -165,45 +164,43 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       school?.coaches?.map((val: any) => ({
         userId: val?.userId,
       })) || [];
+
     try {
-      await updateSchool({
+      const res = await updateSchool({
         variables: {
           where: {
-            id: school?.id,
+            id: selectedSchool?.id,
           },
           data: {
-            athletesProspected: {
-              disconnect: athletesProspectedId,
-            },
-            athletesRecruited: {
-              disconnect: athletesRecruitedId,
-            },
-            athletesInterested: {
-              disconnect: athletesInterestedId,
-            },
-            posts: {
-              deleteMany: schoolPostId,
-            },
             athletes: {
-              disconnect: athletesId,
+              connect: athletesId,
             },
             coaches: {
-              disconnect: coachesId,
+              connect: coachesId,
             },
           },
         },
       });
 
-      await deleteSchool({
-        variables: {
-          where: {
-            id: school?.id,
+      if (res?.data?.updateOneSchool) {
+        await deleteSchool({
+          variables: {
+            where: {
+              id: school?.id,
+            },
           },
-        },
-      });
-      router.push(
-        isHighSchoolType ? `/schools/high-school` : `/schools/college`
-      );
+        });
+
+        toast({
+          title: "School successfully Deleted.",
+          description: `${school?.name} has been successfully deleted`,
+          variant: "successfull",
+        });
+
+        router.push(
+          isHighSchoolType ? `/schools/high-school` : `/schools/college`
+        );
+      }
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -214,11 +211,38 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       });
     } finally {
       setIsDeletingSchool(false);
-      setOpenDeleteSchoolPrompt(false);
+      setUpdatingProfile(null);
     }
   };
   const handleDeleteSchoolPrompt = () => {
-    setOpenDeleteSchoolPrompt(true);
+    setUpdatingProfile(StatusEnum.DELETING);
+  };
+
+  const renderSelectSchool = () => {
+    return (
+      <SchoolDropdown
+        scrollAreaClass="h-72"
+        hasSearch={true}
+        id="migrate-college-high-school"
+        onClose={() => setOpenSchool(!openSchool)}
+        isOpen={openSchool}
+        selectedValue={selectedSchool}
+        onSelectValue={(school) => {
+          setSelectedSchool({ value: school?.value, id: school?.id });
+        }}
+        placeholder={`Select ${isHighSchoolType ? "High School" : "College"}`}
+        label="Select School to Migrate data to"
+        whereClause={{
+          schoolType: {
+            is: {
+              name: {
+                equals: isHighSchoolType ? "High School" : "College",
+              },
+            },
+          },
+        }}
+      />
+    );
   };
 
   const dropdownItems = [
@@ -428,10 +452,12 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       <PromptAlert
         loading={isDeletingSchool}
         content={`This action cannot be undone. This will permanently delete this data from our servers.`}
-        showPrompt={openDeleteSchoolPrompt}
+        showPrompt={updatingProfile === StatusEnum.DELETING}
         handleHidePrompt={() => {
-          setOpenDeleteSchoolPrompt(false);
+          setSelectedSchool({});
+          setUpdatingProfile(null);
         }}
+        customElement={renderSelectSchool()}
         handleConfirmPrompt={() => handleConfirmPrompt(school)}
       />
       <ModalCard

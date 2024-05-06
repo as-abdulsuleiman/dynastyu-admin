@@ -825,7 +825,6 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                 <div className="hidden xl:flex xl:flex-row">
                   {renderBadges("flex flex-row items-center")}
                 </div>
-
                 {loading ? (
                   <Skeleton className="w-[40px] h-[20px]" />
                 ) : (

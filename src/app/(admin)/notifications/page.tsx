@@ -527,7 +527,7 @@ const Page: FC<PageProps> = ({}) => {
   return (
     <div>
       <ContentHeader
-        title="Notification"
+        title="Notifications"
         subHeader="Notification Overview"
         icon={
           <NotificationIcon
