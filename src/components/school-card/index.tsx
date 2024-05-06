@@ -2,13 +2,12 @@
 
 "use client";
 
-import { FC, useMemo, useState } from "react";
+import { FC, useState } from "react";
 import { Text } from "@tremor/react";
 import UserAvatar from "../user-avatar";
 import {
   ActivitySquareIcon,
   AthleteIcon,
-  CheckIcon,
   ClipboardEditIcon,
   FileImageIcon,
   FolderDotIcon,
@@ -44,10 +43,8 @@ import CalloutCard from "../callout";
 import CardContainer from "../card-container";
 import { renderLoader } from "@/lib/loader-helper";
 import { CalloutCardProps } from "@/interface/calloutOptions";
-import { CommandItem } from "../ui/command";
-import ComboBoxCard from "../combobox-card";
-import { cn } from "@/lib/utils";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
+import SchoolDropdown from "../school-dropdown";
 interface SchoolCardProps {
   loading?: boolean;
   school: any;
@@ -221,100 +218,30 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
     setUpdatingProfile(StatusEnum.DELETING);
   };
 
-  const schoolsDataOptions = useMemo(() => {
-    return (
-      schoolsData?.schools.map((school: any) => {
-        let schoolLoaction;
-        if (school) {
-          if (school?.city) {
-            schoolLoaction = school?.city;
-          }
-          if (school?.state) {
-            schoolLoaction = `${schoolLoaction}, ${school?.state}`;
-          }
-        }
-        return {
-          label: `${school?.name}${schoolLoaction ? "," : ""} ${
-            schoolLoaction || ""
-          }`,
-          value: school?.name,
-          id: school?.id,
-          logo: school?.logo,
-          city: school?.city,
-          state: school?.state,
-        };
-      }) || []
-    );
-  }, [schoolsData?.schools]);
-
-  const CustomSchoolItems = ({ item, id }: { item: any; id: number }) => {
-    let schoolLoaction;
-    if (item) {
-      if (item?.city) {
-        schoolLoaction = item?.city;
-      }
-      if (item?.state) {
-        schoolLoaction = `${schoolLoaction}, ${item?.state}`;
-      }
-    }
-    return (
-      <CommandItem
-        className="capitalize cursor-pointer"
-        key={item?.id || id}
-        value={selectedSchool}
-        onSelect={() => {
-          setSelectedSchool({ value: item?.value, id: item?.id });
-          setOpenSchool(false);
-        }}
-      >
-        <div className="flex items-center">
-          <UserAvatar
-            fallbackClassName="h-[55px] w-[55px]"
-            className="h-[55px] w-[55px] shadow mr-4 "
-            fallbackType="name"
-            avatar={item?.avatar as string}
-            fallback={`${item?.label?.charAt(0)} `}
-          />
-          <div>
-            <div className="text-sm mb-0.5">{item?.label}</div>
-            <div className="text-sm text-primary">{schoolLoaction || ""}</div>
-          </div>
-        </div>
-        <CheckIcon
-          className={cn(
-            "ml-auto h-4 w-4",
-            selectedSchool?.id === item?.id ? "opacity-100" : "opacity-0"
-          )}
-        />
-      </CommandItem>
-    );
-  };
-
   const renderSelectSchool = () => {
     return (
-      <div>
-        <div className="mb-6 w-full ml-auto flex flex-col">
-          <ComboBoxCard
-            valueKey="value"
-            displayKey="label"
-            IdKey="value"
-            label="Select School to Migrate data to"
-            id="school-add"
-            placeholder={"Select School"}
-            isOpen={openSchool}
-            scrollAreaClass="h-72"
-            hasSearch
-            shouldFilter={false}
-            searchValue={searchValue}
-            handleSearch={(search) => setSearchValue(search)}
-            loading={loadingSchools}
-            onClose={() => setOpenSchool(!openSchool)}
-            items={schoolsDataOptions as any}
-            selectedValue={selectedSchool}
-            customRenderItems={CustomSchoolItems}
-          />
-        </div>
-      </div>
+      <SchoolDropdown
+        scrollAreaClass="h-72"
+        hasSearch={true}
+        id="migrate-college-high-school"
+        onClose={() => setOpenSchool(!openSchool)}
+        isOpen={openSchool}
+        selectedValue={selectedSchool}
+        onSelectValue={(school) => {
+          setSelectedSchool({ value: school?.value, id: school?.id });
+        }}
+        placeholder={`Select ${isHighSchoolType ? "High School" : "College"}`}
+        label="Select School to Migrate data to"
+        whereClause={{
+          schoolType: {
+            is: {
+              name: {
+                equals: isHighSchoolType ? "High School" : "College",
+              },
+            },
+          },
+        }}
+      />
     );
   };
 

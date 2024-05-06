@@ -35,6 +35,7 @@ const PromptAlert: FC<PromptAlertProps> = ({
 }) => {
   return (
     <AlertDialog defaultOpen={false} open={showPrompt}>
+      <AlertDialogOverlay />
       <AlertDialogContent className="w-[95%] max-w-2xl md:max-w-lg">
         <AlertDialogHeader>
           <AlertDialogTitle>
@@ -46,9 +47,7 @@ const PromptAlert: FC<PromptAlertProps> = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <div>
-          {customElement ? <div className="w-full">{customElement}</div> : null}
-        </div>
+        {customElement ? <> {customElement}</> : null}
 
         <AlertDialogFooter className="flex flex-row items-end ml-auto">
           <AlertDialogCancel disabled={loading} onClick={handleHidePrompt}>

@@ -141,7 +141,7 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
   }, [selectedSchoolData?.findFirstSchool, schooldata?.schools]);
 
   return (
-    <div className="w-full relative" onBlur={onBlur} tabIndex={0}>
+    <div className="w-full relative h-full" onBlur={onBlur} tabIndex={0}>
       {label ? (
         <label
           htmlFor={id}
@@ -170,8 +170,10 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
             <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent side={side} className="PopoverContent p-0">
-          <ScrollArea className={`h-72 rounded-md border ${scrollAreaClass}`}>
+        <PopoverContent side={side} className="PopoverContent p-0 ">
+          <ScrollArea
+            className={`h-72 rounded-md border z-[9999999] ${scrollAreaClass}`}
+          >
             <Command shouldFilter={false}>
               {hasSearch ? (
                 <CommandInput

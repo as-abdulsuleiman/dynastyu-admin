@@ -336,7 +336,7 @@ const Page: FC<PageProps> = ({ params }) => {
         </div>
       )}
       <Separator className="my-6" />
-      <div className="mb-6 w-full  sm:w-1/2 ml-auto flex flex-col">
+      <div className="mb-6 w-full sm:w-1/2 ml-auto flex flex-col">
         <ComboboxCard
           valueKey="value"
           displayKey="label"
