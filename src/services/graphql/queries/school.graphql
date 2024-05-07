@@ -204,6 +204,26 @@ query getFindFirstSchool(
   }
 }
 
+query getAggregateSchool(
+  $where: SchoolWhereInput
+  $orderBy: [SchoolOrderByWithRelationInput!]
+  $cursor: SchoolWhereUniqueInput
+  $take: Int
+  $skip: Int
+) {
+  aggregateSchool(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
+    _count {
+      id
+    }
+  }
+}
+
 mutation createInterest($data: InterestedSchoolsCreateInput!) {
   createOneInterestedSchools(data: $data) {
     athlete {

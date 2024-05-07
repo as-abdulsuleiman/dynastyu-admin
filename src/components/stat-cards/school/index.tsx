@@ -6,9 +6,9 @@ import { SchoolIcon } from "@/components/Icons";
 import StatCard from "@/components/stat-card";
 import { useRootStore } from "@/mobx";
 import {
-  GetSchoolsQuery,
+  GetAggregateSchoolQuery,
   SchoolWhereInput,
-  useGetSchoolsQuery,
+  useGetAggregateSchoolQuery,
 } from "@/services/graphql";
 import { observer } from "mobx-react-lite";
 import { usePathname, useRouter } from "next/navigation";
@@ -27,16 +27,12 @@ const SchoolStatCard: FC<indexProps> = ({ whereClause, title, path }) => {
     schoolStore: { setSchools, schools: schoolCount },
   } = useRootStore();
 
-  const {
-    data: schools,
-    loading,
-    refetch,
-  } = useGetSchoolsQuery({
+  const { data, loading } = useGetAggregateSchoolQuery({
     variables: {
       where: { ...whereClause },
     },
-    onCompleted: (data: GetSchoolsQuery) => {
-      setSchools(data?.schools as any);
+    onCompleted: (data: GetAggregateSchoolQuery) => {
+      setSchools(data as any);
     },
   });
 
@@ -45,10 +41,10 @@ const SchoolStatCard: FC<indexProps> = ({ whereClause, title, path }) => {
   return (
     <StatCard
       activeLegend={`${title?.toLowerCase()}s`}
-      dataCount={schoolCount?.length || 0}
+      dataCount={schoolCount?.aggregateSchool?._count?.id || 0}
       title={`Total ${title}s`}
       loading={loading}
-      categoryValues={[schoolCount.length || 0]}
+      categoryValues={[schoolCount?.aggregateSchool?._count?.id || 0]}
       categories={[activeSchool]}
       onClick={() => router.push("/schools/college")}
       showIcon={pathname === path}

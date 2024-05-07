@@ -26157,6 +26157,17 @@ export type GetFindFirstSchoolQueryVariables = Exact<{
 
 export type GetFindFirstSchoolQuery = { __typename?: 'Query', findFirstSchool?: { __typename?: 'School', id: any, uuid: string, name: string, email: string, createdAt: any, updatedAt: any, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, state?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', id: any, name: string } } | null };
 
+export type GetAggregateSchoolQueryVariables = Exact<{
+  where?: InputMaybe<SchoolWhereInput>;
+  orderBy?: InputMaybe<Array<SchoolOrderByWithRelationInput> | SchoolOrderByWithRelationInput>;
+  cursor?: InputMaybe<SchoolWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetAggregateSchoolQuery = { __typename?: 'Query', aggregateSchool: { __typename?: 'AggregateSchool', _count?: { __typename?: 'SchoolCountAggregate', id: number } | null } };
+
 export type CreateInterestMutationVariables = Exact<{
   data: InterestedSchoolsCreateInput;
 }>;
@@ -29221,6 +29232,58 @@ export type GetFindFirstSchoolQueryHookResult = ReturnType<typeof useGetFindFirs
 export type GetFindFirstSchoolLazyQueryHookResult = ReturnType<typeof useGetFindFirstSchoolLazyQuery>;
 export type GetFindFirstSchoolSuspenseQueryHookResult = ReturnType<typeof useGetFindFirstSchoolSuspenseQuery>;
 export type GetFindFirstSchoolQueryResult = Apollo.QueryResult<GetFindFirstSchoolQuery, GetFindFirstSchoolQueryVariables>;
+export const GetAggregateSchoolDocument = gql`
+    query getAggregateSchool($where: SchoolWhereInput, $orderBy: [SchoolOrderByWithRelationInput!], $cursor: SchoolWhereUniqueInput, $take: Int, $skip: Int) {
+  aggregateSchool(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
+    _count {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAggregateSchoolQuery__
+ *
+ * To run a query within a React component, call `useGetAggregateSchoolQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAggregateSchoolQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAggregateSchoolQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useGetAggregateSchoolQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAggregateSchoolQuery, GetAggregateSchoolQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAggregateSchoolQuery, GetAggregateSchoolQueryVariables>(GetAggregateSchoolDocument, options);
+      }
+export function useGetAggregateSchoolLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAggregateSchoolQuery, GetAggregateSchoolQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAggregateSchoolQuery, GetAggregateSchoolQueryVariables>(GetAggregateSchoolDocument, options);
+        }
+export function useGetAggregateSchoolSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetAggregateSchoolQuery, GetAggregateSchoolQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAggregateSchoolQuery, GetAggregateSchoolQueryVariables>(GetAggregateSchoolDocument, options);
+        }
+export type GetAggregateSchoolQueryHookResult = ReturnType<typeof useGetAggregateSchoolQuery>;
+export type GetAggregateSchoolLazyQueryHookResult = ReturnType<typeof useGetAggregateSchoolLazyQuery>;
+export type GetAggregateSchoolSuspenseQueryHookResult = ReturnType<typeof useGetAggregateSchoolSuspenseQuery>;
+export type GetAggregateSchoolQueryResult = Apollo.QueryResult<GetAggregateSchoolQuery, GetAggregateSchoolQueryVariables>;
 export const CreateInterestDocument = gql`
     mutation createInterest($data: InterestedSchoolsCreateInput!) {
   createOneInterestedSchools(data: $data) {
