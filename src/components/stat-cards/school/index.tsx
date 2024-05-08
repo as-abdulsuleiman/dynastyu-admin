@@ -2,6 +2,7 @@
 
 "use client";
 
+import { FC } from "react";
 import { SchoolIcon } from "@/components/Icons";
 import StatCard from "@/components/stat-card";
 import { useRootStore } from "@/mobx";
@@ -12,7 +13,6 @@ import {
 } from "@/services/graphql";
 import { observer } from "mobx-react-lite";
 import { usePathname, useRouter } from "next/navigation";
-import { FC, useEffect } from "react";
 interface indexProps {
   whereClause: SchoolWhereInput;
   title: string;
