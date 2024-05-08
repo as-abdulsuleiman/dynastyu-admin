@@ -9,6 +9,7 @@ import {
   QueryMode,
   SortOrder,
   useDeleteSchoolMutation,
+  useGetAggregateSchoolLazyQuery,
   useGetSchoolsQuery,
   useUpdateSchoolMutation,
 } from "@/services/graphql";
@@ -31,6 +32,7 @@ import PromptAlert from "@/components/prompt-alert";
 import ContentHeader from "@/components/content-header";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 import SchoolDropdown from "@/components/school-dropdown";
+import { useRootStore } from "@/mobx";
 
 const headerItems = [
   { name: "Name" },
@@ -45,11 +47,15 @@ interface SchoolsProps {}
 
 const Schools: FC<SchoolsProps> = ({}) => {
   const { toast } = useToast();
+  const {
+    schoolStore: { setSchools },
+  } = useRootStore();
   const router = useRouter();
   const [value, setValue] = useState<string>("");
   const [debounced] = useDebouncedValue(value, 300);
   const [deleteSchool] = useDeleteSchoolMutation();
   const [updateSchool] = useUpdateSchoolMutation();
+  const [aggregateCollege] = useGetAggregateSchoolLazyQuery();
   const [isDeletingSchool, setIsDeletingSchool] = useState(false);
   const [activeSchool, setActiveSchool] = useState<any>({});
   const [openSchool, setOpenSchool] = useState<boolean>(false);
@@ -178,6 +184,18 @@ const Schools: FC<SchoolsProps> = ({}) => {
             },
           },
         });
+        const schoolResp = await aggregateCollege({
+          variables: {
+            where: {
+              schoolType: {
+                is: {
+                  name: { equals: "College" },
+                },
+              },
+            },
+          },
+        });
+        setSchools(schoolResp?.data as any);
         refetch();
         toast({
           title: "School successfully Deleted.",

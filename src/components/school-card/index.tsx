@@ -30,6 +30,7 @@ import {
   useUpdateSchoolMutation,
   QueryMode,
   SortOrder,
+  useGetAggregateSchoolLazyQuery,
 } from "@/services/graphql";
 import { useToast } from "@/hooks/use-toast";
 import MenubarCard from "../menubar";
@@ -45,6 +46,7 @@ import { renderLoader } from "@/lib/loader-helper";
 import { CalloutCardProps } from "@/interface/calloutOptions";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 import SchoolDropdown from "../school-dropdown";
+import { useRootStore } from "@/mobx";
 interface SchoolCardProps {
   loading?: boolean;
   school: any;
@@ -52,9 +54,13 @@ interface SchoolCardProps {
 
 const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   const router = useRouter();
+  const {
+    schoolStore: { setSchools },
+  } = useRootStore();
   const { toast } = useToast();
   const [deleteSchool] = useDeleteSchoolMutation();
   const [updateSchool] = useUpdateSchoolMutation();
+  const [aggregateSchool] = useGetAggregateSchoolLazyQuery();
   const [isDeletingSchool, setIsDeletingSchool] = useState(false);
   const [searchValue, setSearchValue] = useState<string>("");
   const [viewAnalytics, setViewAnalytics] = useState(false);
@@ -190,13 +196,25 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
             },
           },
         });
-
+        const schoolResp = await aggregateSchool({
+          variables: {
+            where: {
+              schoolType: {
+                is: {
+                  name: {
+                    equals: isHighSchoolType ? "High School" : "College",
+                  },
+                },
+              },
+            },
+          },
+        });
+        setSchools(schoolResp?.data as any);
         toast({
           title: "School successfully Deleted.",
           description: `${school?.name} has been successfully deleted`,
           variant: "successfull",
         });
-
         router.push(
           isHighSchoolType ? `/schools/high-school` : `/schools/college`
         );
