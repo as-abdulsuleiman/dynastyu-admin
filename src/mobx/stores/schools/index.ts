@@ -2,7 +2,7 @@
 
 "use client";
 
-import { GetSchoolsQuery } from "@/services/graphql";
+import { GetAggregateSchoolQuery, GetSchoolsQuery } from "@/services/graphql";
 import { cast, types } from "mobx-state-tree";
 
 /**
@@ -14,10 +14,13 @@ import { cast, types } from "mobx-state-tree";
 
 export const SchoolStore = types
   .model("SchoolStore", {
-    schools: types.optional(types.frozen<Partial<GetSchoolsQuery[]>>(), []),
+    schools: types.optional(
+      types.frozen<Partial<GetAggregateSchoolQuery>>(),
+      {}
+    ),
   })
   .actions((store) => ({
-    setSchools(schools: Partial<GetSchoolsQuery[]>) {
+    setSchools(schools: Partial<GetAggregateSchoolQuery>) {
       store.schools = cast(schools);
     },
   }));
