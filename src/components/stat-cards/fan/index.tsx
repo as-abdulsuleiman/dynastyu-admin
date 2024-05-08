@@ -5,7 +5,10 @@
 import { FanIcon } from "@/components/Icons";
 import StatCard from "@/components/stat-card";
 import { useRootStore } from "@/mobx";
-import { GetUsersQuery, useGetUsersQuery } from "@/services/graphql";
+import {
+  GetAggregateUserQuery,
+  useGetAggregateUserQuery,
+} from "@/services/graphql";
 import { observer } from "mobx-react-lite";
 import { usePathname, useRouter } from "next/navigation";
 import { FC } from "react";
@@ -20,7 +23,7 @@ const FanStatCard: FC<indexProps> = ({}) => {
     fanStore: { setFans, fans: fansCount },
   } = useRootStore();
 
-  const { data: fans, loading } = useGetUsersQuery({
+  const { data: fans, loading } = useGetAggregateUserQuery({
     variables: {
       where: {
         accountTypeId: {
@@ -28,18 +31,18 @@ const FanStatCard: FC<indexProps> = ({}) => {
         },
       },
     },
-    onCompleted: (data: GetUsersQuery) => {
-      setFans(data.users as any);
+    onCompleted: (data: GetAggregateUserQuery) => {
+      setFans(data as any);
     },
   });
 
   return (
     <StatCard
       activeLegend="Fans"
-      dataCount={fansCount?.length || 0}
+      dataCount={fansCount?.aggregateUser?._count?.id || 0}
       title="Total Fans"
       loading={loading}
-      categoryValues={[fansCount?.length || 0]}
+      categoryValues={[fansCount?.aggregateUser?._count?.id || 0]}
       categories={["Fans"]}
       onClick={() => router.push("/fans")}
       showIcon={pathname === "/fans"}

@@ -12,6 +12,7 @@ import {
   SortOrder,
   useDeleteFirebaseUserMutation,
   useDeleteUserMutation,
+  useGetAggregateUserLazyQuery,
   useGetUsersQuery,
   useUpdateUserMutation,
 } from "@/services/graphql";
@@ -36,6 +37,7 @@ import { fanFilter } from "@/lib/filters";
 import { getURLParams } from "@/lib/helpers";
 import PromptAlert from "../prompt-alert";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
+import { useRootStore } from "@/mobx";
 
 const headerItems = [
   { name: "Name" },
@@ -121,6 +123,12 @@ const Fans: FC<FansProps> = ({}) => {
     },
   });
 
+  const {
+    fanStore: { setFans },
+  } = useRootStore();
+
+  const [agrregatedFans] = useGetAggregateUserLazyQuery();
+
   const handleDeleteFanConfirmPrompt = async (item: any) => {
     setDeletingProfile(true);
     try {
@@ -145,6 +153,17 @@ const Fans: FC<FansProps> = ({}) => {
         description: `@${item?.username} profile has been deleted.`,
         variant: "successfull",
       });
+
+      const fanResponse = await agrregatedFans({
+        variables: {
+          where: {
+            accountTypeId: {
+              equals: 2,
+            },
+          },
+        },
+      });
+      setFans(fanResponse.data as any);
       refetch();
     } catch (error) {
       toast({

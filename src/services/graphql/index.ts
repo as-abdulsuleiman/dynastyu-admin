@@ -25870,6 +25870,17 @@ export type GetPositionsQueryVariables = Exact<{
 
 export type GetPositionsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', name: string, id: any, uuid: string, shortName: string }> };
 
+export type GetAggregateAthleteProfileQueryVariables = Exact<{
+  where?: InputMaybe<AthleteProfileWhereInput>;
+  orderBy?: InputMaybe<Array<AthleteProfileOrderByWithRelationInput> | AthleteProfileOrderByWithRelationInput>;
+  cursor?: InputMaybe<AthleteProfileWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetAggregateAthleteProfileQuery = { __typename?: 'Query', aggregateAthleteProfile: { __typename?: 'AggregateAthleteProfile', _count?: { __typename?: 'AthleteProfileCountAggregate', id: number } | null } };
+
 export type GetPositionCategoriesQueryVariables = Exact<{
   where?: InputMaybe<PositionCategoryWhereInput>;
   orderBy?: InputMaybe<Array<PositionCategoryOrderByWithRelationInput> | PositionCategoryOrderByWithRelationInput>;
@@ -25941,6 +25952,17 @@ export type GetCoachQueryVariables = Exact<{
 
 
 export type GetCoachQuery = { __typename?: 'Query', coachProfile?: { __typename?: 'CoachProfile', id: any, title?: string | null, schoolId?: any | null, verified: boolean, city?: string | null, state?: string | null, userId: any, createdAt: any, updatedAt: any, canReceiveMessages?: boolean | null, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, school?: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } } | null, country?: { __typename?: 'Country', name: string, flag: string, id: any, abbreviation: string } | null, user: { __typename?: 'User', firstname: string, surname: string, id: any, username?: string | null, avatar?: string | null, isActive: boolean, email: string, dob?: any | null, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', title: string, id: any } | null }, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, reposts: number, comments: number, interestedSchools: number, evaluationsCreated: number, prospectedSchools: number } | null } } | null };
+
+export type GetAggregateCoachProfileQueryVariables = Exact<{
+  where?: InputMaybe<CoachProfileWhereInput>;
+  orderBy?: InputMaybe<Array<CoachProfileOrderByWithRelationInput> | CoachProfileOrderByWithRelationInput>;
+  cursor?: InputMaybe<CoachProfileWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetAggregateCoachProfileQuery = { __typename?: 'Query', aggregateCoachProfile: { __typename?: 'AggregateCoachProfile', _count?: { __typename?: 'CoachProfileCountAggregate', id: number } | null } };
 
 export type RegisterCoachMutationVariables = Exact<{
   data: UserCreateInput;
@@ -26121,6 +26143,17 @@ export type GetPostFlagQueryVariables = Exact<{
 
 
 export type GetPostFlagQuery = { __typename?: 'Query', postFlag?: { __typename?: 'PostFlag', id: any, uuid: string, createdAt: any, updatedAt: any, userId: any, postId: any, reason: string, user: { __typename?: 'User', id: any, uuid: string, username?: string | null, firstname: string, surname: string, avatar?: string | null, email: string, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', id: any, title: string } | null } }, post: { __typename?: 'Post', id: any, userId: any, uuid: string, videos: Array<string>, images: Array<string>, caption: string, visibility: Visibility, createdAt: any, updatedAt: any, videosAspectRatio: Array<string>, user: { __typename?: 'User', id: any, uuid: string, username?: string | null, firstname: string, surname: string, avatar?: string | null, email: string, accountType: { __typename?: 'AccountType', id: any, title: string, role?: { __typename?: 'Role', id: any, title: string } | null } } } } | null };
+
+export type GetAggregatePostFlagQueryVariables = Exact<{
+  where?: InputMaybe<PostFlagWhereInput>;
+  orderBy?: InputMaybe<Array<PostFlagOrderByWithRelationInput> | PostFlagOrderByWithRelationInput>;
+  cursor?: InputMaybe<PostFlagWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetAggregatePostFlagQuery = { __typename?: 'Query', aggregatePostFlag: { __typename?: 'AggregatePostFlag', _count?: { __typename?: 'PostFlagCountAggregate', id: number } | null } };
 
 export type SchoolCommonPartsFragment = { __typename?: 'School', id: any, uuid: string, name: string, email: string, createdAt: any, updatedAt: any, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, state?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', id: any, name: string } };
 
@@ -26437,6 +26470,17 @@ export type GetSkillVerificationRequestQueryVariables = Exact<{
 
 export type GetSkillVerificationRequestQuery = { __typename?: 'Query', skillVerificationRequest?: { __typename?: 'SkillVerificationRequest', id: any, uuid: string, dateOfVerfication?: any | null, verified: boolean, createdAt: any, updatedAt: any, skillId: any, userId: any, skill: { __typename?: 'Skills', id: any, athleteId?: any | null, videos: Array<string>, secondValue?: string | null, value: string, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, skills: Array<{ __typename?: 'Skills', value: string }> } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null, avatar?: string | null, email: string, athleteProfile?: { __typename?: 'AthleteProfile', id: any, verified: boolean, userId: any, verifiedBy?: { __typename?: 'CoachProfile', title?: string | null, user: { __typename?: 'User', username?: string | null, firstname: string, surname: string } } | null } | null }, camp?: { __typename?: 'Camp', name: string, id: any, uuid: string, address: string, description?: string | null } | null } | null };
 
+export type GetAggregateSkillTypeQueryVariables = Exact<{
+  where?: InputMaybe<SkillTypeWhereInput>;
+  orderBy?: InputMaybe<Array<SkillTypeOrderByWithRelationInput> | SkillTypeOrderByWithRelationInput>;
+  cursor?: InputMaybe<SkillTypeWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetAggregateSkillTypeQuery = { __typename?: 'Query', aggregateSkillType: { __typename?: 'AggregateSkillType', _count?: { __typename?: 'SkillTypeCountAggregate', id: number } | null } };
+
 export type GetCampsQueryVariables = Exact<{
   where?: InputMaybe<CampWhereInput>;
   orderBy?: InputMaybe<Array<CampOrderByWithRelationInput> | CampOrderByWithRelationInput>;
@@ -26544,6 +26588,17 @@ export type GetBlockedUsersQueryVariables = Exact<{
 
 
 export type GetBlockedUsersQuery = { __typename?: 'Query', findManyBlocks: Array<{ __typename?: 'Blocks', blocked: { __typename?: 'User', id: any, firstname: string, username?: string | null, surname: string, avatar?: string | null, accountType: { __typename?: 'AccountType', id: any, title: string } } }> };
+
+export type GetAggregateUserQueryVariables = Exact<{
+  where?: InputMaybe<UserWhereInput>;
+  orderBy?: InputMaybe<Array<UserOrderByWithRelationInput> | UserOrderByWithRelationInput>;
+  cursor?: InputMaybe<UserWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetAggregateUserQuery = { __typename?: 'Query', aggregateUser: { __typename?: 'AggregateUser', _count?: { __typename?: 'UserCountAggregate', id: number } | null } };
 
 export type CreateOneUserMutationVariables = Exact<{
   data: UserCreateInput;
@@ -27332,6 +27387,58 @@ export type GetPositionsQueryHookResult = ReturnType<typeof useGetPositionsQuery
 export type GetPositionsLazyQueryHookResult = ReturnType<typeof useGetPositionsLazyQuery>;
 export type GetPositionsSuspenseQueryHookResult = ReturnType<typeof useGetPositionsSuspenseQuery>;
 export type GetPositionsQueryResult = Apollo.QueryResult<GetPositionsQuery, GetPositionsQueryVariables>;
+export const GetAggregateAthleteProfileDocument = gql`
+    query getAggregateAthleteProfile($where: AthleteProfileWhereInput, $orderBy: [AthleteProfileOrderByWithRelationInput!], $cursor: AthleteProfileWhereUniqueInput, $take: Int, $skip: Int) {
+  aggregateAthleteProfile(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
+    _count {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAggregateAthleteProfileQuery__
+ *
+ * To run a query within a React component, call `useGetAggregateAthleteProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAggregateAthleteProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAggregateAthleteProfileQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useGetAggregateAthleteProfileQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAggregateAthleteProfileQuery, GetAggregateAthleteProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAggregateAthleteProfileQuery, GetAggregateAthleteProfileQueryVariables>(GetAggregateAthleteProfileDocument, options);
+      }
+export function useGetAggregateAthleteProfileLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAggregateAthleteProfileQuery, GetAggregateAthleteProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAggregateAthleteProfileQuery, GetAggregateAthleteProfileQueryVariables>(GetAggregateAthleteProfileDocument, options);
+        }
+export function useGetAggregateAthleteProfileSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetAggregateAthleteProfileQuery, GetAggregateAthleteProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAggregateAthleteProfileQuery, GetAggregateAthleteProfileQueryVariables>(GetAggregateAthleteProfileDocument, options);
+        }
+export type GetAggregateAthleteProfileQueryHookResult = ReturnType<typeof useGetAggregateAthleteProfileQuery>;
+export type GetAggregateAthleteProfileLazyQueryHookResult = ReturnType<typeof useGetAggregateAthleteProfileLazyQuery>;
+export type GetAggregateAthleteProfileSuspenseQueryHookResult = ReturnType<typeof useGetAggregateAthleteProfileSuspenseQuery>;
+export type GetAggregateAthleteProfileQueryResult = Apollo.QueryResult<GetAggregateAthleteProfileQuery, GetAggregateAthleteProfileQueryVariables>;
 export const GetPositionCategoriesDocument = gql`
     query getPositionCategories($where: PositionCategoryWhereInput, $orderBy: [PositionCategoryOrderByWithRelationInput!], $cursor: PositionCategoryWhereUniqueInput, $take: Int, $skip: Int, $distinct: [PositionCategoryScalarFieldEnum!]) {
   positionCategories(
@@ -27844,6 +27951,58 @@ export type GetCoachQueryHookResult = ReturnType<typeof useGetCoachQuery>;
 export type GetCoachLazyQueryHookResult = ReturnType<typeof useGetCoachLazyQuery>;
 export type GetCoachSuspenseQueryHookResult = ReturnType<typeof useGetCoachSuspenseQuery>;
 export type GetCoachQueryResult = Apollo.QueryResult<GetCoachQuery, GetCoachQueryVariables>;
+export const GetAggregateCoachProfileDocument = gql`
+    query getAggregateCoachProfile($where: CoachProfileWhereInput, $orderBy: [CoachProfileOrderByWithRelationInput!], $cursor: CoachProfileWhereUniqueInput, $take: Int, $skip: Int) {
+  aggregateCoachProfile(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
+    _count {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAggregateCoachProfileQuery__
+ *
+ * To run a query within a React component, call `useGetAggregateCoachProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAggregateCoachProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAggregateCoachProfileQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useGetAggregateCoachProfileQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAggregateCoachProfileQuery, GetAggregateCoachProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAggregateCoachProfileQuery, GetAggregateCoachProfileQueryVariables>(GetAggregateCoachProfileDocument, options);
+      }
+export function useGetAggregateCoachProfileLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAggregateCoachProfileQuery, GetAggregateCoachProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAggregateCoachProfileQuery, GetAggregateCoachProfileQueryVariables>(GetAggregateCoachProfileDocument, options);
+        }
+export function useGetAggregateCoachProfileSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetAggregateCoachProfileQuery, GetAggregateCoachProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAggregateCoachProfileQuery, GetAggregateCoachProfileQueryVariables>(GetAggregateCoachProfileDocument, options);
+        }
+export type GetAggregateCoachProfileQueryHookResult = ReturnType<typeof useGetAggregateCoachProfileQuery>;
+export type GetAggregateCoachProfileLazyQueryHookResult = ReturnType<typeof useGetAggregateCoachProfileLazyQuery>;
+export type GetAggregateCoachProfileSuspenseQueryHookResult = ReturnType<typeof useGetAggregateCoachProfileSuspenseQuery>;
+export type GetAggregateCoachProfileQueryResult = Apollo.QueryResult<GetAggregateCoachProfileQuery, GetAggregateCoachProfileQueryVariables>;
 export const RegisterCoachDocument = gql`
     mutation registerCoach($data: UserCreateInput!) {
   registerCoach(data: $data) {
@@ -28964,6 +29123,58 @@ export type GetPostFlagQueryHookResult = ReturnType<typeof useGetPostFlagQuery>;
 export type GetPostFlagLazyQueryHookResult = ReturnType<typeof useGetPostFlagLazyQuery>;
 export type GetPostFlagSuspenseQueryHookResult = ReturnType<typeof useGetPostFlagSuspenseQuery>;
 export type GetPostFlagQueryResult = Apollo.QueryResult<GetPostFlagQuery, GetPostFlagQueryVariables>;
+export const GetAggregatePostFlagDocument = gql`
+    query getAggregatePostFlag($where: PostFlagWhereInput, $orderBy: [PostFlagOrderByWithRelationInput!], $cursor: PostFlagWhereUniqueInput, $take: Int, $skip: Int) {
+  aggregatePostFlag(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
+    _count {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAggregatePostFlagQuery__
+ *
+ * To run a query within a React component, call `useGetAggregatePostFlagQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAggregatePostFlagQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAggregatePostFlagQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useGetAggregatePostFlagQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAggregatePostFlagQuery, GetAggregatePostFlagQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAggregatePostFlagQuery, GetAggregatePostFlagQueryVariables>(GetAggregatePostFlagDocument, options);
+      }
+export function useGetAggregatePostFlagLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAggregatePostFlagQuery, GetAggregatePostFlagQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAggregatePostFlagQuery, GetAggregatePostFlagQueryVariables>(GetAggregatePostFlagDocument, options);
+        }
+export function useGetAggregatePostFlagSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetAggregatePostFlagQuery, GetAggregatePostFlagQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAggregatePostFlagQuery, GetAggregatePostFlagQueryVariables>(GetAggregatePostFlagDocument, options);
+        }
+export type GetAggregatePostFlagQueryHookResult = ReturnType<typeof useGetAggregatePostFlagQuery>;
+export type GetAggregatePostFlagLazyQueryHookResult = ReturnType<typeof useGetAggregatePostFlagLazyQuery>;
+export type GetAggregatePostFlagSuspenseQueryHookResult = ReturnType<typeof useGetAggregatePostFlagSuspenseQuery>;
+export type GetAggregatePostFlagQueryResult = Apollo.QueryResult<GetAggregatePostFlagQuery, GetAggregatePostFlagQueryVariables>;
 export const GetSchoolsDocument = gql`
     query getSchools($where: SchoolWhereInput, $orderBy: [SchoolOrderByWithRelationInput!], $cursor: SchoolWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SchoolScalarFieldEnum!]) {
   schools(
@@ -30943,6 +31154,58 @@ export type GetSkillVerificationRequestQueryHookResult = ReturnType<typeof useGe
 export type GetSkillVerificationRequestLazyQueryHookResult = ReturnType<typeof useGetSkillVerificationRequestLazyQuery>;
 export type GetSkillVerificationRequestSuspenseQueryHookResult = ReturnType<typeof useGetSkillVerificationRequestSuspenseQuery>;
 export type GetSkillVerificationRequestQueryResult = Apollo.QueryResult<GetSkillVerificationRequestQuery, GetSkillVerificationRequestQueryVariables>;
+export const GetAggregateSkillTypeDocument = gql`
+    query getAggregateSkillType($where: SkillTypeWhereInput, $orderBy: [SkillTypeOrderByWithRelationInput!], $cursor: SkillTypeWhereUniqueInput, $take: Int, $skip: Int) {
+  aggregateSkillType(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
+    _count {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAggregateSkillTypeQuery__
+ *
+ * To run a query within a React component, call `useGetAggregateSkillTypeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAggregateSkillTypeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAggregateSkillTypeQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useGetAggregateSkillTypeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAggregateSkillTypeQuery, GetAggregateSkillTypeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAggregateSkillTypeQuery, GetAggregateSkillTypeQueryVariables>(GetAggregateSkillTypeDocument, options);
+      }
+export function useGetAggregateSkillTypeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAggregateSkillTypeQuery, GetAggregateSkillTypeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAggregateSkillTypeQuery, GetAggregateSkillTypeQueryVariables>(GetAggregateSkillTypeDocument, options);
+        }
+export function useGetAggregateSkillTypeSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetAggregateSkillTypeQuery, GetAggregateSkillTypeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAggregateSkillTypeQuery, GetAggregateSkillTypeQueryVariables>(GetAggregateSkillTypeDocument, options);
+        }
+export type GetAggregateSkillTypeQueryHookResult = ReturnType<typeof useGetAggregateSkillTypeQuery>;
+export type GetAggregateSkillTypeLazyQueryHookResult = ReturnType<typeof useGetAggregateSkillTypeLazyQuery>;
+export type GetAggregateSkillTypeSuspenseQueryHookResult = ReturnType<typeof useGetAggregateSkillTypeSuspenseQuery>;
+export type GetAggregateSkillTypeQueryResult = Apollo.QueryResult<GetAggregateSkillTypeQuery, GetAggregateSkillTypeQueryVariables>;
 export const GetCampsDocument = gql`
     query getCamps($where: CampWhereInput, $orderBy: [CampOrderByWithRelationInput!], $cursor: CampWhereUniqueInput, $take: Int, $skip: Int, $distinct: [CampScalarFieldEnum!]) {
   camps(
@@ -31639,6 +31902,58 @@ export type GetBlockedUsersQueryHookResult = ReturnType<typeof useGetBlockedUser
 export type GetBlockedUsersLazyQueryHookResult = ReturnType<typeof useGetBlockedUsersLazyQuery>;
 export type GetBlockedUsersSuspenseQueryHookResult = ReturnType<typeof useGetBlockedUsersSuspenseQuery>;
 export type GetBlockedUsersQueryResult = Apollo.QueryResult<GetBlockedUsersQuery, GetBlockedUsersQueryVariables>;
+export const GetAggregateUserDocument = gql`
+    query getAggregateUser($where: UserWhereInput, $orderBy: [UserOrderByWithRelationInput!], $cursor: UserWhereUniqueInput, $take: Int, $skip: Int) {
+  aggregateUser(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
+    _count {
+      id
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAggregateUserQuery__
+ *
+ * To run a query within a React component, call `useGetAggregateUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAggregateUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAggregateUserQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useGetAggregateUserQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAggregateUserQuery, GetAggregateUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAggregateUserQuery, GetAggregateUserQueryVariables>(GetAggregateUserDocument, options);
+      }
+export function useGetAggregateUserLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAggregateUserQuery, GetAggregateUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAggregateUserQuery, GetAggregateUserQueryVariables>(GetAggregateUserDocument, options);
+        }
+export function useGetAggregateUserSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetAggregateUserQuery, GetAggregateUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAggregateUserQuery, GetAggregateUserQueryVariables>(GetAggregateUserDocument, options);
+        }
+export type GetAggregateUserQueryHookResult = ReturnType<typeof useGetAggregateUserQuery>;
+export type GetAggregateUserLazyQueryHookResult = ReturnType<typeof useGetAggregateUserLazyQuery>;
+export type GetAggregateUserSuspenseQueryHookResult = ReturnType<typeof useGetAggregateUserSuspenseQuery>;
+export type GetAggregateUserQueryResult = Apollo.QueryResult<GetAggregateUserQuery, GetAggregateUserQueryVariables>;
 export const CreateOneUserDocument = gql`
     mutation createOneUser($data: UserCreateInput!) {
   createOneUser(data: $data) {

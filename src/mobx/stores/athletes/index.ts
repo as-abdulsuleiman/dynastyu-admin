@@ -1,8 +1,8 @@
 /** @format */
 
-"use client"
+"use client";
 
-import { GetAthletesQuery, GetUsersQuery, User } from "@/services/graphql";
+import { GetAggregateAthleteProfileQuery, User } from "@/services/graphql";
 import { cast, types } from "mobx-state-tree";
 
 /**
@@ -14,10 +14,13 @@ import { cast, types } from "mobx-state-tree";
 
 export const AthleteStore = types
   .model("AthleteStore", {
-    athletes: types.optional(types.frozen<Partial<GetAthletesQuery[]>>(),[]),
+    athletes: types.optional(
+      types.frozen<Partial<GetAggregateAthleteProfileQuery>>(),
+      {}
+    ),
   })
   .actions((store) => ({
-    setAthletes(athletes: Partial<GetAthletesQuery[]>) {
-        store.athletes =cast(athletes) 
-      },
+    setAthletes(athletes: Partial<GetAggregateAthleteProfileQuery>) {
+      store.athletes = cast(athletes);
+    },
   }));

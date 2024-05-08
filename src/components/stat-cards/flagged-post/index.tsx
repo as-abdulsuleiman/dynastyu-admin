@@ -5,7 +5,10 @@
 import { FC } from "react";
 import StatCard from "@/components/stat-card";
 import { useRootStore } from "@/mobx";
-import { GetPostFlagsQuery, useGetPostFlagsQuery } from "@/services/graphql";
+import {
+  GetAggregatePostFlagQuery,
+  useGetAggregatePostFlagQuery,
+} from "@/services/graphql";
 import { observer } from "mobx-react-lite";
 import { useRouter, usePathname } from "next/navigation";
 import { FlagOffIcon } from "@/components/Icons";
@@ -19,20 +22,20 @@ const FlaggedPostStatCard: FC<indexProps> = ({}) => {
     flaggedPostStore: { setFlaggedPost, flaggedPost: flaggedPostCount },
   } = useRootStore();
 
-  const { data: flaggedPostData, loading } = useGetPostFlagsQuery({
+  const { data: flaggedPostData, loading } = useGetAggregatePostFlagQuery({
     variables: {},
-    onCompleted: (data: GetPostFlagsQuery) => {
-      setFlaggedPost(data?.postFlags as any);
+    onCompleted: (data: GetAggregatePostFlagQuery) => {
+      setFlaggedPost(data as any);
     },
   });
 
   return (
     <StatCard
       activeLegend="Flagged Post"
-      dataCount={flaggedPostCount?.length || 0}
+      dataCount={flaggedPostCount?.aggregatePostFlag?._count?.id || 0}
       title="Total Flagged Post"
       loading={loading}
-      categoryValues={[flaggedPostCount?.length]}
+      categoryValues={[flaggedPostCount?.aggregatePostFlag?._count?.id || 0]}
       categories={["Flagged Post"]}
       onClick={() => router.push("/flagged-posts")}
       showIcon={pathname === "/flagged-posts"}

@@ -6,6 +6,7 @@ import { FC, useState } from "react";
 import {
   useDeleteFirebaseUserMutation,
   useDeleteUserMutation,
+  useGetAggregateUserLazyQuery,
   useGetUserQuery,
   useUpdateUserMutation,
 } from "@/services/graphql";
@@ -46,6 +47,7 @@ import CardContainer from "../card-container";
 import { renderLoader } from "@/lib/loader-helper";
 import { CalloutCardProps } from "@/interface/calloutOptions";
 import PromptAlert from "../prompt-alert";
+import { useRootStore } from "@/mobx";
 
 interface FanDetailProps {
   params: {
@@ -63,7 +65,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
-
+  const [aggregateFan] = useGetAggregateUserLazyQuery();
   const {
     data: fanData,
     loading: loading,
@@ -76,6 +78,10 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
       },
     },
   });
+
+  const {
+    fanStore: { setFans, fans: fansCount },
+  } = useRootStore();
 
   const handleDeleteFanConfirmPrompt = async (item: any) => {
     setDeletingFan(true);
@@ -95,6 +101,18 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
             },
           },
         });
+
+        const fanResp = await aggregateFan({
+          variables: {
+            where: {
+              accountTypeId: {
+                equals: 2,
+              },
+            },
+          },
+        });
+
+        setFans(fanResp.data as any);
         toast({
           title: "Fan successfully deleted.",
           description: `@${item?.username} profile has been deleted.`,

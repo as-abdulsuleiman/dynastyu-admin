@@ -13,6 +13,7 @@ import {
   SortOrder,
   useDeleteFirebaseUserMutation,
   useDeleteUserMutation,
+  useGetAggregateCoachProfileLazyQuery,
   useGetUsersQuery,
   useUpdateCoachMutation,
 } from "@/services/graphql";
@@ -129,6 +130,8 @@ const Coaches: FC<CoachesProps> = ({}) => {
     },
   });
 
+  const [Aggregatedcoaches] = useGetAggregateCoachProfileLazyQuery();
+
   const lastUserId = useMemo(() => {
     const lastPostInResults =
       coachesData?.users[coachesData?.users?.length - 1];
@@ -158,6 +161,8 @@ const Coaches: FC<CoachesProps> = ({}) => {
           description: `@${item?.username} profile has been deleted.`,
           variant: "successfull",
         });
+        const coachResponse = await Aggregatedcoaches();
+        setCoaches(coachResponse?.data as any);
         refetch();
       }
     } catch (error) {

@@ -5,7 +5,10 @@
 import { UsersIcon } from "@/components/Icons";
 import StatCard from "@/components/stat-card";
 import { useRootStore } from "@/mobx";
-import { GetUsersQuery, SortOrder, useGetUsersQuery } from "@/services/graphql";
+import {
+  GetAggregateUserQuery,
+  useGetAggregateUserQuery,
+} from "@/services/graphql";
 import { observer } from "mobx-react-lite";
 import { usePathname, useRouter } from "next/navigation";
 import { FC } from "react";
@@ -18,20 +21,20 @@ const UserStatCard: FC<indexProps> = ({}) => {
     userStore: { setUsers, users: usersCount },
   } = useRootStore();
 
-  const { data: users, loading } = useGetUsersQuery({
+  const { data: users, loading } = useGetAggregateUserQuery({
     variables: {},
-    onCompleted: (data: GetUsersQuery) => {
-      setUsers(data.users as any);
+    onCompleted: (data: GetAggregateUserQuery) => {
+      setUsers(data as any);
     },
   });
 
   return (
     <StatCard
       activeLegend="Users"
-      dataCount={usersCount?.length || 0}
+      dataCount={usersCount?.aggregateUser?._count?.id || 0}
       title="Total Users"
       loading={loading}
-      categoryValues={[usersCount?.length || 0]}
+      categoryValues={[usersCount?.aggregateUser?._count?.id || 0]}
       categories={["Users"]}
       onClick={() => router.push("/users")}
       showIcon={pathname === "/users"}

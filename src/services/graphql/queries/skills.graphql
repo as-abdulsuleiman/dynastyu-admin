@@ -534,6 +534,26 @@ query getSkillVerificationRequest(
   }
 }
 
+query getAggregateSkillType(
+  $where: SkillTypeWhereInput
+  $orderBy: [SkillTypeOrderByWithRelationInput!]
+  $cursor: SkillTypeWhereUniqueInput
+  $take: Int
+  $skip: Int
+) {
+  aggregateSkillType(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
+    _count {
+      id
+    }
+  }
+}
+
 query getCamps(
   $where: CampWhereInput
   $orderBy: [CampOrderByWithRelationInput!]

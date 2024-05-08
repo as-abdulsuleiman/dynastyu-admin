@@ -22,6 +22,7 @@ import {
   SortOrder,
   useDeleteFirebaseUserMutation,
   useDeleteUserMutation,
+  useGetAggregateAthleteProfileLazyQuery,
   useGetUsersQuery,
   useUpdateAthleteMutation,
 } from "@/services/graphql";
@@ -117,6 +118,8 @@ const Athletes: FC<AthletesProps> = ({}) => {
     },
   });
 
+  const [aggregatedAthlete] = useGetAggregateAthleteProfileLazyQuery();
+
   const lastUserId = useMemo(() => {
     const lastPostInResults =
       athleteData?.users[athleteData?.users?.length - 1];
@@ -141,6 +144,9 @@ const Athletes: FC<AthletesProps> = ({}) => {
             },
           },
         });
+
+        const athleteResp = await aggregatedAthlete();
+        setAthletes(athleteResp?.data as any);
         refetch();
         toast({
           title: "Athlete successfully deleted.",

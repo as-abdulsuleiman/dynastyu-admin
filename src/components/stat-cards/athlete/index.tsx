@@ -5,7 +5,10 @@
 import { FC } from "react";
 import StatCard from "@/components/stat-card";
 import { useRootStore } from "@/mobx";
-import { GetAthletesQuery, useGetAthletesQuery } from "@/services/graphql";
+import {
+  GetAggregateAthleteProfileQuery,
+  useGetAggregateAthleteProfileQuery,
+} from "@/services/graphql";
 import { observer } from "mobx-react-lite";
 import { useRouter, usePathname } from "next/navigation";
 import { AthleteIcon } from "@/components/Icons";
@@ -19,20 +22,20 @@ const AthleteStatCard: FC<indexProps> = ({}) => {
     athleteStore: { setAthletes, athletes: athletesCount },
   } = useRootStore();
 
-  const { data: athletes, loading } = useGetAthletesQuery({
+  const { data: athletes, loading } = useGetAggregateAthleteProfileQuery({
     variables: {},
-    onCompleted: (data: GetAthletesQuery) => {
-      setAthletes(data.athleteProfiles as any);
+    onCompleted: (data: GetAggregateAthleteProfileQuery) => {
+      setAthletes(data as any);
     },
   });
 
   return (
     <StatCard
       activeLegend="Athletes"
-      dataCount={athletesCount?.length || 0}
+      dataCount={athletesCount?.aggregateAthleteProfile?._count?.id || 0}
       title="Total Athletes"
       loading={loading}
-      categoryValues={[athletesCount.length || 0]}
+      categoryValues={[athletesCount?.aggregateAthleteProfile?._count?.id || 0]}
       categories={["Athletes"]}
       onClick={() => router.push("/athletes")}
       showIcon={pathname === "/athletes"}

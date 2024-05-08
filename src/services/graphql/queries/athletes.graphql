@@ -21,7 +21,7 @@ query getAthletes(
     createdAt
     verified
     featured
-    socialAccounts{
+    socialAccounts {
       id
       uuid
       name
@@ -72,7 +72,6 @@ query getAthletes(
   }
 }
 
-
 query getAthleteProfile($where: AthleteProfileWhereUniqueInput!) {
   athleteProfile(where: $where) {
     id
@@ -90,7 +89,7 @@ query getAthleteProfile($where: AthleteProfileWhereUniqueInput!) {
     coachContactName
     coachContactPhoneNumber
     coachContactTitle
-    socialAccounts{
+    socialAccounts {
       id
       uuid
       name
@@ -212,16 +211,16 @@ query getAthleteProfile($where: AthleteProfileWhereUniqueInput!) {
       city
       state
       isActive
-      comments{
+      comments {
         id
         userId
         postId
       }
-      followedBy{
+      followedBy {
         followerId
         followingId
       }
-      following{
+      following {
         followerId
         followingId
       }
@@ -263,7 +262,6 @@ query getAthleteProfile($where: AthleteProfileWhereUniqueInput!) {
   }
 }
 
-
 query getPositions(
   $where: PositionWhereInput
   $orderBy: [PositionOrderByWithRelationInput!]
@@ -284,6 +282,26 @@ query getPositions(
     id
     uuid
     shortName
+  }
+}
+
+query getAggregateAthleteProfile(
+  $where: AthleteProfileWhereInput
+  $orderBy: [AthleteProfileOrderByWithRelationInput!]
+  $cursor: AthleteProfileWhereUniqueInput
+  $take: Int
+  $skip: Int
+) {
+  aggregateAthleteProfile(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
+    _count {
+      id
+    }
   }
 }
 
@@ -386,7 +404,3 @@ mutation createAthleteProfile($data: AthleteProfileCreateInput!) {
     userId
   }
 }
-
-
-
-

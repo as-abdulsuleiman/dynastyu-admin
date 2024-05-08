@@ -1,8 +1,8 @@
 /** @format */
 
-"use client"
+"use client";
 
-import { GetUsersQuery, User } from "@/services/graphql";
+import { GetAggregatePostFlagQuery, User } from "@/services/graphql";
 import { cast, types } from "mobx-state-tree";
 
 /**
@@ -14,10 +14,13 @@ import { cast, types } from "mobx-state-tree";
 
 export const FlaggedPostStore = types
   .model("FlaggedPostStore", {
-    flaggedPost: types.optional(types.frozen<Partial<GetUsersQuery[]>>(), []),
+    flaggedPost: types.optional(
+      types.frozen<Partial<GetAggregatePostFlagQuery>>(),
+      {}
+    ),
   })
   .actions((store) => ({
-    setFlaggedPost(flaggedPost: Partial<GetUsersQuery[]>) {
-      store.flaggedPost = cast(flaggedPost)
+    setFlaggedPost(flaggedPost: Partial<GetAggregatePostFlagQuery>) {
+      store.flaggedPost = cast(flaggedPost);
     },
   }));
