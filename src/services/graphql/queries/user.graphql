@@ -446,6 +446,26 @@ query getBlockedUsers(
   }
 }
 
+query getAggregateUser(
+  $where: UserWhereInput
+  $orderBy: [UserOrderByWithRelationInput!]
+  $cursor: UserWhereUniqueInput
+  $take: Int
+  $skip: Int
+) {
+  aggregateUser(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
+    _count {
+      id
+    }
+  }
+}
+
 mutation createOneUser($data: UserCreateInput!) {
   createOneUser(data: $data) {
     ...UserCommonParts

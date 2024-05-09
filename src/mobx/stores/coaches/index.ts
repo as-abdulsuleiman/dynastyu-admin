@@ -1,9 +1,8 @@
-
 /** @format */
 
-"use client"
+"use client";
 
-import {  GetCoachesQuery } from "@/services/graphql";
+import { GetAggregateCoachProfileQuery } from "@/services/graphql";
 import { cast, types } from "mobx-state-tree";
 
 /**
@@ -15,10 +14,13 @@ import { cast, types } from "mobx-state-tree";
 
 export const CoacheStore = types
   .model("CoacheStore", {
-    coaches: types.optional(types.frozen<Partial<GetCoachesQuery[]>>(),[]),
+    coaches: types.optional(
+      types.frozen<Partial<GetAggregateCoachProfileQuery>>(),
+      {}
+    ),
   })
   .actions((store) => ({
-    setCoaches(coaches: Partial<GetCoachesQuery[]>) {
-        store.coaches = cast(coaches) 
-      },
+    setCoaches(coaches: Partial<GetAggregateCoachProfileQuery>) {
+      store.coaches = cast(coaches);
+    },
   }));

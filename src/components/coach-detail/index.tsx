@@ -9,6 +9,7 @@ import {
   SortOrder,
   useDeleteFirebaseUserMutation,
   useDeleteUserMutation,
+  useGetAggregateCoachProfileLazyQuery,
   useGetSchoolsQuery,
   useGetUserQuery,
   useUpdateCoachMutation,
@@ -64,6 +65,7 @@ import ContentHeader from "../content-header";
 import CardContainer from "../card-container";
 import { renderLoader } from "@/lib/loader-helper";
 import { CalloutCardProps } from "@/interface/calloutOptions";
+import { useRootStore } from "@/mobx";
 
 interface CoachDetailProps {
   params: {
@@ -74,6 +76,9 @@ interface CoachDetailProps {
 const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   const router = useRouter();
   const { toast } = useToast();
+  const {
+    coacheStore: { setCoaches },
+  } = useRootStore();
   const [viewPlayerCardUrl, setViewPlayerCardUrl] = useState(false);
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
   const [viewAnalytics, setViewAnalytics] = useState(false);
@@ -87,6 +92,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   const [updateCoach] = useUpdateCoachMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
+  const [Aggregatedcoaches] = useGetAggregateCoachProfileLazyQuery();
 
   const { data, loading, refetch } = useGetUserQuery({
     variables: {
@@ -175,6 +181,8 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
           },
         });
       }
+      const coachResponse = await Aggregatedcoaches();
+      setCoaches(coachResponse?.data as any);
       toast({
         title: "Profile successfully deleted.",
         description: `@${coachData?.username} profile has been deleted.`,

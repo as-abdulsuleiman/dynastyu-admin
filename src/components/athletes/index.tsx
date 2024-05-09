@@ -22,6 +22,7 @@ import {
   SortOrder,
   useDeleteFirebaseUserMutation,
   useDeleteUserMutation,
+  useGetAggregateAthleteProfileLazyQuery,
   useGetUsersQuery,
   useUpdateAthleteMutation,
 } from "@/services/graphql";
@@ -51,7 +52,6 @@ const Athletes: FC<AthletesProps> = ({}) => {
   const { toast } = useToast();
   const {
     authStore: { user },
-    userStore: { setUsers },
     athleteStore: { setAthletes },
   } = useRootStore();
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
@@ -64,6 +64,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
   const [updateAthlete] = useUpdateAthleteMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
+  const [aggregatedAthlete] = useGetAggregateAthleteProfileLazyQuery();
 
   const filteredParams = getURLParams(selectedOptions);
 
@@ -141,6 +142,8 @@ const Athletes: FC<AthletesProps> = ({}) => {
             },
           },
         });
+        const athleteResp = await aggregatedAthlete();
+        setAthletes(athleteResp?.data as any);
         refetch();
         toast({
           title: "Athlete successfully deleted.",

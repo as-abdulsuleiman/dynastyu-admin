@@ -5,7 +5,10 @@
 import { WhistleIcon } from "@/components/Icons";
 import StatCard from "@/components/stat-card";
 import { useRootStore } from "@/mobx";
-import { GetCoachesQuery, useGetCoachesQuery } from "@/services/graphql";
+import {
+  GetAggregateCoachProfileQuery,
+  useGetAggregateCoachProfileQuery,
+} from "@/services/graphql";
 import { observer } from "mobx-react-lite";
 import { usePathname, useRouter } from "next/navigation";
 import { FC } from "react";
@@ -19,24 +22,24 @@ const CoacheVerificationRequestStatCard: FC<indexProps> = ({}) => {
     coacheStore: { setCoaches, coaches: coachesCount },
   } = useRootStore();
 
-  const { data: coaches, loading } = useGetCoachesQuery({
+  const { data: coaches, loading } = useGetAggregateCoachProfileQuery({
     variables: {
       where: {
         verified: { equals: false },
       },
     },
-    onCompleted: (data: GetCoachesQuery) => {
-      setCoaches(data.coachProfiles as any);
+    onCompleted: (data: GetAggregateCoachProfileQuery) => {
+      setCoaches(data as any);
     },
   });
 
   return (
     <StatCard
       activeLegend="Verification Request"
-      dataCount={coachesCount?.length || 0}
+      dataCount={coachesCount?.aggregateCoachProfile?._count?.id || 0}
       title="Total Coaches"
       loading={loading}
-      categoryValues={[coachesCount?.length]}
+      categoryValues={[coachesCount?.aggregateCoachProfile?._count?.id || 0]}
       categories={["Verification Request"]}
       onClick={() => router.push("/coaches/verification-request")}
       showIcon={pathname === "/coaches/verification-request"}

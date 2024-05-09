@@ -8,6 +8,7 @@ import { useRootStore } from "@/mobx";
 import { observer } from "mobx-react-lite";
 import { useRouter, usePathname } from "next/navigation";
 import { FlagOffIcon } from "@/components/Icons";
+import { useGetAggregateSkillVerificationRequestQuery } from "@/services/graphql";
 
 interface indexProps {}
 

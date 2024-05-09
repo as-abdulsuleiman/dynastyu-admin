@@ -534,6 +534,26 @@ query getSkillVerificationRequest(
   }
 }
 
+query getAggregateSkillType(
+  $where: SkillTypeWhereInput
+  $orderBy: [SkillTypeOrderByWithRelationInput!]
+  $cursor: SkillTypeWhereUniqueInput
+  $take: Int
+  $skip: Int
+) {
+  aggregateSkillType(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
+    _count {
+      id
+    }
+  }
+}
+
 query getCamps(
   $where: CampWhereInput
   $orderBy: [CampOrderByWithRelationInput!]
@@ -626,5 +646,59 @@ mutation deleteManySkillHistory($where: SkillHistoryWhereInput) {
 mutation createHistory($data: SkillHistoryCreateInput!) {
   createOneSkillHistory(data: $data) {
     id
+  }
+}
+
+query getAggregateSkillVerificationRequest(
+  $where: SkillVerificationRequestWhereInput
+  $orderBy: [SkillVerificationRequestOrderByWithRelationInput!]
+  $cursor: SkillVerificationRequestWhereUniqueInput
+  $take: Int
+  $skip: Int
+) {
+  aggregateSkillVerificationRequest(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
+    _count {
+      id
+    }
+    _avg {
+      id
+      skillId
+      userId
+      campId
+    }
+    _sum {
+      id
+      skillId
+      userId
+      campId
+    }
+    _min {
+      id
+      uuid
+      skillId
+      userId
+      campId
+      verified
+      dateOfVerfication
+      createdAt
+      updatedAt
+    }
+    _max {
+      id
+      uuid
+      skillId
+      userId
+      campId
+      verified
+      dateOfVerfication
+      createdAt
+      updatedAt
+    }
   }
 }

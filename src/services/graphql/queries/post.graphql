@@ -279,3 +279,23 @@ query getPostFlag($where: PostFlagWhereUniqueInput!) {
     }
   }
 }
+
+query getAggregatePostFlag(
+  $where: PostFlagWhereInput
+  $orderBy: [PostFlagOrderByWithRelationInput!]
+  $cursor: PostFlagWhereUniqueInput
+  $take: Int
+  $skip: Int
+) {
+  aggregatePostFlag(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
+    _count {
+      id
+    }
+  }
+}

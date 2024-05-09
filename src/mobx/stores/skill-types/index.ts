@@ -2,7 +2,7 @@
 
 "use client";
 
-import { GetSkillTypesQuery } from "@/services/graphql";
+import { GetAggregateSkillTypeQuery } from "@/services/graphql";
 import { cast, types } from "mobx-state-tree";
 
 /**
@@ -14,10 +14,13 @@ import { cast, types } from "mobx-state-tree";
 
 export const SkillTypeStore = types
   .model("SkillTypes", {
-    skillTypes: types.optional(types.frozen<Partial<GetSkillTypesQuery[]>>(), []),
+    skillTypes: types.optional(
+      types.frozen<Partial<GetAggregateSkillTypeQuery>>(),
+      {}
+    ),
   })
   .actions((store) => ({
-    setSkillTypes(skillTypes: Partial<GetSkillTypesQuery[]>) {
+    setSkillTypes(skillTypes: Partial<GetAggregateSkillTypeQuery>) {
       store.skillTypes = cast(skillTypes);
     },
   }));

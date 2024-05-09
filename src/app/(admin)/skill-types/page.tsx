@@ -13,6 +13,7 @@ import {
   useDeleteManySkillVerificationRequestMutation,
   useDeleteManySkillsMutation,
   useDeleteSkillTypeMutation,
+  useGetAggregateSkillTypeLazyQuery,
   useGetSkillTypesQuery,
 } from "@/services/graphql";
 import SkillTypeStatCard from "@/components/stat-cards/skillType";
@@ -31,6 +32,7 @@ import { Button } from "@/components/ui/button";
 import ContentHeader from "@/components/content-header";
 
 import GripVertical from "@/components/Icons/grip-vertical";
+import { useRootStore } from "@/mobx";
 
 const headerItems = [
   { name: "Name" },
@@ -55,6 +57,9 @@ interface pageProps {}
 
 const Page: FC<pageProps> = ({}) => {
   const { toast } = useToast();
+  const {
+    skillTypeStore: { setSkillTypes },
+  } = useRootStore();
   const router = useRouter();
   const [status, setStatus] = useState<string>("");
   const [value, setValue] = useState<string>("");
@@ -67,6 +72,7 @@ const Page: FC<pageProps> = ({}) => {
   const [deleteManySkillHistory] = useDeleteManySkillHistoryMutation();
   const [deleteManySkillVerificationRequest] =
     useDeleteManySkillVerificationRequestMutation();
+  const [aggregateSkillType] = useGetAggregateSkillTypeLazyQuery();
 
   const {
     data: skillTypesData,
@@ -205,6 +211,8 @@ const Page: FC<pageProps> = ({}) => {
           },
         },
       });
+      const skillTypeRes = await aggregateSkillType();
+      setSkillTypes(skillTypeRes?.data as any);
       refetch();
       toast({
         title: "Skill type successfully deleted.",
@@ -300,9 +308,9 @@ const Page: FC<pageProps> = ({}) => {
         <div className="flex flex-row items-center">
           <ContentHeader
             title="Skill Types"
-            icon={
-              <SkillIcon className="h-[22px] w-[22px] ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
-            }
+            // icon={
+            //   <SkillIcon className="h-[22px] w-[22px] ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            // }
             subHeader="Skill Types Overview"
           />
         </div>

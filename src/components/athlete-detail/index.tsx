@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import {
   useDeleteFirebaseUserMutation,
   useDeleteUserMutation,
+  useGetAggregateAthleteProfileLazyQuery,
   useGetUserQuery,
   useUpdateAthleteMutation,
 } from "@/services/graphql";
@@ -72,6 +73,7 @@ interface AthleteDetailProps {
 const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
   const {
     authStore: { user },
+    athleteStore: { setAthletes },
   } = useRootStore();
   const router = useRouter();
   const { toast } = useToast();
@@ -82,6 +84,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
   const [updateAthlete] = useUpdateAthleteMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
+  const [aggregateAthlete] = useGetAggregateAthleteProfileLazyQuery();
 
   const { data, loading, refetch } = useGetUserQuery({
     variables: {
@@ -240,6 +243,8 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
             },
           },
         });
+        const athleteResp = await aggregateAthlete();
+        setAthletes(athleteResp?.data as any);
         toast({
           title: "Athlete successfully deleted.",
           description: ` @${item?.username} profile has been deleted`,

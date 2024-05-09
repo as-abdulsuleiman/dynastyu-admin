@@ -169,6 +169,26 @@ query getCoach($where: CoachProfileWhereUniqueInput!) {
   }
 }
 
+query getAggregateCoachProfile(
+  $where: CoachProfileWhereInput
+  $orderBy: [CoachProfileOrderByWithRelationInput!]
+  $cursor: CoachProfileWhereUniqueInput
+  $take: Int
+  $skip: Int
+) {
+  aggregateCoachProfile(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
+    _count {
+      id
+    }
+  }
+}
+
 mutation registerCoach($data: UserCreateInput!) {
   registerCoach(data: $data) {
     coach {

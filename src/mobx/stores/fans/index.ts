@@ -1,8 +1,8 @@
 /** @format */
 
-"use client"
+"use client";
 
-import { GetUsersQuery, User } from "@/services/graphql";
+import { GetAggregateUserQuery } from "@/services/graphql";
 import { cast, types } from "mobx-state-tree";
 
 /**
@@ -14,10 +14,10 @@ import { cast, types } from "mobx-state-tree";
 
 export const FanStore = types
   .model("FanStore", {
-    fans: types.optional(types.frozen<Partial<GetUsersQuery[]>>(), []),
+    fans: types.optional(types.frozen<Partial<GetAggregateUserQuery>>(), {}),
   })
   .actions((store) => ({
-    setFans(fans: Partial<GetUsersQuery[]>) {
-      store.fans = cast(fans)
+    setFans(fans: Partial<GetAggregateUserQuery>) {
+      store.fans = cast(fans);
     },
   }));
