@@ -22,6 +22,7 @@ interface PromptAlertProps {
   handleConfirmPrompt?: () => void;
   loading?: boolean;
   customElement?: ReactNode;
+  disable?: boolean;
 }
 
 const PromptAlert: FC<PromptAlertProps> = ({
@@ -32,6 +33,7 @@ const PromptAlert: FC<PromptAlertProps> = ({
   handleHidePrompt,
   handleConfirmPrompt,
   customElement,
+  disable,
 }) => {
   return (
     <AlertDialog defaultOpen={false} open={showPrompt}>
@@ -53,20 +55,37 @@ const PromptAlert: FC<PromptAlertProps> = ({
           <AlertDialogCancel disabled={loading} onClick={handleHidePrompt}>
             Cancel
           </AlertDialogCancel>
-          <AlertDialogAction
-            className="ml-[8px]"
-            disabled={loading}
-            onClick={handleConfirmPrompt}
-          >
-            {loading ? (
-              <div className="flex flex-row items-center justify-center">
-                <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
-                Loading...
-              </div>
-            ) : (
-              "Continue"
-            )}
-          </AlertDialogAction>
+          {disable ? (
+            <AlertDialogAction
+              className="ml-[8px]"
+              disabled={disable || loading}
+              onClick={handleConfirmPrompt}
+            >
+              {loading ? (
+                <div className="flex flex-row items-center justify-center">
+                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                  Loading...
+                </div>
+              ) : (
+                "Continue"
+              )}
+            </AlertDialogAction>
+          ) : (
+            <AlertDialogAction
+              className="ml-[8px]"
+              disabled={loading}
+              onClick={handleConfirmPrompt}
+            >
+              {loading ? (
+                <div className="flex flex-row items-center justify-center">
+                  <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                  Loading...
+                </div>
+              ) : (
+                "Continue"
+              )}
+            </AlertDialogAction>
+          )}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

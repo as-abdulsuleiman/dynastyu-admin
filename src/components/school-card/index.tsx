@@ -69,6 +69,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   const [debounced] = useDebouncedValue(searchValue, 300);
   const isHighSchoolType = school?.schoolType?.name === "High School" ?? false;
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
   const dataList: any = [
     {
@@ -247,6 +248,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         selectedValue={selectedSchool}
         onSelectValue={(school) => {
           setSelectedSchool({ value: school?.value, id: school?.id });
+          setIsDisabled(false);
         }}
         placeholder={`Select ${isHighSchoolType ? "High School" : "College"}`}
         label="Select School to Migrate data to"
@@ -479,8 +481,10 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         handleHidePrompt={() => {
           setSelectedSchool({});
           setUpdatingProfile(null);
+          setIsDisabled(true);
         }}
         customElement={renderSelectSchool()}
+        disable={isDisabled}
         handleConfirmPrompt={() => handleConfirmPrompt(school)}
       />
       <ModalCard
