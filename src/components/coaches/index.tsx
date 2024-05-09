@@ -63,9 +63,6 @@ const Coaches: FC<CoachesProps> = ({}) => {
   const router = useRouter();
   const { toast } = useToast();
   const {
-    userStore: { setUsers },
-  } = useRootStore();
-  const {
     coacheStore: { setCoaches },
   } = useRootStore();
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
@@ -78,6 +75,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
   const [ActiveUser, setActiveUser] = useState<any>({});
   const [deletingProfile, setDeletingProfile] = useState<boolean>(false);
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
+  const [aggregatedcoaches] = useGetAggregateCoachProfileLazyQuery();
   const filteredParams = getURLParams(selectedOptions);
 
   const {
@@ -130,8 +128,6 @@ const Coaches: FC<CoachesProps> = ({}) => {
     },
   });
 
-  const [Aggregatedcoaches] = useGetAggregateCoachProfileLazyQuery();
-
   const lastUserId = useMemo(() => {
     const lastPostInResults =
       coachesData?.users[coachesData?.users?.length - 1];
@@ -161,7 +157,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
           description: `@${item?.username} profile has been deleted.`,
           variant: "successfull",
         });
-        const coachResponse = await Aggregatedcoaches();
+        const coachResponse = await aggregatedcoaches();
         setCoaches(coachResponse?.data as any);
         refetch();
       }

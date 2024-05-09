@@ -53,21 +53,20 @@ interface FansProps {}
 
 const Fans: FC<FansProps> = ({}) => {
   const { toast } = useToast();
-  // const {
-  //   userStore: { setUsers },
-  // } = useRootStore();
   const router = useRouter();
+  const {
+    fanStore: { setFans },
+  } = useRootStore();
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [value, setValue] = useState<string>("");
   const [debounced] = useDebouncedValue(value, 300);
   const [isActivating, setIsactivating] = useState<boolean>();
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
   const [updateUser] = useUpdateUserMutation();
+  const [agrregatedFans] = useGetAggregateUserLazyQuery();
   const filteredParams = getURLParams(selectedOptions);
   const [ActiveUser, setActiveUser] = useState<any>({});
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
-  const [openFanDeletePrompt, setOpenFanDeletePrompt] =
-    useState<boolean>(false);
   const [deletingProfile, setDeletingProfile] = useState<boolean>(false);
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
   const [deleteUser] = useDeleteUserMutation();
@@ -123,12 +122,6 @@ const Fans: FC<FansProps> = ({}) => {
     },
   });
 
-  const {
-    fanStore: { setFans },
-  } = useRootStore();
-
-  const [agrregatedFans] = useGetAggregateUserLazyQuery();
-
   const handleDeleteFanConfirmPrompt = async (item: any) => {
     setDeletingProfile(true);
     try {
@@ -148,23 +141,26 @@ const Fans: FC<FansProps> = ({}) => {
           },
         });
       }
-      toast({
-        title: "Fan successfully deleted.",
-        description: `@${item?.username} profile has been deleted.`,
-        variant: "successfull",
-      });
-
       const fanResponse = await agrregatedFans({
         variables: {
           where: {
-            accountTypeId: {
-              equals: 2,
+            accountType: {
+              is: {
+                title: {
+                  equals: "Fan",
+                },
+              },
             },
           },
         },
       });
       setFans(fanResponse.data as any);
       refetch();
+      toast({
+        title: "Fan successfully deleted.",
+        description: `@${item?.username} profile has been deleted.`,
+        variant: "successfull",
+      });
     } catch (error) {
       toast({
         title: "Something went wrong.",

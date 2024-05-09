@@ -52,7 +52,6 @@ const Athletes: FC<AthletesProps> = ({}) => {
   const { toast } = useToast();
   const {
     authStore: { user },
-    userStore: { setUsers },
     athleteStore: { setAthletes },
   } = useRootStore();
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
@@ -65,6 +64,7 @@ const Athletes: FC<AthletesProps> = ({}) => {
   const [updateAthlete] = useUpdateAthleteMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
+  const [aggregatedAthlete] = useGetAggregateAthleteProfileLazyQuery();
 
   const filteredParams = getURLParams(selectedOptions);
 
@@ -118,8 +118,6 @@ const Athletes: FC<AthletesProps> = ({}) => {
     },
   });
 
-  const [aggregatedAthlete] = useGetAggregateAthleteProfileLazyQuery();
-
   const lastUserId = useMemo(() => {
     const lastPostInResults =
       athleteData?.users[athleteData?.users?.length - 1];
@@ -144,7 +142,6 @@ const Athletes: FC<AthletesProps> = ({}) => {
             },
           },
         });
-
         const athleteResp = await aggregatedAthlete();
         setAthletes(athleteResp?.data as any);
         refetch();

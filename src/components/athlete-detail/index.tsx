@@ -85,6 +85,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
   const [deleteUser] = useDeleteUserMutation();
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
   const [aggregateAthlete] = useGetAggregateAthleteProfileLazyQuery();
+
   const { data, loading, refetch } = useGetUserQuery({
     variables: {
       where: {
@@ -242,10 +243,8 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
             },
           },
         });
-
         const athleteResp = await aggregateAthlete();
         setAthletes(athleteResp?.data as any);
-
         toast({
           title: "Athlete successfully deleted.",
           description: ` @${item?.username} profile has been deleted`,

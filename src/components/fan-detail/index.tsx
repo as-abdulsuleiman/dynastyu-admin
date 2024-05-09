@@ -58,6 +58,9 @@ interface FanDetailProps {
 const FanDetail: FC<FanDetailProps> = ({ params }) => {
   const router = useRouter();
   const { toast } = useToast();
+  const {
+    fanStore: { setFans },
+  } = useRootStore();
   const [viewPlayerCardUrl, setViewPlayerCardUrl] = useState(false);
   const [viewAnalytics, setViewAnalytics] = useState(false);
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
@@ -66,6 +69,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
   const [deleteUser] = useDeleteUserMutation();
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
   const [aggregateFan] = useGetAggregateUserLazyQuery();
+
   const {
     data: fanData,
     loading: loading,
@@ -78,10 +82,6 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
       },
     },
   });
-
-  const {
-    fanStore: { setFans, fans: fansCount },
-  } = useRootStore();
 
   const handleDeleteFanConfirmPrompt = async (item: any) => {
     setDeletingFan(true);

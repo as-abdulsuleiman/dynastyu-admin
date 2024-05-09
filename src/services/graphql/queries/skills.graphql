@@ -648,3 +648,57 @@ mutation createHistory($data: SkillHistoryCreateInput!) {
     id
   }
 }
+
+query getAggregateSkillVerificationRequest(
+  $where: SkillVerificationRequestWhereInput
+  $orderBy: [SkillVerificationRequestOrderByWithRelationInput!]
+  $cursor: SkillVerificationRequestWhereUniqueInput
+  $take: Int
+  $skip: Int
+) {
+  aggregateSkillVerificationRequest(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
+    _count {
+      id
+    }
+    _avg {
+      id
+      skillId
+      userId
+      campId
+    }
+    _sum {
+      id
+      skillId
+      userId
+      campId
+    }
+    _min {
+      id
+      uuid
+      skillId
+      userId
+      campId
+      verified
+      dateOfVerfication
+      createdAt
+      updatedAt
+    }
+    _max {
+      id
+      uuid
+      skillId
+      userId
+      campId
+      verified
+      dateOfVerfication
+      createdAt
+      updatedAt
+    }
+  }
+}

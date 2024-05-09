@@ -26,8 +26,12 @@ const FanStatCard: FC<indexProps> = ({}) => {
   const { data: fans, loading } = useGetAggregateUserQuery({
     variables: {
       where: {
-        accountTypeId: {
-          equals: 2,
+        accountType: {
+          is: {
+            title: {
+              equals: "Fan",
+            },
+          },
         },
       },
     },

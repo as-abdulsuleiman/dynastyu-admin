@@ -265,9 +265,9 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
         <div className="flex flex-row items-center">
           <ContentHeader
             title="Skill Verification Request"
-            icon={
-              <SkillIcon className="h-[22px] w-[22px] ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
-            }
+            // icon={
+            //   <SkillIcon className="h-[22px] w-[22px] ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
+            // }
             subHeader="Skill Verification Overview"
           />
         </div>

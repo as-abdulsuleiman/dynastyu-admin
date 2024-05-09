@@ -75,7 +75,6 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
     coacheStore: { setCoaches },
   } = useRootStore();
   const [status, setStatus] = useState<string>("");
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
   const [debounced] = useDebouncedValue(value, 300);
   const [isActivating, setIsactivating] = useState<boolean>(false);
@@ -522,9 +521,9 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
           <div className="flex flex-row items-center">
             <ContentHeader
               title="Coaches"
-              icon={
-                <WhistleIcon className="h-4 w-4 ml-2 fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis" />
-              }
+              // icon={
+              //   <WhistleIcon className="h-4 w-4 ml-2 fill-tremor-content-emphasis dark:fill-dark-tremor-content-emphasis" />
+              // }
               subHeader="Coaches Verification Overview"
             />
           </div>

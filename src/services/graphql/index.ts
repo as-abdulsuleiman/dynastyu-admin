@@ -26554,6 +26554,17 @@ export type CreateHistoryMutationVariables = Exact<{
 
 export type CreateHistoryMutation = { __typename?: 'Mutation', createOneSkillHistory: { __typename?: 'SkillHistory', id: any } };
 
+export type GetAggregateSkillVerificationRequestQueryVariables = Exact<{
+  where?: InputMaybe<SkillVerificationRequestWhereInput>;
+  orderBy?: InputMaybe<Array<SkillVerificationRequestOrderByWithRelationInput> | SkillVerificationRequestOrderByWithRelationInput>;
+  cursor?: InputMaybe<SkillVerificationRequestWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetAggregateSkillVerificationRequestQuery = { __typename?: 'Query', aggregateSkillVerificationRequest: { __typename?: 'AggregateSkillVerificationRequest', _count?: { __typename?: 'SkillVerificationRequestCountAggregate', id: number } | null, _avg?: { __typename?: 'SkillVerificationRequestAvgAggregate', id?: number | null, skillId?: number | null, userId?: number | null, campId?: number | null } | null, _sum?: { __typename?: 'SkillVerificationRequestSumAggregate', id?: any | null, skillId?: any | null, userId?: any | null, campId?: any | null } | null, _min?: { __typename?: 'SkillVerificationRequestMinAggregate', id?: any | null, uuid?: string | null, skillId?: any | null, userId?: any | null, campId?: any | null, verified?: boolean | null, dateOfVerfication?: any | null, createdAt?: any | null, updatedAt?: any | null } | null, _max?: { __typename?: 'SkillVerificationRequestMaxAggregate', id?: any | null, uuid?: string | null, skillId?: any | null, userId?: any | null, campId?: any | null, verified?: boolean | null, dateOfVerfication?: any | null, createdAt?: any | null, updatedAt?: any | null } | null } };
+
 export type UserCommonPartsFragment = { __typename?: 'User', id: any, firstname: string, surname: string, email: string, isActive: boolean, avatar?: string | null, dob?: any | null, username?: string | null, address?: string | null, firebaseUid: string, city?: string | null, state?: string | null, updatedAt: any, createdAt: any, accountTypeId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, comments: number, postLikes: number, commentLikes: number, postReports: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluationsCreated: number, postFlag: number, blockedByUsers: number, blockedUsers: number, reposts: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, featured: boolean, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, updatedAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, _count?: { __typename?: 'AthleteProfileCount', transcripts: number, skills: number, evaluations: number, SkillHistory: number, socialAccounts: number } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, title?: string | null, city?: string | null, state?: string | null, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } } | null, socialAccounts: Array<{ __typename?: 'SocialAccount', id: any, uuid: string, name: string, link: string, type: SocialAccountType, athleteProfileId?: any | null }>, school: { __typename?: 'School', id: any, name: string, logo?: string | null, state?: string | null, city?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }>, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null } | null, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, verified: boolean, schoolId?: any | null, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school?: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, state?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } | null } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } };
 
 export type GetFollowersQueryVariables = Exact<{
@@ -31581,6 +31592,92 @@ export function useCreateHistoryMutation(baseOptions?: ApolloReactHooks.Mutation
 export type CreateHistoryMutationHookResult = ReturnType<typeof useCreateHistoryMutation>;
 export type CreateHistoryMutationResult = Apollo.MutationResult<CreateHistoryMutation>;
 export type CreateHistoryMutationOptions = Apollo.BaseMutationOptions<CreateHistoryMutation, CreateHistoryMutationVariables>;
+export const GetAggregateSkillVerificationRequestDocument = gql`
+    query getAggregateSkillVerificationRequest($where: SkillVerificationRequestWhereInput, $orderBy: [SkillVerificationRequestOrderByWithRelationInput!], $cursor: SkillVerificationRequestWhereUniqueInput, $take: Int, $skip: Int) {
+  aggregateSkillVerificationRequest(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+  ) {
+    _count {
+      id
+    }
+    _avg {
+      id
+      skillId
+      userId
+      campId
+    }
+    _sum {
+      id
+      skillId
+      userId
+      campId
+    }
+    _min {
+      id
+      uuid
+      skillId
+      userId
+      campId
+      verified
+      dateOfVerfication
+      createdAt
+      updatedAt
+    }
+    _max {
+      id
+      uuid
+      skillId
+      userId
+      campId
+      verified
+      dateOfVerfication
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAggregateSkillVerificationRequestQuery__
+ *
+ * To run a query within a React component, call `useGetAggregateSkillVerificationRequestQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAggregateSkillVerificationRequestQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAggregateSkillVerificationRequestQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function useGetAggregateSkillVerificationRequestQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAggregateSkillVerificationRequestQuery, GetAggregateSkillVerificationRequestQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAggregateSkillVerificationRequestQuery, GetAggregateSkillVerificationRequestQueryVariables>(GetAggregateSkillVerificationRequestDocument, options);
+      }
+export function useGetAggregateSkillVerificationRequestLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAggregateSkillVerificationRequestQuery, GetAggregateSkillVerificationRequestQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAggregateSkillVerificationRequestQuery, GetAggregateSkillVerificationRequestQueryVariables>(GetAggregateSkillVerificationRequestDocument, options);
+        }
+export function useGetAggregateSkillVerificationRequestSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetAggregateSkillVerificationRequestQuery, GetAggregateSkillVerificationRequestQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAggregateSkillVerificationRequestQuery, GetAggregateSkillVerificationRequestQueryVariables>(GetAggregateSkillVerificationRequestDocument, options);
+        }
+export type GetAggregateSkillVerificationRequestQueryHookResult = ReturnType<typeof useGetAggregateSkillVerificationRequestQuery>;
+export type GetAggregateSkillVerificationRequestLazyQueryHookResult = ReturnType<typeof useGetAggregateSkillVerificationRequestLazyQuery>;
+export type GetAggregateSkillVerificationRequestSuspenseQueryHookResult = ReturnType<typeof useGetAggregateSkillVerificationRequestSuspenseQuery>;
+export type GetAggregateSkillVerificationRequestQueryResult = Apollo.QueryResult<GetAggregateSkillVerificationRequestQuery, GetAggregateSkillVerificationRequestQueryVariables>;
 export const GetFollowersDocument = gql`
     query getFollowers($where: FollowsWhereInput, $orderBy: [FollowsOrderByWithRelationInput!], $cursor: FollowsWhereUniqueInput, $take: Int, $skip: Int, $distinct: [FollowsScalarFieldEnum!]) {
   findManyFollows(

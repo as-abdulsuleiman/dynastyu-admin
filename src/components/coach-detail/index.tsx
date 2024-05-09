@@ -76,6 +76,9 @@ interface CoachDetailProps {
 const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   const router = useRouter();
   const { toast } = useToast();
+  const {
+    coacheStore: { setCoaches },
+  } = useRootStore();
   const [viewPlayerCardUrl, setViewPlayerCardUrl] = useState(false);
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
   const [viewAnalytics, setViewAnalytics] = useState(false);
@@ -90,6 +93,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   const [deleteUser] = useDeleteUserMutation();
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
   const [Aggregatedcoaches] = useGetAggregateCoachProfileLazyQuery();
+
   const { data, loading, refetch } = useGetUserQuery({
     variables: {
       where: {
@@ -98,9 +102,6 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
     },
   });
 
-  const {
-    coacheStore: { setCoaches },
-  } = useRootStore();
   const coachData = data?.user;
 
   const coachSchoolId = useMemo(() => {
