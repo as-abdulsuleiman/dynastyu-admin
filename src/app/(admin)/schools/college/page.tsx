@@ -369,7 +369,6 @@ const Schools: FC<SchoolsProps> = ({}) => {
           />
         </div>
       </div>
-
       <UniversalTable
         title="School List"
         headerItems={headerItems}
@@ -381,8 +380,9 @@ const Schools: FC<SchoolsProps> = ({}) => {
         <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
       )}
       <PromptAlert
+        disableCancelBtn={isDeletingSchool}
         loading={isDeletingSchool}
-        disable={isDisabled}
+        disableConfirmBtn={isDisabled || isDeletingSchool}
         content={`This action cannot be undone. This will permanently delete this data from our servers.`}
         showPrompt={updatingProfile === StatusEnum.DELETING}
         handleHidePrompt={() => {

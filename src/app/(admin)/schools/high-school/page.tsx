@@ -389,7 +389,8 @@ const Schools: FC<SchoolsProps> = ({}) => {
       )}
       <PromptAlert
         loading={isDeletingSchool}
-        disable={isDisabled}
+        disableCancelBtn={isDeletingSchool}
+        disableConfirmBtn={isDisabled || isDeletingSchool}
         content={`This action cannot be undone. This will permanently delete this data from our servers.`}
         showPrompt={updatingProfile === StatusEnum.DELETING}
         handleHidePrompt={() => {

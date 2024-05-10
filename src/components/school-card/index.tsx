@@ -276,12 +276,12 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       onClick: () => router.push(`/schools/edit?school=${school?.id}`),
     },
     {
-      name: `Delete ${school?.schoolType?.name}`,
-      onClick: () => handleDeleteSchoolPrompt(),
-    },
-    {
       name: "View Analytics",
       onClick: () => setViewAnalytics(true),
+    },
+    {
+      name: `Delete ${school?.schoolType?.name}`,
+      onClick: () => handleDeleteSchoolPrompt(),
     },
   ];
 
@@ -484,7 +484,8 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           setIsDisabled(true);
         }}
         customElement={renderSelectSchool()}
-        disable={isDisabled}
+        disableCancelBtn={isDeletingSchool}
+        disableConfirmBtn={isDisabled || isDeletingSchool}
         handleConfirmPrompt={() => handleConfirmPrompt(school)}
       />
       <ModalCard
