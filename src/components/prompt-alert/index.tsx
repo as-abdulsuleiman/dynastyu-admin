@@ -22,6 +22,8 @@ interface PromptAlertProps {
   handleConfirmPrompt?: () => void;
   loading?: boolean;
   customElement?: ReactNode;
+  disableConfirmBtn?: boolean;
+  disableCancelBtn?: boolean;
 }
 
 const PromptAlert: FC<PromptAlertProps> = ({
@@ -32,6 +34,8 @@ const PromptAlert: FC<PromptAlertProps> = ({
   handleHidePrompt,
   handleConfirmPrompt,
   customElement,
+  disableConfirmBtn,
+  disableCancelBtn,
 }) => {
   return (
     <AlertDialog defaultOpen={false} open={showPrompt}>
@@ -50,12 +54,15 @@ const PromptAlert: FC<PromptAlertProps> = ({
         {customElement ? <> {customElement}</> : null}
 
         <AlertDialogFooter className="flex flex-row items-end ml-auto">
-          <AlertDialogCancel disabled={loading} onClick={handleHidePrompt}>
+          <AlertDialogCancel
+            disabled={disableCancelBtn}
+            onClick={handleHidePrompt}
+          >
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
             className="ml-[8px]"
-            disabled={loading}
+            disabled={disableConfirmBtn}
             onClick={handleConfirmPrompt}
           >
             {loading ? (

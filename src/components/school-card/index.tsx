@@ -69,6 +69,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   const [debounced] = useDebouncedValue(searchValue, 300);
   const isHighSchoolType = school?.schoolType?.name === "High School" ?? false;
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
   const dataList: any = [
     {
@@ -247,6 +248,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         selectedValue={selectedSchool}
         onSelectValue={(school) => {
           setSelectedSchool({ value: school?.value, id: school?.id });
+          setIsDisabled(false);
         }}
         placeholder={`Select ${isHighSchoolType ? "High School" : "College"}`}
         label="Select School to Migrate data to"
@@ -274,12 +276,12 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       onClick: () => router.push(`/schools/edit?school=${school?.id}`),
     },
     {
-      name: `Delete ${school?.schoolType?.name}`,
-      onClick: () => handleDeleteSchoolPrompt(),
-    },
-    {
       name: "View Analytics",
       onClick: () => setViewAnalytics(true),
+    },
+    {
+      name: `Delete ${school?.schoolType?.name}`,
+      onClick: () => handleDeleteSchoolPrompt(),
     },
   ];
 
@@ -479,8 +481,11 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         handleHidePrompt={() => {
           setSelectedSchool({});
           setUpdatingProfile(null);
+          setIsDisabled(true);
         }}
         customElement={renderSelectSchool()}
+        disableCancelBtn={isDeletingSchool}
+        disableConfirmBtn={isDisabled || isDeletingSchool}
         handleConfirmPrompt={() => handleConfirmPrompt(school)}
       />
       <ModalCard

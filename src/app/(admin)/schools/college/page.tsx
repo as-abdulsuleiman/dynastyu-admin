@@ -61,6 +61,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
   const [openSchool, setOpenSchool] = useState<boolean>(false);
   const [selectedSchool, setSelectedSchool] = useState<any>({});
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
   const {
     data: schools,
@@ -234,6 +235,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
         selectedValue={selectedSchool}
         onSelectValue={(school) => {
           setSelectedSchool({ value: school?.value, id: school?.id });
+          setIsDisabled(false);
         }}
         placeholder="Select College"
         label="Select School to Migrate data to"
@@ -367,7 +369,6 @@ const Schools: FC<SchoolsProps> = ({}) => {
           />
         </div>
       </div>
-
       <UniversalTable
         title="School List"
         headerItems={headerItems}
@@ -379,13 +380,16 @@ const Schools: FC<SchoolsProps> = ({}) => {
         <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
       )}
       <PromptAlert
+        disableCancelBtn={isDeletingSchool}
         loading={isDeletingSchool}
+        disableConfirmBtn={isDisabled || isDeletingSchool}
         content={`This action cannot be undone. This will permanently delete this data from our servers.`}
         showPrompt={updatingProfile === StatusEnum.DELETING}
         handleHidePrompt={() => {
           setActiveSchool({});
           setSelectedSchool({});
           setUpdatingProfile(null);
+          setIsDisabled(true);
         }}
         customElement={renderSelectSchool()}
         handleConfirmPrompt={() => handleConfirmPrompt(activeSchool)}
