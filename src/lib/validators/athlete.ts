@@ -25,7 +25,7 @@ export const AthleteValidator = Yup.object({
   graduationYear:Yup.string().required("Graduation year is required"),
   gpa: Yup.string()
     .trim()
-    .matches(/^[0-4][.][0-9][0-9]$/, "Invalid GPA. Please ensure that the GPA falls within the range of 0-4 to 4.00")
+    .matches(/^([0-4](\.\d{1,2})?|4\.([0-8]\d?|9[0-8]?)|4\.99)$/, "Invalid GPA. Please ensure that the GPA falls within the range of 0-4 to 4.99")
     .required("GPA is required"),
   city:Yup.string().required("City is required"),
   state:Yup.string().required("State is required"),
