@@ -33,6 +33,29 @@ type IconProps = {
   className: string;
   color: string;
 };
+type CountBadgeProps = {
+  countValue: any;
+  className?: string;
+};
+
+const CountBadge = ({ countValue, className }: CountBadgeProps) => {
+  const formatCount = (count: number) => {
+    return +count > 99 ? `${Math.max(0, 99)}+` : Math.max(0, +count || 0);
+  };
+
+  return (
+    <div
+      className={cn(
+        "h-[25px] w-[25px] rounded-full bg-destructive flex flex-row items-center justify-center",
+        className
+      )}
+    >
+      <div className="font-TTHovesDemiBold flex flex-row items-center justify-center m-auto text-gray-200 dark:text-dark-gray-700 text-sm">
+        {formatCount(countValue)}
+      </div>
+    </div>
+  );
+};
 
 const SidebarLinkGroup: FC<SidebarItemsProps> = ({
   handleNavigation,
@@ -194,7 +217,10 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       hasFill: false,
       path: "/notifications",
       hasBadge: false,
-      parentCount: [],
+      parentCount: [
+        flaggedPostCount?.aggregatePostFlag?._count?.id,
+        coachesCount?.aggregateCoachProfile?._count?.id,
+      ],
       // items: [
       //   {
       //     name: "Create Fan",
@@ -276,23 +302,33 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
                   {val?.name}
                 </div>
                 {(!isActive && showCount) || (!hasChildren && showCount) ? (
-                  <div className={`ml-auto flex flex-row -space-x-1.5`}>
-                    {val?.parentCount?.map((count: any, idx) => {
+                  <div className="ml-auto flex flex-row -space-x-[8px] relative">
+                    {val?.parentCount?.slice(0, 2)?.map((count: any, idx) => {
                       return (
-                        <div
-                          className={`h-5 w-6  ${
-                            idx === 0 ? "z-10" : "z-[5]"
-                          } rounded-full ${
-                            !isActive ? "bg-primary" : "bg-secondary"
-                          }`}
+                        <CountBadge
                           key={idx}
-                        >
-                          <div
-                            className={` font-TTHovesDemiBold  flex flex-row items-center justify-center m-auto text-gray-200 dark:text-dark-gray-700 text-sm`}
-                          >
-                            {formatCount(count)}
-                          </div>
-                        </div>
+                          countValue={count}
+                          className={`z-${
+                            idx + 1
+                            // idx === 0
+                            //   ? "z-10 shadow-2xl bg-destructive"
+                            //   : "z-[5] bg-popover-foreground"
+                          }`}
+                        />
+                        // <div
+                        //   className={`h-5 w-6  ${
+                        //     idx === 0 ? "z-10" : "z-[5]"
+                        //   } rounded-full ${
+                        //     !isActive ? "bg-primary" : "bg-destructive"
+                        //   }`}
+                        //   key={idx}
+                        // >
+                        //   <div
+                        //     className={` font-TTHovesDemiBold  flex flex-row items-center justify-center m-auto text-gray-200 dark:text-dark-gray-700 text-sm`}
+                        //   >
+                        //     {formatCount(count)}
+                        //   </div>
+                        // </div>
                       );
                     })}
                   </div>
@@ -320,17 +356,21 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
                           href={value?.path}
                           scroll
                           className="flex flex-row items-center"
-                        >
+                        >"bg-primary" : "bg-destructive"
                           
                         </Link> */}
                         </div>
                         {value?.count ? (
-                          <div className="ml-auto">
-                            <div className="h-5 w-7 bg-primary font-TTHovesDemiBold rounded-full flex flex-row items-center justify-center m-auto text-gray-200 dark:text-dark-gray-700 text-sm">
-                              {formatCount(value?.count)}
-                            </div>
-                          </div>
-                        ) : null}
+                          <CountBadge
+                            countValue={value?.count}
+                            className="ml-auto"
+                          />
+                        ) : // <div className="ml-auto">
+                        //   <div className="h-5 w-6 bg-destructive font-TTHovesDemiBold rounded-full flex flex-row items-center justify-center m-auto text-gray-200 dark:text-dark-gray-700 text-sm">
+                        //     {formatCount(value?.count)}
+                        //   </div>
+                        // </div>
+                        null}
                       </div>
                     </Link>
                   );

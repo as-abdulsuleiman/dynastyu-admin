@@ -17,6 +17,7 @@ import {
   useGetAggregateCoachProfileQuery,
   useGetAggregatePostFlagQuery,
   useGetAggregateSkillTypeQuery,
+  useGetSkillVerificationRequestsQuery,
 } from "@/services/graphql";
 import { useRootStore } from "@/mobx";
 
@@ -35,6 +36,7 @@ const SideBar: FC<SideBarProps> = ({ sidebarOpen, setSidebarOpen }) => {
     coachVerificationRequestStore: { setCoachVerificationRequest },
     flaggedPostStore: { setFlaggedPost },
     skillTypeStore: { setSkillTypes },
+    skillVerificationRequestStore: { setSkillVerificationRequest },
   } = useRootStore();
 
   let storedSidebarExpanded = "true";
@@ -96,6 +98,19 @@ const SideBar: FC<SideBarProps> = ({ sidebarOpen, setSidebarOpen }) => {
   useGetAggregateSkillTypeQuery({
     onCompleted: (data: GetAggregateSkillTypeQuery) => {
       setSkillTypes(data as any);
+    },
+  });
+
+  useGetSkillVerificationRequestsQuery({
+    variables: {
+      where: {
+        verified: {
+          equals: false,
+        },
+      },
+    },
+    onCompleted: (data) => {
+      setSkillVerificationRequest(data?.skillVerificationRequests as any);
     },
   });
 

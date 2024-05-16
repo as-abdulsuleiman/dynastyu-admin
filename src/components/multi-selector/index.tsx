@@ -15,7 +15,7 @@ interface MultiSelectorProps {
   selectedOptions: Options[];
   hidePlaceholder?: boolean;
   avoidHighlightFirstOption?: boolean;
-  // loadingMessage:str
+  disable?: boolean;
   handleSelect: (selectedList: Options[], selectedItem: Options) => void;
   handleRemove: (selectedList: Options[], removedItem: Options) => void;
 }
@@ -30,6 +30,7 @@ const MultiSelector: FC<MultiSelectorProps> = ({
   options,
   loading,
   groupBy,
+  disable,
   handleSelect,
   handleRemove,
   placeholder,
@@ -47,14 +48,13 @@ const MultiSelector: FC<MultiSelectorProps> = ({
         id="Multiselect"
         className="text-sm shadow-sm transition-colors"
         options={options}
-        loading={true}
+        loading={loading}
         selectedValues={selectedOptions}
         onSelect={handleSelect}
         onRemove={handleRemove}
         displayValue={displayValue}
         showCheckbox={showCheckbox}
-        disable={true}
-        // loadingMessage="Loading..."
+        disable={disable}
         groupBy={groupBy}
         avoidHighlightFirstOption={avoidHighlightFirstOption}
         hidePlaceholder={hidePlaceholder}

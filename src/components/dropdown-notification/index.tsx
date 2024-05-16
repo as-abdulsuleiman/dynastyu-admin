@@ -59,11 +59,8 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
       },
     },
     pollInterval: 10 * 1000,
-    // onCompleted: (data) => {
-    //   setSkillVerificationRequest(data?.skillVerificationRequests as any);
-    //   setLoading(loading);
-    // },
   });
+
   const { data: flaggedPostData } = useGetPostFlagsQuery({
     variables: {
       take: 10,

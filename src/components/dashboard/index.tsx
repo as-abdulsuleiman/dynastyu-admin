@@ -339,11 +339,13 @@ const Dashboard: FC<DashboardProps> = () => {
           placeholder="Type to search..."
         />
         <MultiSelector
+          disable={loading}
           options={usersFilter}
           displayValue="label"
           placeholder="Filter"
           showCheckbox={true}
           hidePlaceholder={true}
+          loading={loading}
           avoidHighlightFirstOption={true}
           selectedOptions={selectedOptions}
           handleRemove={handleRemoveOption}
