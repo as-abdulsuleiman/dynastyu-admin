@@ -6,7 +6,6 @@ import { Label } from "../ui/label";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CloseCircleLineIcon } from "@/components/Icons";
-import { Reorder, useDragControls } from "framer-motion";
 
 interface MultiTextInputProps {
   label?: string;
@@ -81,7 +80,6 @@ const MultiTextInput: FC<MultiTextInputProps> = ({
       console.log("newItems", newItems);
     }
   };
-  const controls = useDragControls();
 
   const className = `${
     error?.length
@@ -124,20 +122,13 @@ const MultiTextInput: FC<MultiTextInputProps> = ({
         />
         {newItems?.length ? (
           <ScrollArea className="h-32 flex flex-row">
-            <Reorder.Group
-              className="flex flex-row flex-wrap items-center pt-8 pb-2"
-              values={newItems}
-              onReorder={setItems}
-              axis="y"
-            >
+            <div className="flex flex-row flex-wrap items-center pt-8 pb-2">
               {/* <div className="flex flex-row flex-wrap items-center pt-8 pb-2"> */}
               {newItems?.map((val: string, index) => {
                 return (
-                  <Reorder.Item
-                    dragControls={controls}
+                  <div
                     className="mr-2 flex flex-row items-center justify-center bg-primary w-fit h-6 py-3 px-2 rounded-xl mb-2"
                     key={index}
-                    value={val}
                   >
                     <div className="text-[14px] dark:text-gray-200 text-gray-200">
                       {val}
@@ -148,7 +139,7 @@ const MultiTextInput: FC<MultiTextInputProps> = ({
                       }
                       className="h-[16px] w-[16px] cursor-pointer dark:stroke-gray-200 stroke-gray-200 ml-1.5"
                     />
-                  </Reorder.Item>
+                  </div>
                   // <div
                   //   draggable
                   //   onDragStart={(e) => handleDragStart(e, index)}
@@ -171,7 +162,7 @@ const MultiTextInput: FC<MultiTextInputProps> = ({
                 );
               })}
               {/* </div> */}
-            </Reorder.Group>
+            </div>
           </ScrollArea>
         ) : null}
       </div>
