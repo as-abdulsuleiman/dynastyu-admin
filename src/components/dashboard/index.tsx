@@ -4,7 +4,7 @@
 
 import { FC, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Grid, Text, Title } from "@tremor/react";
+import { Grid } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 import FanStatCard from "@/components/stat-cards/fan";

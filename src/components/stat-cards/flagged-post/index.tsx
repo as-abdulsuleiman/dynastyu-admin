@@ -22,19 +22,19 @@ const FlaggedPostStatCard: FC<indexProps> = ({}) => {
     flaggedPostStore: { setFlaggedPost, flaggedPost: flaggedPostCount },
   } = useRootStore();
 
-  const { data: flaggedPostData, loading } = useGetAggregatePostFlagQuery({
-    variables: {},
-    onCompleted: (data: GetAggregatePostFlagQuery) => {
-      setFlaggedPost(data as any);
-    },
-  });
+  // const { data: flaggedPostData, loading } = useGetAggregatePostFlagQuery({
+  //   variables: {},
+  //   onCompleted: (data: GetAggregatePostFlagQuery) => {
+  //     setFlaggedPost(data as any);
+  //   },
+  // });
 
   return (
     <StatCard
       activeLegend="Flagged Post"
       dataCount={flaggedPostCount?.aggregatePostFlag?._count?.id || 0}
       title="Total Flagged Post"
-      loading={loading}
+      // loading={loading}
       categoryValues={[flaggedPostCount?.aggregatePostFlag?._count?.id || 0]}
       categories={["Flagged Post"]}
       onClick={() => router.push("/flagged-posts")}

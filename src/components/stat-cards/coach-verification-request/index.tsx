@@ -19,26 +19,29 @@ const CoacheVerificationRequestStatCard: FC<indexProps> = ({}) => {
   const pathname = usePathname();
 
   const {
-    coacheStore: { setCoaches, coaches: coachesCount },
+    coachVerificationRequestStore: {
+      setCoachVerificationRequest,
+      caochVerificationRequest: coachesCount,
+    },
   } = useRootStore();
 
-  const { data: coaches, loading } = useGetAggregateCoachProfileQuery({
-    variables: {
-      where: {
-        verified: { equals: false },
-      },
-    },
-    onCompleted: (data: GetAggregateCoachProfileQuery) => {
-      setCoaches(data as any);
-    },
-  });
+  // const { data: coaches, loading } = useGetAggregateCoachProfileQuery({
+  //   variables: {
+  //     where: {
+  //       verified: { equals: false },
+  //     },
+  //   },
+  //   onCompleted: (data: GetAggregateCoachProfileQuery) => {
+  //     setCoachVerificationRequest(data as any);
+  //   },
+  // });
 
   return (
     <StatCard
       activeLegend="Verification Request"
       dataCount={coachesCount?.aggregateCoachProfile?._count?.id || 0}
       title="Total Coaches"
-      loading={loading}
+      // loading={loading}
       categoryValues={[coachesCount?.aggregateCoachProfile?._count?.id || 0]}
       categories={["Verification Request"]}
       onClick={() => router.push("/coaches/verification-request")}

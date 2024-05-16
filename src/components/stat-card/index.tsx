@@ -11,7 +11,7 @@ import CardContainer from "../card-container";
 
 interface CountCardProps {
   title: string;
-  loading: boolean;
+  loading?: boolean;
   dataCount: number;
   categoryValues?: number[];
   categories?: string[];

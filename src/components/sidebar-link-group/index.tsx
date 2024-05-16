@@ -18,6 +18,10 @@ import {
   SkillIcon,
   LayoutGridIcon,
 } from "../Icons";
+import {
+  GetAggregateSkillVerificationRequestQuery,
+  useGetAggregateSkillVerificationRequestQuery,
+} from "@/services/graphql";
 // import Notification from "../Icons/notification";
 interface SidebarItemsProps {
   handleNavigation: (val: string) => void;
@@ -37,7 +41,11 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
 }) => {
   const {
     skillVerificationRequestStore: { skillVerificationRequest },
+    coachVerificationRequestStore: { caochVerificationRequest: coachesCount },
+    flaggedPostStore: { flaggedPost: flaggedPostCount },
+    skillTypeStore: { skillTypes: skillTypeCount },
   } = useRootStore();
+
   const pathname = usePathname();
   const themeColor = UseThemeColor();
 
@@ -49,7 +57,7 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
     {
       name: "Dashboard",
       path: "/dashboard",
-      count: 0,
+      parentCount: [],
       items: [],
       hasFill: false,
       hasBadge: false,
@@ -71,7 +79,7 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       path: "/athletes",
       items: [],
       hasBadge: false,
-      count: 0,
+      parentCount: [],
       icon: ({ className, color }: IconProps) => (
         <AthleteIcon className={className} color={color} />
       ),
@@ -80,14 +88,19 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       name: "Coaches",
       hasFill: true,
       path: "/coaches",
-      hasBadge: false,
-      count: 0,
+      hasBadge: true,
+      parentCount: [coachesCount?.aggregateCoachProfile?._count?.id],
       items: [
         {
           name: "Create Coach",
           path: "/coaches/new",
         },
-        { name: "Verification Request", path: "/coaches/verification-request" },
+        {
+          name: "Verification Request",
+          path: "/coaches/verification-request",
+          count: coachesCount?.aggregateCoachProfile?._count?.id,
+          hasBadge: true,
+        },
       ],
       icon: ({ className, color }: IconProps) => (
         <WhistleIcon className={className} color={color} />
@@ -98,7 +111,7 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       hasFill: true,
       path: "/fans",
       hasBadge: false,
-      count: 0,
+      parentCount: [],
       // items: [
       //   {
       //     name: "Create Fan",
@@ -114,7 +127,7 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       hasFill: false,
       path: "/schools/college",
       hasBadge: false,
-      count: 0,
+      parentCount: [],
       items: [
         {
           name: "College",
@@ -144,7 +157,7 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       hasFill: false,
       path: "/flagged-posts",
       hasBadge: false,
-      count: 11,
+      parentCount: [flaggedPostCount?.aggregatePostFlag?._count?.id],
       items: [],
       icon: ({ className, color }: IconProps) => (
         <FlagOffIcon className={cn(className, "h-4 w-4")} color={color} />
@@ -155,7 +168,7 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       hasFill: true,
       path: "/skill-types",
       hasBadge: false,
-      count: 0,
+      parentCount: [skillVerificationRequest?.length],
       items: [
         {
           name: "Create Skill Type",
@@ -181,7 +194,7 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       hasFill: false,
       path: "/notifications",
       hasBadge: false,
-      count: 0,
+      parentCount: [],
       // items: [
       //   {
       //     name: "Create Fan",
@@ -198,13 +211,14 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       hasFill: false,
       path: "/settings",
       hasBadge: false,
-      count: 0,
+      parentCount: [],
       items: [],
       icon: ({ className, color }: IconProps) => (
         <Settings className={cn(className, "stroke-[1.7]")} color={color} />
       ),
     },
   ];
+
   return (
     <>
       {items?.map((val, index) => {
@@ -237,6 +251,9 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
         const iconClass = `h-[19px] w-[19px] ${activeIconColor}`;
         const Icon = () =>
           val?.icon({ className: iconClass, color: iconColor });
+
+        const showCount = val?.parentCount?.length;
+
         return (
           <div key={index}>
             <Link
@@ -258,7 +275,28 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
                 >
                   {val?.name}
                 </div>
-                {isActive ? (
+                {(!isActive && showCount) || (!hasChildren && showCount) ? (
+                  <div className={`ml-auto flex flex-row -space-x-1.5`}>
+                    {val?.parentCount?.map((count: any, idx) => {
+                      return (
+                        <div
+                          className={`h-5 w-6  ${
+                            idx === 0 ? "z-10" : "z-[5]"
+                          } rounded-full ${
+                            !isActive ? "bg-primary" : "bg-secondary"
+                          }`}
+                          key={idx}
+                        >
+                          <div
+                            className={` font-TTHovesDemiBold  flex flex-row items-center justify-center m-auto text-gray-200 dark:text-dark-gray-700 text-sm`}
+                          >
+                            {formatCount(count)}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : isActive ? (
                   <ChevronDownIcon className="ml-auto h-5 w-5 stroke-primary-foreground dark:stroke-primary-foreground" />
                 ) : null}
               </div>
@@ -286,7 +324,7 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
                           
                         </Link> */}
                         </div>
-                        {value?.hasBadge ? (
+                        {value?.count ? (
                           <div className="ml-auto">
                             <div className="h-5 w-7 bg-primary font-TTHovesDemiBold rounded-full flex flex-row items-center justify-center m-auto text-gray-200 dark:text-dark-gray-700 text-sm">
                               {formatCount(value?.count)}

@@ -24,20 +24,20 @@ const SkillTypeStatCard: FC<indexProps> = ({ title }) => {
     skillTypeStore: { setSkillTypes, skillTypes: skillTypeCount },
   } = useRootStore();
 
-  const { data: skillTypesData, loading: loading } =
-    useGetAggregateSkillTypeQuery({
-      variables: {},
-      onCompleted: (data: GetAggregateSkillTypeQuery) => {
-        setSkillTypes(data as any);
-      },
-    });
+  // const { data: skillTypesData, loading: loading } =
+  //   useGetAggregateSkillTypeQuery({
+  //     variables: {},
+  //     onCompleted: (data: GetAggregateSkillTypeQuery) => {
+  //       setSkillTypes(data as any);
+  //     },
+  //   });
 
   return (
     <StatCard
       activeLegend={"Skill Types"}
       dataCount={skillTypeCount?.aggregateSkillType?._count?.id || 0}
       title={`Total ${title}`}
-      loading={loading}
+      // loading={loading}
       categoryValues={[skillTypeCount?.aggregateSkillType?._count?.id || 0]}
       categories={["Skill Types"]}
       onClick={() => router.push("/skill-types")}
