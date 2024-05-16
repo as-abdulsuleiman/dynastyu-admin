@@ -13,6 +13,7 @@ import { SchoolStore } from "./schools";
 import { SkillTypeStore } from "./skill-types";
 import { FlaggedPostStore } from "./flagged-posts";
 import { SkillVerificationRequestStore } from "./skill-verification-requests";
+import { CoachVerificationRequestStore } from "./coach-verification-request";
 
 export const RootStore = types.model("RootStore", {
   counterStore: CounterStore,
@@ -24,7 +25,8 @@ export const RootStore = types.model("RootStore", {
   schoolStore: SchoolStore,
   skillTypeStore :SkillTypeStore,
   flaggedPostStore:FlaggedPostStore,
-  skillVerificationRequestStore: SkillVerificationRequestStore
+  skillVerificationRequestStore: SkillVerificationRequestStore,
+  coachVerificationRequestStore:CoachVerificationRequestStore
 });
 
 export interface RootStore extends Instance<typeof RootStore> {}
@@ -41,7 +43,8 @@ export const createRootStore = () => {
       schoolStore: SchoolStore.create(),
       skillTypeStore :SkillTypeStore.create(),
       flaggedPostStore: FlaggedPostStore.create(),
-      skillVerificationRequestStore: SkillVerificationRequestStore.create()
+      skillVerificationRequestStore: SkillVerificationRequestStore.create(),
+      coachVerificationRequestStore:CoachVerificationRequestStore.create()
 
     },
     { NODE_ENV: process.env.NODE_ENV }

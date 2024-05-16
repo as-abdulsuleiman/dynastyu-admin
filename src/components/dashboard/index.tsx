@@ -4,7 +4,7 @@
 
 import { FC, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Grid, Text, Title } from "@tremor/react";
+import { Grid } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 import FanStatCard from "@/components/stat-cards/fan";
@@ -339,11 +339,13 @@ const Dashboard: FC<DashboardProps> = () => {
           placeholder="Type to search..."
         />
         <MultiSelector
+          disable={loading}
           options={usersFilter}
           displayValue="label"
           placeholder="Filter"
           showCheckbox={true}
           hidePlaceholder={true}
+          loading={loading}
           avoidHighlightFirstOption={true}
           selectedOptions={selectedOptions}
           handleRemove={handleRemoveOption}

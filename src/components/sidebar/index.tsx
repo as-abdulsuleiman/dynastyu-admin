@@ -10,6 +10,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeftIcon } from "@/components/Icons";
 import SidebarLinkGroup from "../sidebar-link-group";
+import {
+  GetAggregateCoachProfileQuery,
+  GetAggregatePostFlagQuery,
+  GetAggregateSkillTypeQuery,
+  useGetAggregateCoachProfileQuery,
+  useGetAggregatePostFlagQuery,
+  useGetAggregateSkillTypeQuery,
+  useGetSkillVerificationRequestsQuery,
+} from "@/services/graphql";
+import { useRootStore } from "@/mobx";
 
 interface SideBarProps {
   sidebarOpen: boolean;
@@ -21,6 +31,13 @@ const SideBar: FC<SideBarProps> = ({ sidebarOpen, setSidebarOpen }) => {
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
   const year = new Date().getFullYear();
+
+  const {
+    coachVerificationRequestStore: { setCoachVerificationRequest },
+    flaggedPostStore: { setFlaggedPost },
+    skillTypeStore: { setSkillTypes },
+    skillVerificationRequestStore: { setSkillVerificationRequest },
+  } = useRootStore();
 
   let storedSidebarExpanded = "true";
 
@@ -60,6 +77,42 @@ const SideBar: FC<SideBarProps> = ({ sidebarOpen, setSidebarOpen }) => {
       document.querySelector("body")?.classList.remove("sidebar-expanded");
     }
   }, [sidebarExpanded]);
+
+  useGetAggregateCoachProfileQuery({
+    variables: {
+      where: {
+        verified: { equals: false },
+      },
+    },
+    onCompleted: (data: GetAggregateCoachProfileQuery) => {
+      setCoachVerificationRequest(data as any);
+    },
+  });
+
+  useGetAggregatePostFlagQuery({
+    onCompleted: (data: GetAggregatePostFlagQuery) => {
+      setFlaggedPost(data as any);
+    },
+  });
+
+  useGetAggregateSkillTypeQuery({
+    onCompleted: (data: GetAggregateSkillTypeQuery) => {
+      setSkillTypes(data as any);
+    },
+  });
+
+  useGetSkillVerificationRequestsQuery({
+    variables: {
+      where: {
+        verified: {
+          equals: false,
+        },
+      },
+    },
+    onCompleted: (data) => {
+      setSkillVerificationRequest(data?.skillVerificationRequests as any);
+    },
+  });
 
   return (
     <aside

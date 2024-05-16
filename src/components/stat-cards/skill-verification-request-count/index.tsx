@@ -8,7 +8,10 @@ import { useRootStore } from "@/mobx";
 import { observer } from "mobx-react-lite";
 import { useRouter, usePathname } from "next/navigation";
 import { FlagOffIcon } from "@/components/Icons";
-import { useGetAggregateSkillVerificationRequestQuery } from "@/services/graphql";
+import {
+  GetAggregateSkillVerificationRequestQuery,
+  useGetAggregateSkillVerificationRequestQuery,
+} from "@/services/graphql";
 
 interface indexProps {}
 
@@ -21,6 +24,22 @@ const SkillVerificationRequestStatCard: FC<indexProps> = ({}) => {
       isLoading,
     },
   } = useRootStore();
+
+  // const { data } = useGetAggregateSkillVerificationRequestQuery({
+  //   // variables: {
+  //   //   where: {
+  //   //     verified: {
+  //   //       equals: false,
+  //   //     },
+  //   //   },
+  //   // },
+  //   // onCompleted: (data: GetAggregateSkillVerificationRequestQuery) => {
+  //   //   console.log("data", data);
+  //   //   // setSkillTypes(data as any);
+  //   // },
+  // });
+
+  // console.log("data", data);
 
   return (
     <StatCard

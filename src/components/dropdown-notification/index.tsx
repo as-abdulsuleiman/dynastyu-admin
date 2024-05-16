@@ -39,7 +39,6 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
 
   const [open, setOpen] = useState(false);
   const {
-    flaggedPostStore: { setFlaggedPost, flaggedPost },
     skillVerificationRequestStore: {
       setSkillVerificationRequest,
       setLoading,
@@ -47,7 +46,7 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
     },
   } = useRootStore();
 
-  const { data, loading } = useGetSkillVerificationRequestsQuery({
+  const { data } = useGetSkillVerificationRequestsQuery({
     variables: {
       where: {
         verified: {
@@ -60,16 +59,9 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
       },
     },
     pollInterval: 10 * 1000,
-    onCompleted: (data) => {
-      setSkillVerificationRequest(data?.skillVerificationRequests as any);
-      setLoading(loading);
-    },
   });
-  const {
-    data: flaggedPostData,
-    refetch,
-    fetchMore,
-  } = useGetPostFlagsQuery({
+
+  const { data: flaggedPostData } = useGetPostFlagsQuery({
     variables: {
       take: 10,
       orderBy: {
@@ -77,10 +69,6 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
       },
     },
     pollInterval: 10 * 1000,
-    onCompleted: (data) => {
-      setFlaggedPost(data?.postFlags as any);
-      // setLoading(loading);
-    },
   });
 
   const showNotificationBadge = skillVerificationRequest?.length;
