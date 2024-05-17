@@ -7,7 +7,13 @@ import { observer } from "mobx-react-lite";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import { GetUserQuery, useGetPostFlagQuery } from "@/services/graphql";
+import {
+  GetAggregatePostFlagQuery,
+  GetUserQuery,
+  useGetAggregatePostFlagLazyQuery,
+  useGetAggregatePostFlagSuspenseQuery,
+  useGetPostFlagQuery,
+} from "@/services/graphql";
 import MediaCard from "../media-card";
 import TabCard from "../tab-card";
 import UserAvatar from "../user-avatar";
@@ -18,6 +24,7 @@ import { generateProfilePath } from "@/lib/helpers";
 import ContentHeader from "../content-header";
 import CardContainer from "../card-container";
 import { formatDate } from "@/lib/utils";
+import { useRootStore } from "@/mobx";
 
 interface FlaggedPostDetailProps {
   params: {
@@ -29,6 +36,11 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
   const { toast } = useToast();
   const router = useRouter();
 
+  const {
+    flaggedPostStore: { setFlaggedPost },
+  } = useRootStore();
+  const [useAggregatePostFlag] = useGetAggregatePostFlagLazyQuery();
+
   const { data, loading } = useGetPostFlagQuery({
     variables: {
       where: {
@@ -36,6 +48,20 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
       },
     },
   });
+
+  const UseAggregatePostFlagCount = async () => {
+    await useAggregatePostFlag({
+      onCompleted: (data: GetAggregatePostFlagQuery) => {
+        setFlaggedPost(data as any);
+      },
+    });
+  };
+
+  const handleDisablePost = async () => {
+    try {
+      await UseAggregatePostFlagCount();
+    } catch (error) {}
+  };
 
   const renderPostedBy = (post: any) => {
     const userPath = generateProfilePath(post?.user as GetUserQuery["user"]);
@@ -168,7 +194,7 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
         variant="default"
         className="my-6 ml-auto flex flex-row"
         disabled
-        onClick={() => {}}
+        onClick={handleDisablePost}
       >
         Disable Post
       </Button>

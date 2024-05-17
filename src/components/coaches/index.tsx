@@ -8,6 +8,8 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 import CoacheStatCard from "@/components/stat-cards/coache";
 import {
+  CoachProfileWhereInput,
+  GetAggregateCoachProfileQuery,
   GetUsersQuery,
   QueryMode,
   SortOrder,
@@ -64,6 +66,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
   const { toast } = useToast();
   const {
     coacheStore: { setCoaches },
+    coachVerificationRequestStore: { setCoachVerificationRequest },
   } = useRootStore();
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [value, setValue] = useState<string>("");
@@ -75,7 +78,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
   const [ActiveUser, setActiveUser] = useState<any>({});
   const [deletingProfile, setDeletingProfile] = useState<boolean>(false);
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
-  const [aggregatedcoaches] = useGetAggregateCoachProfileLazyQuery();
+  const [getAggregateCoachProfile] = useGetAggregateCoachProfileLazyQuery();
   const filteredParams = getURLParams(selectedOptions);
 
   const {
@@ -134,6 +137,27 @@ const Coaches: FC<CoachesProps> = ({}) => {
     return lastPostInResults?.id;
   }, [coachesData?.users]);
 
+  const aggregateCoachVerificationCount = async () => {
+    await getAggregateCoachProfile({
+      variables: {
+        where: {
+          verified: { equals: false },
+        },
+      },
+      onCompleted: (data: GetAggregateCoachProfileQuery) => {
+        setCoachVerificationRequest(data as any);
+      },
+    });
+  };
+
+  const aggregateCoachesCount = async () => {
+    await getAggregateCoachProfile({
+      onCompleted: (data: GetAggregateCoachProfileQuery) => {
+        setCoaches(data as any);
+      },
+    });
+  };
+
   const handleDeleteCoachConfirmPrompt = async (item: any) => {
     setDeletingProfile(true);
     try {
@@ -144,7 +168,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
           },
         },
       });
-      if (response.data?.deleteOneUser) {
+      if (response?.data?.deleteOneUser) {
         await deleteFirebaseUser({
           variables: {
             data: {
@@ -152,14 +176,14 @@ const Coaches: FC<CoachesProps> = ({}) => {
             },
           },
         });
+        await aggregateCoachesCount();
+        refetch();
+
         toast({
           title: "Coach successfully deleted.",
           description: `@${item?.username} profile has been deleted.`,
           variant: "successfull",
         });
-        const coachResponse = await aggregatedcoaches();
-        setCoaches(coachResponse?.data as any);
-        refetch();
       }
     } catch (error) {
       toast({
@@ -248,6 +272,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
           },
         },
       });
+      await aggregateCoachVerificationCount();
       toast({
         title: "Profile successfully updated.",
         description: `@${item?.username} profile has been ${
@@ -500,6 +525,8 @@ const Coaches: FC<CoachesProps> = ({}) => {
           placeholder="Search..."
         />
         <MultiSelector
+          disable={loading}
+          loading={loading}
           options={coachFilter}
           displayValue="label"
           placeholder="Filter"

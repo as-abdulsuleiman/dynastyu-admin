@@ -327,6 +327,8 @@ const Users: FC<UsersProps> = ({}) => {
           placeholder="Type to search..."
         />
         <MultiSelector
+          loading={loading}
+          disable={loading}
           options={usersFilter}
           displayValue="label"
           placeholder="Filter"

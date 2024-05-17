@@ -2,22 +2,19 @@
 
 "use client";
 
-import { FC, useEffect, useMemo, useState } from "react";
-import { Title, Text, Grid } from "@tremor/react";
+import { FC, useMemo, useState } from "react";
+import { Grid } from "@tremor/react";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { StatusOnlineIcon, StatusOfflineIcon } from "@heroicons/react/outline";
 import CoacheVerificationRequestStatCard from "@/components/stat-cards/coach-verification-request";
 import SelectCard from "@/components/select";
 import {
-  CoachProfileWhereInput,
+  GetAggregateCoachProfileQuery,
   GetCoachesQuery,
   QueryMode,
   SortOrder,
-  useDeleteCoachMutation,
-  useDeleteUserMutation,
-  useGetCoachesLazyQuery,
+  useGetAggregateCoachProfileLazyQuery,
   useGetCoachesQuery,
-  useGetUsersLazyQuery,
   useUpdateCoachMutation,
 } from "@/services/graphql";
 import Pagination from "@/components/pagination";
@@ -43,15 +40,6 @@ import { formatDate } from "@/lib/utils";
 import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
 
-enum FilterEnum {
-  ACTIVE = "Active",
-  INACTIVE = "Inactive",
-  APPROVED = "Approved",
-  VERIFIED = "Verified",
-  NOTVERIFIED = "Not Verified",
-  NOTAPPROVED = "Not Approved",
-}
-
 const headerItems = [
   { name: "Name" },
   { name: "Username" },
@@ -69,22 +57,14 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
   const router = useRouter();
   const { toast } = useToast();
   const {
-    userStore: { setUsers },
+    coachVerificationRequestStore: { setCoachVerificationRequest },
   } = useRootStore();
-  const {
-    coacheStore: { setCoaches },
-  } = useRootStore();
-  const [status, setStatus] = useState<string>("");
   const [value, setValue] = useState<string>("");
   const [debounced] = useDebouncedValue(value, 300);
-  const [isActivating, setIsactivating] = useState<boolean>(false);
   const [isVerifying, setIsVerifying] = useState<boolean>();
   const [selectedUser, setSelectedUser] = useState<number | null>(null);
-  const [deleteCoach] = useDeleteCoachMutation();
   const [updateCoach] = useUpdateCoachMutation();
-  const [deleteUser] = useDeleteUserMutation();
-  const [getUsers] = useGetUsersLazyQuery();
-  const [getCoaches] = useGetCoachesLazyQuery();
+  const [getAggregateCoachProfile] = useGetAggregateCoachProfileLazyQuery();
 
   const {
     loading,
@@ -93,59 +73,6 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
     fetchMore,
   } = useGetCoachesQuery({
     variables: {
-      where: {
-        verified: { equals: false },
-      },
-      take: 10,
-      orderBy: {
-        createdAt: SortOrder.Desc,
-      },
-    },
-    returnPartialData: true,
-    fetchPolicy: "cache-first",
-    // pollInterval: 30 * 1000,
-  });
-
-  //   const whereClause: CoachProfileWhereInput = useMemo(() => {
-  //     if (status === FilterEnum.INACTIVE) {
-  //       return {
-  //         user: {
-  //           is: {
-  //             isActive: {
-  //               equals: false,
-  //             },
-  //           },
-  //         },
-  //       };
-  //     } else if (status === FilterEnum.ACTIVE) {
-  //       return {
-  //         user: {
-  //           is: {
-  //             isActive: {
-  //               equals: true,
-  //             },
-  //           },
-  //         },
-  //       };
-  //     } else if (status === FilterEnum.VERIFIED) {
-  //       return {
-  //         verified: {
-  //           equals: true,
-  //         },
-  //       };
-  //     } else if (status === FilterEnum.NOTVERIFIED) {
-  //       return {
-  //         verified: {
-  //           equals: false,
-  //         },
-  //       };
-  //     } else {
-  //       return {};
-  //     }
-  //   }, [status]);
-
-  useEffect(() => {
-    refetch({
       where: {
         verified: { equals: false },
         OR: [
@@ -191,103 +118,21 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
           },
         ],
       },
-    });
-  }, [status, debounced, refetch]);
+      take: 10,
+      orderBy: {
+        createdAt: SortOrder.Desc,
+      },
+    },
+    returnPartialData: true,
+    fetchPolicy: "cache-first",
+    pollInterval: 30 * 1000,
+  });
 
   const lastUserId = useMemo(() => {
     const lastPostInResults =
       coachesData?.coachProfiles[coachesData?.coachProfiles?.length - 1];
     return lastPostInResults?.id;
   }, [coachesData?.coachProfiles]);
-
-  const handleDeleteCoach = async (item: any) => {
-    try {
-      const response = await deleteCoach({
-        variables: {
-          where: {
-            id: item.id,
-          },
-        },
-      });
-      if (response.data?.deleteOneCoachProfile) {
-        await deleteUser({
-          variables: {
-            where: {
-              id: item?.user?.id,
-            },
-          },
-        });
-        const caochesResponse = await getCoaches({});
-        const usersResponse = await getUsers({});
-        await refetch();
-        setUsers(usersResponse.data?.users as any);
-        setCoaches(caochesResponse.data?.coachProfiles as any);
-        toast({
-          title: "Coach successfully deleted.",
-          description: `@${item?.user?.username} account has been deleted.`,
-          variant: "default",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Something went wrong.",
-        description: `${
-          error || "Could not successfully created a coach. Please try again."
-        }`,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleActivateCoach = async (item: any) => {
-    setSelectedUser(item?.id);
-    setIsactivating(true);
-    try {
-      const isCoachActive = item?.user?.isActive;
-      await updateCoach({
-        variables: {
-          where: {
-            id: item?.id,
-          },
-          data: {
-            user: {
-              update: {
-                isActive: { set: !isCoachActive },
-              },
-            },
-          },
-        },
-      });
-      toast({
-        title: "Profile successfully updated.",
-        description: `@${item?.user?.username} profile has been ${
-          isCoachActive ? "deactivated" : "activated"
-        } `,
-        variant: "successfull",
-      });
-      // if (resp.data?.updateOneCoachProfile) {
-      // await refetch();
-      // toast({
-      //   title: "Coach successfully updated.",
-      //   description: `${coach?.user?.username} has been ${
-      //     coach?.user?.isActive ? "Deactivated" : "Activated"
-      //   } `,
-      //   variant: "default",
-      // });
-      // }
-    } catch (error) {
-      toast({
-        title: "Something went wrong.",
-        description: `${
-          error || "Could not successfully update Coach. Please try again."
-        }`,
-        variant: "destructive",
-      });
-    } finally {
-      setIsactivating(false);
-      setSelectedUser(null);
-    }
-  };
 
   const handleVerifyCoach = async (item: any) => {
     setSelectedUser(item?.id);
@@ -304,6 +149,16 @@ const CoachVerificationRequest: FC<CoachVerificationRequestProps> = ({}) => {
               set: !isVerified,
             },
           },
+        },
+      });
+      await getAggregateCoachProfile({
+        variables: {
+          where: {
+            verified: { equals: false },
+          },
+        },
+        onCompleted: (data: GetAggregateCoachProfileQuery) => {
+          setCoachVerificationRequest(data as any);
         },
       });
       await refetch();
