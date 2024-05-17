@@ -87,7 +87,10 @@ const SchoolDropdown: FC<SchoolDropdownProps> = ({
     variables: {
       where: {
         ...whereClause,
-        OR: [{ name: { contains: debounced, mode: QueryMode.Insensitive } }],
+        OR: [
+          { name: { contains: debounced, mode: QueryMode.Insensitive } },
+          { email: { contains: debounced, mode: QueryMode.Insensitive } },
+        ],
       },
       take: 20,
       orderBy: {

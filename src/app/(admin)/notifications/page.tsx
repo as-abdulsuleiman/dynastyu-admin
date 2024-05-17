@@ -541,14 +541,14 @@ const Page: FC<PageProps> = ({}) => {
       <TabCard
         className="text-lg font-TTHovesDemiBold"
         tabs={[
-          { name: "Flagged Post" },
-          { name: "Skill Verfication" },
           { name: "Coach Verification" },
+          { name: "Skill Verfication" },
+          { name: "Flagged Post" },
         ]}
         tabContent={[
-          { content: renderFlaggedPostRequest() },
-          { content: renderSkillVerificationRequest() },
           { content: renderCoachVerificationRequest() },
+          { content: renderSkillVerificationRequest() },
+          { content: renderFlaggedPostRequest() },
         ]}
       />
       <PromptAlert

@@ -38,7 +38,7 @@ const UserAvatar: FC<UserAvatarProps> = ({
     return (
       <>
         {url ? (
-          <div className=" absolute inset-0 w-full h-full">
+          <div className="absolute inset-0 w-full h-full">
             <ReactPlayer
               muted
               playing={false}
@@ -66,7 +66,7 @@ const UserAvatar: FC<UserAvatarProps> = ({
     return (
       <AvatarFallback
         className={cn(
-          "capitalize text-xs h-[79px] w-[79px]",
+          "capitalize text-xs h-[79px] w-[79px] bg-slate-500 text-white",
           fallbackClassName
         )}
       >
