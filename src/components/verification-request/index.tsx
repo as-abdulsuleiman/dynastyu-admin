@@ -108,7 +108,7 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
         },
       });
       await refetch();
-      const res = await getSkillVerificationRequest({
+      await getSkillVerificationRequest({
         variables: {
           where: {
             verified: {
@@ -120,8 +120,10 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
             createdAt: SortOrder.Desc,
           },
         },
+        onCompleted: (data) => {
+          setSkillVerificationRequest(data?.skillVerificationRequests as any);
+        },
       });
-      setSkillVerificationRequest(res?.data?.skillVerificationRequests as any);
       toast({
         title: "Skill verification successfully updated",
         description: `${

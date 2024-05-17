@@ -216,7 +216,6 @@ const SkillVerificationRequest: FC<SkillVerificationRequestProps> = ({}) => {
         <TableCell className="text-center text-sm">
           {item?.user?.email}
         </TableCell>
-
         <TableCell className="text-center text-sm">
           <div>
             {item.createdAt ? formatDate(item?.createdAt, "dd MMM yyyy") : ""}

@@ -407,6 +407,8 @@ const Fans: FC<FansProps> = ({}) => {
           displayValue="label"
           placeholder="Filter"
           showCheckbox={true}
+          loading={loading}
+          disable={loading}
           hidePlaceholder={true}
           avoidHighlightFirstOption={true}
           selectedOptions={selectedOptions}

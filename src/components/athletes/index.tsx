@@ -577,6 +577,8 @@ const Athletes: FC<AthletesProps> = ({}) => {
         />
         <MultiSelector
           options={athleteFilter}
+          disable={loading}
+          loading={loading}
           displayValue="label"
           placeholder="Filter"
           showCheckbox={true}
