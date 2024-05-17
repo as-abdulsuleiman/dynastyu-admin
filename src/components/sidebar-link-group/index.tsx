@@ -2,7 +2,7 @@
 
 import { FC } from "react";
 import { Bell, FolderRoot, Home, Medal, Settings } from "lucide-react";
-import { usePathname, useParams, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useRootStore } from "@/mobx";
 import { observer } from "mobx-react-lite";
 import { cn } from "@/lib/utils";
@@ -18,10 +18,7 @@ import {
   SkillIcon,
   LayoutGridIcon,
 } from "../Icons";
-import {
-  GetAggregateSkillVerificationRequestQuery,
-  useGetAggregateSkillVerificationRequestQuery,
-} from "@/services/graphql";
+
 // import Notification from "../Icons/notification";
 interface SidebarItemsProps {
   handleNavigation: (val: string) => void;
@@ -50,7 +47,7 @@ const CountBadge = ({ countValue, className }: CountBadgeProps) => {
         className
       )}
     >
-      <div className="font-TTHovesDemiBold flex flex-row items-center justify-center m-auto text-gray-200 dark:text-dark-gray-700 text-sm">
+      <div className="font-TTHovesDemiBold flex flex-row items-center justify-center m-auto text-gray-200 dark:text-dark-gray-700 text-[11.5px]">
         {formatCount(countValue)}
       </div>
     </div>
@@ -71,10 +68,6 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
 
   const pathname = usePathname();
   const themeColor = UseThemeColor();
-
-  const formatCount = (count: number) => {
-    return +count > 99 ? `${Math.max(0, 99)}+` : Math.max(0, +count || 0);
-  };
 
   const items = [
     {
@@ -278,7 +271,7 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
         const Icon = () =>
           val?.icon({ className: iconClass, color: iconColor });
 
-        const showCount = val?.parentCount?.length;
+        const showCount = val?.parentCount?.length > 0;
 
         return (
           <div key={index}>
@@ -315,20 +308,6 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
                             //   : "z-[5] bg-popover-foreground"
                           }`}
                         />
-                        // <div
-                        //   className={`h-5 w-6  ${
-                        //     idx === 0 ? "z-10" : "z-[5]"
-                        //   } rounded-full ${
-                        //     !isActive ? "bg-primary" : "bg-destructive"
-                        //   }`}
-                        //   key={idx}
-                        // >
-                        //   <div
-                        //     className={` font-TTHovesDemiBold  flex flex-row items-center justify-center m-auto text-gray-200 dark:text-dark-gray-700 text-sm`}
-                        //   >
-                        //     {formatCount(count)}
-                        //   </div>
-                        // </div>
                       );
                     })}
                   </div>
@@ -352,25 +331,13 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
                           // onClick={() => handleNavigation()}
                         >
                           {value?.name}
-                          {/* <Link
-                          href={value?.path}
-                          scroll
-                          className="flex flex-row items-center"
-                        >"bg-primary" : "bg-destructive"
-                          
-                        </Link> */}
                         </div>
                         {value?.count ? (
                           <CountBadge
                             countValue={value?.count}
                             className="ml-auto"
                           />
-                        ) : // <div className="ml-auto">
-                        //   <div className="h-5 w-6 bg-destructive font-TTHovesDemiBold rounded-full flex flex-row items-center justify-center m-auto text-gray-200 dark:text-dark-gray-700 text-sm">
-                        //     {formatCount(value?.count)}
-                        //   </div>
-                        // </div>
-                        null}
+                        ) : null}
                       </div>
                     </Link>
                   );

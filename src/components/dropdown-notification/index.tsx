@@ -18,6 +18,7 @@ import {
 import { useRootStore } from "@/mobx";
 import {
   SortOrder,
+  useGetCoachesQuery,
   useGetPostFlagsQuery,
   useGetSkillVerificationRequestsQuery,
 } from "@/services/graphql";
@@ -30,13 +31,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import UserAvatar from "../user-avatar";
 import { buttonVariants } from "../ui/button";
-import { FlagOffIcon, NotificationIcon } from "@/components/Icons";
+import { NotificationIcon } from "@/components/Icons";
 
 interface DropdownProps {}
 
 const DropdownNotification: FC<DropdownProps> = ({}) => {
   const router = useRouter();
-
   const [open, setOpen] = useState(false);
   const {
     skillVerificationRequestStore: {
@@ -61,14 +61,24 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
     pollInterval: 10 * 1000,
   });
 
-  const { data: flaggedPostData } = useGetPostFlagsQuery({
+  const {
+    loading: LoadingCoachesData,
+    data: coachesData,
+    refetch: refetchCoachesData,
+    fetchMore: fetchMoreCoachesData,
+  } = useGetCoachesQuery({
     variables: {
+      where: {
+        verified: { equals: false },
+      },
       take: 10,
       orderBy: {
         createdAt: SortOrder.Desc,
       },
     },
-    pollInterval: 10 * 1000,
+    returnPartialData: true,
+    fetchPolicy: "cache-first",
+    // pollInterval: 30 * 1000,
   });
 
   const showNotificationBadge = skillVerificationRequest?.length;
@@ -96,8 +106,8 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
       <div className="relative mt-4">
         <ScrollArea className="w-full h-72 ">
           <DropdownMenuLabel className="flex flex-row items-center sticky z-50 top-0 bg-secondary backdrop-blur-sm">
-            <div className="">Skill Verification Requests</div>
-            <div className="ml-auto bg-destructive py-1 px-2 rounded-md cursor-pointer font-TTHovesDemiBold text-xs">
+            <div className="">Skill Verification Request</div>
+            <div className="ml-auto bg-destructive text-white py-1 px-2 rounded-md cursor-pointer font-TTHovesDemiBold text-xs">
               <Link
                 onClick={() => setOpen(false)}
                 href="/skill-types/verification-request"
@@ -118,6 +128,7 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
                       <UserAvatar
                         className="h-[59px] w-[59px] shadow"
                         fallbackType="name"
+                        fallbackClassName="h-[59px] w-[59px]"
                         avatar={value?.user?.avatar as string}
                         fallback={`${value?.user?.firstname?.charAt(
                           0
@@ -164,19 +175,22 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
     );
   };
 
-  const renderFlaggedPosts = () => {
+  const renderCoachVerification = () => {
     return (
       <div className="relative mt-4">
         <ScrollArea className="w-full h-72 ">
           <DropdownMenuLabel className="flex flex-row items-center sticky z-50 top-0 bg-secondary backdrop-blur-sm">
-            <div className="">Flagged Posts</div>
-            <div className="ml-auto bg-destructive py-1 px-2 rounded-md cursor-pointer font-TTHovesDemiBold text-xs">
-              <Link onClick={() => setOpen(false)} href={`/flagged-posts`}>
+            <div className="">Coach Verification Request</div>
+            <div className="ml-auto text-white bg-destructive py-1 px-2 rounded-md cursor-pointer font-TTHovesDemiBold text-xs">
+              <Link
+                onClick={() => setOpen(false)}
+                href={`/coaches/verification-request`}
+              >
                 View All
               </Link>
             </div>
           </DropdownMenuLabel>
-          {flaggedPostData?.postFlags?.map((value: any, index: any) => {
+          {coachesData?.coachProfiles?.map((value: any, index: any) => {
             return (
               <DropdownMenuGroup
                 key={index}
@@ -186,47 +200,28 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
                   <div className="flex flex-row items-center p-2 py-2 flex-1">
                     <div className="relative self-start">
                       <UserAvatar
-                        className="h-[59px] w-[59px] shadow relative"
+                        className="h-[59px] w-[59px] shadow"
                         fallbackType="name"
-                        type={
-                          value?.post?.videos?.length > 0 ? "video" : "image"
-                        }
-                        avatar={
-                          value?.post?.videos?.length > 0
-                            ? value?.post?.videos[0]
-                            : (value?.post?.images[0] as string)
-                        }
-                        fallback={`${value?.post?.user?.firstname?.charAt(
+                        fallbackClassName="h-[59px] w-[59px]"
+                        avatar={value?.user?.avatar as string}
+                        fallback={`${value?.user?.firstname?.charAt(
                           0
-                        )} ${value?.post?.user?.surname?.charAt(0)}`}
+                        )} ${value?.user?.surname?.charAt(0)}`}
                       />
-                      <div className="absolute right-[-2px] bottom-1.5 z-10 bg-[#FF4747] h-6 w-6 rounded-full flex flex-row items-center justify-center">
-                        <FlagOffIcon className="h-4 w-4" color="#fff" />
-                      </div>
                       <div className="absolute h-[15px] rounded-full w-[15px] bg-primary top-1 border border-1 left-0"></div>
                     </div>
-                    <div className="flex flex-col ml-3 justify-center w-full">
+                    <div className="flex item-center flex-col justify-center ml-3">
                       <div key={value?.id} className="cursor-pointer">
-                        <span>@{value?.user?.username}</span> has flagged a post
+                        <span>@{value?.user?.username}</span> {""}
+                        <span className="ml-1">
+                          is requesting for Coach verification
+                        </span>
                       </div>
                       <div className="mt-0 text-[12px] py-0">
                         {formatDistanceToNow(new Date(value?.createdAt), {
                           addSuffix: true,
                         })}
                       </div>
-                      <Link
-                        onClick={() => setOpen(false)}
-                        href={`/flagged-post/${value?.id}`}
-                        className={cn(
-                          buttonVariants({
-                            variant: "destructive",
-                            size: "sm",
-                          }),
-                          "mt-2 ml-auto mr-0 w"
-                        )}
-                      >
-                        Review
-                      </Link>
                     </div>
                   </div>
                 </DropdownMenuItem>
@@ -253,59 +248,13 @@ const DropdownNotification: FC<DropdownProps> = ({}) => {
           Notifications
           <div className="ml-auto bg-secondary py-1 px-2 rounded-md cursor-pointer font-TTHovesDemiBold text-xs">
             <Link onClick={() => setOpen(false)} href="/notifications">
-              View All
+              View All Notifications
             </Link>
           </div>
         </DropdownMenuLabel>
-        {renderSkillVerificationRequests()}
+        {renderCoachVerification()}
         <DropdownMenuSeparator />
-        {renderFlaggedPosts()}
-        {/* <DropdownMenuGroup>
-          <DropdownMenuItem>
-            Profile
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Billing
-            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Settings
-            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            Keyboard shortcuts
-            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuGroup> */}
-        {/* <DropdownMenuSeparator /> */}
-        {/* <DropdownMenuGroup>
-          <DropdownMenuItem>Team</DropdownMenuItem>
-          <DropdownMenuSub>
-            <DropdownMenuSubTrigger>Invite users</DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-              <DropdownMenuSubContent>
-                <DropdownMenuItem>Email</DropdownMenuItem>
-                <DropdownMenuItem>Message</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>More...</DropdownMenuItem>
-              </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-          </DropdownMenuSub>
-          <DropdownMenuItem>
-            New Team
-            <DropdownMenuShortcut>⌘+T</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuGroup> */}
-        {/* <DropdownMenuSeparator />
-        <DropdownMenuItem>GitHub</DropdownMenuItem>
-        <DropdownMenuItem>Support</DropdownMenuItem> */}
-        {/* <DropdownMenuItem disabled>API</DropdownMenuItem>
-        <DropdownMenuSeparator /> */}
-        {/* <DropdownMenuItem>
-          Log out
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-        </DropdownMenuItem> */}
+        {renderSkillVerificationRequests()}
       </DropdownMenuContent>
     </DropdownMenu>
   );
