@@ -321,7 +321,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
                 title={item?.title}
                 className={item?.className}
                 icon={() => <>{item?.icon}</>}
-                content={item?.content}
+                content={item?.content || "N/A"}
                 flagUrl={item?.flagUrl}
               />
             </div>
