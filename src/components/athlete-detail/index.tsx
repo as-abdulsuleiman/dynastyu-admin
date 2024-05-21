@@ -558,7 +558,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               title={item?.title}
               className={item?.className}
               icon={() => <>{item?.icon}</>}
-              content={item?.content}
+              content={item?.content || "N/A"}
               flagUrl={item?.flagUrl}
             />
           );
@@ -572,7 +572,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
               icon={() => <>{val?.icon}</>}
               color="teal"
               type="link"
-              content={val?.link}
+              content={val?.link || "N/A"}
             />
           );
         })}

@@ -265,10 +265,12 @@ const Page: FC<pageProps> = ({}) => {
         </TableCell>
         <TableCell className="text-center text-sm">
           <div className="flex flex-row items-center justify-center">
-            {item?.secondFieldName}
+            {item?.secondFieldName || "N/A"}
           </div>
         </TableCell>
-        <TableCell className="text-center text-sm">{item?.unit}</TableCell>
+        <TableCell className="text-center text-sm">
+          {item?.unit || "N/A"}
+        </TableCell>
         <TableCell className="text-center text-sm">
           {item?.numberOfVideos}
         </TableCell>

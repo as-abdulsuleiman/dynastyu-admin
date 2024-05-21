@@ -507,19 +507,6 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
       ),
       content: formattedSchoolName,
     },
-
-    {
-      color: "teal",
-      type: "string",
-      title: "Date of Birth",
-      className: "mt-4",
-      icon: () => (
-        <SchoolIcon className="h-[19px] w-[19px] mr-2" color="teal" />
-      ),
-      content: coachData?.dob
-        ? formatDate(new Date(coachData?.dob), "MMMM dd yyyy")
-        : "",
-    },
     {
       color: "teal",
       type: "flag",
@@ -565,7 +552,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                 title={item?.title}
                 className={item?.className}
                 icon={() => <>{item?.icon}</>}
-                content={item?.content}
+                content={item?.content || " N/A"}
                 flagUrl={item?.flagUrl}
               />
             </div>

@@ -399,7 +399,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
                 title={item?.title}
                 className={item?.className}
                 icon={() => <>{item?.icon}</>}
-                content={item?.content}
+                content={item?.content || "N/A"}
                 flagUrl={item?.flagUrl}
               />
             </div>
@@ -411,7 +411,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
             type="string"
             title="Classification"
             className="mt-4 min-h-[75px]"
-            content={school?.division}
+            content={school?.division || "N/A"}
             icon={() => (
               <FolderDotIcon className="h-[20px] w-[20px] mr-2" color="teal" />
             )}
@@ -423,7 +423,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
               type="string"
               className="mt-4 min-h-[75px]"
               title="Division"
-              content={school?.division}
+              content={school?.division || "N/A"}
               icon={() => (
                 <FolderDotIcon
                   className="h-[20px] w-[20px] mr-2"

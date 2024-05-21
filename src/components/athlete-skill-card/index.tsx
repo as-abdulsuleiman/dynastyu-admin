@@ -103,13 +103,13 @@ const AthleteSkillCard: FC<AthleteSkillsCardProps> = ({
         <div className="flex flex-row items-start md:items-center mb-1">
           <div>Value:</div>
           <Text className="truncate text-left text-tremor-default ml-2">
-            {val?.value}
+            {val?.value || "N/A"}
           </Text>
         </div>
         <div className="flex flex-row items-center mb-1">
           <div>Second Value:</div>
           <Text className="truncate text-tremor-default ml-2">
-            {val?.secondValue}
+            {val?.secondValue || "N/A"}
           </Text>
         </div>
         <div className="flex flex-row items-center mb-1">
