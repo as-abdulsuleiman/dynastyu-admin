@@ -173,23 +173,47 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       })) || [];
 
     try {
-      const res = await updateSchool({
-        variables: {
-          where: {
-            id: selectedSchool?.id,
-          },
-          data: {
-            athletes: {
-              connect: athletesId,
+      if (school?.coaches?.length > 0 || school?.athletes?.length > 0) {
+        const res = await updateSchool({
+          variables: {
+            where: {
+              id: selectedSchool?.id,
             },
-            coaches: {
-              connect: coachesId,
+            data: {
+              athletes: {
+                connect: athletesId,
+              },
+              coaches: {
+                connect: coachesId,
+              },
             },
           },
-        },
-      });
+        });
 
-      if (res?.data?.updateOneSchool) {
+        if (res?.data?.updateOneSchool) {
+          await deleteSchool({
+            variables: {
+              where: {
+                id: school?.id,
+              },
+            },
+          });
+          const schoolResp = await aggregateSchool({
+            variables: {
+              where: {
+                schoolType: {
+                  is: {
+                    name: {
+                      equals: isHighSchoolType ? "High School" : "College",
+                    },
+                  },
+                },
+              },
+            },
+          });
+          setSchools(schoolResp?.data as any);
+        }
+      } else {
         await deleteSchool({
           variables: {
             where: {
@@ -211,15 +235,16 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           },
         });
         setSchools(schoolResp?.data as any);
-        toast({
-          title: "School successfully Deleted.",
-          description: `${school?.name} has been successfully deleted`,
-          variant: "successfull",
-        });
-        router.push(
-          isHighSchoolType ? `/schools/high-school` : `/schools/college`
-        );
       }
+
+      toast({
+        title: "School successfully Deleted.",
+        description: `${school?.name} has been successfully deleted`,
+        variant: "successfull",
+      });
+      router.push(
+        isHighSchoolType ? `/schools/high-school` : `/schools/college`
+      );
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -483,9 +508,18 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           setUpdatingProfile(null);
           setIsDisabled(true);
         }}
-        customElement={renderSelectSchool()}
+        customElement={
+          school?.athletes?.length > 0 || school?.coaches?.length > 0
+            ? renderSelectSchool()
+            : null
+        }
         disableCancelBtn={isDeletingSchool}
-        disableConfirmBtn={isDisabled || isDeletingSchool}
+        disableConfirmBtn={
+          isDisabled &&
+          (isDeletingSchool ||
+            school?.athletes?.length > 0 ||
+            school?.coaches?.length > 0)
+        }
         handleConfirmPrompt={() => handleConfirmPrompt(school)}
       />
       <ModalCard

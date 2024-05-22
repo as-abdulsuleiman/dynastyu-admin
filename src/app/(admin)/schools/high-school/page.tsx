@@ -164,24 +164,46 @@ const Schools: FC<SchoolsProps> = ({}) => {
       const coachesId = school?.coaches?.map((val: any) => ({
         userId: val?.userId,
       }));
-
-      const res = await updateSchool({
-        variables: {
-          where: {
-            id: selectedSchool?.id,
-          },
-          data: {
-            athletes: {
-              connect: athletesId || [],
+      if (school?.coaches?.length > 0 || school?.athletes?.length > 0) {
+        const res = await updateSchool({
+          variables: {
+            where: {
+              id: selectedSchool?.id,
             },
-            coaches: {
-              connect: coachesId || [],
+            data: {
+              athletes: {
+                connect: athletesId || [],
+              },
+              coaches: {
+                connect: coachesId || [],
+              },
             },
           },
-        },
-      });
+        });
 
-      if (res?.data?.updateOneSchool) {
+        if (res?.data?.updateOneSchool) {
+          await deleteSchool({
+            variables: {
+              where: {
+                id: school?.id,
+              },
+            },
+          });
+
+          const schoolResp = await aggregateHighSchool({
+            variables: {
+              where: {
+                schoolType: {
+                  is: {
+                    name: { equals: "High School" },
+                  },
+                },
+              },
+            },
+          });
+          setSchools(schoolResp?.data as any);
+        }
+      } else {
         await deleteSchool({
           variables: {
             where: {
@@ -189,7 +211,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
             },
           },
         });
-        refetch();
+
         const schoolResp = await aggregateHighSchool({
           variables: {
             where: {
@@ -202,12 +224,13 @@ const Schools: FC<SchoolsProps> = ({}) => {
           },
         });
         setSchools(schoolResp?.data as any);
-        toast({
-          title: "School successfully Deleted.",
-          description: `${school?.name} has been successfully deleted`,
-          variant: "successfull",
-        });
       }
+      refetch();
+      toast({
+        title: "School successfully Deleted.",
+        description: `${school?.name} has been successfully deleted`,
+        variant: "successfull",
+      });
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -390,7 +413,12 @@ const Schools: FC<SchoolsProps> = ({}) => {
       <PromptAlert
         loading={isDeletingSchool}
         disableCancelBtn={isDeletingSchool}
-        disableConfirmBtn={isDisabled || isDeletingSchool}
+        disableConfirmBtn={
+          isDisabled &&
+          (isDeletingSchool ||
+            activeSchool?.athletes?.length > 0 ||
+            activeSchool?.coaches?.length > 0)
+        }
         content={`This action cannot be undone. This will permanently delete this data from our servers.`}
         showPrompt={updatingProfile === StatusEnum.DELETING}
         handleHidePrompt={() => {
@@ -399,7 +427,12 @@ const Schools: FC<SchoolsProps> = ({}) => {
           setUpdatingProfile(null);
           setIsDisabled(true);
         }}
-        customElement={renderSelectSchool()}
+        customElement={
+          activeSchool?.athletes?.length > 0 ||
+          activeSchool?.coaches?.length > 0
+            ? renderSelectSchool()
+            : null
+        }
         handleConfirmPrompt={() => handleConfirmPrompt(activeSchool)}
       />
     </main>
