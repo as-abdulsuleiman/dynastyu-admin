@@ -18,6 +18,7 @@ import {
   LayoutGridIcon,
   CircleUserRoundIcon,
   NotificationIcon,
+  CogIcon,
 } from "@/components/Icons";
 
 interface SidebarItemsProps {
@@ -224,11 +225,40 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
         <NotificationIcon className={className} color={color} />
       ),
     },
-
+    {
+      name: "Settings",
+      hasFill: false,
+      path: "/profile-settings",
+      hasBadge: false,
+      parentCount: [],
+      items: [
+        {
+          name: "Profile",
+          path: "/profile-settings",
+          hasBadge: false,
+          count: 0,
+        },
+        {
+          name: "Staff",
+          path: "/staff-settings",
+          hasBadge: false,
+          count: 0,
+        },
+        {
+          name: "Security",
+          path: "/security-settings",
+          hasBadge: false,
+          count: 0,
+        },
+      ],
+      icon: ({ className, color }: IconProps) => (
+        <CogIcon className={cn(className)} color={color} />
+      ),
+    },
     {
       name: "Admin",
       hasFill: false,
-      path: "/settings",
+      path: "/account-types",
       hasBadge: false,
       parentCount: [],
       items: [
