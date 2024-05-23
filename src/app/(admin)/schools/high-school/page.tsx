@@ -160,7 +160,6 @@ const Schools: FC<SchoolsProps> = ({}) => {
       const athletesId = school?.athletes?.map((val: any) => ({
         userId: val?.userId,
       }));
-
       const coachesId = school?.coaches?.map((val: any) => ({
         userId: val?.userId,
       }));

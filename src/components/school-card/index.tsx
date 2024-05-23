@@ -166,12 +166,10 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
       school?.athletes?.map((val: any) => ({
         userId: val?.userId,
       })) || [];
-
     const coachesId =
       school?.coaches?.map((val: any) => ({
         userId: val?.userId,
       })) || [];
-
     try {
       if (school?.coaches?.length > 0 || school?.athletes?.length > 0) {
         await updateSchool({

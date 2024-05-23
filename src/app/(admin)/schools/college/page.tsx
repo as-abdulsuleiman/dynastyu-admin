@@ -163,7 +163,6 @@ const Schools: FC<SchoolsProps> = ({}) => {
       const coachesId = school?.coaches?.map((val: any) => ({
         userId: val?.userId,
       }));
-
       if (school?.coaches?.length > 0 || school?.athletes?.length > 0) {
         await updateSchool({
           variables: {
