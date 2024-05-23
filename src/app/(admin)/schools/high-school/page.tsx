@@ -5,6 +5,7 @@
 import { FC, useMemo, useState } from "react";
 import { MoreHorizontalIcon, SchoolIcon } from "@/components/Icons";
 import {
+  GetAggregateSchoolQuery,
   GetSchoolsQuery,
   QueryMode,
   SortOrder,
@@ -154,60 +155,58 @@ const Schools: FC<SchoolsProps> = ({}) => {
   };
 
   const handleConfirmPrompt = async (school: any) => {
+    setIsDeletingSchool(true);
     try {
-      setIsDeletingSchool(true);
-
       const athletesId = school?.athletes?.map((val: any) => ({
         userId: val?.userId,
       }));
-
       const coachesId = school?.coaches?.map((val: any) => ({
         userId: val?.userId,
       }));
-
-      const res = await updateSchool({
-        variables: {
-          where: {
-            id: selectedSchool?.id,
-          },
-          data: {
-            athletes: {
-              connect: athletesId || [],
-            },
-            coaches: {
-              connect: coachesId || [],
-            },
-          },
-        },
-      });
-
-      if (res?.data?.updateOneSchool) {
-        await deleteSchool({
+      if (school?.coaches?.length > 0 || school?.athletes?.length > 0) {
+        await updateSchool({
           variables: {
             where: {
-              id: school?.id,
+              id: selectedSchool?.id,
             },
-          },
-        });
-        refetch();
-        const schoolResp = await aggregateHighSchool({
-          variables: {
-            where: {
-              schoolType: {
-                is: {
-                  name: { equals: "High School" },
-                },
+            data: {
+              athletes: {
+                connect: athletesId || [],
+              },
+              coaches: {
+                connect: coachesId || [],
               },
             },
           },
         });
-        setSchools(schoolResp?.data as any);
-        toast({
-          title: "School successfully Deleted.",
-          description: `${school?.name} has been successfully deleted`,
-          variant: "successfull",
-        });
       }
+      await deleteSchool({
+        variables: {
+          where: {
+            id: school?.id,
+          },
+        },
+      });
+      await aggregateHighSchool({
+        variables: {
+          where: {
+            schoolType: {
+              is: {
+                name: { equals: "High School" },
+              },
+            },
+          },
+        },
+        onCompleted: (data: GetAggregateSchoolQuery) => {
+          setSchools(data as any);
+        },
+      });
+      await refetch();
+      toast({
+        title: "School successfully Deleted.",
+        description: `${school?.name} has been successfully deleted`,
+        variant: "successfull",
+      });
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -217,6 +216,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
         variant: "destructive",
       });
     } finally {
+      setIsDisabled(true);
       setActiveSchool({});
       setSelectedSchool({});
       setIsDeletingSchool(false);
@@ -390,7 +390,12 @@ const Schools: FC<SchoolsProps> = ({}) => {
       <PromptAlert
         loading={isDeletingSchool}
         disableCancelBtn={isDeletingSchool}
-        disableConfirmBtn={isDisabled || isDeletingSchool}
+        disableConfirmBtn={
+          isDisabled &&
+          (isDeletingSchool ||
+            activeSchool?.athletes?.length > 0 ||
+            activeSchool?.coaches?.length > 0)
+        }
         content={`This action cannot be undone. This will permanently delete this data from our servers.`}
         showPrompt={updatingProfile === StatusEnum.DELETING}
         handleHidePrompt={() => {
@@ -399,7 +404,12 @@ const Schools: FC<SchoolsProps> = ({}) => {
           setUpdatingProfile(null);
           setIsDisabled(true);
         }}
-        customElement={renderSelectSchool()}
+        customElement={
+          activeSchool?.athletes?.length > 0 ||
+          activeSchool?.coaches?.length > 0
+            ? renderSelectSchool()
+            : null
+        }
         handleConfirmPrompt={() => handleConfirmPrompt(activeSchool)}
       />
     </main>

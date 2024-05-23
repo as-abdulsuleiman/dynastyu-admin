@@ -31,6 +31,7 @@ import {
   QueryMode,
   SortOrder,
   useGetAggregateSchoolLazyQuery,
+  GetAggregateSchoolQuery,
 } from "@/services/graphql";
 import { useToast } from "@/hooks/use-toast";
 import MenubarCard from "../menubar";
@@ -161,65 +162,63 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
 
   const handleConfirmPrompt = async (school: any) => {
     setIsDeletingSchool(true);
-
     const athletesId =
       school?.athletes?.map((val: any) => ({
         userId: val?.userId,
       })) || [];
-
     const coachesId =
       school?.coaches?.map((val: any) => ({
         userId: val?.userId,
       })) || [];
-
     try {
-      const res = await updateSchool({
-        variables: {
-          where: {
-            id: selectedSchool?.id,
-          },
-          data: {
-            athletes: {
-              connect: athletesId,
-            },
-            coaches: {
-              connect: coachesId,
-            },
-          },
-        },
-      });
-
-      if (res?.data?.updateOneSchool) {
-        await deleteSchool({
+      if (school?.coaches?.length > 0 || school?.athletes?.length > 0) {
+        await updateSchool({
           variables: {
             where: {
-              id: school?.id,
+              id: selectedSchool?.id,
             },
-          },
-        });
-        const schoolResp = await aggregateSchool({
-          variables: {
-            where: {
-              schoolType: {
-                is: {
-                  name: {
-                    equals: isHighSchoolType ? "High School" : "College",
-                  },
-                },
+            data: {
+              athletes: {
+                connect: athletesId,
+              },
+              coaches: {
+                connect: coachesId,
               },
             },
           },
         });
-        setSchools(schoolResp?.data as any);
-        toast({
-          title: "School successfully Deleted.",
-          description: `${school?.name} has been successfully deleted`,
-          variant: "successfull",
-        });
-        router.push(
-          isHighSchoolType ? `/schools/high-school` : `/schools/college`
-        );
       }
+      await deleteSchool({
+        variables: {
+          where: {
+            id: school?.id,
+          },
+        },
+      });
+      await aggregateSchool({
+        variables: {
+          where: {
+            schoolType: {
+              is: {
+                name: {
+                  equals: isHighSchoolType ? "High School" : "College",
+                },
+              },
+            },
+          },
+        },
+        onCompleted: (data: GetAggregateSchoolQuery) => {
+          setSchools(data as any);
+        },
+      });
+      toast({
+        title: "School successfully Deleted.",
+        description: `${school?.name} has been successfully deleted`,
+        variant: "successfull",
+      });
+      router.push(
+        isHighSchoolType ? `/schools/high-school` : `/schools/college`
+      );
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -229,6 +228,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         variant: "destructive",
       });
     } finally {
+      setIsDisabled(true);
       setIsDeletingSchool(false);
       setUpdatingProfile(null);
     }
@@ -483,9 +483,18 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           setUpdatingProfile(null);
           setIsDisabled(true);
         }}
-        customElement={renderSelectSchool()}
+        customElement={
+          school?.athletes?.length > 0 || school?.coaches?.length > 0
+            ? renderSelectSchool()
+            : null
+        }
         disableCancelBtn={isDeletingSchool}
-        disableConfirmBtn={isDisabled || isDeletingSchool}
+        disableConfirmBtn={
+          isDisabled &&
+          (isDeletingSchool ||
+            school?.athletes?.length > 0 ||
+            school?.coaches?.length > 0)
+        }
         handleConfirmPrompt={() => handleConfirmPrompt(school)}
       />
       <ModalCard
