@@ -1,7 +1,6 @@
 /** @format */
 
 import * as Yup from "yup";
-import { isValid, parse } from "date-fns";
 
 export const FanValidator = Yup.object({
   email: Yup.string().lowercase()

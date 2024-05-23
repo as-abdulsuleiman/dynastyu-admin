@@ -1,3 +1,5 @@
+# @format
+
 query getAccountTypes(
   $where: AccountTypeWhereInput
   $orderBy: [AccountTypeOrderByWithRelationInput!]
@@ -18,6 +20,11 @@ query getAccountTypes(
     uuid
     title
     createdAt
+    updatedAt
+    roleId
+    _count {
+      users
+    }
     role {
       id
       title
@@ -25,17 +32,21 @@ query getAccountTypes(
   }
 }
 
-
-query getAccountType(
-  $where: AccountTypeWhereUniqueInput!
-) {
-  accountType(
-    where: $where
-  ) {
+query getAccountType($where: AccountTypeWhereUniqueInput!) {
+  accountType(where: $where) {
     id
     uuid
     title
     createdAt
+    updatedAt
+    users{
+      id
+      uuid
+      username
+      email
+      firstname
+      surname
+    }
     role {
       id
       title
@@ -43,3 +54,59 @@ query getAccountType(
   }
 }
 
+mutation updateAccountType(
+  $data: AccountTypeUpdateInput!
+  $where: AccountTypeWhereUniqueInput!
+) {
+  updateOneAccountType(where: $where, data: $data) {
+    id
+    uuid
+    title
+    createdAt
+    updatedAt
+    roleId
+    _count {
+      users
+    }
+    role {
+      id
+      title
+    }
+  }
+}
+
+mutation createAccountType($data: AccountTypeCreateInput!) {
+  createOneAccountType(data: $data) {
+    id
+    uuid
+    title
+    createdAt
+    updatedAt
+    roleId
+    _count {
+      users
+    }
+    role {
+      id
+      title
+    }
+  }
+}
+
+mutation deleteAccountType($where: AccountTypeWhereUniqueInput!) {
+  deleteOneAccountType(where: $where) {
+    id
+    uuid
+    title
+    createdAt
+    updatedAt
+    roleId
+    _count {
+      users
+    }
+    role {
+      id
+      title
+    }
+  }
+}

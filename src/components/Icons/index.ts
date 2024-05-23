@@ -70,3 +70,14 @@ export { default as WarehouseIcon } from "./warehouse";
 export { default as WhistleIcon } from "./whistle";
 export { default as UserIcon } from "./user";
 export { default as RefreshIcon } from "./refresh";
+export { default as PanelRightOpenIcon } from "./panel-right-open";
+export { default as ActivityIcon } from "./activity";
+export { default as CogIcon } from "./cog";
+export { default as PlusIcon } from "./plus";
+
+
+
+
+
+
+

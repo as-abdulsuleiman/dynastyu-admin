@@ -1,7 +1,6 @@
 /** @format */
 
 import { FC } from "react";
-import { Bell, FolderRoot, Home, Medal, Settings } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useRootStore } from "@/mobx";
 import { observer } from "mobx-react-lite";
@@ -17,9 +16,10 @@ import {
   ChevronDownIcon,
   SkillIcon,
   LayoutGridIcon,
+  CircleUserRoundIcon,
+  NotificationIcon,
 } from "../Icons";
 
-// import Notification from "../Icons/notification";
 interface SidebarItemsProps {
   handleNavigation: (val: string) => void;
   sidebarExpanded: boolean;
@@ -221,19 +221,38 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       //   },
       // ],
       icon: ({ className, color }: IconProps) => (
-        <Bell className={className} color={color} />
+        <NotificationIcon className={className} color={color} />
       ),
     },
 
     {
-      name: "Settings",
+      name: "Admin",
       hasFill: false,
       path: "/settings",
       hasBadge: false,
       parentCount: [],
-      items: [],
+      items: [
+        {
+          name: "Account Types",
+          path: "/account-types",
+          hasBadge: false,
+          count: 0,
+        },
+        {
+          name: "School Types",
+          path: "/school-types",
+          hasBadge: false,
+          count: 0,
+        },
+        {
+          name: "Roles",
+          path: "/roles",
+          hasBadge: false,
+          count: 0,
+        },
+      ],
       icon: ({ className, color }: IconProps) => (
-        <Settings className={cn(className, "stroke-[1.7]")} color={color} />
+        <CircleUserRoundIcon className={cn(className)} color={color} />
       ),
     },
   ];

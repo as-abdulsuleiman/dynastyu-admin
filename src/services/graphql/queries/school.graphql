@@ -278,6 +278,98 @@ query interestedSchools(
   }
 }
 
+query getSchoolTypes(
+  $where: SchoolTypeWhereInput
+  $orderBy: [SchoolTypeOrderByWithRelationInput!]
+  $cursor: SchoolTypeWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [SchoolTypeScalarFieldEnum!]
+) {
+  schoolTypes(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    id
+    uuid
+    name
+    createdAt
+    updatedAt
+    _count {
+      schools
+    }
+  }
+}
+
+query getSchoolType(
+  $where: SchoolTypeWhereUniqueInput!
+) {
+  schoolType(
+    where: $where
+  ) {
+    id
+    uuid
+    name
+    createdAt
+    updatedAt
+    schools {
+      id
+      uuid
+      name
+      email
+    }
+    _count {
+      schools
+    }
+  }
+}
+
+mutation updateSchoolType(
+  $data: SchoolTypeUpdateInput!
+  $where: SchoolTypeWhereUniqueInput!
+) {
+  updateOneSchoolType(where: $where, data: $data) {
+    id
+    uuid
+    name
+    createdAt
+    updatedAt
+    _count {
+      schools
+    }
+  }
+}
+
+mutation createSchoolType($data: SchoolTypeCreateInput!) {
+  createOneSchoolType(data: $data) {
+    id
+    uuid
+    name
+    createdAt
+    updatedAt
+    _count {
+      schools
+    }
+  }
+}
+
+mutation deleteSchoolType($where: SchoolTypeWhereUniqueInput!) {
+  deleteOneSchoolType(where: $where) {
+    id
+    uuid
+    name
+    createdAt
+    updatedAt
+    _count {
+      schools
+    }
+  }
+}
+
 mutation updateInterest(
   $data: InterestedSchoolsUpdateInput!
   $where: InterestedSchoolsWhereUniqueInput!
@@ -507,33 +599,6 @@ mutation registerSchool($data: SchoolCreateInput!) {
     schoolType {
       name
       id
-    }
-  }
-}
-
-query getSchoolTypes(
-  $where: SchoolTypeWhereInput
-  $orderBy: [SchoolTypeOrderByWithRelationInput!]
-  $cursor: SchoolTypeWhereUniqueInput
-  $take: Int
-  $skip: Int
-  $distinct: [SchoolTypeScalarFieldEnum!]
-) {
-  schoolTypes(
-    where: $where
-    orderBy: $orderBy
-    take: $take
-    skip: $skip
-    distinct: $distinct
-    cursor: $cursor
-  ) {
-    id
-    uuid
-    name
-    updatedAt
-    createdAt
-    _count {
-      schools
     }
   }
 }
