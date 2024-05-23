@@ -5,6 +5,7 @@
 import { FC, useMemo, useState } from "react";
 import { MoreHorizontalIcon, SchoolIcon } from "@/components/Icons";
 import {
+  GetAggregateSchoolQuery,
   GetSchoolsQuery,
   QueryMode,
   SortOrder,
@@ -164,7 +165,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
       }));
 
       if (school?.coaches?.length > 0 || school?.athletes?.length > 0) {
-        const res = await updateSchool({
+        await updateSchool({
           variables: {
             where: {
               id: selectedSchool?.id,
@@ -179,49 +180,29 @@ const Schools: FC<SchoolsProps> = ({}) => {
             },
           },
         });
-        if (res?.data?.updateOneSchool) {
-          await deleteSchool({
-            variables: {
-              where: {
-                id: school?.id,
-              },
-            },
-          });
-          const schoolResp = await aggregateCollege({
-            variables: {
-              where: {
-                schoolType: {
-                  is: {
-                    name: { equals: "College" },
-                  },
-                },
-              },
-            },
-          });
-          setSchools(schoolResp?.data as any);
-        }
-      } else {
-        await deleteSchool({
-          variables: {
-            where: {
-              id: school?.id,
-            },
-          },
-        });
-        const schoolResp = await aggregateCollege({
-          variables: {
-            where: {
-              schoolType: {
-                is: {
-                  name: { equals: "College" },
-                },
-              },
-            },
-          },
-        });
-        setSchools(schoolResp?.data as any);
       }
-      refetch();
+      await deleteSchool({
+        variables: {
+          where: {
+            id: school?.id,
+          },
+        },
+      });
+      await aggregateCollege({
+        variables: {
+          where: {
+            schoolType: {
+              is: {
+                name: { equals: "College" },
+              },
+            },
+          },
+        },
+        onCompleted: (data: GetAggregateSchoolQuery) => {
+          setSchools(data as any);
+        },
+      });
+      await refetch();
       toast({
         title: "School successfully Deleted.",
         description: `${school?.name} has been successfully deleted`,
@@ -236,6 +217,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
         variant: "destructive",
       });
     } finally {
+      setIsDisabled(true);
       setActiveSchool({});
       setSelectedSchool({});
       setIsDeletingSchool(false);

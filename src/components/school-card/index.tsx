@@ -31,6 +31,7 @@ import {
   QueryMode,
   SortOrder,
   useGetAggregateSchoolLazyQuery,
+  GetAggregateSchoolQuery,
 } from "@/services/graphql";
 import { useToast } from "@/hooks/use-toast";
 import MenubarCard from "../menubar";
@@ -161,7 +162,6 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
 
   const handleConfirmPrompt = async (school: any) => {
     setIsDeletingSchool(true);
-
     const athletesId =
       school?.athletes?.map((val: any) => ({
         userId: val?.userId,
@@ -174,7 +174,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
 
     try {
       if (school?.coaches?.length > 0 || school?.athletes?.length > 0) {
-        const res = await updateSchool({
+        await updateSchool({
           variables: {
             where: {
               id: selectedSchool?.id,
@@ -189,54 +189,30 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
             },
           },
         });
-
-        if (res?.data?.updateOneSchool) {
-          await deleteSchool({
-            variables: {
-              where: {
-                id: school?.id,
-              },
-            },
-          });
-          const schoolResp = await aggregateSchool({
-            variables: {
-              where: {
-                schoolType: {
-                  is: {
-                    name: {
-                      equals: isHighSchoolType ? "High School" : "College",
-                    },
-                  },
-                },
-              },
-            },
-          });
-          setSchools(schoolResp?.data as any);
-        }
-      } else {
-        await deleteSchool({
-          variables: {
-            where: {
-              id: school?.id,
-            },
-          },
-        });
-        const schoolResp = await aggregateSchool({
-          variables: {
-            where: {
-              schoolType: {
-                is: {
-                  name: {
-                    equals: isHighSchoolType ? "High School" : "College",
-                  },
-                },
-              },
-            },
-          },
-        });
-        setSchools(schoolResp?.data as any);
       }
-
+      await deleteSchool({
+        variables: {
+          where: {
+            id: school?.id,
+          },
+        },
+      });
+      await aggregateSchool({
+        variables: {
+          where: {
+            schoolType: {
+              is: {
+                name: {
+                  equals: isHighSchoolType ? "High School" : "College",
+                },
+              },
+            },
+          },
+        },
+        onCompleted: (data: GetAggregateSchoolQuery) => {
+          setSchools(data as any);
+        },
+      });
       toast({
         title: "School successfully Deleted.",
         description: `${school?.name} has been successfully deleted`,
@@ -254,6 +230,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
         variant: "destructive",
       });
     } finally {
+      setIsDisabled(true);
       setIsDeletingSchool(false);
       setUpdatingProfile(null);
     }
