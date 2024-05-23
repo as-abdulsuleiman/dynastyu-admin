@@ -18,7 +18,7 @@ import {
   LayoutGridIcon,
   CircleUserRoundIcon,
   NotificationIcon,
-} from "../Icons";
+} from "@/components/Icons";
 
 interface SidebarItemsProps {
   handleNavigation: (val: string) => void;
