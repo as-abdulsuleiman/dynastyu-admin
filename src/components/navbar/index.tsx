@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import { useRootStore } from "@/mobx";
 import { observer } from "mobx-react-lite";
-import { MenuIcon } from "@/components/Icons";
+import { MenuIcon, PanelRightOpenIcon } from "@/components/Icons";
 import {
   SortOrder,
   useGetSkillVerificationRequestsQuery,
@@ -40,9 +40,10 @@ const Navbar: FC<NavbarProps> = ({ setSidebarOpen, sidebarOpen }) => {
   return (
     <header className="sticky top-0 z-20 flex w-full supports-backdrop-blur:bg-background/60 border-b bg-background/95 backdrop-blur">
       <nav className="w-full h-16 mx-auto flex items-center px-[16px] md:px-6 ">
-        <MenuIcon
-          className="z-99999 block lg:hidden"
+        <PanelRightOpenIcon
+          className="z-99999 block lg:hidden cursor-pointer"
           aria-controls="sidebar"
+          strokeWidth="1.5"
           onClick={(e) => {
             e.stopPropagation();
             setSidebarOpen(!sidebarOpen);

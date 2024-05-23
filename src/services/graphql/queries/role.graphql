@@ -1,0 +1,88 @@
+# @format
+
+query getRole($where: RoleWhereUniqueInput!) {
+  role(where: $where) {
+    id
+    uuid
+    title
+    createdAt
+    updatedAt
+    _count {
+      permissions
+      users
+      accountTypes
+    }
+  }
+}
+
+query getRoles(
+  $where: RoleWhereInput
+  $orderBy: [RoleOrderByWithRelationInput!]
+  $cursor: RoleWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [RoleScalarFieldEnum!]
+) {
+  roles(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    id
+    uuid
+    title
+    createdAt
+    updatedAt
+    _count {
+      permissions
+      users
+      accountTypes
+    }
+  }
+}
+
+mutation updateRole(
+  $data: RoleUpdateInput!
+  $where: RoleWhereUniqueInput!
+) {
+  updateOneRole(where: $where, data: $data) {
+   id
+    uuid
+    title
+    createdAt
+    updatedAt
+    _count {
+      permissions
+      users
+      accountTypes
+    }
+  }
+}
+
+
+mutation createRole($data: RoleCreateInput!) {
+  createOneRole(data: $data) {
+    id
+    uuid
+    _count {
+      permissions
+      users
+      accountTypes
+    }
+  }
+}
+
+mutation deleteRole($where: RoleWhereUniqueInput!) {
+  deleteOneRole(where: $where) {
+   id
+    uuid
+    _count {
+      permissions
+      users
+      accountTypes
+    }
+  }
+}

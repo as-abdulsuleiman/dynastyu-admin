@@ -50,7 +50,7 @@ const ModalCard: FC<ModalProps> = ({
             <DialogTitle>{label}</DialogTitle>
           </DialogHeader>
         ) : null}
-        <div className="p-4">{children}</div>
+        <div className="p-4 pb-0">{children}</div>
       </DialogContent>
     </Dialog>
   );

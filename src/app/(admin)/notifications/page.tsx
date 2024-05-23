@@ -481,19 +481,6 @@ const Page: FC<PageProps> = ({}) => {
                   </div>
                 </div>
                 <div className="mt-2 ml-auto mr-0">
-                  {" "}
-                  {/* <Link
-                    href={`/coach/${value?.user?.id}`}
-                    className={cn(
-                      buttonVariants({
-                        variant: "destructive",
-                        size: "sm",
-                      }),
-                      "mr-3"
-                    )}
-                  >
-                    Review
-                  </Link> */}
                   <Link
                     onClick={() => {
                       setSelectedCoach(value as any);
@@ -525,7 +512,7 @@ const Page: FC<PageProps> = ({}) => {
     );
   };
   return (
-    <div>
+    <main className="w-full h-full">
       <ContentHeader
         title="Notifications"
         subHeader="Notification Overview"
@@ -536,10 +523,9 @@ const Page: FC<PageProps> = ({}) => {
           />
         }
       />
-
       <Separator className="my-6" />
       <TabCard
-        className="text-lg font-TTHovesDemiBold"
+        className="font-TTHovesDemiBold"
         tabs={[
           { name: "Coach Verification" },
           { name: "Skill Verfication" },
@@ -561,7 +547,7 @@ const Page: FC<PageProps> = ({}) => {
         }}
         handleConfirmPrompt={() => handleVerifyCoach(selectedCoach)}
       />
-    </div>
+    </main>
   );
 };
 

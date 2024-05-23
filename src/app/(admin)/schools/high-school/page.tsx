@@ -41,7 +41,7 @@ const headerItems = [
   { name: "Email" },
   { name: "Created At" },
   { name: "Updated At" },
-  { name: "Action" },
+  { name: "Actions" },
 ];
 
 interface SchoolsProps {}

@@ -27,7 +27,6 @@ import { Loader2Icon, SchoolIcon } from "../Icons";
 import { projectAuth } from "@/services/firebase/config";
 import { useRootStore } from "@/mobx";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { Title, Text } from "@tremor/react";
 import { SelectCountry } from "../select-country";
 import SelectCity from "../select-city";
 import SelectState from "../select-state";
@@ -132,8 +131,8 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
         } || {},
     },
     resetOptions: {
-      keepDirtyValues: true, // user-interacted input will be retained
-      keepErrors: true, // input errors will be retained with value update
+      // keepDirtyValues: true, // user-interacted input will be retained
+      // keepErrors: true, // input errors will be retained with value update
     },
   });
 

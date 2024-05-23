@@ -43,7 +43,7 @@ const headerItems = [
   { name: "Role" },
   { name: "Email" },
   { name: "Status" },
-  { name: "Action" },
+  { name: "Actions" },
 ];
 enum FilterEnum {
   ACTIVE = "Active",

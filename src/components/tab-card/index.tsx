@@ -6,9 +6,12 @@ import { cn } from "@/lib/utils";
 
 interface TabCardProps {
   tabs: Tabs[];
-  variant?: "solid" | "line";
-  tabContent: TabContent[];
+  tabIndex?: number;
   className?: string;
+  tabClassName?: string;
+  tabContent: TabContent[];
+  variant?: "solid" | "line";
+  onIndexChange?: (index: number) => void;
 }
 
 type TabContent = {
@@ -20,32 +23,40 @@ type Tabs = {
 };
 
 const TabCard: FC<TabCardProps> = ({
-  variant = "line",
   tabs,
-  tabContent,
+  tabIndex,
   className,
+  tabContent,
+  tabClassName,
+  variant = "line",
+  onIndexChange,
 }) => {
   return (
-    <TabGroup defaultIndex={0}>
-      <TabList className="mt-8" color="teal" defaultValue={0} variant={variant}>
+    <TabGroup defaultIndex={0} index={tabIndex} onIndexChange={onIndexChange}>
+      <TabList
+        className={cn("mt-8", tabClassName)}
+        color="teal"
+        defaultValue={0}
+        variant={variant}
+      >
         {tabs?.map((tab: Tabs, index: number) => {
           return (
             <Tab
               className={cn(
-                "ui-selected:text-accent-foreground dark:ui-selected:text-accent-foreground font-TTHovesDemiBold",
+                "ui-selected:text-accent-foreground dark:ui-selected:text-accent-foreground font-TTHovesDemiBold text-[17px]",
                 className
               )}
               value={index}
               key={index}
             >
-              {tab.name}
+              {tab?.name}
             </Tab>
           );
         })}
       </TabList>
       <TabPanels>
         {tabContent?.map((val, id) => {
-          return <TabPanel key={id}>{val.content}</TabPanel>;
+          return <TabPanel key={id}>{val?.content}</TabPanel>;
         })}
       </TabPanels>
     </TabGroup>

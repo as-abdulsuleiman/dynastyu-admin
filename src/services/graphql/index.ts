@@ -25830,14 +25830,36 @@ export type GetAccountTypesQueryVariables = Exact<{
 }>;
 
 
-export type GetAccountTypesQuery = { __typename?: 'Query', accountTypes: Array<{ __typename?: 'AccountType', id: any, uuid: string, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null }> };
+export type GetAccountTypesQuery = { __typename?: 'Query', accountTypes: Array<{ __typename?: 'AccountType', id: any, uuid: string, title: string, createdAt: any, updatedAt: any, roleId?: any | null, _count?: { __typename?: 'AccountTypeCount', users: number } | null, role?: { __typename?: 'Role', id: any, title: string } | null }> };
 
 export type GetAccountTypeQueryVariables = Exact<{
   where: AccountTypeWhereUniqueInput;
 }>;
 
 
-export type GetAccountTypeQuery = { __typename?: 'Query', accountType?: { __typename?: 'AccountType', id: any, uuid: string, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } | null };
+export type GetAccountTypeQuery = { __typename?: 'Query', accountType?: { __typename?: 'AccountType', id: any, uuid: string, title: string, createdAt: any, updatedAt: any, users: Array<{ __typename?: 'User', id: any, uuid: string, username?: string | null, email: string, firstname: string, surname: string }>, role?: { __typename?: 'Role', id: any, title: string } | null } | null };
+
+export type UpdateAccountTypeMutationVariables = Exact<{
+  data: AccountTypeUpdateInput;
+  where: AccountTypeWhereUniqueInput;
+}>;
+
+
+export type UpdateAccountTypeMutation = { __typename?: 'Mutation', updateOneAccountType?: { __typename?: 'AccountType', id: any, uuid: string, title: string, createdAt: any, updatedAt: any, roleId?: any | null, _count?: { __typename?: 'AccountTypeCount', users: number } | null, role?: { __typename?: 'Role', id: any, title: string } | null } | null };
+
+export type CreateAccountTypeMutationVariables = Exact<{
+  data: AccountTypeCreateInput;
+}>;
+
+
+export type CreateAccountTypeMutation = { __typename?: 'Mutation', createOneAccountType: { __typename?: 'AccountType', id: any, uuid: string, title: string, createdAt: any, updatedAt: any, roleId?: any | null, _count?: { __typename?: 'AccountTypeCount', users: number } | null, role?: { __typename?: 'Role', id: any, title: string } | null } };
+
+export type DeleteAccountTypeMutationVariables = Exact<{
+  where: AccountTypeWhereUniqueInput;
+}>;
+
+
+export type DeleteAccountTypeMutation = { __typename?: 'Mutation', deleteOneAccountType?: { __typename?: 'AccountType', id: any, uuid: string, title: string, createdAt: any, updatedAt: any, roleId?: any | null, _count?: { __typename?: 'AccountTypeCount', users: number } | null, role?: { __typename?: 'Role', id: any, title: string } | null } | null };
 
 export type GetAthletesQueryVariables = Exact<{
   where?: InputMaybe<AthleteProfileWhereInput>;
@@ -26155,6 +26177,47 @@ export type GetAggregatePostFlagQueryVariables = Exact<{
 
 export type GetAggregatePostFlagQuery = { __typename?: 'Query', aggregatePostFlag: { __typename?: 'AggregatePostFlag', _count?: { __typename?: 'PostFlagCountAggregate', id: number } | null } };
 
+export type GetRoleQueryVariables = Exact<{
+  where: RoleWhereUniqueInput;
+}>;
+
+
+export type GetRoleQuery = { __typename?: 'Query', role?: { __typename?: 'Role', id: any, uuid: string, title: string, createdAt: any, updatedAt: any, _count?: { __typename?: 'RoleCount', permissions: number, users: number, accountTypes: number } | null } | null };
+
+export type GetRolesQueryVariables = Exact<{
+  where?: InputMaybe<RoleWhereInput>;
+  orderBy?: InputMaybe<Array<RoleOrderByWithRelationInput> | RoleOrderByWithRelationInput>;
+  cursor?: InputMaybe<RoleWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  distinct?: InputMaybe<Array<RoleScalarFieldEnum> | RoleScalarFieldEnum>;
+}>;
+
+
+export type GetRolesQuery = { __typename?: 'Query', roles: Array<{ __typename?: 'Role', id: any, uuid: string, title: string, createdAt: any, updatedAt: any, _count?: { __typename?: 'RoleCount', permissions: number, users: number, accountTypes: number } | null }> };
+
+export type UpdateRoleMutationVariables = Exact<{
+  data: RoleUpdateInput;
+  where: RoleWhereUniqueInput;
+}>;
+
+
+export type UpdateRoleMutation = { __typename?: 'Mutation', updateOneRole?: { __typename?: 'Role', id: any, uuid: string, title: string, createdAt: any, updatedAt: any, _count?: { __typename?: 'RoleCount', permissions: number, users: number, accountTypes: number } | null } | null };
+
+export type CreateRoleMutationVariables = Exact<{
+  data: RoleCreateInput;
+}>;
+
+
+export type CreateRoleMutation = { __typename?: 'Mutation', createOneRole: { __typename?: 'Role', id: any, uuid: string, _count?: { __typename?: 'RoleCount', permissions: number, users: number, accountTypes: number } | null } };
+
+export type DeleteRoleMutationVariables = Exact<{
+  where: RoleWhereUniqueInput;
+}>;
+
+
+export type DeleteRoleMutation = { __typename?: 'Mutation', deleteOneRole?: { __typename?: 'Role', id: any, uuid: string, _count?: { __typename?: 'RoleCount', permissions: number, users: number, accountTypes: number } | null } | null };
+
 export type SchoolCommonPartsFragment = { __typename?: 'School', id: any, uuid: string, name: string, email: string, createdAt: any, updatedAt: any, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, state?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', id: any, name: string } };
 
 export type SkillCommonPartsFragment = { __typename?: 'Skills', id: any, value: string, verified: boolean, createdAt: any, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, unit: string, isPrimaryForRecruitment: boolean, icon?: string | null } };
@@ -26219,6 +26282,47 @@ export type InterestedSchoolsQueryVariables = Exact<{
 
 
 export type InterestedSchoolsQuery = { __typename?: 'Query', findManyInterestedSchools: Array<{ __typename?: 'InterestedSchools', userId?: any | null, schoolId: any, AthleteCommitment: number, athleteId: any, school: { __typename?: 'School', id: any, name: string, logo?: string | null }, athlete: { __typename?: 'AthleteProfile', id: any, position?: { __typename?: 'Position', id: any, name: string } | null, skills: Array<{ __typename?: 'Skills', id: any, value: string, verified: boolean, createdAt: any, skillType: { __typename?: 'SkillType', id: any, name: string, description?: string | null, secondFieldName?: string | null, unit: string, isPrimaryForRecruitment: boolean, icon?: string | null } }> }, User?: { __typename?: 'User', id: any, firstname: string, surname: string, uuid: string, username?: string | null, avatar?: string | null } | null }> };
+
+export type GetSchoolTypesQueryVariables = Exact<{
+  where?: InputMaybe<SchoolTypeWhereInput>;
+  orderBy?: InputMaybe<Array<SchoolTypeOrderByWithRelationInput> | SchoolTypeOrderByWithRelationInput>;
+  cursor?: InputMaybe<SchoolTypeWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  distinct?: InputMaybe<Array<SchoolTypeScalarFieldEnum> | SchoolTypeScalarFieldEnum>;
+}>;
+
+
+export type GetSchoolTypesQuery = { __typename?: 'Query', schoolTypes: Array<{ __typename?: 'SchoolType', id: any, uuid: string, name: string, createdAt: any, updatedAt: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null }> };
+
+export type GetSchoolTypeQueryVariables = Exact<{
+  where: SchoolTypeWhereUniqueInput;
+}>;
+
+
+export type GetSchoolTypeQuery = { __typename?: 'Query', schoolType?: { __typename?: 'SchoolType', id: any, uuid: string, name: string, createdAt: any, updatedAt: any, schools: Array<{ __typename?: 'School', id: any, uuid: string, name: string, email: string }>, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } | null };
+
+export type UpdateSchoolTypeMutationVariables = Exact<{
+  data: SchoolTypeUpdateInput;
+  where: SchoolTypeWhereUniqueInput;
+}>;
+
+
+export type UpdateSchoolTypeMutation = { __typename?: 'Mutation', updateOneSchoolType?: { __typename?: 'SchoolType', id: any, uuid: string, name: string, createdAt: any, updatedAt: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } | null };
+
+export type CreateSchoolTypeMutationVariables = Exact<{
+  data: SchoolTypeCreateInput;
+}>;
+
+
+export type CreateSchoolTypeMutation = { __typename?: 'Mutation', createOneSchoolType: { __typename?: 'SchoolType', id: any, uuid: string, name: string, createdAt: any, updatedAt: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } };
+
+export type DeleteSchoolTypeMutationVariables = Exact<{
+  where: SchoolTypeWhereUniqueInput;
+}>;
+
+
+export type DeleteSchoolTypeMutation = { __typename?: 'Mutation', deleteOneSchoolType?: { __typename?: 'SchoolType', id: any, uuid: string, name: string, createdAt: any, updatedAt: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } | null };
 
 export type UpdateInterestMutationVariables = Exact<{
   data: InterestedSchoolsUpdateInput;
@@ -26328,18 +26432,6 @@ export type RegisterSchoolMutationVariables = Exact<{
 
 
 export type RegisterSchoolMutation = { __typename?: 'Mutation', createOneSchool: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, conference?: string | null, division?: string | null, primaryColor: string, secondaryColor: string, state?: string | null, city?: string | null, address?: string | null, backgroundImage?: string | null, yearFounded?: string | null, yearlyTuition?: string | null, country?: { __typename?: 'Country', name: string, abbreviation: string, flag: string } | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } };
-
-export type GetSchoolTypesQueryVariables = Exact<{
-  where?: InputMaybe<SchoolTypeWhereInput>;
-  orderBy?: InputMaybe<Array<SchoolTypeOrderByWithRelationInput> | SchoolTypeOrderByWithRelationInput>;
-  cursor?: InputMaybe<SchoolTypeWhereUniqueInput>;
-  take?: InputMaybe<Scalars['Int']['input']>;
-  skip?: InputMaybe<Scalars['Int']['input']>;
-  distinct?: InputMaybe<Array<SchoolTypeScalarFieldEnum> | SchoolTypeScalarFieldEnum>;
-}>;
-
-
-export type GetSchoolTypesQuery = { __typename?: 'Query', schoolTypes: Array<{ __typename?: 'SchoolType', id: any, uuid: string, name: string, updatedAt: any, createdAt: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null }> };
 
 export type DeleteSchoolMutationVariables = Exact<{
   where: SchoolWhereUniqueInput;
@@ -26941,6 +27033,11 @@ export const GetAccountTypesDocument = gql`
     uuid
     title
     createdAt
+    updatedAt
+    roleId
+    _count {
+      users
+    }
     role {
       id
       title
@@ -26993,6 +27090,15 @@ export const GetAccountTypeDocument = gql`
     uuid
     title
     createdAt
+    updatedAt
+    users {
+      id
+      uuid
+      username
+      email
+      firstname
+      surname
+    }
     role {
       id
       title
@@ -27033,6 +27139,142 @@ export type GetAccountTypeQueryHookResult = ReturnType<typeof useGetAccountTypeQ
 export type GetAccountTypeLazyQueryHookResult = ReturnType<typeof useGetAccountTypeLazyQuery>;
 export type GetAccountTypeSuspenseQueryHookResult = ReturnType<typeof useGetAccountTypeSuspenseQuery>;
 export type GetAccountTypeQueryResult = Apollo.QueryResult<GetAccountTypeQuery, GetAccountTypeQueryVariables>;
+export const UpdateAccountTypeDocument = gql`
+    mutation updateAccountType($data: AccountTypeUpdateInput!, $where: AccountTypeWhereUniqueInput!) {
+  updateOneAccountType(where: $where, data: $data) {
+    id
+    uuid
+    title
+    createdAt
+    updatedAt
+    roleId
+    _count {
+      users
+    }
+    role {
+      id
+      title
+    }
+  }
+}
+    `;
+export type UpdateAccountTypeMutationFn = Apollo.MutationFunction<UpdateAccountTypeMutation, UpdateAccountTypeMutationVariables>;
+
+/**
+ * __useUpdateAccountTypeMutation__
+ *
+ * To run a mutation, you first call `useUpdateAccountTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAccountTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAccountTypeMutation, { data, loading, error }] = useUpdateAccountTypeMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useUpdateAccountTypeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateAccountTypeMutation, UpdateAccountTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateAccountTypeMutation, UpdateAccountTypeMutationVariables>(UpdateAccountTypeDocument, options);
+      }
+export type UpdateAccountTypeMutationHookResult = ReturnType<typeof useUpdateAccountTypeMutation>;
+export type UpdateAccountTypeMutationResult = Apollo.MutationResult<UpdateAccountTypeMutation>;
+export type UpdateAccountTypeMutationOptions = Apollo.BaseMutationOptions<UpdateAccountTypeMutation, UpdateAccountTypeMutationVariables>;
+export const CreateAccountTypeDocument = gql`
+    mutation createAccountType($data: AccountTypeCreateInput!) {
+  createOneAccountType(data: $data) {
+    id
+    uuid
+    title
+    createdAt
+    updatedAt
+    roleId
+    _count {
+      users
+    }
+    role {
+      id
+      title
+    }
+  }
+}
+    `;
+export type CreateAccountTypeMutationFn = Apollo.MutationFunction<CreateAccountTypeMutation, CreateAccountTypeMutationVariables>;
+
+/**
+ * __useCreateAccountTypeMutation__
+ *
+ * To run a mutation, you first call `useCreateAccountTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAccountTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAccountTypeMutation, { data, loading, error }] = useCreateAccountTypeMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateAccountTypeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateAccountTypeMutation, CreateAccountTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateAccountTypeMutation, CreateAccountTypeMutationVariables>(CreateAccountTypeDocument, options);
+      }
+export type CreateAccountTypeMutationHookResult = ReturnType<typeof useCreateAccountTypeMutation>;
+export type CreateAccountTypeMutationResult = Apollo.MutationResult<CreateAccountTypeMutation>;
+export type CreateAccountTypeMutationOptions = Apollo.BaseMutationOptions<CreateAccountTypeMutation, CreateAccountTypeMutationVariables>;
+export const DeleteAccountTypeDocument = gql`
+    mutation deleteAccountType($where: AccountTypeWhereUniqueInput!) {
+  deleteOneAccountType(where: $where) {
+    id
+    uuid
+    title
+    createdAt
+    updatedAt
+    roleId
+    _count {
+      users
+    }
+    role {
+      id
+      title
+    }
+  }
+}
+    `;
+export type DeleteAccountTypeMutationFn = Apollo.MutationFunction<DeleteAccountTypeMutation, DeleteAccountTypeMutationVariables>;
+
+/**
+ * __useDeleteAccountTypeMutation__
+ *
+ * To run a mutation, you first call `useDeleteAccountTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAccountTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAccountTypeMutation, { data, loading, error }] = useDeleteAccountTypeMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteAccountTypeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteAccountTypeMutation, DeleteAccountTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteAccountTypeMutation, DeleteAccountTypeMutationVariables>(DeleteAccountTypeDocument, options);
+      }
+export type DeleteAccountTypeMutationHookResult = ReturnType<typeof useDeleteAccountTypeMutation>;
+export type DeleteAccountTypeMutationResult = Apollo.MutationResult<DeleteAccountTypeMutation>;
+export type DeleteAccountTypeMutationOptions = Apollo.BaseMutationOptions<DeleteAccountTypeMutation, DeleteAccountTypeMutationVariables>;
 export const GetAthletesDocument = gql`
     query getAthletes($where: AthleteProfileWhereInput, $orderBy: [AthleteProfileOrderByWithRelationInput!], $cursor: AthleteProfileWhereUniqueInput, $take: Int, $skip: Int, $distinct: [AthleteProfileScalarFieldEnum!]) {
   athleteProfiles(
@@ -29197,6 +29439,237 @@ export type GetAggregatePostFlagQueryHookResult = ReturnType<typeof useGetAggreg
 export type GetAggregatePostFlagLazyQueryHookResult = ReturnType<typeof useGetAggregatePostFlagLazyQuery>;
 export type GetAggregatePostFlagSuspenseQueryHookResult = ReturnType<typeof useGetAggregatePostFlagSuspenseQuery>;
 export type GetAggregatePostFlagQueryResult = Apollo.QueryResult<GetAggregatePostFlagQuery, GetAggregatePostFlagQueryVariables>;
+export const GetRoleDocument = gql`
+    query getRole($where: RoleWhereUniqueInput!) {
+  role(where: $where) {
+    id
+    uuid
+    title
+    createdAt
+    updatedAt
+    _count {
+      permissions
+      users
+      accountTypes
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetRoleQuery__
+ *
+ * To run a query within a React component, call `useGetRoleQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRoleQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRoleQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetRoleQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetRoleQuery, GetRoleQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetRoleQuery, GetRoleQueryVariables>(GetRoleDocument, options);
+      }
+export function useGetRoleLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetRoleQuery, GetRoleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetRoleQuery, GetRoleQueryVariables>(GetRoleDocument, options);
+        }
+export function useGetRoleSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetRoleQuery, GetRoleQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetRoleQuery, GetRoleQueryVariables>(GetRoleDocument, options);
+        }
+export type GetRoleQueryHookResult = ReturnType<typeof useGetRoleQuery>;
+export type GetRoleLazyQueryHookResult = ReturnType<typeof useGetRoleLazyQuery>;
+export type GetRoleSuspenseQueryHookResult = ReturnType<typeof useGetRoleSuspenseQuery>;
+export type GetRoleQueryResult = Apollo.QueryResult<GetRoleQuery, GetRoleQueryVariables>;
+export const GetRolesDocument = gql`
+    query getRoles($where: RoleWhereInput, $orderBy: [RoleOrderByWithRelationInput!], $cursor: RoleWhereUniqueInput, $take: Int, $skip: Int, $distinct: [RoleScalarFieldEnum!]) {
+  roles(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    id
+    uuid
+    title
+    createdAt
+    updatedAt
+    _count {
+      permissions
+      users
+      accountTypes
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetRolesQuery__
+ *
+ * To run a query within a React component, call `useGetRolesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRolesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRolesQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      distinct: // value for 'distinct'
+ *   },
+ * });
+ */
+export function useGetRolesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetRolesQuery, GetRolesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetRolesQuery, GetRolesQueryVariables>(GetRolesDocument, options);
+      }
+export function useGetRolesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetRolesQuery, GetRolesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetRolesQuery, GetRolesQueryVariables>(GetRolesDocument, options);
+        }
+export function useGetRolesSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetRolesQuery, GetRolesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetRolesQuery, GetRolesQueryVariables>(GetRolesDocument, options);
+        }
+export type GetRolesQueryHookResult = ReturnType<typeof useGetRolesQuery>;
+export type GetRolesLazyQueryHookResult = ReturnType<typeof useGetRolesLazyQuery>;
+export type GetRolesSuspenseQueryHookResult = ReturnType<typeof useGetRolesSuspenseQuery>;
+export type GetRolesQueryResult = Apollo.QueryResult<GetRolesQuery, GetRolesQueryVariables>;
+export const UpdateRoleDocument = gql`
+    mutation updateRole($data: RoleUpdateInput!, $where: RoleWhereUniqueInput!) {
+  updateOneRole(where: $where, data: $data) {
+    id
+    uuid
+    title
+    createdAt
+    updatedAt
+    _count {
+      permissions
+      users
+      accountTypes
+    }
+  }
+}
+    `;
+export type UpdateRoleMutationFn = Apollo.MutationFunction<UpdateRoleMutation, UpdateRoleMutationVariables>;
+
+/**
+ * __useUpdateRoleMutation__
+ *
+ * To run a mutation, you first call `useUpdateRoleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateRoleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateRoleMutation, { data, loading, error }] = useUpdateRoleMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useUpdateRoleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateRoleMutation, UpdateRoleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateRoleMutation, UpdateRoleMutationVariables>(UpdateRoleDocument, options);
+      }
+export type UpdateRoleMutationHookResult = ReturnType<typeof useUpdateRoleMutation>;
+export type UpdateRoleMutationResult = Apollo.MutationResult<UpdateRoleMutation>;
+export type UpdateRoleMutationOptions = Apollo.BaseMutationOptions<UpdateRoleMutation, UpdateRoleMutationVariables>;
+export const CreateRoleDocument = gql`
+    mutation createRole($data: RoleCreateInput!) {
+  createOneRole(data: $data) {
+    id
+    uuid
+    _count {
+      permissions
+      users
+      accountTypes
+    }
+  }
+}
+    `;
+export type CreateRoleMutationFn = Apollo.MutationFunction<CreateRoleMutation, CreateRoleMutationVariables>;
+
+/**
+ * __useCreateRoleMutation__
+ *
+ * To run a mutation, you first call `useCreateRoleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateRoleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createRoleMutation, { data, loading, error }] = useCreateRoleMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateRoleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateRoleMutation, CreateRoleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateRoleMutation, CreateRoleMutationVariables>(CreateRoleDocument, options);
+      }
+export type CreateRoleMutationHookResult = ReturnType<typeof useCreateRoleMutation>;
+export type CreateRoleMutationResult = Apollo.MutationResult<CreateRoleMutation>;
+export type CreateRoleMutationOptions = Apollo.BaseMutationOptions<CreateRoleMutation, CreateRoleMutationVariables>;
+export const DeleteRoleDocument = gql`
+    mutation deleteRole($where: RoleWhereUniqueInput!) {
+  deleteOneRole(where: $where) {
+    id
+    uuid
+    _count {
+      permissions
+      users
+      accountTypes
+    }
+  }
+}
+    `;
+export type DeleteRoleMutationFn = Apollo.MutationFunction<DeleteRoleMutation, DeleteRoleMutationVariables>;
+
+/**
+ * __useDeleteRoleMutation__
+ *
+ * To run a mutation, you first call `useDeleteRoleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteRoleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteRoleMutation, { data, loading, error }] = useDeleteRoleMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteRoleMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteRoleMutation, DeleteRoleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteRoleMutation, DeleteRoleMutationVariables>(DeleteRoleDocument, options);
+      }
+export type DeleteRoleMutationHookResult = ReturnType<typeof useDeleteRoleMutation>;
+export type DeleteRoleMutationResult = Apollo.MutationResult<DeleteRoleMutation>;
+export type DeleteRoleMutationOptions = Apollo.BaseMutationOptions<DeleteRoleMutation, DeleteRoleMutationVariables>;
 export const GetSchoolsDocument = gql`
     query getSchools($where: SchoolWhereInput, $orderBy: [SchoolOrderByWithRelationInput!], $cursor: SchoolWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SchoolScalarFieldEnum!]) {
   schools(
@@ -29619,6 +30092,239 @@ export type InterestedSchoolsQueryHookResult = ReturnType<typeof useInterestedSc
 export type InterestedSchoolsLazyQueryHookResult = ReturnType<typeof useInterestedSchoolsLazyQuery>;
 export type InterestedSchoolsSuspenseQueryHookResult = ReturnType<typeof useInterestedSchoolsSuspenseQuery>;
 export type InterestedSchoolsQueryResult = Apollo.QueryResult<InterestedSchoolsQuery, InterestedSchoolsQueryVariables>;
+export const GetSchoolTypesDocument = gql`
+    query getSchoolTypes($where: SchoolTypeWhereInput, $orderBy: [SchoolTypeOrderByWithRelationInput!], $cursor: SchoolTypeWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SchoolTypeScalarFieldEnum!]) {
+  schoolTypes(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    id
+    uuid
+    name
+    createdAt
+    updatedAt
+    _count {
+      schools
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetSchoolTypesQuery__
+ *
+ * To run a query within a React component, call `useGetSchoolTypesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSchoolTypesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSchoolTypesQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      distinct: // value for 'distinct'
+ *   },
+ * });
+ */
+export function useGetSchoolTypesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>(GetSchoolTypesDocument, options);
+      }
+export function useGetSchoolTypesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>(GetSchoolTypesDocument, options);
+        }
+export function useGetSchoolTypesSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>(GetSchoolTypesDocument, options);
+        }
+export type GetSchoolTypesQueryHookResult = ReturnType<typeof useGetSchoolTypesQuery>;
+export type GetSchoolTypesLazyQueryHookResult = ReturnType<typeof useGetSchoolTypesLazyQuery>;
+export type GetSchoolTypesSuspenseQueryHookResult = ReturnType<typeof useGetSchoolTypesSuspenseQuery>;
+export type GetSchoolTypesQueryResult = Apollo.QueryResult<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>;
+export const GetSchoolTypeDocument = gql`
+    query getSchoolType($where: SchoolTypeWhereUniqueInput!) {
+  schoolType(where: $where) {
+    id
+    uuid
+    name
+    createdAt
+    updatedAt
+    schools {
+      id
+      uuid
+      name
+      email
+    }
+    _count {
+      schools
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetSchoolTypeQuery__
+ *
+ * To run a query within a React component, call `useGetSchoolTypeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetSchoolTypeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetSchoolTypeQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetSchoolTypeQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetSchoolTypeQuery, GetSchoolTypeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetSchoolTypeQuery, GetSchoolTypeQueryVariables>(GetSchoolTypeDocument, options);
+      }
+export function useGetSchoolTypeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetSchoolTypeQuery, GetSchoolTypeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetSchoolTypeQuery, GetSchoolTypeQueryVariables>(GetSchoolTypeDocument, options);
+        }
+export function useGetSchoolTypeSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetSchoolTypeQuery, GetSchoolTypeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetSchoolTypeQuery, GetSchoolTypeQueryVariables>(GetSchoolTypeDocument, options);
+        }
+export type GetSchoolTypeQueryHookResult = ReturnType<typeof useGetSchoolTypeQuery>;
+export type GetSchoolTypeLazyQueryHookResult = ReturnType<typeof useGetSchoolTypeLazyQuery>;
+export type GetSchoolTypeSuspenseQueryHookResult = ReturnType<typeof useGetSchoolTypeSuspenseQuery>;
+export type GetSchoolTypeQueryResult = Apollo.QueryResult<GetSchoolTypeQuery, GetSchoolTypeQueryVariables>;
+export const UpdateSchoolTypeDocument = gql`
+    mutation updateSchoolType($data: SchoolTypeUpdateInput!, $where: SchoolTypeWhereUniqueInput!) {
+  updateOneSchoolType(where: $where, data: $data) {
+    id
+    uuid
+    name
+    createdAt
+    updatedAt
+    _count {
+      schools
+    }
+  }
+}
+    `;
+export type UpdateSchoolTypeMutationFn = Apollo.MutationFunction<UpdateSchoolTypeMutation, UpdateSchoolTypeMutationVariables>;
+
+/**
+ * __useUpdateSchoolTypeMutation__
+ *
+ * To run a mutation, you first call `useUpdateSchoolTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSchoolTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSchoolTypeMutation, { data, loading, error }] = useUpdateSchoolTypeMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useUpdateSchoolTypeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateSchoolTypeMutation, UpdateSchoolTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateSchoolTypeMutation, UpdateSchoolTypeMutationVariables>(UpdateSchoolTypeDocument, options);
+      }
+export type UpdateSchoolTypeMutationHookResult = ReturnType<typeof useUpdateSchoolTypeMutation>;
+export type UpdateSchoolTypeMutationResult = Apollo.MutationResult<UpdateSchoolTypeMutation>;
+export type UpdateSchoolTypeMutationOptions = Apollo.BaseMutationOptions<UpdateSchoolTypeMutation, UpdateSchoolTypeMutationVariables>;
+export const CreateSchoolTypeDocument = gql`
+    mutation createSchoolType($data: SchoolTypeCreateInput!) {
+  createOneSchoolType(data: $data) {
+    id
+    uuid
+    name
+    createdAt
+    updatedAt
+    _count {
+      schools
+    }
+  }
+}
+    `;
+export type CreateSchoolTypeMutationFn = Apollo.MutationFunction<CreateSchoolTypeMutation, CreateSchoolTypeMutationVariables>;
+
+/**
+ * __useCreateSchoolTypeMutation__
+ *
+ * To run a mutation, you first call `useCreateSchoolTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSchoolTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSchoolTypeMutation, { data, loading, error }] = useCreateSchoolTypeMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateSchoolTypeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateSchoolTypeMutation, CreateSchoolTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateSchoolTypeMutation, CreateSchoolTypeMutationVariables>(CreateSchoolTypeDocument, options);
+      }
+export type CreateSchoolTypeMutationHookResult = ReturnType<typeof useCreateSchoolTypeMutation>;
+export type CreateSchoolTypeMutationResult = Apollo.MutationResult<CreateSchoolTypeMutation>;
+export type CreateSchoolTypeMutationOptions = Apollo.BaseMutationOptions<CreateSchoolTypeMutation, CreateSchoolTypeMutationVariables>;
+export const DeleteSchoolTypeDocument = gql`
+    mutation deleteSchoolType($where: SchoolTypeWhereUniqueInput!) {
+  deleteOneSchoolType(where: $where) {
+    id
+    uuid
+    name
+    createdAt
+    updatedAt
+    _count {
+      schools
+    }
+  }
+}
+    `;
+export type DeleteSchoolTypeMutationFn = Apollo.MutationFunction<DeleteSchoolTypeMutation, DeleteSchoolTypeMutationVariables>;
+
+/**
+ * __useDeleteSchoolTypeMutation__
+ *
+ * To run a mutation, you first call `useDeleteSchoolTypeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteSchoolTypeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteSchoolTypeMutation, { data, loading, error }] = useDeleteSchoolTypeMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteSchoolTypeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteSchoolTypeMutation, DeleteSchoolTypeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteSchoolTypeMutation, DeleteSchoolTypeMutationVariables>(DeleteSchoolTypeDocument, options);
+      }
+export type DeleteSchoolTypeMutationHookResult = ReturnType<typeof useDeleteSchoolTypeMutation>;
+export type DeleteSchoolTypeMutationResult = Apollo.MutationResult<DeleteSchoolTypeMutation>;
+export type DeleteSchoolTypeMutationOptions = Apollo.BaseMutationOptions<DeleteSchoolTypeMutation, DeleteSchoolTypeMutationVariables>;
 export const UpdateInterestDocument = gql`
     mutation updateInterest($data: InterestedSchoolsUpdateInput!, $where: InterestedSchoolsWhereUniqueInput!) {
   updateOneInterestedSchools(data: $data, where: $where) {
@@ -30212,65 +30918,6 @@ export function useRegisterSchoolMutation(baseOptions?: ApolloReactHooks.Mutatio
 export type RegisterSchoolMutationHookResult = ReturnType<typeof useRegisterSchoolMutation>;
 export type RegisterSchoolMutationResult = Apollo.MutationResult<RegisterSchoolMutation>;
 export type RegisterSchoolMutationOptions = Apollo.BaseMutationOptions<RegisterSchoolMutation, RegisterSchoolMutationVariables>;
-export const GetSchoolTypesDocument = gql`
-    query getSchoolTypes($where: SchoolTypeWhereInput, $orderBy: [SchoolTypeOrderByWithRelationInput!], $cursor: SchoolTypeWhereUniqueInput, $take: Int, $skip: Int, $distinct: [SchoolTypeScalarFieldEnum!]) {
-  schoolTypes(
-    where: $where
-    orderBy: $orderBy
-    take: $take
-    skip: $skip
-    distinct: $distinct
-    cursor: $cursor
-  ) {
-    id
-    uuid
-    name
-    updatedAt
-    createdAt
-    _count {
-      schools
-    }
-  }
-}
-    `;
-
-/**
- * __useGetSchoolTypesQuery__
- *
- * To run a query within a React component, call `useGetSchoolTypesQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetSchoolTypesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetSchoolTypesQuery({
- *   variables: {
- *      where: // value for 'where'
- *      orderBy: // value for 'orderBy'
- *      cursor: // value for 'cursor'
- *      take: // value for 'take'
- *      skip: // value for 'skip'
- *      distinct: // value for 'distinct'
- *   },
- * });
- */
-export function useGetSchoolTypesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>(GetSchoolTypesDocument, options);
-      }
-export function useGetSchoolTypesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>(GetSchoolTypesDocument, options);
-        }
-export function useGetSchoolTypesSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useSuspenseQuery<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>(GetSchoolTypesDocument, options);
-        }
-export type GetSchoolTypesQueryHookResult = ReturnType<typeof useGetSchoolTypesQuery>;
-export type GetSchoolTypesLazyQueryHookResult = ReturnType<typeof useGetSchoolTypesLazyQuery>;
-export type GetSchoolTypesSuspenseQueryHookResult = ReturnType<typeof useGetSchoolTypesSuspenseQuery>;
-export type GetSchoolTypesQueryResult = Apollo.QueryResult<GetSchoolTypesQuery, GetSchoolTypesQueryVariables>;
 export const DeleteSchoolDocument = gql`
     mutation deleteSchool($where: SchoolWhereUniqueInput!) {
   deleteOneSchool(where: $where) {

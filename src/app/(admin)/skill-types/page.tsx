@@ -41,7 +41,7 @@ const headerItems = [
   { name: "Number Of Videos" },
   { name: "Created At" },
   { name: "Updated At" },
-  { name: "Action" },
+  { name: "Actions" },
 ];
 
 const filterItems = [
@@ -330,7 +330,6 @@ const Page: FC<pageProps> = ({}) => {
           />
         </div>
       </div>
-
       <UniversalTable
         title="Skill Type List"
         headerItems={headerItems}
