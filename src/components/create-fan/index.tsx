@@ -116,7 +116,7 @@ const CreateFan: FC<CreateFanProps> = ({ params, searchParams }) => {
     },
     resetOptions: {
       keepDirtyValues: true,
-      keepErrors: true,
+      // keepErrors: true,
     },
   });
 

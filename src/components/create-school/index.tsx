@@ -179,6 +179,10 @@ const CreateSchool: FC<CreateSchoolProps> = ({ params, searchParams }) => {
       undergradStudents: schoolData?.school?.undergradStudents || null,
       yearFounded: schoolData?.school?.yearFounded || "",
     },
+    resetOptions: {
+      keepDirtyValues: true, // user-interacted input will be retained
+      // keepErrors: true, // input errors will be retained with value update
+    },
   });
 
   const watchAllFields = watch();

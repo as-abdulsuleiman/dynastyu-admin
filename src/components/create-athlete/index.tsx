@@ -138,6 +138,10 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
           roleId: athleteData?.athleteProfile?.user?.accountType?.roleId,
         } || {},
     },
+    resetOptions: {
+      keepDirtyValues: true, // user-interacted input will be retained
+      // keepErrors: true, // input errors will be retained with value update
+    },
   });
 
   const watchAllFields = watch();

@@ -131,7 +131,7 @@ const CreateCoach: FC<CreateCoachProps> = ({ params, searchParams }) => {
         } || {},
     },
     resetOptions: {
-      // keepDirtyValues: true, // user-interacted input will be retained
+      keepDirtyValues: true, // user-interacted input will be retained
       // keepErrors: true, // input errors will be retained with value update
     },
   });

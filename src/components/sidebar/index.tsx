@@ -121,7 +121,7 @@ const SideBar: FC<SideBarProps> = ({ sidebarOpen, setSidebarOpen }) => {
         sidebarOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
-      <div className="h-full flex flex-col border border-1 w-full drop-shadow-md supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur dark:bg-background/95">
+      <div className="h-screen flex flex-col border border-1 w-full drop-shadow-md supports-backdrop-blur:bg-background/60 bg-background/95 backdrop-blur dark:bg-background/95">
         <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
           <Link
             href="/dashboard"
@@ -150,17 +150,20 @@ const SideBar: FC<SideBarProps> = ({ sidebarOpen, setSidebarOpen }) => {
             <ArrowLeftIcon />
           </button>
         </div>
-        <div className="w-full px-6 pt-3 pb-8 h-full shadow-xl">
+        <div className="w-full px-6 pt-3 pb-8 h-full shadow-xl overflow-y-scroll no-scrollbar">
           {/* <div className="text-msm">MENU</div> */}
-          <div className="relative w-full h-full">
-            <SidebarLinkGroup
-              setSidebarExpanded={setSidebarExpanded}
-              handleNavigation={(val) => router.push(val)}
-              sidebarExpanded={sidebarExpanded}
-            />
-            <div className="absolute bottom-0">
+          <div className="flex flex-col justify-between relative w-full h-full">
+            <div>
+              {" "}
+              <SidebarLinkGroup
+                setSidebarExpanded={setSidebarExpanded}
+                handleNavigation={(val) => router.push(val)}
+                sidebarExpanded={sidebarExpanded}
+              />
+            </div>
+            <div className="flex flex-col items-start mt-[80px]">
               <ThemeToggle />
-              <div className="text-[11px] mt-[20px] text-center font-medium">{`© ${year} DynastyU. All Rights Reserved`}</div>
+              <div className="text-[11px] mt-[20px] mb-[5px] text-center font-medium">{`© ${year} DynastyU. All Rights Reserved`}</div>
             </div>
           </div>
         </div>

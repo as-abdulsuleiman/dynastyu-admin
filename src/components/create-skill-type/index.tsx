@@ -98,6 +98,10 @@ const CreateSkillType: FC<CreateSkillTypeProps> = ({
       isPrimaryForRecruitment:
         skillTypeData?.skillType?.isPrimaryForRecruitment || false,
     },
+    resetOptions: {
+      keepDirtyValues: true, // user-interacted input will be retained
+      // keepErrors: true, // input errors will be retained with value update
+    },
   });
 
   const {
