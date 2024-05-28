@@ -150,7 +150,7 @@ const SideBar: FC<SideBarProps> = ({ sidebarOpen, setSidebarOpen }) => {
             <ArrowLeftIcon />
           </button>
         </div>
-        <div className="w-full px-6 pt-3 pb-8 h-full shadow-xl overflow-y-scroll">
+        <div className="w-full px-6 pt-3 pb-8 h-full shadow-xl overflow-y-scroll no-scrollbar">
           {/* <div className="text-msm">MENU</div> */}
           <div className="flex flex-col justify-between relative w-full h-full">
             <div>
