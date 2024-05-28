@@ -40,7 +40,7 @@ const PromptAlert: FC<PromptAlertProps> = ({
   return (
     <AlertDialog defaultOpen={false} open={showPrompt}>
       <AlertDialogOverlay />
-      <AlertDialogContent className="w-[95%] h-fit max-w-2xl md:max-w-lg">
+      <AlertDialogContent className="w-[95%] max-w-2xl md:max-w-lg">
         <AlertDialogHeader>
           <AlertDialogTitle>
             {title || "Are you absolutely sure?"}
