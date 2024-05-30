@@ -24,7 +24,13 @@ import Pagination from "../pagination";
 import UserAvatar from "../user-avatar";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
-import { FanIcon, Loader2Icon, MoreHorizontalIcon } from "../Icons";
+import {
+  BadgeAlertIcon,
+  BadgeCheckIcon,
+  FanIcon,
+  Loader2Icon,
+  MoreHorizontalIcon,
+} from "../Icons";
 import MenubarCard from "../menubar";
 import { observer } from "mobx-react-lite";
 import { Separator } from "../ui/separator";
@@ -46,6 +52,7 @@ const headerItems = [
   { name: "Created At" },
   { name: "Updated At" },
   { name: "Status" },
+  { name: "Verified" },
   { name: "Actions" },
 ];
 
@@ -181,6 +188,42 @@ const Fans: FC<FansProps> = ({}) => {
     setActiveUser(item);
   };
 
+  const handleVerifyFan = async (item: any) => {
+    setUpdatingProfile(StatusEnum.VERIFYING);
+    setSelectedUser(item?.id);
+    try {
+      const isVerified = item?.user?.verified;
+      await updateUser({
+        variables: {
+          where: { id: item?.user?.id },
+          data: {
+            // verified: { set: !isVerified },
+            // verifiedBy: { connect: { id: user?.coachProfile?.id } },
+          },
+        },
+      });
+      await refetch({});
+      toast({
+        title: "Profile successfully updated.",
+        description: `@${item?.username} profile has been ${
+          !isVerified ? "verified" : "unverified"
+        }`,
+        variant: "successfull",
+      });
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not successfully created a coach. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    } finally {
+      setUpdatingProfile(null);
+      setSelectedUser(null);
+    }
+  };
+
   const handleActiveUser = async (item: any) => {
     setSelectedUser(item?.id);
     setIsactivating(true);
@@ -306,8 +349,8 @@ const Fans: FC<FansProps> = ({}) => {
       },
 
       {
-        name: "Delete Profile",
-        onClick: () => handleDeleteFan(item),
+        name: "Verify Profile",
+        onClick: () => console.log("first"),
       },
     ];
     return (
@@ -362,6 +405,35 @@ const Fans: FC<FansProps> = ({}) => {
                 datatype="moderateDecrease"
               >
                 {item?.isActive ? "Active" : "Deactivated"}
+              </BadgeCard>
+            )}
+          </div>
+        </TableCell>
+        <TableCell className="text-sm">
+          <div className="text-right w-100 flex flex-row items-center justify-center">
+            {item?.id === selectedUser &&
+            updatingProfile === StatusEnum.VERIFYING ? (
+              <div className="text-center flex flex-row justify-center items-center">
+                <Loader2Icon className="mr-1 h-4 w-4 animate-spin " />
+                {item?.athleteProfile?.verified
+                  ? "Unverifying..."
+                  : "Verifying..."}
+              </div>
+            ) : (
+              <BadgeCard
+                size="xs"
+                className="px-[8px]"
+                color={item?.athleteProfile?.verified ? "sky" : "rose"}
+                icon={() => {
+                  return item?.athleteProfile?.verified ? (
+                    <BadgeCheckIcon className="h-4 w-4 mr-1" color="sky" />
+                  ) : (
+                    <BadgeAlertIcon className="h-4 w-4 mr-1" color="rose" />
+                  );
+                }}
+                datatype="moderateDecrease"
+              >
+                {item?.athleteProfile?.verified ? "Verified" : "Not Verified"}
               </BadgeCard>
             )}
           </div>

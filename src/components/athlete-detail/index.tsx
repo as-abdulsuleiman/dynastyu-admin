@@ -310,7 +310,7 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
       toast({
         title: "Something went wrong.",
         description: `${
-          error || "Could not successfully created a coach. Please try again."
+          error || "Could not successfully verify athlete. Please try again."
         }`,
         variant: "destructive",
       });

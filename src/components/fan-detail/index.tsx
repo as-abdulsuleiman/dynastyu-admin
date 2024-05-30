@@ -134,6 +134,44 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
     }
   };
 
+  const handleVerifyFan = async (item: any) => {
+    setUpdatingProfile(StatusEnum.VERIFYING);
+
+    try {
+      const isVerified = item?.athleteProfile?.verified;
+      await updateUser({
+        variables: {
+          where: { id: item?.athleteProfile?.id },
+          data: {
+            // verified: { set: !isVerified },
+            // verifiedBy: { connect: { id: fanData?.user?.coachProfile?.id } },
+          },
+        },
+      });
+      toast({
+        title: "Fan profile successfully updated.",
+        description: `${fanData?.user?.username} profile has been ${
+          isVerified ? "Unverified" : "Verified"
+        } `,
+        variant: "successfull",
+      });
+      // if (resp?.data?.updateOneAthleteProfile) {
+      //   // await refetch();
+
+      // }
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not successfully verify fan. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    } finally {
+      setUpdatingProfile(null);
+    }
+  };
+
   const handleDeleteFan = () => {
     setUpdatingProfile(StatusEnum.DELETING);
   };
@@ -195,6 +233,16 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
     {
       name: "View Analytics",
       onClick: () => setViewAnalytics(true),
+    },
+    {
+      // name: `${
+      //   athleteData?.athleteProfile?.verified
+      //     ? "Unverify Profile"
+      //     : "Verify Profile"
+      // }`,
+      name: "Verify Profile",
+      // onClick: () => handleVerifyAthlete(athleteData),
+      onClick: () => console.log("clicked"),
     },
     {
       name: "Delete Profile",

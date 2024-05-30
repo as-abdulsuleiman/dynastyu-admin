@@ -281,16 +281,6 @@ const Athletes: FC<AthletesProps> = ({}) => {
         }`,
         variant: "successfull",
       });
-      // if (resp.data?.updateOneAthleteProfile) {
-      //   //
-      //   // toast({
-      //   //   title: "Coach successfully updated.",
-      //   //   description: `${coach?.user?.username} has been ${
-      //   //     coach?.user?.isActive ? "Deactivated" : "Activated"
-      //   //   } `,
-      //   //   variant: "default",
-      //   // });
-      // }
     } catch (error) {
       toast({
         title: "Something went wrong.",
