@@ -1,0 +1,108 @@
+# @format
+
+query getPermissions(
+  $where: PermissionWhereInput
+  $orderBy: [PermissionOrderByWithRelationInput!]
+  $cursor: PermissionWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [PermissionScalarFieldEnum!]
+) {
+  permissions(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    id
+    uuid
+    title
+    createdAt
+    updatedAt
+    query
+    _count {
+      roles
+    }
+    roles {
+      id
+      title
+      users {
+        firstname
+        surname
+        id
+      }
+    }
+  }
+}
+
+query getPermission($where: PermissionWhereUniqueInput!) {
+  permission(where: $where) {
+    id
+    uuid
+    title
+    createdAt
+    updatedAt
+    query
+    _count {
+      roles
+    }
+    roles {
+      id
+      title
+      users {
+        firstname
+        surname
+        id
+      }
+    }
+  }
+}
+
+mutation updatePermission(
+  $data: PermissionUpdateInput!
+  $where: PermissionWhereUniqueInput!
+) {
+  updateOnePermission(where: $where, data: $data) {
+    id
+    uuid
+    title
+    createdAt
+    updatedAt
+    query
+    _count {
+      roles
+    }
+    roles {
+      id
+      title
+    }
+  }
+}
+
+mutation createPermission($data: PermissionCreateInput!) {
+  createOnePermission(data: $data) {
+    id
+    uuid
+    title
+    query
+    roles {
+      id
+      title
+    }
+  }
+}
+
+mutation deletePermission($where: PermissionWhereUniqueInput!) {
+  deleteOnePermission(where: $where) {
+    id
+    uuid
+    title
+    query
+    roles {
+      id
+      title
+    }
+  }
+}
