@@ -519,6 +519,15 @@ export type AggregateNotification = {
   _sum?: Maybe<NotificationSumAggregate>;
 };
 
+export type AggregatePermission = {
+  __typename?: 'AggregatePermission';
+  _avg?: Maybe<PermissionAvgAggregate>;
+  _count?: Maybe<PermissionCountAggregate>;
+  _max?: Maybe<PermissionMaxAggregate>;
+  _min?: Maybe<PermissionMinAggregate>;
+  _sum?: Maybe<PermissionSumAggregate>;
+};
+
 export type AggregatePosition = {
   __typename?: 'AggregatePosition';
   _avg?: Maybe<PositionAvgAggregate>;
@@ -7975,6 +7984,7 @@ export type Mutation = {
   createManyInterestedSchools: AffectedRowsOutput;
   createManyMessage: AffectedRowsOutput;
   createManyNotification: AffectedRowsOutput;
+  createManyPermission: AffectedRowsOutput;
   createManyPosition: AffectedRowsOutput;
   createManyPositionCategory: AffectedRowsOutput;
   createManyPost: AffectedRowsOutput;
@@ -8007,6 +8017,7 @@ export type Mutation = {
   createOneInterestedSchools: InterestedSchools;
   createOneMessage: Message;
   createOneNotification: Notification;
+  createOnePermission: Permission;
   createOnePosition: Position;
   createOnePositionCategory: PositionCategory;
   createOnePost: Post;
@@ -8040,6 +8051,7 @@ export type Mutation = {
   deleteManyInterestedSchools: AffectedRowsOutput;
   deleteManyMessage: AffectedRowsOutput;
   deleteManyNotification: AffectedRowsOutput;
+  deleteManyPermission: AffectedRowsOutput;
   deleteManyPosition: AffectedRowsOutput;
   deleteManyPositionCategory: AffectedRowsOutput;
   deleteManyPost: AffectedRowsOutput;
@@ -8072,6 +8084,7 @@ export type Mutation = {
   deleteOneInterestedSchools?: Maybe<InterestedSchools>;
   deleteOneMessage?: Maybe<Message>;
   deleteOneNotification?: Maybe<Notification>;
+  deleteOnePermission?: Maybe<Permission>;
   deleteOnePosition?: Maybe<Position>;
   deleteOnePositionCategory?: Maybe<PositionCategory>;
   deleteOnePost?: Maybe<Post>;
@@ -8108,6 +8121,7 @@ export type Mutation = {
   updateManyInterestedSchools: AffectedRowsOutput;
   updateManyMessage: AffectedRowsOutput;
   updateManyNotification: AffectedRowsOutput;
+  updateManyPermission: AffectedRowsOutput;
   updateManyPosition: AffectedRowsOutput;
   updateManyPositionCategory: AffectedRowsOutput;
   updateManyPost: AffectedRowsOutput;
@@ -8140,6 +8154,7 @@ export type Mutation = {
   updateOneInterestedSchools?: Maybe<InterestedSchools>;
   updateOneMessage?: Maybe<Message>;
   updateOneNotification?: Maybe<Notification>;
+  updateOnePermission?: Maybe<Permission>;
   updateOnePosition?: Maybe<Position>;
   updateOnePositionCategory?: Maybe<PositionCategory>;
   updateOnePost?: Maybe<Post>;
@@ -8173,6 +8188,7 @@ export type Mutation = {
   upsertOneInterestedSchools: InterestedSchools;
   upsertOneMessage: Message;
   upsertOneNotification: Notification;
+  upsertOnePermission: Permission;
   upsertOnePosition: Position;
   upsertOnePositionCategory: PositionCategory;
   upsertOnePost: Post;
@@ -8274,6 +8290,12 @@ export type MutationCreateManyMessageArgs = {
 
 export type MutationCreateManyNotificationArgs = {
   data: Array<NotificationCreateManyInput>;
+  skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationCreateManyPermissionArgs = {
+  data: Array<PermissionCreateManyInput>;
   skipDuplicates?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -8456,6 +8478,11 @@ export type MutationCreateOneNotificationArgs = {
 };
 
 
+export type MutationCreateOnePermissionArgs = {
+  data: PermissionCreateInput;
+};
+
+
 export type MutationCreateOnePositionArgs = {
   data: PositionCreateInput;
 };
@@ -8621,6 +8648,11 @@ export type MutationDeleteManyNotificationArgs = {
 };
 
 
+export type MutationDeleteManyPermissionArgs = {
+  where?: InputMaybe<PermissionWhereInput>;
+};
+
+
 export type MutationDeleteManyPositionArgs = {
   where?: InputMaybe<PositionWhereInput>;
 };
@@ -8778,6 +8810,11 @@ export type MutationDeleteOneMessageArgs = {
 
 export type MutationDeleteOneNotificationArgs = {
   where: NotificationWhereUniqueInput;
+};
+
+
+export type MutationDeleteOnePermissionArgs = {
+  where: PermissionWhereUniqueInput;
 };
 
 
@@ -8975,6 +9012,12 @@ export type MutationUpdateManyNotificationArgs = {
 };
 
 
+export type MutationUpdateManyPermissionArgs = {
+  data: PermissionUpdateManyMutationInput;
+  where?: InputMaybe<PermissionWhereInput>;
+};
+
+
 export type MutationUpdateManyPositionArgs = {
   data: PositionUpdateManyMutationInput;
   where?: InputMaybe<PositionWhereInput>;
@@ -9164,6 +9207,12 @@ export type MutationUpdateOneMessageArgs = {
 export type MutationUpdateOneNotificationArgs = {
   data: NotificationUpdateInput;
   where: NotificationWhereUniqueInput;
+};
+
+
+export type MutationUpdateOnePermissionArgs = {
+  data: PermissionUpdateInput;
+  where: PermissionWhereUniqueInput;
 };
 
 
@@ -9375,6 +9424,13 @@ export type MutationUpsertOneNotificationArgs = {
   create: NotificationCreateInput;
   update: NotificationUpdateInput;
   where: NotificationWhereUniqueInput;
+};
+
+
+export type MutationUpsertOnePermissionArgs = {
+  create: PermissionCreateInput;
+  update: PermissionUpdateInput;
+  where: PermissionWhereUniqueInput;
 };
 
 
@@ -11023,6 +11079,81 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type Permission = {
+  __typename?: 'Permission';
+  _count?: Maybe<PermissionCount>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['BigInt']['output'];
+  query: Scalars['String']['output'];
+  roles: Array<Role>;
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  uuid: Scalars['String']['output'];
+};
+
+
+export type PermissionRolesArgs = {
+  cursor?: InputMaybe<RoleWhereUniqueInput>;
+  distinct?: InputMaybe<Array<RoleScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<RoleOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<RoleWhereInput>;
+};
+
+export type PermissionAvgAggregate = {
+  __typename?: 'PermissionAvgAggregate';
+  id?: Maybe<Scalars['Float']['output']>;
+};
+
+export type PermissionAvgOrderByAggregateInput = {
+  id?: InputMaybe<SortOrder>;
+};
+
+export type PermissionCount = {
+  __typename?: 'PermissionCount';
+  roles: Scalars['Int']['output'];
+};
+
+export type PermissionCountAggregate = {
+  __typename?: 'PermissionCountAggregate';
+  _all: Scalars['Int']['output'];
+  createdAt: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  query: Scalars['Int']['output'];
+  title: Scalars['Int']['output'];
+  updatedAt: Scalars['Int']['output'];
+  uuid: Scalars['Int']['output'];
+};
+
+export type PermissionCountOrderByAggregateInput = {
+  createdAt?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  query?: InputMaybe<SortOrder>;
+  title?: InputMaybe<SortOrder>;
+  updatedAt?: InputMaybe<SortOrder>;
+  uuid?: InputMaybe<SortOrder>;
+};
+
+export type PermissionCreateInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  query: Scalars['String']['input'];
+  roles?: InputMaybe<RoleCreateNestedManyWithoutPermissionsInput>;
+  title: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PermissionCreateManyInput = {
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
+  query: Scalars['String']['input'];
+  title: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type PermissionCreateNestedManyWithoutRolesInput = {
   connect?: InputMaybe<Array<PermissionWhereUniqueInput>>;
   connectOrCreate?: InputMaybe<Array<PermissionCreateOrConnectWithoutRolesInput>>;
@@ -11043,15 +11174,101 @@ export type PermissionCreateWithoutRolesInput = {
   uuid?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type PermissionGroupBy = {
+  __typename?: 'PermissionGroupBy';
+  _avg?: Maybe<PermissionAvgAggregate>;
+  _count?: Maybe<PermissionCountAggregate>;
+  _max?: Maybe<PermissionMaxAggregate>;
+  _min?: Maybe<PermissionMinAggregate>;
+  _sum?: Maybe<PermissionSumAggregate>;
+  createdAt: Scalars['DateTime']['output'];
+  id: Scalars['BigInt']['output'];
+  query: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  uuid: Scalars['String']['output'];
+};
+
 export type PermissionListRelationFilter = {
   every?: InputMaybe<PermissionWhereInput>;
   none?: InputMaybe<PermissionWhereInput>;
   some?: InputMaybe<PermissionWhereInput>;
 };
 
+export type PermissionMaxAggregate = {
+  __typename?: 'PermissionMaxAggregate';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['BigInt']['output']>;
+  query?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  uuid?: Maybe<Scalars['String']['output']>;
+};
+
+export type PermissionMaxOrderByAggregateInput = {
+  createdAt?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  query?: InputMaybe<SortOrder>;
+  title?: InputMaybe<SortOrder>;
+  updatedAt?: InputMaybe<SortOrder>;
+  uuid?: InputMaybe<SortOrder>;
+};
+
+export type PermissionMinAggregate = {
+  __typename?: 'PermissionMinAggregate';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['BigInt']['output']>;
+  query?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  uuid?: Maybe<Scalars['String']['output']>;
+};
+
+export type PermissionMinOrderByAggregateInput = {
+  createdAt?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  query?: InputMaybe<SortOrder>;
+  title?: InputMaybe<SortOrder>;
+  updatedAt?: InputMaybe<SortOrder>;
+  uuid?: InputMaybe<SortOrder>;
+};
+
 export type PermissionOrderByRelationAggregateInput = {
   _count?: InputMaybe<SortOrder>;
 };
+
+export type PermissionOrderByWithAggregationInput = {
+  _avg?: InputMaybe<PermissionAvgOrderByAggregateInput>;
+  _count?: InputMaybe<PermissionCountOrderByAggregateInput>;
+  _max?: InputMaybe<PermissionMaxOrderByAggregateInput>;
+  _min?: InputMaybe<PermissionMinOrderByAggregateInput>;
+  _sum?: InputMaybe<PermissionSumOrderByAggregateInput>;
+  createdAt?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  query?: InputMaybe<SortOrder>;
+  title?: InputMaybe<SortOrder>;
+  updatedAt?: InputMaybe<SortOrder>;
+  uuid?: InputMaybe<SortOrder>;
+};
+
+export type PermissionOrderByWithRelationInput = {
+  createdAt?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  query?: InputMaybe<SortOrder>;
+  roles?: InputMaybe<RoleOrderByRelationAggregateInput>;
+  title?: InputMaybe<SortOrder>;
+  updatedAt?: InputMaybe<SortOrder>;
+  uuid?: InputMaybe<SortOrder>;
+};
+
+export enum PermissionScalarFieldEnum {
+  CreatedAt = 'createdAt',
+  Id = 'id',
+  Query = 'query',
+  Title = 'title',
+  UpdatedAt = 'updatedAt',
+  Uuid = 'uuid'
+}
 
 export type PermissionScalarWhereInput = {
   AND?: InputMaybe<Array<PermissionScalarWhereInput>>;
@@ -11063,6 +11280,37 @@ export type PermissionScalarWhereInput = {
   title?: InputMaybe<StringFilter>;
   updatedAt?: InputMaybe<DateTimeFilter>;
   uuid?: InputMaybe<StringFilter>;
+};
+
+export type PermissionScalarWhereWithAggregatesInput = {
+  AND?: InputMaybe<Array<PermissionScalarWhereWithAggregatesInput>>;
+  NOT?: InputMaybe<Array<PermissionScalarWhereWithAggregatesInput>>;
+  OR?: InputMaybe<Array<PermissionScalarWhereWithAggregatesInput>>;
+  createdAt?: InputMaybe<DateTimeWithAggregatesFilter>;
+  id?: InputMaybe<BigIntWithAggregatesFilter>;
+  query?: InputMaybe<StringWithAggregatesFilter>;
+  title?: InputMaybe<StringWithAggregatesFilter>;
+  updatedAt?: InputMaybe<DateTimeWithAggregatesFilter>;
+  uuid?: InputMaybe<StringWithAggregatesFilter>;
+};
+
+export type PermissionSumAggregate = {
+  __typename?: 'PermissionSumAggregate';
+  id?: Maybe<Scalars['BigInt']['output']>;
+};
+
+export type PermissionSumOrderByAggregateInput = {
+  id?: InputMaybe<SortOrder>;
+};
+
+export type PermissionUpdateInput = {
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
+  query?: InputMaybe<StringFieldUpdateOperationsInput>;
+  roles?: InputMaybe<RoleUpdateManyWithoutPermissionsNestedInput>;
+  title?: InputMaybe<StringFieldUpdateOperationsInput>;
+  updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
 };
 
 export type PermissionUpdateManyMutationInput = {
@@ -14297,6 +14545,7 @@ export type Query = {
   aggregateInterestedSchools: AggregateInterestedSchools;
   aggregateMessage: AggregateMessage;
   aggregateNotification: AggregateNotification;
+  aggregatePermission: AggregatePermission;
   aggregatePosition: AggregatePosition;
   aggregatePositionCategory: AggregatePositionCategory;
   aggregatePost: AggregatePost;
@@ -14345,6 +14594,7 @@ export type Query = {
   findFirstInterestedSchools?: Maybe<InterestedSchools>;
   findFirstMessage?: Maybe<Message>;
   findFirstNotification?: Maybe<Notification>;
+  findFirstPermission?: Maybe<Permission>;
   findFirstPosition?: Maybe<Position>;
   findFirstPositionCategory?: Maybe<PositionCategory>;
   findFirstPost?: Maybe<Post>;
@@ -14387,6 +14637,7 @@ export type Query = {
   groupByInterestedSchools: Array<InterestedSchoolsGroupBy>;
   groupByMessage: Array<MessageGroupBy>;
   groupByNotification: Array<NotificationGroupBy>;
+  groupByPermission: Array<PermissionGroupBy>;
   groupByPosition: Array<PositionGroupBy>;
   groupByPositionCategory: Array<PositionCategoryGroupBy>;
   groupByPost: Array<PostGroupBy>;
@@ -14409,6 +14660,8 @@ export type Query = {
   messages: Array<Message>;
   notification?: Maybe<Notification>;
   notifications: Array<Notification>;
+  permission?: Maybe<Permission>;
+  permissions: Array<Permission>;
   position?: Maybe<Position>;
   positionCategories: Array<PositionCategory>;
   positionCategory?: Maybe<PositionCategory>;
@@ -14582,6 +14835,15 @@ export type QueryAggregateNotificationArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<NotificationWhereInput>;
+};
+
+
+export type QueryAggregatePermissionArgs = {
+  cursor?: InputMaybe<PermissionWhereUniqueInput>;
+  orderBy?: InputMaybe<Array<PermissionOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<PermissionWhereInput>;
 };
 
 
@@ -15007,6 +15269,16 @@ export type QueryFindFirstNotificationArgs = {
 };
 
 
+export type QueryFindFirstPermissionArgs = {
+  cursor?: InputMaybe<PermissionWhereUniqueInput>;
+  distinct?: InputMaybe<Array<PermissionScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<PermissionOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<PermissionWhereInput>;
+};
+
+
 export type QueryFindFirstPositionArgs = {
   cursor?: InputMaybe<PositionWhereUniqueInput>;
   distinct?: InputMaybe<Array<PositionScalarFieldEnum>>;
@@ -15402,6 +15674,16 @@ export type QueryGroupByNotificationArgs = {
 };
 
 
+export type QueryGroupByPermissionArgs = {
+  by: Array<PermissionScalarFieldEnum>;
+  having?: InputMaybe<PermissionScalarWhereWithAggregatesInput>;
+  orderBy?: InputMaybe<Array<PermissionOrderByWithAggregationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<PermissionWhereInput>;
+};
+
+
 export type QueryGroupByPositionArgs = {
   by: Array<PositionScalarFieldEnum>;
   having?: InputMaybe<PositionScalarWhereWithAggregatesInput>;
@@ -15609,6 +15891,21 @@ export type QueryNotificationsArgs = {
   skip?: InputMaybe<Scalars['Int']['input']>;
   take?: InputMaybe<Scalars['Int']['input']>;
   where?: InputMaybe<NotificationWhereInput>;
+};
+
+
+export type QueryPermissionArgs = {
+  where: PermissionWhereUniqueInput;
+};
+
+
+export type QueryPermissionsArgs = {
+  cursor?: InputMaybe<PermissionWhereUniqueInput>;
+  distinct?: InputMaybe<Array<PermissionScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<PermissionOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<PermissionWhereInput>;
 };
 
 
@@ -16625,11 +16922,44 @@ export type Return = {
 export type Role = {
   __typename?: 'Role';
   _count?: Maybe<RoleCount>;
+  accountTypes: Array<AccountType>;
   createdAt: Scalars['DateTime']['output'];
   id: Scalars['BigInt']['output'];
+  permissions: Array<Permission>;
   title: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
+  users: Array<User>;
   uuid: Scalars['String']['output'];
+};
+
+
+export type RoleAccountTypesArgs = {
+  cursor?: InputMaybe<AccountTypeWhereUniqueInput>;
+  distinct?: InputMaybe<Array<AccountTypeScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<AccountTypeOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<AccountTypeWhereInput>;
+};
+
+
+export type RolePermissionsArgs = {
+  cursor?: InputMaybe<PermissionWhereUniqueInput>;
+  distinct?: InputMaybe<Array<PermissionScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<PermissionOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<PermissionWhereInput>;
+};
+
+
+export type RoleUsersArgs = {
+  cursor?: InputMaybe<UserWhereUniqueInput>;
+  distinct?: InputMaybe<Array<UserScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<UserOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  where?: InputMaybe<UserWhereInput>;
 };
 
 export type RoleAvgAggregate = {
@@ -16685,6 +17015,12 @@ export type RoleCreateManyInput = {
   uuid?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type RoleCreateNestedManyWithoutPermissionsInput = {
+  connect?: InputMaybe<Array<RoleWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<RoleCreateOrConnectWithoutPermissionsInput>>;
+  create?: InputMaybe<Array<RoleCreateWithoutPermissionsInput>>;
+};
+
 export type RoleCreateNestedOneWithoutAccountTypesInput = {
   connect?: InputMaybe<RoleWhereUniqueInput>;
   connectOrCreate?: InputMaybe<RoleCreateOrConnectWithoutAccountTypesInput>;
@@ -16702,6 +17038,11 @@ export type RoleCreateOrConnectWithoutAccountTypesInput = {
   where: RoleWhereUniqueInput;
 };
 
+export type RoleCreateOrConnectWithoutPermissionsInput = {
+  create: RoleCreateWithoutPermissionsInput;
+  where: RoleWhereUniqueInput;
+};
+
 export type RoleCreateOrConnectWithoutUsersInput = {
   create: RoleCreateWithoutUsersInput;
   where: RoleWhereUniqueInput;
@@ -16711,6 +17052,16 @@ export type RoleCreateWithoutAccountTypesInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   id?: InputMaybe<Scalars['BigInt']['input']>;
   permissions?: InputMaybe<PermissionCreateNestedManyWithoutRolesInput>;
+  title: Scalars['String']['input'];
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  users?: InputMaybe<UserCreateNestedManyWithoutRoleInput>;
+  uuid?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type RoleCreateWithoutPermissionsInput = {
+  accountTypes?: InputMaybe<AccountTypeCreateNestedManyWithoutRoleInput>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  id?: InputMaybe<Scalars['BigInt']['input']>;
   title: Scalars['String']['input'];
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   users?: InputMaybe<UserCreateNestedManyWithoutRoleInput>;
@@ -16781,6 +17132,10 @@ export type RoleMinOrderByAggregateInput = {
   uuid?: InputMaybe<SortOrder>;
 };
 
+export type RoleOrderByRelationAggregateInput = {
+  _count?: InputMaybe<SortOrder>;
+};
+
 export type RoleOrderByWithAggregationInput = {
   _avg?: InputMaybe<RoleAvgOrderByAggregateInput>;
   _count?: InputMaybe<RoleCountOrderByAggregateInput>;
@@ -16817,6 +17172,17 @@ export enum RoleScalarFieldEnum {
   UpdatedAt = 'updatedAt',
   Uuid = 'uuid'
 }
+
+export type RoleScalarWhereInput = {
+  AND?: InputMaybe<Array<RoleScalarWhereInput>>;
+  NOT?: InputMaybe<Array<RoleScalarWhereInput>>;
+  OR?: InputMaybe<Array<RoleScalarWhereInput>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<BigIntFilter>;
+  title?: InputMaybe<StringFilter>;
+  updatedAt?: InputMaybe<DateTimeFilter>;
+  uuid?: InputMaybe<StringFilter>;
+};
 
 export type RoleScalarWhereWithAggregatesInput = {
   AND?: InputMaybe<Array<RoleScalarWhereWithAggregatesInput>>;
@@ -16857,6 +17223,24 @@ export type RoleUpdateManyMutationInput = {
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
 };
 
+export type RoleUpdateManyWithWhereWithoutPermissionsInput = {
+  data: RoleUpdateManyMutationInput;
+  where: RoleScalarWhereInput;
+};
+
+export type RoleUpdateManyWithoutPermissionsNestedInput = {
+  connect?: InputMaybe<Array<RoleWhereUniqueInput>>;
+  connectOrCreate?: InputMaybe<Array<RoleCreateOrConnectWithoutPermissionsInput>>;
+  create?: InputMaybe<Array<RoleCreateWithoutPermissionsInput>>;
+  delete?: InputMaybe<Array<RoleWhereUniqueInput>>;
+  deleteMany?: InputMaybe<Array<RoleScalarWhereInput>>;
+  disconnect?: InputMaybe<Array<RoleWhereUniqueInput>>;
+  set?: InputMaybe<Array<RoleWhereUniqueInput>>;
+  update?: InputMaybe<Array<RoleUpdateWithWhereUniqueWithoutPermissionsInput>>;
+  updateMany?: InputMaybe<Array<RoleUpdateManyWithWhereWithoutPermissionsInput>>;
+  upsert?: InputMaybe<Array<RoleUpsertWithWhereUniqueWithoutPermissionsInput>>;
+};
+
 export type RoleUpdateOneWithoutAccountTypesNestedInput = {
   connect?: InputMaybe<RoleWhereUniqueInput>;
   connectOrCreate?: InputMaybe<RoleCreateOrConnectWithoutAccountTypesInput>;
@@ -16877,10 +17261,25 @@ export type RoleUpdateOneWithoutUsersNestedInput = {
   upsert?: InputMaybe<RoleUpsertWithoutUsersInput>;
 };
 
+export type RoleUpdateWithWhereUniqueWithoutPermissionsInput = {
+  data: RoleUpdateWithoutPermissionsInput;
+  where: RoleWhereUniqueInput;
+};
+
 export type RoleUpdateWithoutAccountTypesInput = {
   createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
   permissions?: InputMaybe<PermissionUpdateManyWithoutRolesNestedInput>;
+  title?: InputMaybe<StringFieldUpdateOperationsInput>;
+  updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  users?: InputMaybe<UserUpdateManyWithoutRoleNestedInput>;
+  uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+};
+
+export type RoleUpdateWithoutPermissionsInput = {
+  accountTypes?: InputMaybe<AccountTypeUpdateManyWithoutRoleNestedInput>;
+  createdAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
+  id?: InputMaybe<BigIntFieldUpdateOperationsInput>;
   title?: InputMaybe<StringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   users?: InputMaybe<UserUpdateManyWithoutRoleNestedInput>;
@@ -16895,6 +17294,12 @@ export type RoleUpdateWithoutUsersInput = {
   title?: InputMaybe<StringFieldUpdateOperationsInput>;
   updatedAt?: InputMaybe<DateTimeFieldUpdateOperationsInput>;
   uuid?: InputMaybe<StringFieldUpdateOperationsInput>;
+};
+
+export type RoleUpsertWithWhereUniqueWithoutPermissionsInput = {
+  create: RoleCreateWithoutPermissionsInput;
+  update: RoleUpdateWithoutPermissionsInput;
+  where: RoleWhereUniqueInput;
 };
 
 export type RoleUpsertWithoutAccountTypesInput = {
@@ -26063,6 +26468,47 @@ export type UpdateUserFcmTokenInputMutationVariables = Exact<{
 
 export type UpdateUserFcmTokenInputMutation = { __typename?: 'Mutation', updateUserFcmToken?: { __typename?: 'UpdateUserFcmTokenReturn', success: boolean, user: { __typename?: 'User', id: any, firstname: string } } | null };
 
+export type GetPermissionsQueryVariables = Exact<{
+  where?: InputMaybe<PermissionWhereInput>;
+  orderBy?: InputMaybe<Array<PermissionOrderByWithRelationInput> | PermissionOrderByWithRelationInput>;
+  cursor?: InputMaybe<PermissionWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  distinct?: InputMaybe<Array<PermissionScalarFieldEnum> | PermissionScalarFieldEnum>;
+}>;
+
+
+export type GetPermissionsQuery = { __typename?: 'Query', permissions: Array<{ __typename?: 'Permission', id: any, uuid: string, title: string, createdAt: any, updatedAt: any, query: string, _count?: { __typename?: 'PermissionCount', roles: number } | null, roles: Array<{ __typename?: 'Role', id: any, title: string }> }> };
+
+export type GetPermissionQueryVariables = Exact<{
+  where: PermissionWhereUniqueInput;
+}>;
+
+
+export type GetPermissionQuery = { __typename?: 'Query', permission?: { __typename?: 'Permission', id: any, uuid: string, title: string, createdAt: any, updatedAt: any, query: string, _count?: { __typename?: 'PermissionCount', roles: number } | null, roles: Array<{ __typename?: 'Role', id: any, title: string, users: Array<{ __typename?: 'User', firstname: string, surname: string, id: any }> }> } | null };
+
+export type UpdatePermissionMutationVariables = Exact<{
+  data: PermissionUpdateInput;
+  where: PermissionWhereUniqueInput;
+}>;
+
+
+export type UpdatePermissionMutation = { __typename?: 'Mutation', updateOnePermission?: { __typename?: 'Permission', id: any, uuid: string, title: string, createdAt: any, updatedAt: any, query: string, _count?: { __typename?: 'PermissionCount', roles: number } | null, roles: Array<{ __typename?: 'Role', id: any, title: string }> } | null };
+
+export type CreatePermissionMutationVariables = Exact<{
+  data: PermissionCreateInput;
+}>;
+
+
+export type CreatePermissionMutation = { __typename?: 'Mutation', createOnePermission: { __typename?: 'Permission', id: any, uuid: string, title: string, query: string, roles: Array<{ __typename?: 'Role', id: any, title: string }> } };
+
+export type DeletePermissionMutationVariables = Exact<{
+  where: PermissionWhereUniqueInput;
+}>;
+
+
+export type DeletePermissionMutation = { __typename?: 'Mutation', deleteOnePermission?: { __typename?: 'Permission', id: any, uuid: string, title: string, query: string, roles: Array<{ __typename?: 'Role', id: any, title: string }> } | null };
+
 export type CreatePostMutationVariables = Exact<{
   data: PostCreateInput;
 }>;
@@ -26689,7 +27135,7 @@ export type GetUsersQueryVariables = Exact<{
 }>;
 
 
-export type GetUsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, username?: string | null, city?: string | null, state?: string | null, isActive: boolean, dob?: any | null, address?: string | null, firebaseUid: string, updatedAt: any, createdAt: any, accountTypeId: any, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, featured: boolean, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, updatedAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, _count?: { __typename?: 'AthleteProfileCount', transcripts: number, skills: number, evaluations: number, SkillHistory: number, socialAccounts: number } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, title?: string | null, city?: string | null, state?: string | null, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } } | null, socialAccounts: Array<{ __typename?: 'SocialAccount', id: any, uuid: string, name: string, link: string, type: SocialAccountType, athleteProfileId?: any | null }>, school: { __typename?: 'School', id: any, name: string, logo?: string | null, state?: string | null, city?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }> } | null, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, comments: number, postLikes: number, commentLikes: number, postReports: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluationsCreated: number, postFlag: number, blockedByUsers: number, blockedUsers: number, reposts: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, verified: boolean, schoolId?: any | null, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school?: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, state?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } | null } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } }> };
+export type GetUsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, username?: string | null, city?: string | null, state?: string | null, isActive: boolean, dob?: any | null, address?: string | null, firebaseUid: string, updatedAt: any, createdAt: any, accountTypeId: any, athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, graduationYear?: string | null, hudlLink?: string | null, featured: boolean, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, createdAt: any, updatedAt: any, playerCardUrl?: string | null, verified: boolean, gpa?: string | null, schoolId: any, userId: any, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, _count?: { __typename?: 'AthleteProfileCount', transcripts: number, skills: number, evaluations: number, SkillHistory: number, socialAccounts: number } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, title?: string | null, city?: string | null, state?: string | null, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } } | null, socialAccounts: Array<{ __typename?: 'SocialAccount', id: any, uuid: string, name: string, link: string, type: SocialAccountType, athleteProfileId?: any | null }>, school: { __typename?: 'School', id: any, name: string, logo?: string | null, state?: string | null, city?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, transcripts: Array<{ __typename?: 'Transcripts', name: string, url: string, id: any, uuid: string }>, position?: { __typename?: 'Position', name: string, shortName: string, id: any } | null, skills: Array<{ __typename?: 'Skills', id: any, videos: Array<string>, value: string, skillType: { __typename?: 'SkillType', name: string, id: any, unit: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, description?: string | null, secondValueOptions: Array<string> } }> } | null, role?: { __typename?: 'Role', id: any, title: string, users: Array<{ __typename?: 'User', firstname: string, surname: string, id: any }>, permissions: Array<{ __typename?: 'Permission', id: any, title: string, query: string }>, accountTypes: Array<{ __typename?: 'AccountType', id: any, title: string }> } | null, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, _count?: { __typename?: 'UserCount', following: number, followedBy: number, posts: number, comments: number, postLikes: number, commentLikes: number, postReports: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluationsCreated: number, postFlag: number, blockedByUsers: number, blockedUsers: number, reposts: number } | null, following: Array<{ __typename?: 'Follows', followingId: any, following: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } }>, coachProfile?: { __typename?: 'CoachProfile', id: any, userId: any, title?: string | null, city?: string | null, state?: string | null, verified: boolean, schoolId?: any | null, _count?: { __typename?: 'CoachProfileCount', verifiedAthletes: number } | null, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, school?: { __typename?: 'School', id: any, name: string, email: string, logo?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, city?: string | null, state?: string | null, latitude?: number | null, longitude?: number | null, radius?: number | null, address?: string | null, yearFounded?: string | null, division?: string | null, conference?: string | null, yearlyTuition?: string | null, undergradStudents?: number | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } } | null } | null, accountType: { __typename?: 'AccountType', id: any, title: string, createdAt: any, role?: { __typename?: 'Role', id: any, title: string } | null } }> };
 
 export type GetBlockedUsersQueryVariables = Exact<{
   where?: InputMaybe<BlocksWhereInput>;
@@ -28709,6 +29155,253 @@ export function useUpdateUserFcmTokenInputMutation(baseOptions?: ApolloReactHook
 export type UpdateUserFcmTokenInputMutationHookResult = ReturnType<typeof useUpdateUserFcmTokenInputMutation>;
 export type UpdateUserFcmTokenInputMutationResult = Apollo.MutationResult<UpdateUserFcmTokenInputMutation>;
 export type UpdateUserFcmTokenInputMutationOptions = Apollo.BaseMutationOptions<UpdateUserFcmTokenInputMutation, UpdateUserFcmTokenInputMutationVariables>;
+export const GetPermissionsDocument = gql`
+    query getPermissions($where: PermissionWhereInput, $orderBy: [PermissionOrderByWithRelationInput!], $cursor: PermissionWhereUniqueInput, $take: Int, $skip: Int, $distinct: [PermissionScalarFieldEnum!]) {
+  permissions(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    distinct: $distinct
+  ) {
+    id
+    uuid
+    title
+    createdAt
+    updatedAt
+    query
+    _count {
+      roles
+    }
+    roles {
+      id
+      title
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPermissionsQuery__
+ *
+ * To run a query within a React component, call `useGetPermissionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPermissionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPermissionsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      distinct: // value for 'distinct'
+ *   },
+ * });
+ */
+export function useGetPermissionsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetPermissionsQuery, GetPermissionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetPermissionsQuery, GetPermissionsQueryVariables>(GetPermissionsDocument, options);
+      }
+export function useGetPermissionsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetPermissionsQuery, GetPermissionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetPermissionsQuery, GetPermissionsQueryVariables>(GetPermissionsDocument, options);
+        }
+export function useGetPermissionsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetPermissionsQuery, GetPermissionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetPermissionsQuery, GetPermissionsQueryVariables>(GetPermissionsDocument, options);
+        }
+export type GetPermissionsQueryHookResult = ReturnType<typeof useGetPermissionsQuery>;
+export type GetPermissionsLazyQueryHookResult = ReturnType<typeof useGetPermissionsLazyQuery>;
+export type GetPermissionsSuspenseQueryHookResult = ReturnType<typeof useGetPermissionsSuspenseQuery>;
+export type GetPermissionsQueryResult = Apollo.QueryResult<GetPermissionsQuery, GetPermissionsQueryVariables>;
+export const GetPermissionDocument = gql`
+    query getPermission($where: PermissionWhereUniqueInput!) {
+  permission(where: $where) {
+    id
+    uuid
+    title
+    createdAt
+    updatedAt
+    query
+    _count {
+      roles
+    }
+    roles {
+      id
+      title
+      users {
+        firstname
+        surname
+        id
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPermissionQuery__
+ *
+ * To run a query within a React component, call `useGetPermissionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPermissionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPermissionQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetPermissionQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetPermissionQuery, GetPermissionQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetPermissionQuery, GetPermissionQueryVariables>(GetPermissionDocument, options);
+      }
+export function useGetPermissionLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetPermissionQuery, GetPermissionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetPermissionQuery, GetPermissionQueryVariables>(GetPermissionDocument, options);
+        }
+export function useGetPermissionSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetPermissionQuery, GetPermissionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetPermissionQuery, GetPermissionQueryVariables>(GetPermissionDocument, options);
+        }
+export type GetPermissionQueryHookResult = ReturnType<typeof useGetPermissionQuery>;
+export type GetPermissionLazyQueryHookResult = ReturnType<typeof useGetPermissionLazyQuery>;
+export type GetPermissionSuspenseQueryHookResult = ReturnType<typeof useGetPermissionSuspenseQuery>;
+export type GetPermissionQueryResult = Apollo.QueryResult<GetPermissionQuery, GetPermissionQueryVariables>;
+export const UpdatePermissionDocument = gql`
+    mutation updatePermission($data: PermissionUpdateInput!, $where: PermissionWhereUniqueInput!) {
+  updateOnePermission(where: $where, data: $data) {
+    id
+    uuid
+    title
+    createdAt
+    updatedAt
+    query
+    _count {
+      roles
+    }
+    roles {
+      id
+      title
+    }
+  }
+}
+    `;
+export type UpdatePermissionMutationFn = Apollo.MutationFunction<UpdatePermissionMutation, UpdatePermissionMutationVariables>;
+
+/**
+ * __useUpdatePermissionMutation__
+ *
+ * To run a mutation, you first call `useUpdatePermissionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePermissionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePermissionMutation, { data, loading, error }] = useUpdatePermissionMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useUpdatePermissionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdatePermissionMutation, UpdatePermissionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdatePermissionMutation, UpdatePermissionMutationVariables>(UpdatePermissionDocument, options);
+      }
+export type UpdatePermissionMutationHookResult = ReturnType<typeof useUpdatePermissionMutation>;
+export type UpdatePermissionMutationResult = Apollo.MutationResult<UpdatePermissionMutation>;
+export type UpdatePermissionMutationOptions = Apollo.BaseMutationOptions<UpdatePermissionMutation, UpdatePermissionMutationVariables>;
+export const CreatePermissionDocument = gql`
+    mutation createPermission($data: PermissionCreateInput!) {
+  createOnePermission(data: $data) {
+    id
+    uuid
+    title
+    query
+    roles {
+      id
+      title
+    }
+  }
+}
+    `;
+export type CreatePermissionMutationFn = Apollo.MutationFunction<CreatePermissionMutation, CreatePermissionMutationVariables>;
+
+/**
+ * __useCreatePermissionMutation__
+ *
+ * To run a mutation, you first call `useCreatePermissionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePermissionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPermissionMutation, { data, loading, error }] = useCreatePermissionMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreatePermissionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePermissionMutation, CreatePermissionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreatePermissionMutation, CreatePermissionMutationVariables>(CreatePermissionDocument, options);
+      }
+export type CreatePermissionMutationHookResult = ReturnType<typeof useCreatePermissionMutation>;
+export type CreatePermissionMutationResult = Apollo.MutationResult<CreatePermissionMutation>;
+export type CreatePermissionMutationOptions = Apollo.BaseMutationOptions<CreatePermissionMutation, CreatePermissionMutationVariables>;
+export const DeletePermissionDocument = gql`
+    mutation deletePermission($where: PermissionWhereUniqueInput!) {
+  deleteOnePermission(where: $where) {
+    id
+    uuid
+    title
+    query
+    roles {
+      id
+      title
+    }
+  }
+}
+    `;
+export type DeletePermissionMutationFn = Apollo.MutationFunction<DeletePermissionMutation, DeletePermissionMutationVariables>;
+
+/**
+ * __useDeletePermissionMutation__
+ *
+ * To run a mutation, you first call `useDeletePermissionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePermissionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePermissionMutation, { data, loading, error }] = useDeletePermissionMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeletePermissionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeletePermissionMutation, DeletePermissionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeletePermissionMutation, DeletePermissionMutationVariables>(DeletePermissionDocument, options);
+      }
+export type DeletePermissionMutationHookResult = ReturnType<typeof useDeletePermissionMutation>;
+export type DeletePermissionMutationResult = Apollo.MutationResult<DeletePermissionMutation>;
+export type DeletePermissionMutationOptions = Apollo.BaseMutationOptions<DeletePermissionMutation, DeletePermissionMutationVariables>;
 export const CreatePostDocument = gql`
     mutation createPost($data: PostCreateInput!) {
   createOnePost(data: $data) {
@@ -32604,6 +33297,24 @@ export const GetUsersDocument = gql`
         id
         flag
         abbreviation
+      }
+    }
+    role {
+      id
+      title
+      users {
+        firstname
+        surname
+        id
+      }
+      permissions {
+        id
+        title
+        query
+      }
+      accountTypes {
+        id
+        title
       }
     }
   }

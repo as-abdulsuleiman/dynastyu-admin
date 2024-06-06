@@ -413,6 +413,24 @@ query GetUsers(
         abbreviation
       }
     }
+    role {
+      id
+      title
+      users {
+        firstname
+        surname
+        id
+      }
+      permissions {
+        id
+        title
+        query
+      }
+      accountTypes {
+        id
+        title
+      }
+    }
   }
 }
 

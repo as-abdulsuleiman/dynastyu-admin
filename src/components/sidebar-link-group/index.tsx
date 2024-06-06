@@ -280,6 +280,12 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
           hasBadge: false,
           count: 0,
         },
+        {
+          name: "Permissions",
+          path: "/permissions",
+          hasBadge: false,
+          count: 0,
+        },
       ],
       icon: ({ className, color }: IconProps) => (
         <CircleUserRoundIcon className={cn(className)} color={color} />

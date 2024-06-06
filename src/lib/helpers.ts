@@ -12,64 +12,63 @@ export const getURLParams = (params: any[]) => {
 };
 
 const inventory = [
-  {  
+  {
     id: 1,
     label: "Active",
-    key: 'default',
-    value:{
+    key: "default",
+    value: {
       isActive: {
         equals: true,
       },
-    }
+    },
   },
-  {  
+  {
     id: 1,
     label: "Inactive",
-    key: 'default',
-   value:{
-    isActive: {
-      equals: false,
+    key: "default",
+    value: {
+      isActive: {
+        equals: false,
+      },
     },
-   }
   },
   {
     id: 2,
     label: "Verified",
-    key:'athleteProfile',
+    key: "athleteProfile",
     value: {
       verified: {
         equals: true,
       },
     },
-  }, 
+  },
   {
     id: 2,
     label: "Not Verified",
-    key:'athleteProfile',
+    key: "athleteProfile",
     value: {
       verified: {
         equals: false,
       },
     },
-  }, 
-  
+  },
 ];
 
 export const getQueryParams = (params?: any[]) => {
   let itemsObject: any = {};
   inventory?.forEach((item: any, index: number) => {
-    console.log("item",item['key'])
-    let newObject ={}
-    if(item['key'] === 'athleteProfile'){
-      newObject ={
-        [item.key]:{
-          is:{
-            ...item?.value
-          }
-        }
-      }
+    console.log("item", item["key"]);
+    let newObject = {};
+    if (item["key"] === "athleteProfile") {
+      newObject = {
+        [item.key]: {
+          is: {
+            ...item?.value,
+          },
+        },
+      };
     }
-    console.log("newObject",newObject)
+    console.log("newObject", newObject);
     itemsObject = Object.assign({ ...itemsObject, ...item?.value });
   });
   return itemsObject;
@@ -82,24 +81,24 @@ export const getQueryParams = (params?: any[]) => {
   //   acc[key][obj.label] = rest?.value;
   //   return acc;
   // }, {});
-// //   let itemsObject: any = {};
-//  return inventory?.map((item: any, index: number) => {
-//   let itemsObject={}
-//   let profile;
-//   if(item?.key !=="default"){
-//     itemsObject={
-//       [item.key]:{
-//         ...item.value
-//       }
-//     }
-//   }
+  // //   let itemsObject: any = {};
+  //  return inventory?.map((item: any, index: number) => {
+  //   let itemsObject={}
+  //   let profile;
+  //   if(item?.key !=="default"){
+  //     itemsObject={
+  //       [item.key]:{
+  //         ...item.value
+  //       }
+  //     }
+  //   }
 
-//   return itemsObject
-   
-//     // itemsObject = Object.assign({ ...itemsObject, ...item?.value });
-//   });
+  //   return itemsObject
+
+  //     // itemsObject = Object.assign({ ...itemsObject, ...item?.value });
+  //   });
   // return itemsObject;
-  
+
   // return inventory.reduce((acc:any, obj) => {
   //   const { key, ...rest } = obj;
   //   if (!acc[key]) {
@@ -108,10 +107,7 @@ export const getQueryParams = (params?: any[]) => {
   //   acc[key].push(rest?.value);
   //   return acc;
   // }, {});
-
- 
-
-}
+};
 
 export const generateProfilePath = (user: GetUserQuery["user"]): string => {
   let userPath = "";
@@ -127,4 +123,16 @@ export const generateProfilePath = (user: GetUserQuery["user"]): string => {
     userPath = `/coach/${user?.id}`;
   }
   return userPath;
+};
+
+export const hasPermission = (permissions: any, title: string, Data: any) => {
+  const valueExists = permissions?.some(
+    (permission: any) => permission.title === title
+  );
+
+  if (valueExists) {
+    return Data;
+  }
+
+  return null;
 };
