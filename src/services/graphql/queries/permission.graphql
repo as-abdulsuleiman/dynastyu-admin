@@ -28,11 +28,6 @@ query getPermissions(
     roles {
       id
       title
-      users {
-        firstname
-        surname
-        id
-      }
     }
   }
 }

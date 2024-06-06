@@ -26478,7 +26478,7 @@ export type GetPermissionsQueryVariables = Exact<{
 }>;
 
 
-export type GetPermissionsQuery = { __typename?: 'Query', permissions: Array<{ __typename?: 'Permission', id: any, uuid: string, title: string, createdAt: any, updatedAt: any, query: string, _count?: { __typename?: 'PermissionCount', roles: number } | null, roles: Array<{ __typename?: 'Role', id: any, title: string, users: Array<{ __typename?: 'User', firstname: string, surname: string, id: any }> }> }> };
+export type GetPermissionsQuery = { __typename?: 'Query', permissions: Array<{ __typename?: 'Permission', id: any, uuid: string, title: string, createdAt: any, updatedAt: any, query: string, _count?: { __typename?: 'PermissionCount', roles: number } | null, roles: Array<{ __typename?: 'Role', id: any, title: string }> }> };
 
 export type GetPermissionQueryVariables = Exact<{
   where: PermissionWhereUniqueInput;
@@ -29177,11 +29177,6 @@ export const GetPermissionsDocument = gql`
     roles {
       id
       title
-      users {
-        firstname
-        surname
-        id
-      }
     }
   }
 }

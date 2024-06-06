@@ -15,6 +15,7 @@ import {
   useDeletePermissionMutation,
   useGetPermissionsQuery,
   useUpdatePermissionMutation,
+  useUpdateRoleMutation,
 } from "@/services/graphql";
 import { formatDate } from "@/lib/utils";
 import MenubarCard from "../menubar";
@@ -48,6 +49,7 @@ export const PermissionsCard: FC = () => {
   const [createPermission] = useCreatePermissionMutation();
   const [updatePermission] = useUpdatePermissionMutation();
   const [deletePermission] = useDeletePermissionMutation();
+
   const router = useRouter();
   const { toast } = useToast();
   const {
@@ -93,7 +95,24 @@ export const PermissionsCard: FC = () => {
 
   const handleConfirmPrompt = async (item: any) => {
     setDeletingPermission(true);
+    const roleId = item?.roles?.map((role: any) => {
+      return {
+        id: role?.id,
+      };
+    });
     try {
+      // await updatePermission({
+      //   variables: {
+      //     where: {
+      //       id: item?.id,
+      //     },
+      //     data: {
+      //       roles: {
+      //         disconnect: [{}],
+      //       },
+      //     },
+      //   },
+      // });
       const res = await deletePermission({
         variables: {
           where: {
@@ -102,12 +121,12 @@ export const PermissionsCard: FC = () => {
         },
       });
       if (res?.data) {
+        await refetch();
         toast({
           title: "Permissions successfully deleted.",
           description: `${item?.title} permission has been successfully deleted`,
           variant: "successfull",
         });
-        refetch();
       }
     } catch (error: any) {
       toast({
@@ -125,14 +144,14 @@ export const PermissionsCard: FC = () => {
 
   const renderPermissions = ({ item, id }: { item: any; id: any }) => {
     const permissionItems = [
-      {
-        name: "View Permission",
-        onClick: () => {
-          router.push(`/permission/${item?.id}`, {
-            scroll: true,
-          });
-        },
-      },
+      // {
+      //   name: "View Permission",
+      //   onClick: () => {
+      //     router.push(`/permission/${item?.id}`, {
+      //       scroll: true,
+      //     });
+      //   },
+      // },
       {
         name: "Edit Permission",
         onClick: () => {
@@ -146,6 +165,7 @@ export const PermissionsCard: FC = () => {
         onClick: () => handleDeletePermission(item),
       },
     ];
+
     return (
       <TableRow key={item?.id}>
         <TableCell>
@@ -306,7 +326,7 @@ export const PermissionsCard: FC = () => {
           setIsOpen(true);
         }}
       >
-        Add Permissions
+        Add Permission
         <PlusIcon className="ml-3 h-[18px] w-[18px]" />
       </Button>
       <Separator className="my-6" />
