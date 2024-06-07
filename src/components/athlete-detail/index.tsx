@@ -64,6 +64,7 @@ import AthleteSkillCard from "../athlete-skill-card";
 import { renderLoader } from "@/lib/loader-helper";
 import { CalloutCardProps } from "@/interface/calloutOptions";
 import PromptAlert from "../prompt-alert";
+import TabCard from "../tab-card";
 interface AthleteDetailProps {
   params: {
     id: number;
@@ -271,14 +272,14 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
   };
 
   const recruitingContact = useMemo(() => {
-    let newecruitingContact = [];
-    newecruitingContact?.push({
+    let newRecruitingContact = [];
+    newRecruitingContact?.push({
       recruitingContactName: athleteData?.athleteProfile?.recruitingContactName,
       recruitingPhoneNumber: athleteData?.athleteProfile?.recruitingPhoneNumber,
       recruitingRelationship:
         athleteData?.athleteProfile?.recruitingRelationship,
     });
-    return loading ? [] : newecruitingContact;
+    return loading ? [] : newRecruitingContact;
   }, [athleteData?.athleteProfile, loading]);
 
   const handleVerifyAthlete = async (item: any) => {
@@ -701,6 +702,53 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     },
   ];
 
+  const renderInterestedSchools = () => {
+    return (
+      <InterestedSchoolCard
+        loading={loading}
+        interestedSchools={
+          (athleteData?._count?.interestedSchools as any) || []
+        }
+      />
+    );
+  };
+
+  const renderRecruitedSchool = () => {
+    return (
+      <RecruitedSchoolCard
+        loading={loading}
+        recruitedSchools={(athleteData?._count?.recruitedSchools as any) || []}
+      />
+    );
+  };
+
+  const renderTranscript = () => {
+    return (
+      <TranscriptCard
+        loading={loading}
+        transcripts={(athleteData?.athleteProfile?.transcripts as any) || []}
+      />
+    );
+  };
+  const renderAthleteSkills = () => {
+    return (
+      <AthleteSkillCard
+        athleteId={params?.id}
+        loading={loading}
+        athleteSkills={(data?.user?.athleteProfile?.skills as any) || []}
+      />
+    );
+  };
+
+  const renderAthleteRecruitingContact = () => {
+    return (
+      <AthleteRecruitingContact
+        loading={false}
+        recruitingContact={recruitingContact}
+      />
+    );
+  };
+
   return (
     <main className="w-full h-full relative">
       <Button
@@ -729,35 +777,26 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
         </div>
       )}
       <Separator className="my-6" />
-      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-        <InterestedSchoolCard
-          loading={loading}
-          interestedSchools={
-            (athleteData?._count?.interestedSchools as any) || []
-          }
-        />
-        <RecruitedSchoolCard
-          loading={loading}
-          recruitedSchools={
-            (athleteData?._count?.recruitedSchools as any) || []
-          }
-        />
-      </Grid>
-      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
-        <TranscriptCard
-          loading={loading}
-          transcripts={(athleteData?.athleteProfile?.transcripts as any) || []}
-        />
-        <AthleteSkillCard
-          athleteId={params?.id}
-          loading={loading}
-          athleteSkills={(data?.user?.athleteProfile?.skills as any) || []}
-        />
-        {/* <AthleteRecruitingContact
-          loading={false}
-          recruitingContact={recruitingContact}
-        /> */}
-      </Grid>
+
+      <TabCard
+        className="text-[18px]"
+        tabClassName="mb-12"
+        tabs={[
+          { name: "Skills" },
+          { name: "Interested Schools" },
+          { name: "Recruited Schools" },
+          { name: "Recruiting Contact" },
+          { name: "Transcripts" },
+        ]}
+        tabContent={[
+          { content: renderAthleteSkills() },
+          { content: renderInterestedSchools() },
+          { content: renderRecruitedSchool() },
+          { content: renderAthleteRecruitingContact() },
+          { content: renderTranscript() },
+        ]}
+      />
+
       <Grid numItemsMd={1} numItemsLg={1} className="mt-6 gap-6">
         <CardContainer className="p-2 md:p-4">
           <div className="flex flex-col items-center justify-start relative">
