@@ -568,11 +568,9 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
 
   const renderAddPermission = () => {
     return (
-      <div>
+      <div w-full>
         <div className="grid grid-cols-12 gap-6">
-          {selectedOptions?.length === 0 ? (
-            <div></div>
-          ) : (
+          {selectedOptions?.length === 0 ? null : (
             <div className="col-span-12 mb-4">
               <Button
                 variant="default"
@@ -620,11 +618,9 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
 
   const renderDeletePermission = () => {
     return (
-      <div>
+      <div className="w-full">
         <div className="grid grid-cols-12 gap-6">
-          {selectedOptions?.length === 0 ? (
-            <div></div>
-          ) : (
+          {selectedOptions?.length === 0 ? null : (
             <div className="col-span-12 mb-4">
               <Button
                 variant="default"
