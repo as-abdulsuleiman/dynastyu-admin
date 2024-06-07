@@ -432,16 +432,6 @@ export const PermissionsCard: FC = () => {
           <PlusIcon className="ml-3 h-[18px] w-[18px]" />
         </Button>
       </Accesscontrol>
-      <Button
-        className="flex flex-row ml-auto"
-        onClick={() => {
-          setIsNew(true);
-          setIsOpen(true);
-        }}
-      >
-        Add Permission
-        <PlusIcon className="ml-3 h-[18px] w-[18px]" />
-      </Button>
       <Separator className="my-6" />
       <SearchInput
         onChange={(e) => setValue(e.target.value)}
