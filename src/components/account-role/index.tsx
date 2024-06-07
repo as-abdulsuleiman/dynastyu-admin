@@ -34,24 +34,21 @@ import { useForm } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
 import ComboBoxCard from "../combobox-card";
 import { useDebouncedValue } from "@mantine/hooks";
+import { getPermission } from "@/lib/helpers";
+import { useRootStore } from "@/mobx";
+import { observer } from "mobx-react-lite";
+import Accesscontrol from "../accesscontrol";
 import MultiSelector from "../multi-selector";
 
 type FormData = yup.InferType<typeof RoleValidator>;
 
 interface AccountRolesProps {}
 
-const headerItems = [
-  { name: "Title" },
-  { name: "Number of users" },
-  { name: "Account type" },
-  { name: "Permissions" },
-  { name: "Created At" },
-  { name: "Updated At" },
-  { name: "Actions" },
-];
-
 const AccountRole: FC<AccountRolesProps> = ({}) => {
   const { toast } = useToast();
+  const {
+    authStore: { user },
+  } = useRootStore();
   const [indexTab, setTabIndex] = useState<number>(0);
   const [deleteRoleTypePrompt, setDeleteRoleTypePrompt] = useState(false);
   const [deletingRoleType, setDeletingRoleType] = useState(false);
@@ -73,6 +70,24 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
   const [createRole] = useCreateRoleMutation();
   const [updateRole] = useUpdateRoleMutation();
   const [deleteRole] = useDeleteRoleMutation();
+
+  const permissionName = getPermission(
+    user?.role?.permissions,
+    "admin.accesslevel.update"
+  );
+
+  const headerItems = [
+    { name: "Title" },
+    { name: "Number of users" },
+    { name: "Account type" },
+    { name: "Permissions" },
+    { name: "Created At" },
+    { name: "Updated At" },
+  ];
+
+  if (permissionName !== ("" || null || undefined)) {
+    headerItems?.push({ name: "Actions" });
+  }
 
   const {
     data: roleTypeData,
@@ -473,18 +488,20 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
                 : ""}
             </div>
           </TableCell>
-          <TableCell className="text-center cursor-pointer text-sm">
-            <div className="text-right w-100 flex flex-row items-center justify-center">
-              <MenubarCard
-                trigger={
-                  <Button size="icon" variant="outline">
-                    <MoreHorizontalIcon className="cursor-pointer" />
-                  </Button>
-                }
-                items={roleTypeItems}
-              />
-            </div>
-          </TableCell>
+          <Accesscontrol name={permissionName}>
+            <TableCell className="text-center cursor-pointer text-sm">
+              <div className="text-right w-100 flex flex-row items-center justify-center">
+                <MenubarCard
+                  trigger={
+                    <Button size="icon" variant="outline">
+                      <MoreHorizontalIcon className="cursor-pointer" />
+                    </Button>
+                  }
+                  items={roleTypeItems}
+                />
+              </div>
+            </TableCell>
+          </Accesscontrol>
         </TableRow>
       );
     };
@@ -672,16 +689,18 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
         <ContentHeader title="Account Types" subHeader="In Progress" />
       </div>
       <Separator className="my-6" />
-      <Button
-        className="flex flex-row ml-auto"
-        onClick={() => {
-          setIsNew(true);
-          setIsOpen(true);
-        }}
-      >
-        Add Role
-        <PlusIcon className="ml-3 h-[18px] w-[18px]" />
-      </Button>
+      <Accesscontrol name={permissionName}>
+        <Button
+          className="flex flex-row ml-auto"
+          onClick={() => {
+            setIsNew(true);
+            setIsOpen(true);
+          }}
+        >
+          Add Role
+          <PlusIcon className="ml-3 h-[18px] w-[18px]" />
+        </Button>
+      </Accesscontrol>
       <TabCard
         tabIndex={indexTab}
         onIndexChange={handleOnIndexChange}
@@ -731,4 +750,4 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
   );
 };
 
-export default AccountRole;
+export default observer(AccountRole);

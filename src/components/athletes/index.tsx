@@ -23,7 +23,6 @@ import {
   useDeleteFirebaseUserMutation,
   useDeleteUserMutation,
   useGetAggregateAthleteProfileLazyQuery,
-  useGetPermissionsQuery,
   useGetUsersQuery,
   useUpdateAthleteMutation,
 } from "@/services/graphql";
@@ -43,8 +42,9 @@ import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
 import { athleteFilter, athleteHeaderItems } from "@/lib/filters";
 import MultiSelector from "../multi-selector";
-import { getURLParams, hasPermission } from "@/lib/helpers";
+import { getPermission, getURLParams } from "@/lib/helpers";
 import PromptAlert from "../prompt-alert";
+import { observer } from "mobx-react-lite";
 
 interface AthletesProps {}
 
@@ -68,6 +68,11 @@ const Athletes: FC<AthletesProps> = ({}) => {
   const [aggregatedAthlete] = useGetAggregateAthleteProfileLazyQuery();
 
   const filteredParams = getURLParams(selectedOptions);
+
+  const permissionName = getPermission(
+    user?.role?.permissions,
+    "athletes.accesslevel.update"
+  );
 
   const {
     data: athleteData,
@@ -118,23 +123,6 @@ const Athletes: FC<AthletesProps> = ({}) => {
       },
     },
   });
-
-  // const { data: permissionData } = useGetPermissionsQuery({
-  //   variables: {
-  //     take: 10,
-  //     orderBy: {
-  //       createdAt: SortOrder.Desc,
-  //     },
-  //   },
-  // });
-
-  // const result = hasPermission(
-  //   permissionData?.permissions,
-  //   "athletes.accesslevel.get",
-  //   athleteData
-  // );
-  // console.log("result", result);
-  // console.log("permissionData", permissionData);
 
   const lastUserId = useMemo(() => {
     const lastPostInResults =
@@ -388,45 +376,50 @@ const Athletes: FC<AthletesProps> = ({}) => {
           });
         },
       },
-      {
-        name: "View Skills",
-        onClick: () => {
-          router.push(`/skills?athlete=${item?.athleteProfile?.id}`, {
-            scroll: true,
-          });
-        },
-      },
-      {
-        name: "Edit Profile",
-        onClick: () => {
-          router.push(`/athletes/edit?athlete=${item?.athleteProfile?.id}`, {
-            scroll: true,
-          });
-        },
-      },
-      {
-        name: `${
-          item?.athleteProfile?.verified ? "Unverify" : "Verify"
-        } Profile`,
-        onClick: () => handleVerifyAthlete(item),
-      },
-      {
-        name: `${item?.isActive ? "Deactivate" : "Activate"} Profile`,
-        onClick: () => handleActivateAthlete(item),
-      },
-      {
-        name: `${
-          item?.athleteProfile?.featured
-            ? "Remove from featured"
-            : "Add to featured"
-        }`,
-        onClick: () => handleFeaturedAthlete(item),
-      },
-      {
-        name: "Delete Profile",
-        onClick: () => handleDeleteAthlete(item),
-      },
     ];
+
+    if (permissionName !== ("" || null || undefined)) {
+      athleteItems?.push(
+        {
+          name: "View Skills",
+          onClick: () => {
+            router.push(`/skills?athlete=${item?.athleteProfile?.id}`, {
+              scroll: true,
+            });
+          },
+        },
+        {
+          name: "Edit Profile",
+          onClick: () => {
+            router.push(`/athletes/edit?athlete=${item?.athleteProfile?.id}`, {
+              scroll: true,
+            });
+          },
+        },
+        {
+          name: `${
+            item?.athleteProfile?.verified ? "Unverify" : "Verify"
+          } Profile`,
+          onClick: () => handleVerifyAthlete(item),
+        },
+        {
+          name: `${item?.isActive ? "Deactivate" : "Activate"} Profile`,
+          onClick: () => handleActivateAthlete(item),
+        },
+        {
+          name: `${
+            item?.athleteProfile?.featured
+              ? "Remove from featured"
+              : "Add to featured"
+          }`,
+          onClick: () => handleFeaturedAthlete(item),
+        },
+        {
+          name: "Delete Profile",
+          onClick: () => handleDeleteAthlete(item),
+        }
+      );
+    }
 
     return (
       <TableRow key={item?.id}>
@@ -630,4 +623,4 @@ const Athletes: FC<AthletesProps> = ({}) => {
     </main>
   );
 };
-export default Athletes;
+export default observer(Athletes);

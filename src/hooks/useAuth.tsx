@@ -19,6 +19,7 @@ import { User, useGetUserLazyQuery } from "@/services/graphql";
 import { useRootStore } from "@/mobx";
 import { projectAuth } from "@/services/firebase/config";
 import { useToast } from "./use-toast";
+import { hasSideBarPermissions, sidebarItem } from "@/lib/helpers";
 
 const AuthContext = createContext<{
   isLoggedIn: boolean;
@@ -73,9 +74,21 @@ function useAuthProvider() {
           },
         },
       });
-      if (dbUser?.data?.user && dbUser?.data?.user?.coachProfile) {
+
+      const permissionCount =
+        dbUser?.data?.user?.role?.permissions.length &&
+        dbUser?.data?.user?.role?.permissions.length > 0;
+      const path = hasSideBarPermissions(
+        sidebarItem,
+        dbUser?.data?.user?.role?.permissions
+      )[0];
+      if (
+        dbUser?.data?.user &&
+        dbUser?.data?.user?.coachProfile &&
+        permissionCount
+      ) {
         setUser(dbUser?.data?.user as User);
-        window.location.href = `${siteUrl}/dashboard`;
+        window.location.href = `${siteUrl}/${path["path"]}`;
       } else {
         toast({
           title: "Access Denied",

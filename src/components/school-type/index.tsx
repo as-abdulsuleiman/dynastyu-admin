@@ -33,21 +33,20 @@ import {
 } from "@/services/graphql";
 import { Input } from "../ui/input";
 import ComboBoxCard from "../combobox-card";
+import { useRootStore } from "@/mobx";
+import { getPermission } from "@/lib/helpers";
+import { observer } from "mobx-react-lite";
+import Accesscontrol from "../accesscontrol";
 
 type FormData = yup.InferType<typeof SchoolTypeValidator>;
-
-const headerItems = [
-  { name: "Name" },
-  { name: "Number of schools" },
-  { name: "Created At" },
-  { name: "Updated At" },
-  { name: "Actions" },
-];
 
 interface SchoolTypeProps {}
 
 const SchoolType: FC<SchoolTypeProps> = ({}) => {
   const { toast } = useToast();
+  const {
+    authStore: { user },
+  } = useRootStore();
   const [indexTab, setTabIndex] = useState<number>(0);
   const [isNew, setIsNew] = useState<boolean>(true);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -63,6 +62,22 @@ const SchoolType: FC<SchoolTypeProps> = ({}) => {
   const [updateSchoolType] = useUpdateSchoolTypeMutation();
   const [deleteSchoolType] = useDeleteSchoolTypeMutation();
   const [getSchoolType] = useGetSchoolTypeLazyQuery();
+
+  const headerItems = [
+    { name: "Name" },
+    { name: "Number of schools" },
+    { name: "Created At" },
+    { name: "Updated At" },
+  ];
+
+  const permissionName = getPermission(
+    user?.role?.permissions,
+    "admin.accesslevel.update"
+  );
+
+  if (permissionName !== ("" || null || undefined)) {
+    headerItems?.push({ name: "Actions" });
+  }
 
   const {
     data: schoolTypeData,
@@ -410,18 +425,20 @@ const SchoolType: FC<SchoolTypeProps> = ({}) => {
                 : ""}
             </div>
           </TableCell>
-          <TableCell className="text-center cursor-pointer text-sm">
-            <div className="text-right w-100 flex flex-row items-center justify-center">
-              <MenubarCard
-                trigger={
-                  <Button size="icon" variant="outline">
-                    <MoreHorizontalIcon className="cursor-pointer" />
-                  </Button>
-                }
-                items={schoolTypeItems}
-              />
-            </div>
-          </TableCell>
+          <Accesscontrol name={permissionName}>
+            <TableCell className="text-center cursor-pointer text-sm">
+              <div className="text-right w-100 flex flex-row items-center justify-center">
+                <MenubarCard
+                  trigger={
+                    <Button size="icon" variant="outline">
+                      <MoreHorizontalIcon className="cursor-pointer" />
+                    </Button>
+                  }
+                  items={schoolTypeItems}
+                />
+              </div>
+            </TableCell>
+          </Accesscontrol>
         </TableRow>
       );
     };
@@ -470,16 +487,18 @@ const SchoolType: FC<SchoolTypeProps> = ({}) => {
         <ContentHeader title="School Types" subHeader="In Progress" />
       </div>
       <Separator className="my-6" />
-      <Button
-        className="flex flex-row ml-auto"
-        onClick={() => {
-          setIsNew(true);
-          setIsOpen(true);
-        }}
-      >
-        Add School Type
-        <PlusIcon className="ml-3 h-[18px] w-[18px]" />
-      </Button>
+      <Accesscontrol name={permissionName}>
+        <Button
+          className="flex flex-row ml-auto"
+          onClick={() => {
+            setIsNew(true);
+            setIsOpen(true);
+          }}
+        >
+          Add School Type
+          <PlusIcon className="ml-3 h-[18px] w-[18px]" />
+        </Button>
+      </Accesscontrol>
       <TabCard
         tabIndex={indexTab}
         onIndexChange={handleOnIndexChange}
@@ -504,4 +523,4 @@ const SchoolType: FC<SchoolTypeProps> = ({}) => {
   );
 };
 
-export default SchoolType;
+export default observer(SchoolType);
