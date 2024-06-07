@@ -27,14 +27,14 @@ const UserAccountNav: FC<UserAccountNavProps> = ({}) => {
     authStore: { user },
   } = useRootStore();
 
-  const navItems = [
-    { name: "Dashboard", path: "/dashboard" },
-    { name: "Athletes", path: "/athletes" },
-    { name: "Coaches", path: "/coaches" },
-    { name: "Fans", path: "/fans" },
-    // { name: "Schools", path: "/schools" },
-    { name: "Settings", path: "/settings" },
-  ];
+  // const navItems = [
+  //   // { name: "Dashboard", path: "/dashboard" },
+  //   // { name: "Athletes", path: "/athletes" },
+  //   // { name: "Coaches", path: "/coaches" },
+  //   // { name: "Fans", path: "/fans" },
+  //   // // { name: "Schools", path: "/schools" },
+  //   // { name: "Settings", path: "/settings" },
+  // ];
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -57,14 +57,14 @@ const UserAccountNav: FC<UserAccountNavProps> = ({}) => {
             )}
           </div>
         </div>
-        <DropdownMenuSeparator />
-        {navItems.map((val, index) => {
+        {/* <DropdownMenuSeparator /> */}
+        {/* {navItems.map((val, index) => {
           return (
             <DropdownMenuItem key={index} asChild className="cursor-pointer">
               <Link href={val?.path}>{val?.name}</Link>
             </DropdownMenuItem>
           );
-        })}
+        })} */}
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onSelect={(event) => {

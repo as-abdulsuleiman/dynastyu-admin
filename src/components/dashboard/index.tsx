@@ -239,10 +239,10 @@ const Dashboard: FC<DashboardProps> = () => {
         name: "View Details",
         onClick: () => router.push(userPath),
       },
-      {
-        name: `${item?.isActive ? "Deactivate" : "Activate"} Profile`,
-        onClick: async () => await handleActiveUser(item),
-      },
+      // {
+      //   name: `${item?.isActive ? "Deactivate" : "Activate"} Profile`,
+      //   onClick: async () => await handleActiveUser(item),
+      // },
       // {
       //   name: "Delete Profile",
       //   onclick: async () => await handleDeleteUser(item),

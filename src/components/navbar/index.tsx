@@ -16,6 +16,8 @@ import UseThemeColor from "@/hooks/useThemeColor";
 import { Skeleton } from "../ui/skeleton";
 import UserAccountNav from "../user-account-nav";
 import DropdownNotification from "../dropdown-notification";
+import { getPermission } from "@/lib/helpers";
+import Accesscontrol from "../accesscontrol";
 interface NavbarProps {
   user?: any;
   isLoggedIn?: boolean;
@@ -27,15 +29,15 @@ interface NavbarProps {
 const Navbar: FC<NavbarProps> = ({ setSidebarOpen, sidebarOpen }) => {
   const { isInitializing } = useAuth();
   const themeColor = UseThemeColor();
-
   const router = useRouter();
   const {
-    skillVerificationRequestStore: {
-      setSkillVerificationRequest,
-      setLoading,
-      skillVerificationRequest,
-    },
+    authStore: { user },
   } = useRootStore();
+
+  const permissionName = getPermission(
+    user?.role?.permissions,
+    "notifications.accesslevel.update"
+  );
 
   return (
     <header className="sticky top-0 z-20 flex w-full supports-backdrop-blur:bg-background/60 border-b bg-background/95 backdrop-blur">
@@ -60,7 +62,9 @@ const Navbar: FC<NavbarProps> = ({ setSidebarOpen, sidebarOpen }) => {
           </div>
         ) : (
           <div className="ml-auto flex items-center">
-            <DropdownNotification />
+            <Accesscontrol name={permissionName}>
+              <DropdownNotification />
+            </Accesscontrol>
             <div className="ml-auto">
               <div className="flex items-center">
                 <UserAccountNav />

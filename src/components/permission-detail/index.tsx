@@ -1,3 +1,5 @@
+/** @format */
+
 import { useGetPermissionQuery } from "@/services/graphql";
 import React, { FC } from "react";
 
@@ -15,7 +17,6 @@ const PermissionDetail: FC<PermissionDetailProps> = ({ params }) => {
       },
     },
   });
-  console.log("data", data);
   return <div>index</div>;
 };
 

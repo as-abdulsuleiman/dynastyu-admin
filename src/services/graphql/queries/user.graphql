@@ -377,6 +377,15 @@ query getUser($where: UserWhereUniqueInput!, $userId: BigInt) {
         surname
       }
     }
+    role {
+      id
+      title
+      permissions {
+        id
+        title
+        query
+      }
+    }
   }
 }
 

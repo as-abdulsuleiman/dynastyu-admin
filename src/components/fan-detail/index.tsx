@@ -48,7 +48,9 @@ import { renderLoader } from "@/lib/loader-helper";
 import { CalloutCardProps } from "@/interface/calloutOptions";
 import PromptAlert from "../prompt-alert";
 import { useRootStore } from "@/mobx";
-
+import { getPermission } from "@/lib/helpers";
+import AccessControl from "../accesscontrol";
+import { observer } from "mobx-react-lite";
 interface FanDetailProps {
   params: {
     id: number;
@@ -60,6 +62,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
   const { toast } = useToast();
   const {
     fanStore: { setFans },
+    authStore: { user },
   } = useRootStore();
   const [viewPlayerCardUrl, setViewPlayerCardUrl] = useState(false);
   const [viewAnalytics, setViewAnalytics] = useState(false);
@@ -82,6 +85,11 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
       },
     },
   });
+
+  const permissionName = getPermission(
+    user?.role?.permissions,
+    "fans.accesslevel.update"
+  );
 
   const handleDeleteFanConfirmPrompt = async (item: any) => {
     setDeletingFan(true);
@@ -476,14 +484,16 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
               {loading ? (
                 <Skeleton className="w-[40px] h-[20px]" />
               ) : (
-                <MenubarCard
-                  trigger={
-                    <Button size="icon" variant="outline">
-                      <MoreHorizontalIcon className="cursor-pointer" />
-                    </Button>
-                  }
-                  items={dropdownItems}
-                />
+                <AccessControl name={permissionName}>
+                  <MenubarCard
+                    trigger={
+                      <Button size="icon" variant="outline">
+                        <MoreHorizontalIcon className="cursor-pointer" />
+                      </Button>
+                    }
+                    items={dropdownItems}
+                  />
+                </AccessControl>
               )}
             </div>
           </div>
@@ -521,4 +531,4 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
   );
 };
 
-export default FanDetail;
+export default observer(FanDetail);

@@ -48,6 +48,10 @@ import { CalloutCardProps } from "@/interface/calloutOptions";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 import SchoolDropdown from "../school-dropdown";
 import { useRootStore } from "@/mobx";
+import { getPermission } from "@/lib/helpers";
+import AccessControl from "../accesscontrol";
+import { observer } from "mobx-react-lite";
+
 interface SchoolCardProps {
   loading?: boolean;
   school: any;
@@ -57,6 +61,7 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   const router = useRouter();
   const {
     schoolStore: { setSchools },
+    authStore: { user },
   } = useRootStore();
   const { toast } = useToast();
   const [deleteSchool] = useDeleteSchoolMutation();
@@ -71,6 +76,11 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   const isHighSchoolType = school?.schoolType?.name === "High School" ?? false;
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
+
+  const permissionName = getPermission(
+    user?.role?.permissions,
+    "schools.accesslevel.update"
+  );
 
   const dataList: any = [
     {
@@ -461,14 +471,16 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
           {loading ? (
             <Skeleton className="w-[40px] h-[20px]" />
           ) : (
-            <MenubarCard
-              trigger={
-                <Button size="icon" variant="outline">
-                  <MoreHorizontalIcon className="cursor-pointer" />
-                </Button>
-              }
-              items={dropdownItems}
-            />
+            <AccessControl name={permissionName}>
+              <MenubarCard
+                trigger={
+                  <Button size="icon" variant="outline">
+                    <MoreHorizontalIcon className="cursor-pointer" />
+                  </Button>
+                }
+                items={dropdownItems}
+              />
+            </AccessControl>
           )}
         </div>
       </div>
@@ -516,4 +528,4 @@ const SchoolCard: FC<SchoolCardProps> = ({ loading, school }) => {
   );
 };
 
-export default SchoolCard;
+export default observer(SchoolCard);

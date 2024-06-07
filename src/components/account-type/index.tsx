@@ -34,22 +34,20 @@ import { AccountTypeValidator } from "@/lib/validators/account-type";
 import { Input } from "@/components/ui/input";
 import ComboBoxCard from "../combobox-card";
 import { useDebouncedValue } from "@mantine/hooks";
+import { useRootStore } from "@/mobx";
+import { getPermission } from "@/lib/helpers";
+import Accesscontrol from "../accesscontrol";
+import { observer } from "mobx-react-lite";
 
 type FormData = yup.InferType<typeof AccountTypeValidator>;
 
 interface AccountTypesProps {}
 
-const headerItems = [
-  { name: "Title" },
-  { name: "Role" },
-  { name: "Number of users" },
-  { name: "Created At" },
-  { name: "Updated At" },
-  { name: "Actions" },
-];
-
 const AccountType: FC<AccountTypesProps> = ({}) => {
   const { toast } = useToast();
+  const {
+    authStore: { user },
+  } = useRootStore();
   const [indexTab, setTabIndex] = useState<number>(0);
   const [deleteAccountTypePrompt, setDeleteAccountTypePrompt] = useState(false);
   const [deletingAccountType, setDeletingAccountType] = useState(false);
@@ -66,6 +64,23 @@ const AccountType: FC<AccountTypesProps> = ({}) => {
   const [updateAccountType] = useUpdateAccountTypeMutation();
   const [deleteAccountType] = useDeleteAccountTypeMutation();
   const [getSchoolAccountType] = useGetAccountTypeLazyQuery();
+
+  const permissionName = getPermission(
+    user?.role?.permissions,
+    "admin.accesslevel.update"
+  );
+
+  const headerItems = [
+    { name: "Title" },
+    { name: "Role" },
+    { name: "Number of users" },
+    { name: "Created At" },
+    { name: "Updated At" },
+  ];
+
+  if (permissionName !== ("" || null || undefined)) {
+    headerItems?.push({ name: "Actions" });
+  }
 
   const {
     data: accountTypeData,
@@ -413,18 +428,20 @@ const AccountType: FC<AccountTypesProps> = ({}) => {
                 : ""}
             </div>
           </TableCell>
-          <TableCell className="text-center cursor-pointer text-sm">
-            <div className="text-right w-100 flex flex-row items-center justify-center">
-              <MenubarCard
-                trigger={
-                  <Button size="icon" variant="outline">
-                    <MoreHorizontalIcon className="cursor-pointer" />
-                  </Button>
-                }
-                items={accountTypeItems}
-              />
-            </div>
-          </TableCell>
+          <Accesscontrol name={permissionName}>
+            <TableCell className="text-center cursor-pointer text-sm">
+              <div className="text-right w-100 flex flex-row items-center justify-center">
+                <MenubarCard
+                  trigger={
+                    <Button size="icon" variant="outline">
+                      <MoreHorizontalIcon className="cursor-pointer" />
+                    </Button>
+                  }
+                  items={accountTypeItems}
+                />
+              </div>
+            </TableCell>
+          </Accesscontrol>
         </TableRow>
       );
     };
@@ -546,16 +563,19 @@ const AccountType: FC<AccountTypesProps> = ({}) => {
         <ContentHeader title="Account Types" subHeader="In Progress" />
       </div>
       <Separator className="my-6" />
-      <Button
-        className="flex flex-row ml-auto"
-        onClick={() => {
-          setIsNew(true);
-          setIsOpen(true);
-        }}
-      >
-        Add Account Type
-        <PlusIcon className="ml-3 h-[18px] w-[18px]" />
-      </Button>
+      <Accesscontrol name={permissionName}>
+        <Button
+          className="flex flex-row ml-auto"
+          onClick={() => {
+            setIsNew(true);
+            setIsOpen(true);
+          }}
+        >
+          Add Account Type
+          <PlusIcon className="ml-3 h-[18px] w-[18px]" />
+        </Button>
+      </Accesscontrol>
+
       <TabCard
         tabIndex={indexTab}
         onIndexChange={handleOnIndexChange}
@@ -580,4 +600,4 @@ const AccountType: FC<AccountTypesProps> = ({}) => {
   );
 };
 
-export default AccountType;
+export default observer(AccountType);
