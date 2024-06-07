@@ -3,13 +3,15 @@
 "use client";
 
 import ContentHeader from "@/components/content-header";
-import React, { FC, useState } from "react";
+import React, { FC, useMemo, useState } from "react";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import { Loader2Icon, MoreHorizontalIcon, PlusIcon } from "../Icons";
 import { TableCell, TableRow } from "../ui/table";
 import UniversalTable from "../universal-table";
 import {
+  GetPermissionsQuery,
+  QueryMode,
   SortOrder,
   useCreatePermissionMutation,
   useDeletePermissionMutation,
@@ -28,6 +30,9 @@ import { useToast } from "@/hooks/use-toast";
 import PromptAlert from "../prompt-alert";
 import * as yup from "yup";
 import { useRouter } from "next/navigation";
+import Pagination from "../pagination";
+import { SearchInput } from "../search-input";
+import { useDebouncedValue } from "@mantine/hooks";
 
 type FormData = yup.InferType<typeof PermissionValidator>;
 const PermissionsHeaderItems = [
@@ -40,6 +45,7 @@ const PermissionsHeaderItems = [
 ];
 export const PermissionsCard: FC = () => {
   const [activePermission, setActivePermission] = useState<any | null>(null);
+  const [value, setValue] = useState<string>("");
   const [isNew, setIsNew] = useState<boolean>(true);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
@@ -49,6 +55,7 @@ export const PermissionsCard: FC = () => {
   const [createPermission] = useCreatePermissionMutation();
   const [updatePermission] = useUpdatePermissionMutation();
   const [deletePermission] = useDeletePermissionMutation();
+  const [debounced] = useDebouncedValue(value, 300);
 
   const router = useRouter();
   const { toast } = useToast();
@@ -56,8 +63,23 @@ export const PermissionsCard: FC = () => {
     data: permissionData,
     loading,
     refetch,
+    fetchMore,
   } = useGetPermissionsQuery({
     variables: {
+      where: {
+        OR: [
+          {
+            title: {
+              contains: debounced,
+              mode: QueryMode.Insensitive,
+            },
+            query: {
+              contains: debounced,
+              mode: QueryMode.Insensitive,
+            },
+          },
+        ],
+      },
       take: 10,
       orderBy: {
         createdAt: SortOrder.Desc,
@@ -87,6 +109,68 @@ export const PermissionsCard: FC = () => {
       // keepErrors: true, // input errors will be retained with value update
     },
   });
+
+  const lastPermissionsId = useMemo(() => {
+    const lastPostInResults =
+      permissionData?.permissions[permissionData?.permissions?.length - 1];
+    return lastPostInResults?.id;
+  }, [permissionData?.permissions]);
+
+  const fetchNext = () => {
+    fetchMore({
+      variables: {
+        take: 10,
+        skip: 1,
+        cursor: {
+          id: lastPermissionsId,
+        },
+        orderBy: {
+          createdAt: SortOrder?.Desc,
+        },
+      },
+      updateQuery: (
+        previousResult: GetPermissionsQuery,
+        { fetchMoreResult }
+      ): GetPermissionsQuery => {
+        if (!fetchMoreResult || fetchMoreResult?.permissions?.length === 0) {
+          return previousResult;
+        } else {
+          const previousPosts = previousResult;
+          const fetchMorePosts = fetchMoreResult?.permissions;
+          fetchMoreResult.permissions = [...fetchMorePosts];
+          return { ...fetchMoreResult };
+        }
+      },
+    });
+  };
+
+  const fetchPrevious = () => {
+    fetchMore({
+      variables: {
+        take: -10,
+        skip: permissionData?.permissions?.length,
+        cursor: {
+          id: lastPermissionsId,
+        },
+        orderBy: {
+          createdAt: SortOrder?.Desc,
+        },
+      },
+      updateQuery: (
+        previousResult: GetPermissionsQuery,
+        { fetchMoreResult }
+      ): GetPermissionsQuery => {
+        if (!fetchMoreResult || fetchMoreResult?.permissions?.length === 0) {
+          return previousResult;
+        } else {
+          const previousPosts = previousResult?.permissions;
+          const fetchMorePosts = fetchMoreResult?.permissions;
+          fetchMoreResult.permissions = [...fetchMorePosts];
+          return { ...fetchMoreResult };
+        }
+      },
+    });
+  };
 
   const handleDeletePermission = (item: any) => {
     setActivePermission(item);
@@ -265,8 +349,8 @@ export const PermissionsCard: FC = () => {
         name="create_permission"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="grid grid-cols-12 gap-3">
-          <div className="col-span-6">
+        <div className="grid grid-row-12 gap-3">
+          <div className="col-span-12">
             <Input
               id="permission_title"
               placeholder="Enter Role Title"
@@ -279,7 +363,7 @@ export const PermissionsCard: FC = () => {
               })}
             />
           </div>
-          <div className="col-span-6">
+          <div className="col-span-12">
             <Input
               id="permission_query"
               placeholder="Enter Query"
@@ -330,6 +414,10 @@ export const PermissionsCard: FC = () => {
         <PlusIcon className="ml-3 h-[18px] w-[18px]" />
       </Button>
       <Separator className="my-6" />
+      <SearchInput
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Type to search..."
+      />
       <UniversalTable
         title="Permissions List"
         headerItems={PermissionsHeaderItems}
@@ -337,6 +425,9 @@ export const PermissionsCard: FC = () => {
         loading={loading}
         renderItems={renderPermissions}
       />
+      {loading || !permissionData?.permissions?.length ? null : (
+        <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
+      )}
       <ModalCard
         isModal={true}
         isOpen={isOpen}
