@@ -82,18 +82,28 @@ function useAuthProvider() {
         sidebarItem,
         dbUser?.data?.user?.role?.permissions
       )[0];
-      if (
-        dbUser?.data?.user &&
-        dbUser?.data?.user?.coachProfile &&
-        permissionCount
-      ) {
-        setUser(dbUser?.data?.user as User);
-        window.location.href = `${siteUrl}/${path["path"]}`;
+      if (dbUser?.data?.user && dbUser?.data?.user?.coachProfile) {
+        if (!dbUser?.data?.user?.coachProfile?.verified) {
+          toast({
+            title: "Access Denied",
+            description: "Sorry, this user is not verified",
+            variant: "destructive",
+          });
+        } else if (!permissionCount) {
+          toast({
+            title: "Access Denied",
+            description:
+              "Sorry, this user doesn't have permission to access the database",
+            variant: "destructive",
+          });
+        } else {
+          setUser(dbUser?.data?.user as User);
+          window.location.href = `${siteUrl}/${path["path"]}`;
+        }
       } else {
         toast({
           title: "Access Denied",
-          description:
-            "Sorry, you don't have permission to access the admin database",
+          description: "Sorry, you don't have to permission to the database",
           variant: "destructive",
         });
       }
