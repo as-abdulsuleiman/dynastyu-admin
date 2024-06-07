@@ -14,6 +14,8 @@ import {
   useUpdateRoleMutation,
   useDeleteRoleMutation,
   QueryMode,
+  useGetPermissionsQuery,
+  useGetRoleQuery,
 } from "@/services/graphql";
 import UniversalTable from "../universal-table";
 import { TableCell, TableRow } from "@/components/ui/table";
@@ -32,6 +34,7 @@ import { useForm } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
 import ComboBoxCard from "../combobox-card";
 import { useDebouncedValue } from "@mantine/hooks";
+import MultiSelector from "../multi-selector";
 
 type FormData = yup.InferType<typeof RoleValidator>;
 
@@ -53,9 +56,16 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
   const [deleteRoleTypePrompt, setDeleteRoleTypePrompt] = useState(false);
   const [deletingRoleType, setDeletingRoleType] = useState(false);
   const [activeRole, setActiveRole] = useState<any | null>(null);
+  const [isAddingPermission, setIsAddingPermission] = useState<boolean>(false);
+  const [isPermissionOpen, setIsPermissionOpen] = useState<boolean>(false);
+  const [isDeletePermissionOpen, setIsDeletePermissionOpen] =
+    useState<boolean>(false);
+  const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [openRoleType, setOpenRoleType] = useState<boolean>(false);
   const [selectedRole, setSelectedRole] = useState<any>({});
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isSubmittingPermission, setIsSubmittingPermission] =
+    useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [isNew, setIsNew] = useState<boolean>(true);
   const [searchValue, setSearchValue] = useState<string>("");
@@ -90,6 +100,35 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
         },
       },
     });
+
+  const {
+    data: permissionData,
+    loading: loadingPermission,
+    refetch: refetchPermission,
+  } = useGetPermissionsQuery({
+    variables: {
+      where: {
+        roles: {
+          none: {
+            id: {
+              equals: activeRole?.id,
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: SortOrder.Desc,
+      },
+    },
+  });
+
+  const { data: roleData, loading: loadingRoleData } = useGetRoleQuery({
+    variables: {
+      where: {
+        id: activeRole?.id,
+      },
+    },
+  });
 
   const {
     register,
@@ -192,6 +231,16 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
     });
   };
 
+  const handleSelectOption = (selectedList: any, selectedItem: any) => {
+    setSelectedOptions((prev) => [...prev, selectedItem]);
+  };
+
+  const handleRemoveOption = (selectedList: any, removedItem: any) => {
+    setSelectedOptions((prev) => [
+      ...prev.filter((a) => a?.id !== removedItem?.id),
+    ]);
+  };
+
   const handleDeleteAccountType = (item: any) => {
     setActiveRole(item);
     setDeleteRoleTypePrompt(true);
@@ -214,6 +263,69 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
       setActiveRole(null);
       setDeletingRoleType(false);
       setDeleteRoleTypePrompt(false);
+    }
+  };
+
+  const handleUpdateRolePermission = async () => {
+    setIsSubmittingPermission(true);
+    const permissionId =
+      selectedOptions?.map((val: any) => ({
+        id: val?.id,
+      })) || [];
+    try {
+      if (isAddingPermission === true) {
+        await updateRole({
+          variables: {
+            where: {
+              id: activeRole?.id,
+            },
+            data: {
+              permissions: {
+                connect: permissionId,
+              },
+            },
+          },
+        });
+        toast({
+          title: "Permission successfully Added.",
+          description: `Permission has been successfully added to ${activeRole?.title} `,
+          variant: "successfull",
+        });
+      } else {
+        await updateRole({
+          variables: {
+            where: {
+              id: activeRole?.id,
+            },
+            data: {
+              permissions: {
+                disconnect: permissionId,
+              },
+            },
+          },
+        });
+        toast({
+          title: "Permission successfully Removed.",
+          description: `Permission has been successfully removed from ${activeRole?.title} `,
+          variant: "successfull",
+        });
+      }
+      await refetchPermission();
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not add Permission. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    } finally {
+      setSelectedOptions([]);
+      setActiveRole(null);
+      setIsSubmittingPermission(false);
+      setIsPermissionOpen(false);
+      setIsDeletePermissionOpen(false);
+      setIsAddingPermission(false);
     }
   };
 
@@ -308,6 +420,21 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
         {
           name: "Delete Role",
           onClick: () => handleDeleteAccountType(item),
+        },
+        {
+          name: "Add Permission",
+          onClick: () => {
+            setActiveRole(item);
+            setIsPermissionOpen(true);
+            setIsAddingPermission(true);
+          },
+        },
+        {
+          name: "Delete Permission",
+          onClick: () => {
+            setActiveRole(item);
+            setIsDeletePermissionOpen(true);
+          },
         },
       ];
       return (
@@ -439,6 +566,106 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
     );
   };
 
+  const renderAddPermission = () => {
+    return (
+      <div w-full>
+        <div className="grid grid-cols-12 gap-6">
+          {selectedOptions?.length === 0 ? null : (
+            <div className="col-span-12 mb-4">
+              <Button
+                variant="default"
+                disabled={
+                  isSubmittingPermission || selectedOptions?.length === 0
+                }
+                className="flex flex-row mr-auto"
+                type="submit"
+                onClick={() => handleUpdateRolePermission()}
+              >
+                {isSubmittingPermission ? (
+                  <div className="flex flex-row items-center justify-center">
+                    <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </div>
+                ) : (
+                  <>Submit</>
+                )}
+              </Button>
+            </div>
+          )}
+        </div>
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12">
+            <div className="mb-2 text-base">Select Permissions</div>
+            <MultiSelector
+              className="mb-4"
+              loading={loadingPermission}
+              disable={loadingPermission}
+              options={permissionData?.permissions as any}
+              displayValue="title"
+              placeholder="Permissions"
+              showCheckbox={true}
+              hidePlaceholder={true}
+              avoidHighlightFirstOption={true}
+              selectedOptions={selectedOptions}
+              handleRemove={handleRemoveOption}
+              handleSelect={handleSelectOption}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderDeletePermission = () => {
+    return (
+      <div className="w-full">
+        <div className="grid grid-cols-12 gap-6">
+          {selectedOptions?.length === 0 ? null : (
+            <div className="col-span-12 mb-4">
+              <Button
+                variant="default"
+                disabled={
+                  isSubmittingPermission || selectedOptions?.length === 0
+                }
+                className="flex flex-row mr-auto"
+                type="submit"
+                onClick={() => handleUpdateRolePermission()}
+              >
+                {isSubmittingPermission ? (
+                  <div className="flex flex-row items-center justify-center">
+                    <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </div>
+                ) : (
+                  <>Submit</>
+                )}
+              </Button>
+            </div>
+          )}
+        </div>
+
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12">
+            <div className="mb-2 text-base ">Select Permissions</div>
+            <MultiSelector
+              loading={loadingRoleData}
+              disable={loadingRoleData}
+              options={roleData?.role?.permissions as any}
+              displayValue="title"
+              placeholder="Permissions"
+              showCheckbox={true}
+              hidePlaceholder={true}
+              avoidHighlightFirstOption={true}
+              selectedOptions={selectedOptions}
+              handleRemove={handleRemoveOption}
+              handleSelect={handleSelectOption}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <main className="w-full h-full">
       <div className="flex flex-row items-center">
@@ -474,6 +701,31 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
         }}
       >
         {renderCreateRoleType()}
+      </ModalCard>
+      <ModalCard
+        isModal={true}
+        isOpen={isPermissionOpen}
+        onOpenChange={() => {
+          reset();
+          setIsPermissionOpen(!isPermissionOpen);
+          setActiveRole(null);
+          setSelectedOptions([]);
+          setIsAddingPermission(false);
+        }}
+      >
+        {renderAddPermission()}
+      </ModalCard>
+      <ModalCard
+        isModal={true}
+        isOpen={isDeletePermissionOpen}
+        onOpenChange={() => {
+          reset();
+          setIsDeletePermissionOpen(!isDeletePermissionOpen);
+          setActiveRole(null);
+          setSelectedOptions([]);
+        }}
+      >
+        {renderDeletePermission()}
       </ModalCard>
     </main>
   );

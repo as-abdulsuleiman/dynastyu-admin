@@ -26628,7 +26628,7 @@ export type GetRoleQueryVariables = Exact<{
 }>;
 
 
-export type GetRoleQuery = { __typename?: 'Query', role?: { __typename?: 'Role', id: any, uuid: string, title: string, createdAt: any, updatedAt: any, _count?: { __typename?: 'RoleCount', permissions: number, users: number, accountTypes: number } | null } | null };
+export type GetRoleQuery = { __typename?: 'Query', role?: { __typename?: 'Role', id: any, uuid: string, title: string, createdAt: any, updatedAt: any, _count?: { __typename?: 'RoleCount', permissions: number, users: number, accountTypes: number } | null, permissions: Array<{ __typename?: 'Permission', id: any, title: string }> } | null };
 
 export type GetRolesQueryVariables = Exact<{
   where?: InputMaybe<RoleWhereInput>;
@@ -26640,7 +26640,7 @@ export type GetRolesQueryVariables = Exact<{
 }>;
 
 
-export type GetRolesQuery = { __typename?: 'Query', roles: Array<{ __typename?: 'Role', id: any, uuid: string, title: string, createdAt: any, updatedAt: any, _count?: { __typename?: 'RoleCount', permissions: number, users: number, accountTypes: number } | null }> };
+export type GetRolesQuery = { __typename?: 'Query', roles: Array<{ __typename?: 'Role', id: any, uuid: string, title: string, createdAt: any, updatedAt: any, _count?: { __typename?: 'RoleCount', permissions: number, users: number, accountTypes: number } | null, permissions: Array<{ __typename?: 'Permission', id: any, title: string }> }> };
 
 export type UpdateRoleMutationVariables = Exact<{
   data: RoleUpdateInput;
@@ -30145,6 +30145,10 @@ export const GetRoleDocument = gql`
       users
       accountTypes
     }
+    permissions {
+      id
+      title
+    }
   }
 }
     `;
@@ -30200,6 +30204,10 @@ export const GetRolesDocument = gql`
       permissions
       users
       accountTypes
+    }
+    permissions {
+      id
+      title
     }
   }
 }
