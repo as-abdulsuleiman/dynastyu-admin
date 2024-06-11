@@ -76,8 +76,8 @@ function useAuthProvider() {
       });
 
       const permissionCount =
-        dbUser?.data?.user?.role?.permissions.length &&
-        dbUser?.data?.user?.role?.permissions.length > 0;
+        dbUser?.data?.user?.role?.permissions?.length &&
+        dbUser?.data?.user?.role?.permissions?.length > 0;
       const path = hasSideBarPermissions(
         sidebarItem,
         dbUser?.data?.user?.role?.permissions

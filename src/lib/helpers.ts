@@ -111,14 +111,14 @@ export const getQueryParams = (params?: any[]) => {
 
 export const generateProfilePath = (user: GetUserQuery["user"]): string => {
   let userPath = "";
-  if (user?.accountType?.role?.title?.toLowerCase() === AccountType.FAN) {
+  if (user?.accountType?.title?.toLowerCase() === AccountType.FAN) {
     userPath = `/fan/${user?.id}`;
   } else if (
-    user?.accountType?.role?.title?.toLowerCase() === AccountType.ATHLETE
+    user?.accountType?.title?.toLowerCase() === AccountType.ATHLETE
   ) {
     userPath = `/athlete/${user?.id}`;
   } else if (
-    user?.accountType?.role?.title?.toLowerCase() === AccountType.COACH
+    user?.accountType?.title?.toLowerCase() === AccountType.COACH
   ) {
     userPath = `/coach/${user?.id}`;
   }
