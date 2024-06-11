@@ -30,20 +30,20 @@ import { useToast } from "@/hooks/use-toast";
 import PromptAlert from "../prompt-alert";
 import * as yup from "yup";
 import { useRouter } from "next/navigation";
+import { getPermission } from "@/lib/helpers";
+import { useRootStore } from "@/mobx";
+import Accesscontrol from "../accesscontrol";
 import Pagination from "../pagination";
 import { SearchInput } from "../search-input";
 import { useDebouncedValue } from "@mantine/hooks";
 
 type FormData = yup.InferType<typeof PermissionValidator>;
-const PermissionsHeaderItems = [
-  { name: "Title" },
-  //   { name: "Role" },
-  { name: "Query" },
-  { name: "Created At" },
-  { name: "Updated At" },
-  { name: "Actions" },
-];
+
 export const PermissionsCard: FC = () => {
+  const router = useRouter();
+  const {
+    authStore: { user },
+  } = useRootStore();
   const [activePermission, setActivePermission] = useState<any | null>(null);
   const [value, setValue] = useState<string>("");
   const [isNew, setIsNew] = useState<boolean>(true);
@@ -57,7 +57,22 @@ export const PermissionsCard: FC = () => {
   const [deletePermission] = useDeletePermissionMutation();
   const [debounced] = useDebouncedValue(value, 300);
 
-  const router = useRouter();
+  const permissionName = getPermission(
+    user?.role?.permissions,
+    "admin.accesslevel.update"
+  );
+
+  const permissionsHeaderItems = [
+    { name: "Title" },
+    { name: "Query" },
+    { name: "Created At" },
+    { name: "Updated At" },
+  ];
+
+  if (permissionName !== ("" || null || undefined)) {
+    permissionsHeaderItems?.push({ name: "Actions" });
+  }
+
   const { toast } = useToast();
   const {
     data: permissionData,
@@ -277,18 +292,20 @@ export const PermissionsCard: FC = () => {
             {formatDate(new Date(item?.updatedAt), "MMMM dd yyyy")}
           </div>
         </TableCell>
-        <TableCell className="text-center cursor-pointer text-sm">
-          <div className="text-right w-100 flex flex-row items-center justify-center">
-            <MenubarCard
-              trigger={
-                <Button size="icon" variant="outline">
-                  <MoreHorizontalIcon className="cursor-pointer" />
-                </Button>
-              }
-              items={permissionItems}
-            />
-          </div>
-        </TableCell>
+        <Accesscontrol name={permissionName}>
+          <TableCell className="text-center cursor-pointer text-sm">
+            <div className="text-right w-100 flex flex-row items-center justify-center">
+              <MenubarCard
+                trigger={
+                  <Button size="icon" variant="outline">
+                    <MoreHorizontalIcon className="cursor-pointer" />
+                  </Button>
+                }
+                items={permissionItems}
+              />
+            </div>
+          </TableCell>
+        </Accesscontrol>
       </TableRow>
     );
   };
@@ -403,16 +420,18 @@ export const PermissionsCard: FC = () => {
     <div className="w-full h-full">
       <ContentHeader title="Permissions" subHeader="Permisssions Overview" />
       <Separator className="my-6" />
-      <Button
-        className="flex flex-row ml-auto"
-        onClick={() => {
-          setIsNew(true);
-          setIsOpen(true);
-        }}
-      >
-        Add Permission
-        <PlusIcon className="ml-3 h-[18px] w-[18px]" />
-      </Button>
+      <Accesscontrol name={permissionName}>
+        <Button
+          className="flex flex-row ml-auto"
+          onClick={() => {
+            setIsNew(true);
+            setIsOpen(true);
+          }}
+        >
+          Add Permission
+          <PlusIcon className="ml-3 h-[18px] w-[18px]" />
+        </Button>
+      </Accesscontrol>
       <Separator className="my-6" />
       <SearchInput
         onChange={(e) => setValue(e.target.value)}
@@ -420,7 +439,7 @@ export const PermissionsCard: FC = () => {
       />
       <UniversalTable
         title="Permissions List"
-        headerItems={PermissionsHeaderItems}
+        headerItems={permissionsHeaderItems}
         items={permissionData?.permissions as any[]}
         loading={loading}
         renderItems={renderPermissions}

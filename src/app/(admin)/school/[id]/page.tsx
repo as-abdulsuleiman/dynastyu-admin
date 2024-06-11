@@ -29,6 +29,9 @@ import { toast } from "@/hooks/use-toast";
 import SchoolCoaches from "@/components/school-coaches";
 import { PromptStatusEnum } from "@/lib/enums/updating-profile.enum";
 import ContentHeader from "@/components/content-header";
+import { getPermission } from "@/lib/helpers";
+import { useRootStore } from "@/mobx";
+import AccessControl from "@/components/accesscontrol";
 
 interface PageProps {
   params: {
@@ -37,6 +40,9 @@ interface PageProps {
 }
 
 const Page: FC<PageProps> = ({ params }) => {
+  const {
+    authStore: { user },
+  } = useRootStore();
   const router = useRouter();
   const [openCoach, setOpenCoach] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>("");
@@ -57,6 +63,11 @@ const Page: FC<PageProps> = ({ params }) => {
       },
     },
   });
+
+  const permissionName = getPermission(
+    user?.role?.permissions,
+    "schools.accesslevel.update"
+  );
 
   const {
     data: schoolCoach,
@@ -335,40 +346,42 @@ const Page: FC<PageProps> = ({ params }) => {
           </div>
         </div>
       )}
-      <Separator className="my-6" />
-      <div className="mb-6 w-full sm:w-1/2 ml-auto flex flex-col">
-        <ComboboxCard
-          valueKey="value"
-          displayKey="label"
-          IdKey="value"
-          label="Add Coach"
-          id="school-coach"
-          placeholder={"Select Coach"}
-          isOpen={openCoach}
-          scrollAreaClass="h-72"
-          hasSearch
-          shouldFilter={false}
-          searchValue={searchValue}
-          handleSearch={(search) => setSearchValue(search)}
-          loading={userLoading}
-          onClose={() => setOpenCoach(!openCoach)}
-          items={usersDataOptions as any}
-          selectedValue={selectedCoach}
-          customRenderItems={coachCustomItems}
-        />
-        {Object?.keys(selectedCoach)?.length === 0 ? null : (
-          <div className="w-full flex mt-6 ">
-            <Button
-              size="sm"
-              className="ml-auto"
-              variant="default"
-              onClick={() => setPromptStatus(PromptStatusEnum.ADDING)}
-            >
-              Add Coach
-            </Button>
-          </div>
-        )}
-      </div>
+      <Separator className="my-6" />{" "}
+      <AccessControl name={permissionName}>
+        <div className="mb-6 w-full sm:w-1/2 ml-auto flex flex-col">
+          <ComboboxCard
+            valueKey="value"
+            displayKey="label"
+            IdKey="value"
+            label="Add Coach"
+            id="school-coach"
+            placeholder={"Select Coach"}
+            isOpen={openCoach}
+            scrollAreaClass="h-72"
+            hasSearch
+            shouldFilter={false}
+            searchValue={searchValue}
+            handleSearch={(search) => setSearchValue(search)}
+            loading={userLoading}
+            onClose={() => setOpenCoach(!openCoach)}
+            items={usersDataOptions as any}
+            selectedValue={selectedCoach}
+            customRenderItems={coachCustomItems}
+          />
+          {Object?.keys(selectedCoach)?.length === 0 ? null : (
+            <div className="w-full flex mt-6 ">
+              <Button
+                size="sm"
+                className="ml-auto"
+                variant="default"
+                onClick={() => setPromptStatus(PromptStatusEnum.ADDING)}
+              >
+                Add Coach
+              </Button>
+            </div>
+          )}
+        </div>
+      </AccessControl>
       <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
         <SchoolCoaches
           handleClick={handleRemoveCoach}

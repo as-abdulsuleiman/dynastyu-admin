@@ -34,6 +34,7 @@ import ContentHeader from "@/components/content-header";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 import SchoolDropdown from "@/components/school-dropdown";
 import { useRootStore } from "@/mobx";
+import { getPermission } from "@/lib/helpers";
 
 const headerItems = [
   { name: "Name" },
@@ -50,6 +51,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
   const { toast } = useToast();
   const {
     schoolStore: { setSchools },
+    authStore: { user },
   } = useRootStore();
   const router = useRouter();
   const [value, setValue] = useState<string>("");
@@ -63,6 +65,11 @@ const Schools: FC<SchoolsProps> = ({}) => {
   const [selectedSchool, setSelectedSchool] = useState<any | number>({});
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
+
+  const permissionName = getPermission(
+    user?.role?.permissions,
+    "schools.accesslevel.update"
+  );
 
   const {
     data: schools,
@@ -262,20 +269,31 @@ const Schools: FC<SchoolsProps> = ({}) => {
   };
 
   const renderItems = ({ item, id }: { item: any; id: any }) => {
-    const userItems = [
+    const highSchoolItems = [
       {
         name: "View Details",
         onClick: () => router.push(`/school/${item?.id}`, { scroll: true }),
       },
+    ];
+
+    const collegeItems = [
       {
-        name: `Edit School`,
-        onClick: () => handleEditSchool(item),
-      },
-      {
-        name: "Delete School",
-        onClick: () => handleDeleteSchoolPrompt(item),
+        name: "View Details",
+        onClick: () => router.push(`/school/${item?.id}`, { scroll: true }),
       },
     ];
+    if (permissionName !== ("" || null || undefined)) {
+      highSchoolItems.push(
+        {
+          name: `Edit School`,
+          onClick: () => handleEditSchool(item),
+        },
+        {
+          name: "Delete School",
+          onClick: () => handleDeleteSchoolPrompt(item),
+        }
+      );
+    }
 
     return (
       <TableRow key={item?.id}>
@@ -328,7 +346,7 @@ const Schools: FC<SchoolsProps> = ({}) => {
                   <MoreHorizontalIcon className="cursor-pointer" />
                 </Button>
               }
-              items={userItems}
+              items={highSchoolItems}
             />
           </div>
         </TableCell>

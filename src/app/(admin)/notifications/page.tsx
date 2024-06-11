@@ -26,13 +26,24 @@ import { buttonVariants } from "@/components/ui/button";
 import Pagination from "@/components/pagination";
 import { toast } from "@/hooks/use-toast";
 import PromptAlert from "@/components/prompt-alert";
+import { observer } from "mobx-react-lite";
+import { getPermission } from "@/lib/helpers";
+import AccessControl from "@/components/accesscontrol";
 
 interface PageProps {}
 
 const Page: FC<PageProps> = ({}) => {
+  const {
+    authStore: { user },
+  } = useRootStore();
   const [selectedCoach, setSelectedCoach] = useState<any | null>(null);
   const [updateCoach, { loading: updatingCoach }] = useUpdateCoachMutation();
   const [openVerifyPrompt, setOpenVerifyPrompt] = useState(false);
+
+  const permissionName = getPermission(
+    user?.role?.permissions,
+    "notifications.accesslevel.update"
+  );
 
   const { data, loading, refetch, fetchMore } =
     useGetSkillVerificationRequestsQuery({
@@ -323,18 +334,20 @@ const Page: FC<PageProps> = ({}) => {
                     })}
                   </div>
                 </div>
-                <Link
-                  href={`/flagged-post/${value?.id}`}
-                  className={cn(
-                    buttonVariants({
-                      variant: "destructive",
-                      size: "sm",
-                    }),
-                    "mt-2 ml-auto mr-0 w"
-                  )}
-                >
-                  Review
-                </Link>
+                <AccessControl name={permissionName}>
+                  <Link
+                    href={`/flagged-post/${value?.id}`}
+                    className={cn(
+                      buttonVariants({
+                        variant: "destructive",
+                        size: "sm",
+                      }),
+                      "mt-2 ml-auto mr-0 w"
+                    )}
+                  >
+                    Review
+                  </Link>
+                </AccessControl>
               </div>
               <Separator className="mb-6" />
             </>
@@ -384,18 +397,20 @@ const Page: FC<PageProps> = ({}) => {
                     })}
                   </div>
                 </div>
-                <Link
-                  href={`/skill-types/verification-request/${value?.id}`}
-                  className={cn(
-                    buttonVariants({
-                      variant: "destructive",
-                      size: "sm",
-                    }),
-                    "mt-2 ml-auto mr-0 w"
-                  )}
-                >
-                  Review
-                </Link>
+                <AccessControl name={permissionName}>
+                  <Link
+                    href={`/skill-types/verification-request/${value?.id}`}
+                    className={cn(
+                      buttonVariants({
+                        variant: "destructive",
+                        size: "sm",
+                      }),
+                      "mt-2 ml-auto mr-0 w"
+                    )}
+                  >
+                    Review
+                  </Link>
+                </AccessControl>
               </div>
               <Separator className="mb-6" />
             </>
@@ -481,21 +496,23 @@ const Page: FC<PageProps> = ({}) => {
                   </div>
                 </div>
                 <div className="mt-2 ml-auto mr-0">
-                  <Link
-                    onClick={() => {
-                      setSelectedCoach(value as any);
-                      setOpenVerifyPrompt(true);
-                    }}
-                    href={``}
-                    className={cn(
-                      buttonVariants({
-                        variant: "destructive",
-                        size: "sm",
-                      })
-                    )}
-                  >
-                    Verify
-                  </Link>
+                  <AccessControl name={permissionName}>
+                    <Link
+                      onClick={() => {
+                        setSelectedCoach(value as any);
+                        setOpenVerifyPrompt(true);
+                      }}
+                      href={``}
+                      className={cn(
+                        buttonVariants({
+                          variant: "destructive",
+                          size: "sm",
+                        })
+                      )}
+                    >
+                      Verify
+                    </Link>
+                  </AccessControl>
                 </div>
               </div>
               <Separator className="mb-6" />
@@ -551,4 +568,4 @@ const Page: FC<PageProps> = ({}) => {
   );
 };
 
-export default Page;
+export default observer(Page);

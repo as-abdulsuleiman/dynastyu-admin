@@ -27,6 +27,8 @@ import VerifiedIcon from "@/components/Icons/verified";
 import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
 import { User } from "lucide-react";
+import { getPermission } from "@/lib/helpers";
+import Accesscontrol from "../accesscontrol";
 
 interface VerificationRequestProps {
   params: {
@@ -50,6 +52,11 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
       skillVerificationRequest,
     },
   } = useRootStore();
+
+  const permissionName = getPermission(
+    user?.role?.permissions,
+    "flaggedposts.accesslevel.update"
+  );
 
   const [updating, setUpdating] = useState<boolean>(false);
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
@@ -165,17 +172,19 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
       </div>
       <Separator className="my-6" />
       <div className="flex-col hidden md:flex ">
-        <Button
-          disabled={isVerifying}
-          className="ml-auto "
-          onClick={() => handleVerifySkill()}
-        >
-          {updating
-            ? "Verifying..."
-            : data?.skillVerificationRequest?.verified
-            ? "Unverify Skill"
-            : "Verify Skill"}
-        </Button>
+        <Accesscontrol name={permissionName}>
+          <Button
+            disabled={isVerifying}
+            className="ml-auto "
+            onClick={() => handleVerifySkill()}
+          >
+            {updating
+              ? "Verifying..."
+              : data?.skillVerificationRequest?.verified
+              ? "Unverify Skill"
+              : "Verify Skill"}
+          </Button>
+        </Accesscontrol>
       </div>
       <Card className="mt-6 gap-6">
         <MediaCard
@@ -310,17 +319,19 @@ const VerificationRequest: FC<VerificationRequestProps> = ({
           </div>
         </div>
         <div className="flex md:hidden mt-4">
-          <Button
-            className="ml-auto w-full"
-            disabled={isVerifying}
-            onClick={() => handleVerifySkill()}
-          >
-            {updating
-              ? "Verifying..."
-              : data?.skillVerificationRequest?.verified
-              ? "Unverify Skill"
-              : "Verify Skill"}
-          </Button>
+          <Accesscontrol name={permissionName}>
+            <Button
+              className="ml-auto w-full"
+              disabled={isVerifying}
+              onClick={() => handleVerifySkill()}
+            >
+              {updating
+                ? "Verifying..."
+                : data?.skillVerificationRequest?.verified
+                ? "Unverify Skill"
+                : "Verify Skill"}
+            </Button>
+          </Accesscontrol>
         </div>
       </Card>
     </main>

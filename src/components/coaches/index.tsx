@@ -42,7 +42,7 @@ import { formatDate } from "@/lib/utils";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
-import { getURLParams } from "@/lib/helpers";
+import { getPermission, getURLParams } from "@/lib/helpers";
 import MultiSelector from "../multi-selector";
 import { coachFilter } from "@/lib/filters";
 import PromptAlert from "../prompt-alert";
@@ -66,6 +66,7 @@ const Coaches: FC<CoachesProps> = ({}) => {
   const { toast } = useToast();
   const {
     coacheStore: { setCoaches },
+    authStore: { user },
     coachVerificationRequestStore: { setCoachVerificationRequest },
   } = useRootStore();
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
@@ -80,6 +81,11 @@ const Coaches: FC<CoachesProps> = ({}) => {
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
   const [getAggregateCoachProfile] = useGetAggregateCoachProfileLazyQuery();
   const filteredParams = getURLParams(selectedOptions);
+
+  const permissionName = getPermission(
+    user?.role?.permissions,
+    "coches.accesslevel.update"
+  );
 
   const {
     data: coachesData,
@@ -372,23 +378,30 @@ const Coaches: FC<CoachesProps> = ({}) => {
           router.push(`/coach/${item?.id}`, { scroll: true });
         },
       },
-      {
-        name: "Edit Profile",
-        onClick: () => handleEditCoach(item),
-      },
-      {
-        name: `${item?.coachProfile?.verified ? "Unverify" : "Verify"} Profile`,
-        onClick: async () => await handleVerifyCoach(item),
-      },
-      {
-        name: `${item?.isActive ? "Deactivate" : "Activate"} Profile`,
-        onClick: async () => await handleActivateCoach(item),
-      },
-      {
-        name: "Delete Coach",
-        onClick: () => handleDeleteCoach(item),
-      },
     ];
+
+    if (permissionName !== ("" || null || undefined)) {
+      coacheItems?.push(
+        {
+          name: "Edit Profile",
+          onClick: () => handleEditCoach(item),
+        },
+        {
+          name: `${
+            item?.coachProfile?.verified ? "Unverify" : "Verify"
+          } Profile`,
+          onClick: async () => await handleVerifyCoach(item),
+        },
+        {
+          name: `${item?.isActive ? "Deactivate" : "Activate"} Profile`,
+          onClick: async () => await handleActivateCoach(item),
+        },
+        {
+          name: "Delete Coach",
+          onClick: () => handleDeleteCoach(item),
+        }
+      );
+    }
     return (
       <TableRow key={item?.id}>
         <TableCell>
