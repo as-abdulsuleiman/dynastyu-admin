@@ -16,6 +16,7 @@ import {
   QueryMode,
   useGetPermissionsQuery,
   useGetRoleQuery,
+  useGetUsersQuery,
 } from "@/services/graphql";
 import UniversalTable from "../universal-table";
 import { TableCell, TableRow } from "@/components/ui/table";
@@ -35,6 +36,8 @@ import { useToast } from "@/hooks/use-toast";
 import ComboBoxCard from "../combobox-card";
 import { useDebouncedValue } from "@mantine/hooks";
 import MultiSelector from "../multi-selector";
+import { SearchInput } from "../search-input";
+import { useRouter } from "next/navigation";
 
 type FormData = yup.InferType<typeof RoleValidator>;
 
@@ -57,7 +60,11 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
   const [deletingRoleType, setDeletingRoleType] = useState(false);
   const [activeRole, setActiveRole] = useState<any | null>(null);
   const [isAddingPermission, setIsAddingPermission] = useState<boolean>(false);
+  const [isAddingUser, setIsAddingUser] = useState<boolean>(false);
   const [isPermissionOpen, setIsPermissionOpen] = useState<boolean>(false);
+  const [isSubmittingUser, setIsSubmittingUser] = useState<boolean>(false);
+  const [isUserOpen, setIsUserOpen] = useState<boolean>(false);
+  const [isDeletingUserOpen, setIsDeletingUserOpen] = useState<boolean>(false);
   const [isDeletePermissionOpen, setIsDeletePermissionOpen] =
     useState<boolean>(false);
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
@@ -87,6 +94,7 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
       },
     },
   });
+  const router = useRouter();
 
   const { data: roleMigrationData, loading: loadingRoleMigrationData } =
     useGetRolesQuery({
@@ -118,6 +126,40 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
       },
       orderBy: {
         createdAt: SortOrder.Desc,
+      },
+    },
+  });
+
+  const {
+    data: userdata,
+    loading: loadingUserData,
+    refetch: refetchingUserData,
+  } = useGetUsersQuery({
+    variables: {
+      where: {
+        role: {
+          isNot: {
+            id: {
+              equals: activeRole?.id,
+            },
+          },
+        },
+        OR: [
+          {
+            firstname: {
+              contains: debounced,
+              mode: QueryMode.Insensitive,
+            },
+            surname: {
+              contains: debounced,
+              mode: QueryMode.Insensitive,
+            },
+            username: {
+              contains: debounced,
+              mode: QueryMode.Insensitive,
+            },
+          },
+        ],
       },
     },
   });
@@ -266,6 +308,70 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
     }
   };
 
+  const handleAddUser = async () => {
+    setIsSubmittingUser(true);
+    const userId =
+      selectedOptions?.map((val: any) => ({
+        id: val?.id,
+      })) || [];
+
+    try {
+      if (isAddingUser === true) {
+        await updateRole({
+          variables: {
+            where: {
+              id: activeRole?.id,
+            },
+            data: {
+              users: {
+                connect: userId,
+              },
+            },
+          },
+        });
+        toast({
+          title: "User successfully Added.",
+          description: `User has been successfully added to ${activeRole?.title} `,
+          variant: "successfull",
+        });
+      } else {
+        await updateRole({
+          variables: {
+            where: {
+              id: activeRole?.id,
+            },
+            data: {
+              users: {
+                disconnect: userId,
+              },
+            },
+          },
+        });
+        toast({
+          title: "User successfully removed.",
+          description: `User has been successfully removed from ${activeRole?.title} `,
+          variant: "successfull",
+        });
+      }
+      await refetchingUserData();
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not add Permission. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    } finally {
+      setSelectedOptions([]);
+      setActiveRole(null);
+      setIsSubmittingUser(false);
+      setIsUserOpen(false);
+      setIsDeletingUserOpen(false);
+      setIsAddingUser(false);
+    }
+  };
+
   const handleUpdateRolePermission = async () => {
     setIsSubmittingPermission(true);
     const permissionId =
@@ -410,6 +516,14 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
     const renderItems = ({ item, id }: { item: any; id: any }) => {
       const roleTypeItems = [
         {
+          name: "View Details",
+          onClick: () => {
+            router.push(`/role/${item?.id}`, {
+              scroll: true,
+            });
+          },
+        },
+        {
           name: "Edit Role",
           onClick: () => {
             setActiveRole(item);
@@ -434,6 +548,21 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
           onClick: () => {
             setActiveRole(item);
             setIsDeletePermissionOpen(true);
+          },
+        },
+        {
+          name: "Add User",
+          onClick: () => {
+            setActiveRole(item);
+            setIsUserOpen(true);
+            setIsAddingUser(true);
+          },
+        },
+        {
+          name: "Remove User",
+          onClick: () => {
+            setActiveRole(item);
+            setIsDeletingUserOpen(true);
           },
         },
       ];
@@ -666,6 +795,117 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
     );
   };
 
+  // const selectedValueDecorator = (selectedList: any) => {
+  //   return selectedList?.map((item: any) => (
+  //     <span key={item.id} style={{ marginRight: "5px", color: "blue" }}>
+  //       {item.firstname} {item.surname}
+  //     </span>
+  //   ));
+  // };
+
+  const renderUsers = () => {
+    return (
+      <div className="w-full">
+        <div className="grid grid-cols-12 gap-6">
+          {selectedOptions?.length === 0 ? null : (
+            <div className="col-span-12 mb-4">
+              <Button
+                variant="default"
+                disabled={isSubmittingUser || selectedOptions?.length === 0}
+                className="flex flex-row mr-auto"
+                type="submit"
+                onClick={() => handleAddUser()}
+              >
+                {isSubmittingUser ? (
+                  <div className="flex flex-row items-center justify-center">
+                    <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </div>
+                ) : (
+                  <>Submit</>
+                )}
+              </Button>
+            </div>
+          )}
+        </div>
+        {/* <SearchInput
+          onChange={(e) => setSearchValue(e.target.value)}
+          placeholder="Type to search..."
+        /> */}
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12">
+            <div className="mb-2 text-base ">Select User</div>
+            <MultiSelector
+              loading={loadingUserData}
+              disable={loadingUserData}
+              options={userdata?.users as any}
+              displayValue="username"
+              placeholder="Users"
+              showCheckbox={true}
+              hidePlaceholder={true}
+              avoidHighlightFirstOption={true}
+              selectedOptions={selectedOptions}
+              handleRemove={handleRemoveOption}
+              handleSelect={handleSelectOption}
+              // selectedValueDecorator={selectedValueDecorator(userdata?.users)}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderRemoveUsers = () => {
+    return (
+      <div className="w-full">
+        <div className="grid grid-cols-12 gap-6">
+          {selectedOptions?.length === 0 ? null : (
+            <div className="col-span-12 mb-4">
+              <Button
+                variant="default"
+                disabled={isSubmittingUser || selectedOptions?.length === 0}
+                className="flex flex-row mr-auto"
+                type="submit"
+                onClick={() => handleAddUser()}
+              >
+                {isSubmittingUser ? (
+                  <div className="flex flex-row items-center justify-center">
+                    <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                    Loading...
+                  </div>
+                ) : (
+                  <>Submit</>
+                )}
+              </Button>
+            </div>
+          )}
+        </div>
+        {/* <SearchInput
+          onChange={(e) => setSearchValue(e.target.value)}
+          placeholder="Type to search..."
+        /> */}
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12">
+            <div className="mb-2 text-base ">Select User</div>
+            <MultiSelector
+              loading={loadingRoleData}
+              disable={loadingRoleData}
+              options={roleData?.role?.users as any}
+              displayValue={`${"username"}`}
+              placeholder="Users"
+              showCheckbox={true}
+              hidePlaceholder={true}
+              avoidHighlightFirstOption={true}
+              selectedOptions={selectedOptions}
+              handleRemove={handleRemoveOption}
+              handleSelect={handleSelectOption}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <main className="w-full h-full">
       <div className="flex flex-row items-center">
@@ -726,6 +966,30 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
         }}
       >
         {renderDeletePermission()}
+      </ModalCard>
+      <ModalCard
+        isModal={true}
+        isOpen={isUserOpen}
+        onOpenChange={() => {
+          reset();
+          setIsUserOpen(!isUserOpen);
+          setActiveRole(null);
+          setSelectedOptions([]);
+        }}
+      >
+        {renderUsers()}
+      </ModalCard>
+      <ModalCard
+        isModal={true}
+        isOpen={isDeletingUserOpen}
+        onOpenChange={() => {
+          reset();
+          setIsDeletingUserOpen(!isDeletingUserOpen);
+          setActiveRole(null);
+          setSelectedOptions([]);
+        }}
+      >
+        {renderRemoveUsers()}
       </ModalCard>
     </main>
   );

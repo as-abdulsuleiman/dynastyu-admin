@@ -15,6 +15,21 @@ query getRole($where: RoleWhereUniqueInput!) {
     permissions {
       id
       title
+      query
+      createdAt
+      updatedAt
+    }
+    users {
+      firstname
+      surname
+      id
+      username
+      createdAt
+      updatedAt
+      accountType {
+        id
+        title
+      }
     }
   }
 }
@@ -48,6 +63,9 @@ query getRoles(
     permissions {
       id
       title
+      query
+      createdAt
+      updatedAt
     }
   }
 }
