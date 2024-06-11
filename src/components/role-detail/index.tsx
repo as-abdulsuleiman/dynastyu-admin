@@ -573,6 +573,13 @@ const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
 
   return (
     <>
+      <Button
+        variant="destructive"
+        className="mb-6"
+        onClick={() => router.back()}
+      >
+        Go Back
+      </Button>
       <ContentHeader
         title="Role"
         subHeader={`${data?.role?.title || "Role details"} `}

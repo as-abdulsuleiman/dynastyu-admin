@@ -152,6 +152,11 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
   } = useGetUsersQuery({
     variables: {
       where: {
+        accountType: {
+          is: {
+            title: { equals: "Coach" },
+          },
+        },
         role: {
           isNot: {
             id: {
@@ -573,13 +578,13 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
             setIsAddingUser(true);
           },
         },
-        {
-          name: "Remove User",
-          onClick: () => {
-            setActiveRole(item);
-            setIsDeletingUserOpen(true);
-          },
-        },
+        // {
+        //   name: "Remove User",
+        //   onClick: () => {
+        //     setActiveRole(item);
+        //     setIsDeletingUserOpen(true);
+        //   },
+        // },
       ];
       return (
         <TableRow key={item?.id} className="text-base">
@@ -926,7 +931,7 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
   return (
     <main className="w-full h-full">
       <div className="flex flex-row items-center">
-        <ContentHeader title="Account Types" subHeader="In Progress" />
+        <ContentHeader title="Roles" subHeader="Roles Overview" />
       </div>
       <Separator className="my-6" />
       <Accesscontrol name={permissionName}>
