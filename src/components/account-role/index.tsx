@@ -570,14 +570,14 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
             setIsDeletePermissionOpen(true);
           },
         },
-        {
-          name: "Add User",
-          onClick: () => {
-            setActiveRole(item);
-            setIsUserOpen(true);
-            setIsAddingUser(true);
-          },
-        },
+        // {
+        //   name: "Add User",
+        //   onClick: () => {
+        //     setActiveRole(item);
+        //     setIsUserOpen(true);
+        //     setIsAddingUser(true);
+        //   },
+        // },
         // {
         //   name: "Remove User",
         //   onClick: () => {
@@ -589,7 +589,14 @@ const AccountRole: FC<AccountRolesProps> = ({}) => {
       return (
         <TableRow key={item?.id} className="text-base">
           <TableCell>
-            <div className="flex flex-row items-center justify-start text-base">
+            <div
+              onClick={() =>
+                router.push(`/role/${item?.id}`, {
+                  scroll: true,
+                })
+              }
+              className="cursor-pointer flex flex-row items-center justify-start text-base"
+            >
               {item?.title}
             </div>
           </TableCell>

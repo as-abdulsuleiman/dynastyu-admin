@@ -7,21 +7,21 @@ import {
   useGetPermissionsQuery,
   QueryMode,
   SortOrder,
-  useGetRolesQuery,
   GetPermissionsQuery,
   useGetUsersQuery,
   GetUsersQuery,
   useUpdateRoleMutation,
+  GetUserQuery,
 } from "@/services/graphql";
 import React, { FC, useState, useMemo } from "react";
 import ContentHeader from "../content-header";
 import { Separator } from "../ui/separator";
 import TabCard from "../tab-card";
-import { formatDate } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import UniversalTable from "../universal-table";
 import { TableCell, TableRow } from "../ui/table";
 import MenubarCard from "../menubar";
-import { Loader2Icon, MoreHorizontalIcon, PlusIcon } from "../Icons";
+import { CheckIcon, Loader2Icon, MoreHorizontalIcon, PlusIcon } from "../Icons";
 import { Button } from "../ui/button";
 import Pagination from "../pagination";
 import { useDebouncedValue } from "@mantine/hooks";
@@ -29,6 +29,11 @@ import { SearchInput } from "../search-input";
 import { useRouter } from "next/navigation";
 import PromptAlert from "../prompt-alert";
 import { useToast } from "@/hooks/use-toast";
+import { generateProfilePath } from "@/lib/helpers";
+import ComboboxCard from "../combobox-card";
+import { CommandItem } from "@/components/ui/command";
+import UserAvatar from "../user-avatar";
+import { PromptStatusEnum } from "@/lib/enums/updating-profile.enum";
 
 interface RoleDetailProps {
   params: {
@@ -44,8 +49,7 @@ const PermissionsHeaderItems = [
 ];
 
 const UserHeaderItems = [
-  { name: "Firstname" },
-  { name: "Surname" },
+  { name: "Name" },
   { name: "Username" },
   { name: "Account Type" },
   { name: "Created At" },
@@ -56,17 +60,21 @@ const UserHeaderItems = [
 const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
   const [permissionValue, setPermissionValue] = useState<string>("");
   const [userValue, setUserValue] = useState<string>("");
+  const [userSearchValue, setUserSearchValue] = useState<string>("");
   const [debounced] = useDebouncedValue(permissionValue, 300);
   const [debouncedUsers] = useDebouncedValue(userValue, 300);
+  const [debouncedSearchUsers] = useDebouncedValue(userSearchValue, 300);
   const [activeUser, setActiveUser] = useState<any | null>(null);
   const [removeUserPrompt, setRemoveUserPrompt] = useState(false);
-  const [removingUser, setRemovingUser] = useState(false);
   const [activePermission, setActivePermission] = useState<any | null>(null);
   const [removePermissionPrompt, setRemovePermissionPrompt] = useState(false);
-  const [removingPermission, setRemovingPermission] = useState(false);
+  const [openUser, setOpenUser] = useState<boolean>(false);
+  const [selectedUser, setSelectedUser] = useState<any | number>({});
+  const [isAddingUser, setIsAddingUser] = useState<boolean>(false);
+  const [promptStatus, setPromptStatus] = useState<PromptStatusEnum | null>();
   const router = useRouter();
   const { toast } = useToast();
-  const [updateRole] = useUpdateRoleMutation();
+  const [updateRole, { loading: updatingRole }] = useUpdateRoleMutation();
   const { data, loading } = useGetRoleQuery({
     variables: {
       where: {
@@ -123,28 +131,24 @@ const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
             id: {
               equals: params?.id,
             },
-            users: {
-              some: {
-                OR: [
-                  {
-                    username: {
-                      contains: debouncedUsers,
-                      mode: QueryMode.Insensitive,
-                    },
-                    firstname: {
-                      contains: debouncedUsers,
-                      mode: QueryMode.Insensitive,
-                    },
-                    surname: {
-                      contains: debouncedUsers,
-                      mode: QueryMode.Insensitive,
-                    },
-                  },
-                ],
-              },
-            },
           },
         },
+        OR: [
+          {
+            username: {
+              contains: debouncedUsers,
+              mode: QueryMode.Insensitive,
+            },
+            firstname: {
+              contains: debouncedUsers,
+              mode: QueryMode.Insensitive,
+            },
+            surname: {
+              contains: debouncedUsers,
+              mode: QueryMode.Insensitive,
+            },
+          },
+        ],
       },
       take: 10,
       orderBy: {
@@ -153,13 +157,51 @@ const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
     },
   });
 
-  const { data: rolesData } = useGetRolesQuery({
+  const { data: addUsersdata, loading: loadingAddUserData } = useGetUsersQuery({
     variables: {
       where: {
-        id: { equals: params?.id },
+        accountType: {
+          is: {
+            title: { equals: "Coach" },
+          },
+        },
+        role: {
+          isNot: {
+            id: {
+              equals: params?.id,
+            },
+          },
+        },
+        OR: [
+          {
+            firstname: {
+              contains: debouncedSearchUsers,
+              mode: QueryMode.Insensitive,
+            },
+            surname: {
+              contains: debouncedSearchUsers,
+              mode: QueryMode.Insensitive,
+            },
+            username: {
+              contains: debouncedSearchUsers,
+              mode: QueryMode.Insensitive,
+            },
+          },
+        ],
       },
     },
   });
+
+  const usersDataOptions = useMemo(() => {
+    return addUsersdata?.users?.map((a) => {
+      return {
+        id: a?.id,
+        label: `${a?.firstname} ${a?.surname}`,
+        value: a?.username,
+        avatar: a?.avatar,
+      };
+    });
+  }, [addUsersdata?.users]);
 
   const lastPermissionsId = useMemo(() => {
     const lastPostInResults =
@@ -283,13 +325,76 @@ const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
       },
     });
   };
+
+  const handleUpdateUser = async (selectedUser: any) => {
+    try {
+      if (isAddingUser === true) {
+        await updateRole({
+          variables: {
+            where: {
+              id: params?.id,
+            },
+            data: {
+              users: {
+                connect: [{ id: selectedUser?.id }],
+              },
+            },
+          },
+        });
+        toast({
+          title: "User successfully Added.",
+          description: `User has been successfully added to ${data?.role?.title} `,
+          variant: "successfull",
+        });
+      } else {
+        await updateRole({
+          variables: {
+            where: {
+              id: params?.id,
+            },
+            data: {
+              users: {
+                disconnect: [{ id: activeUser?.id }],
+              },
+            },
+          },
+        });
+        toast({
+          title: "User successfully removed.",
+          description: `User has been successfully removed from ${data?.role?.title} `,
+          variant: "successfull",
+        });
+      }
+      await refetchUsers();
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not add Permission. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    } finally {
+      setIsAddingUser(false);
+      setPromptStatus(null);
+      setSelectedUser({});
+      setUserSearchValue("");
+      setActiveUser(null);
+      setRemoveUserPrompt(false);
+    }
+  };
+
+  const handleRemoveUser = (item: any) => {
+    setActiveUser(item);
+    setRemoveUserPrompt(true);
+  };
+
   const handleRemovePermission = (item: any) => {
     setActivePermission(item);
     setRemovePermissionPrompt(true);
   };
 
   const handleComfirmRemovePermission = async (item: any) => {
-    setRemovingPermission(true);
     try {
       await updateRole({
         variables: {
@@ -321,51 +426,7 @@ const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
       });
     } finally {
       setActivePermission(null);
-      setRemovingPermission(false);
       setRemovePermissionPrompt(false);
-    }
-  };
-
-  const handleRemoveUser = (item: any) => {
-    setActiveUser(item);
-    setRemoveUserPrompt(true);
-  };
-
-  const handleComfirmRemoveUser = async (item: any) => {
-    setRemovingPermission(true);
-    try {
-      await updateRole({
-        variables: {
-          where: {
-            id: params?.id,
-          },
-          data: {
-            users: {
-              disconnect: [
-                {
-                  id: activeUser?.id,
-                },
-              ],
-            },
-          },
-        },
-      });
-      await refetchUsers();
-      toast({
-        title: "User successfully removed.",
-        description: `${item?.username} has been successfully removed`,
-        variant: "successfull",
-      });
-    } catch (error: any) {
-      toast({
-        title: "Something went wrong.",
-        description: `${error?.message}`,
-        variant: "destructive",
-      });
-    } finally {
-      setActiveUser(null);
-      setRemovingUser(false);
-      setRemoveUserPrompt(false);
     }
   };
 
@@ -373,7 +434,7 @@ const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
     return (
       <div>
         <SearchInput
-          className="my-8"
+          className="my-8 w-full md:w-1/2"
           onChange={(e) => setPermissionValue(e.target.value)}
           placeholder="Type to search..."
         />
@@ -392,13 +453,11 @@ const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
         )}
         <PromptAlert
           title={`Are you absolutely sure?`}
-          disableConfirmBtn={removingPermission}
-          loading={removingPermission}
+          disableConfirmBtn={updatingRole}
+          loading={updatingRole}
           content={`This will permanently remove ${activePermission?.title} permission.`}
           showPrompt={removePermissionPrompt}
           handleHidePrompt={() => {
-            //   setSelectedPermission({});
-            // setIsDisabled(true);
             setActivePermission(null);
             setRemovePermissionPrompt(false);
           }}
@@ -410,14 +469,89 @@ const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
     );
   };
 
+  const userCustomItems = ({ item, id }: { item: any; id: number }) => {
+    return (
+      <CommandItem
+        className="capitalize "
+        key={item?.id || id}
+        value={selectedUser}
+        onSelect={() => {
+          setSelectedUser({ value: item?.value, id: item?.id });
+          setOpenUser(false);
+        }}
+      >
+        <>
+          <div className="flex items-center">
+            <UserAvatar
+              fallbackClassName="h-[55px] w-[55px]"
+              className="h-[55px] w-[55px] shadow mr-4 "
+              fallbackType="name"
+              avatar={item?.avatar as string}
+              fallback={`${item?.label?.charAt(0)} `}
+            />
+
+            <div>
+              <div className="text-sm mb-0.5">{item?.label}</div>
+              <div className="text-xs">{`@ ${item?.value}`}</div>
+            </div>
+          </div>
+        </>
+        <CheckIcon
+          className={cn(
+            "ml-auto h-4 w-4",
+            selectedUser?.value === item?.value ? "opacity-100" : "opacity-0"
+          )}
+        />
+      </CommandItem>
+    );
+  };
+
   const renderUserList = () => {
     return (
-      <div>
-        <SearchInput
-          className="my-8"
-          onChange={(e) => setUserValue(e.target.value)}
-          placeholder="Type to search..."
-        />
+      <div className="w-full">
+        <div className="flex flex-col-reverse sm:flex-row justify-between items-center w-full mt-4 mb-3 sm:mb-8">
+          <SearchInput
+            className=" mb-8 sm:mb-0 w-full "
+            onChange={(e) => setUserValue(e.target.value)}
+            placeholder="Type to search..."
+          />
+          <div className="mb-8 sm:mb-0 mt-3 sm:mt-6 w-full  flex flex-col ml-0 sm:ml-8">
+            <ComboboxCard
+              valueKey="value"
+              displayKey="label"
+              IdKey="value"
+              label="Add User"
+              id="user"
+              placeholder={"Select User"}
+              isOpen={openUser}
+              scrollAreaClass="h-72"
+              hasSearch
+              shouldFilter={false}
+              searchValue={userSearchValue}
+              handleSearch={(search) => setUserSearchValue(search)}
+              loading={loadingAddUserData}
+              onClose={() => setOpenUser(!openUser)}
+              items={usersDataOptions as any}
+              selectedValue={selectedUser}
+              customRenderItems={userCustomItems}
+            />
+
+            <div className="w-full flex mt-6 ">
+              <Button
+                size="sm"
+                className="ml-auto"
+                variant="default"
+                onClick={() => {
+                  setPromptStatus(PromptStatusEnum.ADDING);
+                  setIsAddingUser(true);
+                }}
+                disabled={Object?.keys(selectedUser)?.length === 0}
+              >
+                Add User
+              </Button>
+            </div>
+          </div>
+        </div>
         <UniversalTable
           title="Users List"
           headerItems={UserHeaderItems}
@@ -430,30 +564,39 @@ const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
         )}
         <PromptAlert
           title={`Are you absolutely sure?`}
-          disableConfirmBtn={removingUser}
-          loading={removingUser}
+          disableConfirmBtn={updatingRole}
+          loading={updatingRole}
           content={`This will permanently remove ${activeUser?.username}.`}
           showPrompt={removeUserPrompt}
           handleHidePrompt={() => {
-            //   setSelectedPermission({});
-            // setIsDisabled(true);
             setActivePermission(null);
             setRemovePermissionPrompt(false);
           }}
-          handleConfirmPrompt={() => handleComfirmRemoveUser(activeUser)}
+          handleConfirmPrompt={() => handleUpdateUser(activeUser)}
+        />
+        <PromptAlert
+          disableConfirmBtn={updatingRole}
+          loading={updatingRole}
+          content={`This action will add @${selectedUser?.value} to ${data?.role?.title}.`}
+          showPrompt={promptStatus === PromptStatusEnum.ADDING}
+          handleHidePrompt={() => {
+            setPromptStatus(null);
+            setSelectedUser({});
+            setIsAddingUser(false);
+          }}
+          handleConfirmPrompt={() => handleUpdateUser(selectedUser)}
         />
       </div>
     );
   };
 
   const renderUsers = ({ item, id }: { item: any; id: any }) => {
+    const userPath = generateProfilePath(item as GetUserQuery["user"]);
     const UserItems = [
       {
         name: "View User",
         onClick: () => {
-          router.push(`/athlete/${item?.id}`, {
-            scroll: true,
-          });
+          router.push(userPath);
         },
       },
 
@@ -466,13 +609,25 @@ const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
     return (
       <TableRow key={item?.id}>
         <TableCell>
-          <div className="text-right w-100 flex flex-row items-center justify-start">
-            {item?.firstname}
-          </div>
-        </TableCell>
-        <TableCell className="text-center ">
-          <div className="text-right w-100 flex flex-row items-center justify-center">
-            {item?.surname}
+          <div
+            className="flex flex-row items-center justify-start"
+            onClick={() =>
+              router.push(`/athlete/${item?.id}`, {
+                scroll: true,
+              })
+            }
+          >
+            <UserAvatar
+              className="h-[79px] w-[79px] shadow cursor-pointer"
+              fallbackType="name"
+              avatar={item?.avatar as string}
+              fallback={`${item?.username?.charAt(0)} ${item?.firstname?.charAt(
+                0
+              )}`}
+            />
+            <div className="ml-4 cursor-pointer text-base">
+              {item?.firstname} {item?.surname}
+            </div>
           </div>
         </TableCell>
         <TableCell className="text-center ">
@@ -513,15 +668,6 @@ const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
 
   const renderPermissions = ({ item, id }: { item: any; id: any }) => {
     const permissionItems = [
-      // {
-      //   name: "View Permission",
-      //   onClick: () => {
-      //     router.push(`/permission/${item?.id}`, {
-      //       scroll: true,
-      //     });
-      //   },
-      // },
-
       {
         name: "Remove Permission",
         onClick: () => handleRemovePermission(item),
@@ -535,11 +681,6 @@ const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
             {item?.title}
           </div>
         </TableCell>
-        {/* <TableCell className="text-center ">
-          <div className="text-right w-100 flex flex-row items-center justify-center">
-            {item?.role?.title}
-          </div>
-        </TableCell> */}
         <TableCell className="text-center ">
           <div className="text-right w-100 flex flex-row items-center justify-center">
             {item?.query}
@@ -581,8 +722,8 @@ const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
         Go Back
       </Button>
       <ContentHeader
-        title="Role"
-        subHeader={`${data?.role?.title || "Role details"} `}
+        title="Role "
+        subHeader={`${data?.role?.title || "Role Overview"} `}
       />
       <Separator className="my-6" />
 
@@ -591,7 +732,6 @@ const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
         tabContent={[
           { content: renderPermissionList() },
           { content: renderUserList() },
-          // { content: renderFlaggedPostRequest() },
         ]}
       />
     </>
