@@ -18,12 +18,6 @@ import ContentHeader from "../content-header";
 import { Separator } from "../ui/separator";
 import TabCard from "../tab-card";
 import { formatDate } from "@/lib/utils";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../ui/accordion";
 import UniversalTable from "../universal-table";
 import { TableCell, TableRow } from "../ui/table";
 import MenubarCard from "../menubar";
@@ -43,7 +37,6 @@ interface RoleDetailProps {
 }
 const PermissionsHeaderItems = [
   { name: "Title" },
-  //   { name: "Role" },
   { name: "Query" },
   { name: "Created At" },
   { name: "Updated At" },
@@ -167,8 +160,6 @@ const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
       },
     },
   });
-  console.log("permissionData", permissionData);
-  console.log("rolesData", rolesData);
 
   const lastPermissionsId = useMemo(() => {
     const lastPostInResults =
