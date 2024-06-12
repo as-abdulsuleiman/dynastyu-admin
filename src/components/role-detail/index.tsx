@@ -538,7 +538,6 @@ const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
 
             <div className="w-full flex mt-6 ">
               <Button
-                size="sm"
                 className="ml-auto"
                 variant="default"
                 onClick={() => {
