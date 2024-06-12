@@ -25,7 +25,7 @@ interface UniversalTableProps {
   renderItems: ({ item, id }: { item: {}; id: number }) => React.ReactNode;
 }
 
-type HeaderItems = {
+export type HeaderItems = {
   name: string;
 };
 
