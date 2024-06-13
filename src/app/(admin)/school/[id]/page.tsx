@@ -6,6 +6,7 @@ import { FC, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
+  GetAthletesWithSkillsQuery,
   QueryMode,
   SortOrder,
   useGetAthletesQuery,
@@ -41,6 +42,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import Accesscontrol from "@/components/accesscontrol";
 import MenubarCard from "@/components/menubar";
 import { MoreHorizontalIcon } from "@/components/Icons";
+import Pagination from "@/components/pagination";
 
 interface PageProps {
   params: {
@@ -155,7 +157,12 @@ const Page: FC<PageProps> = ({ params }) => {
     },
   });
 
-  const { data: athletesData } = useGetAthletesWithSkillsQuery({
+  const {
+    data: athletesData,
+    refetch: refetchAthletes,
+    fetchMore: fetchMoreAthletes,
+    loading: LoadingAthletes,
+  } = useGetAthletesWithSkillsQuery({
     variables: {
       where: {
         schoolId: {
@@ -164,6 +171,9 @@ const Page: FC<PageProps> = ({ params }) => {
         verified: { equals: true },
       },
       take: 10,
+      orderBy: {
+        createdAt: SortOrder.Desc,
+      },
     },
     skip: !isHighSchool,
   });
@@ -445,61 +455,29 @@ const Page: FC<PageProps> = ({ params }) => {
   const tableData = useMemo(() => {
     if (athletesData?.athleteProfiles?.length) {
       return athletesData?.athleteProfiles?.map((a, key) => {
-        const skills =
-          skillTypesData?.skillTypes?.length &&
-          skillTypesData?.skillTypes?.map((c) => {
-            return a?.skills?.find((d) => d?.skillType?.id === c?.id)?.value
-              ? `${a?.skills?.find((d) => d?.skillType?.id === c?.id)?.value} ${
-                  c?.unit
-                }`
-              : 0;
-          });
-
-        return [
-          a?.position?.shortName,
-          `${a?.user?.firstname} ${a?.user?.surname}`,
-          a?.graduationYear,
-        ];
+        const skills: any = skillTypesData?.skillTypes?.map((c) => {
+          return a?.skills?.find((d) => d?.skillType?.id === c?.id)?.value
+            ? {
+                [c?.name]: `${
+                  a?.skills?.find((d) => d?.skillType?.id === c?.id)?.value
+                } ${c?.unit}`,
+              }
+            : { [c?.name]: 0 };
+        });
+        return {
+          athleteId: a?.user?.id,
+          position: a?.position?.shortName,
+          name: `${a?.user?.firstname} ${a?.user?.surname}`,
+          graduationYear: a?.graduationYear || "N/A",
+          ...skills?.map((a: any) => a),
+        };
       });
     } else {
       return [];
     }
-  }, [athletesData, skillTypesData]);
+  }, [athletesData?.athleteProfiles, skillTypesData]);
 
-  // Filter the athleteProfiles to get matching profiles
-  const matchingAthletes = athletesData?.athleteProfiles
-    ?.map((athlete) => {
-      const matchingSkills: any = skillTypesData?.skillTypes?.map(
-        (skillType) => {
-          return athlete?.skills?.find((skill) => {
-            if (skill.skillType.id === skillType?.id && skill?.value) {
-              return skill;
-            } else {
-              return skill;
-            }
-          });
-        }
-      );
-      // Filter the skills of each athlete to find matching skill types
-
-      // Return the athlete name and the matching skills if there are any matching skills
-      if (matchingSkills?.length > 0) {
-        return {
-          athleteId: athlete?.id,
-          position: athlete?.position?.shortName,
-          name: `${athlete?.user?.firstname} ${athlete?.user?.surname}`,
-          graduationYear: athlete?.graduationYear,
-          ...matchingSkills?.map((skill: any) => ({
-            [skill?.skillType?.name]: skill?.value
-              ? `${skill?.value} ${skill?.skillType?.unit}`
-              : 0,
-          })),
-        };
-      }
-    })
-    .filter((athlete) => athlete !== undefined); // Remove undefined entries
-
-  let newData = matchingAthletes?.map((obj: any) => {
+  let newDataNew = tableData?.map((obj: any) => {
     return Object.keys(obj).reduce((acc: any, key: any) => {
       if (!isNaN(parseInt(key))) {
         let nestedObj: any = obj[key];
@@ -512,7 +490,74 @@ const Page: FC<PageProps> = ({ params }) => {
     }, {});
   });
 
+  const lastAthleteId = useMemo(() => {
+    const lastPostInResults =
+      athletesData?.athleteProfiles[athletesData?.athleteProfiles?.length - 1];
+    return lastPostInResults?.id;
+  }, [athletesData?.athleteProfiles]);
+
   const renderSchoolTeamPlayers = () => {
+    const fetchNext = () => {
+      fetchMoreAthletes({
+        variables: {
+          take: 10,
+          skip: 1,
+          cursor: {
+            id: lastAthleteId,
+          },
+          orderBy: {
+            createdAt: SortOrder.Desc,
+          },
+        },
+        updateQuery: (
+          previousResult: GetAthletesWithSkillsQuery,
+          { fetchMoreResult }
+        ): GetAthletesWithSkillsQuery => {
+          if (
+            !fetchMoreResult ||
+            fetchMoreResult?.athleteProfiles?.length === 0
+          ) {
+            return previousResult;
+          } else {
+            const previousPosts = previousResult?.athleteProfiles;
+            const fetchMorePosts = fetchMoreResult?.athleteProfiles;
+            fetchMoreResult.athleteProfiles = [...fetchMorePosts];
+            return { ...fetchMoreResult };
+          }
+        },
+      });
+    };
+
+    const fetchPrevious = () => {
+      fetchMoreAthletes({
+        variables: {
+          take: -10,
+          skip: athletesData?.athleteProfiles.length,
+          cursor: {
+            id: lastAthleteId,
+          },
+          orderBy: {
+            createdAt: SortOrder.Desc,
+          },
+        },
+        updateQuery: (
+          previousResult: GetAthletesWithSkillsQuery,
+          { fetchMoreResult }
+        ): GetAthletesWithSkillsQuery => {
+          if (
+            !fetchMoreResult ||
+            fetchMoreResult?.athleteProfiles?.length === 0
+          ) {
+            return previousResult;
+          } else {
+            const previousPosts = previousResult?.athleteProfiles;
+            const fetchMorePosts = fetchMoreResult?.athleteProfiles;
+            fetchMoreResult.athleteProfiles = [...fetchMorePosts];
+            return { ...fetchMoreResult };
+          }
+        },
+      });
+    };
     const renderItems = ({
       item,
       id,
@@ -663,10 +708,13 @@ const Page: FC<PageProps> = ({ params }) => {
         <UniversalTable
           title="Role List"
           headerItems={tableHead as HeaderItems[]}
-          items={newData as any[]}
-          loading={loading}
+          items={newDataNew as any[]}
+          loading={LoadingAthletes}
           renderItems={renderItems}
         />
+        {loading || !athletesData?.athleteProfiles?.length ? null : (
+          <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
+        )}
       </div>
     );
   };
