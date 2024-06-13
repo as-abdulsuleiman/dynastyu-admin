@@ -27014,6 +27014,18 @@ export type GetAthleteProfileQueryVariables = Exact<{
 
 export type GetAthleteProfileQuery = { __typename?: 'Query', athleteProfile?: { __typename?: 'AthleteProfile', id: any, uuid: string, createdAt: any, verified: boolean, playerCardUrl?: string | null, hudlLink?: string | null, graduationYear?: string | null, gpa?: string | null, featured: boolean, recruitingContactName?: string | null, recruitingPhoneNumber?: string | null, recruitingRelationship?: string | null, coachContactName?: string | null, coachContactPhoneNumber?: string | null, coachContactTitle?: string | null, schoolId: any, userId: any, socialAccounts: Array<{ __typename?: 'SocialAccount', id: any, uuid: string, name: string, link: string, type: SocialAccountType, athleteProfileId?: any | null }>, evaluations: Array<{ __typename?: 'Evaluation', id: any, note: string, images: Array<string>, videos: Array<string>, videosAspectRatio: Array<string>, createdById: any }>, transcripts: Array<{ __typename?: 'Transcripts', id: any, uuid: string, name: string, url: string, athleteProfileId?: any | null, createdAt: any, updatedAt: any }>, recruitedSchools: Array<{ __typename?: 'RecruitedAthlete', athleteId: any, schoolId: any, userId?: any | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null } }>, interestedSchools: Array<{ __typename?: 'InterestedSchools', school: { __typename?: 'School', name: string, id: any, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } } }>, skills: Array<{ __typename?: 'Skills', id: any, skillId: any, athleteId?: any | null, value: string, secondValue?: string | null, videos: Array<string>, verified: boolean, verifiedAt?: any | null, skillType: { __typename?: 'SkillType', id: any, name: string } }>, _count?: { __typename?: 'AthleteProfileCount', transcripts: number, skills: number, interestedSchools: number, recruitedSchools: number, prospectedSchools: number, evaluations: number } | null, school: { __typename?: 'School', name: string, logo?: string | null, address?: string | null, description?: string | null, secondaryColor: string, primaryColor: string, email: string, division?: string | null, backgroundImage?: string | null, yearlyTuition?: string | null, yearFounded?: string | null, conference?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any, _count?: { __typename?: 'SchoolTypeCount', schools: number } | null } }, user: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, username?: string | null, city?: string | null, state?: string | null, isActive: boolean, dob?: any | null, comments: Array<{ __typename?: 'Comment', id: any, userId: any, postId: any }>, followedBy: Array<{ __typename?: 'Follows', followerId: any, followingId: any }>, following: Array<{ __typename?: 'Follows', followerId: any, followingId: any }>, accountType: { __typename?: 'AccountType', id: any, title: string, roleId?: any | null }, _count?: { __typename?: 'UserCount', posts: number, postFlag: number } | null }, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, position?: { __typename?: 'Position', name: string, id: any, uuid: string, shortName: string } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, title?: string | null, city?: string | null, state?: string | null, user: { __typename?: 'User', id: any, firstname: string, surname: string, username?: string | null } } | null } | null };
 
+export type GetAthletesWithSkillsQueryVariables = Exact<{
+  where?: InputMaybe<AthleteProfileWhereInput>;
+  orderBy?: InputMaybe<Array<AthleteProfileOrderByWithRelationInput> | AthleteProfileOrderByWithRelationInput>;
+  cursor?: InputMaybe<AthleteProfileWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  distinct?: InputMaybe<Array<AthleteProfileScalarFieldEnum> | AthleteProfileScalarFieldEnum>;
+}>;
+
+
+export type GetAthletesWithSkillsQuery = { __typename?: 'Query', athleteProfiles: Array<{ __typename?: 'AthleteProfile', id: any, uuid: string, createdAt: any, verified: boolean, graduationYear?: string | null, featured: boolean, schoolId: any, userId: any, school: { __typename?: 'School', id: any, name: string, logo?: string | null, schoolType: { __typename?: 'SchoolType', name: string, id: any } }, skills: Array<{ __typename?: 'Skills', value: string, secondValue?: string | null, skillType: { __typename?: 'SkillType', id: any, name: string, options: Array<string>, numberOfVideos: number, secondFieldName?: string | null, secondValueOptions: Array<string>, videosLabels: Array<string>, unit: string } }>, user: { __typename?: 'User', id: any, firstname: string, surname: string, email: string, avatar?: string | null, username?: string | null, city?: string | null, state?: string | null }, country?: { __typename?: 'Country', name: string, id: any, flag: string, abbreviation: string } | null, position?: { __typename?: 'Position', name: string, id: any, uuid: string, shortName: string } | null, verifiedBy?: { __typename?: 'CoachProfile', id: any, user: { __typename?: 'User', id: any, firstname: string, surname: string } } | null }> };
+
 export type GetPositionsQueryVariables = Exact<{
   where?: InputMaybe<PositionWhereInput>;
   orderBy?: InputMaybe<Array<PositionOrderByWithRelationInput> | PositionOrderByWithRelationInput>;
@@ -28771,6 +28783,118 @@ export type GetAthleteProfileQueryHookResult = ReturnType<typeof useGetAthletePr
 export type GetAthleteProfileLazyQueryHookResult = ReturnType<typeof useGetAthleteProfileLazyQuery>;
 export type GetAthleteProfileSuspenseQueryHookResult = ReturnType<typeof useGetAthleteProfileSuspenseQuery>;
 export type GetAthleteProfileQueryResult = Apollo.QueryResult<GetAthleteProfileQuery, GetAthleteProfileQueryVariables>;
+export const GetAthletesWithSkillsDocument = gql`
+    query getAthletesWithSkills($where: AthleteProfileWhereInput, $orderBy: [AthleteProfileOrderByWithRelationInput!], $cursor: AthleteProfileWhereUniqueInput, $take: Int, $skip: Int, $distinct: [AthleteProfileScalarFieldEnum!]) {
+  athleteProfiles(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    skip: $skip
+    take: $take
+    distinct: $distinct
+  ) {
+    id
+    uuid
+    createdAt
+    verified
+    graduationYear
+    school {
+      id
+      name
+      logo
+      schoolType {
+        name
+        id
+      }
+    }
+    skills(orderBy: {skillType: {position: asc}}) {
+      value
+      secondValue
+      skillType {
+        id
+        name
+        options
+        numberOfVideos
+        secondFieldName
+        secondValueOptions
+        videosLabels
+        unit
+      }
+    }
+    featured
+    schoolId
+    userId
+    user {
+      id
+      firstname
+      surname
+      email
+      avatar
+      username
+      city
+      state
+    }
+    country {
+      name
+      id
+      flag
+      abbreviation
+    }
+    position {
+      name
+      id
+      uuid
+      shortName
+    }
+    verifiedBy {
+      id
+      user {
+        id
+        firstname
+        surname
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAthletesWithSkillsQuery__
+ *
+ * To run a query within a React component, call `useGetAthletesWithSkillsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAthletesWithSkillsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAthletesWithSkillsQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      distinct: // value for 'distinct'
+ *   },
+ * });
+ */
+export function useGetAthletesWithSkillsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAthletesWithSkillsQuery, GetAthletesWithSkillsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAthletesWithSkillsQuery, GetAthletesWithSkillsQueryVariables>(GetAthletesWithSkillsDocument, options);
+      }
+export function useGetAthletesWithSkillsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAthletesWithSkillsQuery, GetAthletesWithSkillsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAthletesWithSkillsQuery, GetAthletesWithSkillsQueryVariables>(GetAthletesWithSkillsDocument, options);
+        }
+export function useGetAthletesWithSkillsSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetAthletesWithSkillsQuery, GetAthletesWithSkillsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAthletesWithSkillsQuery, GetAthletesWithSkillsQueryVariables>(GetAthletesWithSkillsDocument, options);
+        }
+export type GetAthletesWithSkillsQueryHookResult = ReturnType<typeof useGetAthletesWithSkillsQuery>;
+export type GetAthletesWithSkillsLazyQueryHookResult = ReturnType<typeof useGetAthletesWithSkillsLazyQuery>;
+export type GetAthletesWithSkillsSuspenseQueryHookResult = ReturnType<typeof useGetAthletesWithSkillsSuspenseQuery>;
+export type GetAthletesWithSkillsQueryResult = Apollo.QueryResult<GetAthletesWithSkillsQuery, GetAthletesWithSkillsQueryVariables>;
 export const GetPositionsDocument = gql`
     query getPositions($where: PositionWhereInput, $orderBy: [PositionOrderByWithRelationInput!], $cursor: PositionWhereUniqueInput, $take: Int, $skip: Int, $distinct: [PositionScalarFieldEnum!]) {
   positions(

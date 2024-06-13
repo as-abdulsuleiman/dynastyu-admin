@@ -8,8 +8,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   QueryMode,
   SortOrder,
+  useGetAthletesQuery,
+  useGetAthletesWithSkillsQuery,
   useGetCoachesQuery,
   useGetSchoolQuery,
+  useGetSkillTypesQuery,
   useUpdateSchoolMutation,
 } from "@/services/graphql";
 import { useRouter } from "next/navigation";
@@ -32,6 +35,12 @@ import ContentHeader from "@/components/content-header";
 import { getPermission } from "@/lib/helpers";
 import { useRootStore } from "@/mobx";
 import AccessControl from "@/components/accesscontrol";
+import TabCard from "@/components/tab-card";
+import UniversalTable, { HeaderItems } from "@/components/universal-table";
+import { TableCell, TableRow } from "@/components/ui/table";
+import Accesscontrol from "@/components/accesscontrol";
+import MenubarCard from "@/components/menubar";
+import { MoreHorizontalIcon } from "@/components/Icons";
 
 interface PageProps {
   params: {
@@ -39,11 +48,21 @@ interface PageProps {
   };
 }
 
+const headerItems = [
+  { name: "Title" },
+  { name: "Number of users" },
+  { name: "Account type" },
+  { name: "Permissions" },
+  { name: "Created At" },
+  { name: "Updated At" },
+];
+
 const Page: FC<PageProps> = ({ params }) => {
   const {
     authStore: { user },
   } = useRootStore();
   const router = useRouter();
+  const [indexTab, setTabIndex] = useState<number>(0);
   const [openCoach, setOpenCoach] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>("");
   const [selectedCoach, setSelectedCoach] = useState<any | number>({});
@@ -63,6 +82,9 @@ const Page: FC<PageProps> = ({ params }) => {
       },
     },
   });
+
+  const isHighSchool =
+    data?.school?.schoolType?.name === "High School" ?? false;
 
   const permissionName = getPermission(
     user?.role?.permissions,
@@ -132,6 +154,31 @@ const Page: FC<PageProps> = ({ params }) => {
       },
     },
   });
+
+  const { data: athletesData } = useGetAthletesWithSkillsQuery({
+    variables: {
+      where: {
+        schoolId: {
+          equals: params?.id,
+        },
+        verified: { equals: true },
+      },
+      take: 10,
+    },
+    skip: !isHighSchool,
+  });
+
+  const { data: skillTypesData } = useGetSkillTypesQuery({
+    variables: {
+      orderBy: {
+        position: SortOrder.Asc,
+      },
+    },
+  });
+
+  const handleOnIndexChange = (index: number) => {
+    setTabIndex(index);
+  };
 
   const usersDataOptions = useMemo(() => {
     return coachData?.coachProfiles?.map((a) => {
@@ -318,6 +365,324 @@ const Page: FC<PageProps> = ({ params }) => {
     },
   ];
 
+  const renderSchoolCoaches = () => {
+    return (
+      <div className="mt-11 mb-24 gap-6">
+        <AccessControl name={permissionName}>
+          <div className="mb-11 w-full sm:w-1/2 ml-auto flex flex-col">
+            <ComboboxCard
+              valueKey="value"
+              displayKey="label"
+              IdKey="value"
+              label="Add Coach"
+              id="school-coach"
+              placeholder={"Select Coach"}
+              isOpen={openCoach}
+              scrollAreaClass="h-72"
+              hasSearch
+              shouldFilter={false}
+              searchValue={searchValue}
+              handleSearch={(search) => setSearchValue(search)}
+              loading={userLoading}
+              onClose={() => setOpenCoach(!openCoach)}
+              items={usersDataOptions as any}
+              selectedValue={selectedCoach}
+              customRenderItems={coachCustomItems}
+            />
+            {Object?.keys(selectedCoach)?.length === 0 ? null : (
+              <div className="w-full flex mt-6 ">
+                <Button
+                  size="sm"
+                  className="ml-auto"
+                  variant="default"
+                  onClick={() => setPromptStatus(PromptStatusEnum.ADDING)}
+                >
+                  Add Coach
+                </Button>
+              </div>
+            )}
+          </div>
+        </AccessControl>
+        <SchoolCoaches
+          handleClick={handleRemoveCoach}
+          loading={loadingSchoolCoach}
+          coaches={(schoolCoach?.coachProfiles as any) || []}
+        />
+      </div>
+    );
+  };
+
+  const renderSchoolInterestedAthletes = () => {
+    return (
+      <div className="mt-11 mb-24 gap-6">
+        <AthletesInterested
+          loading={loading}
+          athletesInterested={(data?.school?.athletesInterested as any) || []}
+        />
+      </div>
+    );
+  };
+
+  const tableHead = useMemo(() => {
+    if (skillTypesData?.skillTypes?.length) {
+      const tableHeader = [
+        { name: "PT" },
+        { name: "Athlete" },
+        { name: "Class" },
+        ...skillTypesData?.skillTypes.map((a) => ({ name: a?.name })),
+      ];
+      if (permissionName && isHighSchool) {
+        tableHeader?.push({
+          name: "Actions",
+        });
+      }
+      return tableHeader;
+    } else {
+      return [{ name: "PT" }, { name: "Athlete" }, { name: "Class" }];
+    }
+  }, [isHighSchool, permissionName, skillTypesData?.skillTypes]);
+
+  const tableData = useMemo(() => {
+    if (athletesData?.athleteProfiles?.length) {
+      return athletesData?.athleteProfiles?.map((a, key) => {
+        const skills =
+          skillTypesData?.skillTypes?.length &&
+          skillTypesData?.skillTypes?.map((c) => {
+            return a?.skills?.find((d) => d?.skillType?.id === c?.id)?.value
+              ? `${a?.skills?.find((d) => d?.skillType?.id === c?.id)?.value} ${
+                  c?.unit
+                }`
+              : 0;
+          });
+
+        return [
+          a?.position?.shortName,
+          `${a?.user?.firstname} ${a?.user?.surname}`,
+          a?.graduationYear,
+        ];
+      });
+    } else {
+      return [];
+    }
+  }, [athletesData, skillTypesData]);
+
+  // Filter the athleteProfiles to get matching profiles
+  const matchingAthletes = athletesData?.athleteProfiles
+    ?.map((athlete) => {
+      const matchingSkills: any = skillTypesData?.skillTypes?.map(
+        (skillType) => {
+          return athlete?.skills?.find((skill) => {
+            if (skill.skillType.id === skillType?.id && skill?.value) {
+              return skill;
+            } else {
+              return skill;
+            }
+          });
+        }
+      );
+      // Filter the skills of each athlete to find matching skill types
+
+      // Return the athlete name and the matching skills if there are any matching skills
+      if (matchingSkills?.length > 0) {
+        return {
+          athleteId: athlete?.id,
+          position: athlete?.position?.shortName,
+          name: `${athlete?.user?.firstname} ${athlete?.user?.surname}`,
+          graduationYear: athlete?.graduationYear,
+          ...matchingSkills?.map((skill: any) => ({
+            [skill?.skillType?.name]: skill?.value
+              ? `${skill?.value} ${skill?.skillType?.unit}`
+              : 0,
+          })),
+        };
+      }
+    })
+    .filter((athlete) => athlete !== undefined); // Remove undefined entries
+
+  let newData = matchingAthletes?.map((obj: any) => {
+    return Object.keys(obj).reduce((acc: any, key: any) => {
+      if (!isNaN(parseInt(key))) {
+        let nestedObj: any = obj[key];
+        let nestedKey: any = Object.keys(nestedObj)[0];
+        acc[nestedKey] = nestedObj[nestedKey];
+      } else {
+        acc[key] = obj[key];
+      }
+      return acc;
+    }, {});
+  });
+
+  const renderSchoolTeamPlayers = () => {
+    const renderItems = ({
+      item,
+      id,
+      key,
+    }: {
+      item: any;
+      id: any;
+      key?: any;
+    }) => {
+      const atheleItems = [
+        {
+          name: "View Details",
+          onClick: () => {
+            router.push(`/athlete/${item?.athleteId}`, {
+              scroll: true,
+            });
+          },
+        },
+      ];
+      return (
+        <TableRow key={id} className="text-base">
+          <TableCell className="text-center">
+            <div className="flex flex-row items-center justify-start">
+              <div className="flex items-start justify-center relative my-auto mx-auto rounded-full  h-[49px] w-[49px] shadow cursor-pointer p-4 text-sm capitalize bg-slate-500 text-white">
+                <div className="absolute w-full h-full"> {item?.position}</div>
+              </div>
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center text-base">
+              {item?.name}
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center text-base">
+              {item?.graduationYear}
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center text-base">
+              {item?.Height || 0}
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center text-base">
+              {item?.Weight || 0}
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center text-base">
+              {item["40-Yard Dash"] || 0}
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center text-base">
+              {item["Shuttle time"] || 0}
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center text-base">
+              {item["Vertical Leap"] || 0}
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center text-base">
+              {item["Bench Press Max"] || 0}
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center text-base">
+              {item["185 Bench Press Reps Max"] || 0}
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center text-base">
+              {item["Squat"] || 0}
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center text-base">
+              {item["Hand Span"] || 0}
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center text-base">
+              {item["Hand Length"] || 0}
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center text-base">
+              {item["Wing Span"] || 0}
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center text-base">
+              {item["Broad Jump"] || 0}
+            </div>
+          </TableCell>
+
+          {/* <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center">
+              {item?._count?.users}
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center">
+              {item?._count?.accountTypes}
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center">
+              {item?._count?.permissions}
+            </div>
+          </TableCell>
+          <TableCell className="text-center cursor-pointer text-sm">
+            <div className="text-right w-100 flex flex-row items-center justify-center">
+              {item?.updatedAt
+                ? formatDate(new Date(item?.createdAt), "MMMM dd yyyy")
+                : ""}
+            </div>
+          </TableCell>
+          <TableCell className="text-center cursor-pointer text-sm">
+            <div className="text-right w-100 flex flex-row items-center justify-center">
+              {item?.updatedAt
+                ? formatDate(new Date(item?.updatedAt), "MMMM dd yyyy")
+                : ""}
+            </div>
+          </TableCell> */}
+          <Accesscontrol name={permissionName}>
+            <TableCell className="text-center cursor-pointer text-sm">
+              <div className="text-right w-100 flex flex-row items-center justify-center">
+                <MenubarCard
+                  trigger={
+                    <Button size="icon" variant="outline">
+                      <MoreHorizontalIcon className="cursor-pointer" />
+                    </Button>
+                  }
+                  items={atheleItems}
+                />
+              </div>
+            </TableCell>
+          </Accesscontrol>
+        </TableRow>
+      );
+    };
+    return (
+      <div className="mt-11 mb-24 gap-6">
+        <UniversalTable
+          title="Role List"
+          headerItems={tableHead as HeaderItems[]}
+          items={newData as any[]}
+          loading={loading}
+          renderItems={renderItems}
+        />
+      </div>
+    );
+  };
+
+  const tabsHeader = [{ name: "Coaches" }, { name: "Athletes Interested" }];
+
+  const tabsContnet = [
+    { content: renderSchoolCoaches() },
+    { content: renderSchoolInterestedAthletes() },
+  ];
+
+  if (isHighSchool) {
+    tabsHeader.push({ name: "Team Players" });
+    tabsContnet.push({ content: renderSchoolTeamPlayers() });
+  }
+
   return (
     <main className="w-full h-full relative">
       <Button
@@ -346,43 +711,16 @@ const Page: FC<PageProps> = ({ params }) => {
           </div>
         </div>
       )}
-      <Separator className="my-6" />{" "}
-      <AccessControl name={permissionName}>
-        <div className="mb-6 w-full sm:w-1/2 ml-auto flex flex-col">
-          <ComboboxCard
-            valueKey="value"
-            displayKey="label"
-            IdKey="value"
-            label="Add Coach"
-            id="school-coach"
-            placeholder={"Select Coach"}
-            isOpen={openCoach}
-            scrollAreaClass="h-72"
-            hasSearch
-            shouldFilter={false}
-            searchValue={searchValue}
-            handleSearch={(search) => setSearchValue(search)}
-            loading={userLoading}
-            onClose={() => setOpenCoach(!openCoach)}
-            items={usersDataOptions as any}
-            selectedValue={selectedCoach}
-            customRenderItems={coachCustomItems}
-          />
-          {Object?.keys(selectedCoach)?.length === 0 ? null : (
-            <div className="w-full flex mt-6 ">
-              <Button
-                size="sm"
-                className="ml-auto"
-                variant="default"
-                onClick={() => setPromptStatus(PromptStatusEnum.ADDING)}
-              >
-                Add Coach
-              </Button>
-            </div>
-          )}
-        </div>
-      </AccessControl>
-      <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
+      <TabCard
+        tabIndex={indexTab}
+        onIndexChange={handleOnIndexChange}
+        className="font-TTHovesDemiBold "
+        tabClassName="my-11"
+        tabs={tabsHeader}
+        tabContent={tabsContnet}
+      />
+      <Separator className="my-6 mb-16" />{" "}
+      {/* <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
         <SchoolCoaches
           handleClick={handleRemoveCoach}
           loading={loadingSchoolCoach}
@@ -392,7 +730,7 @@ const Page: FC<PageProps> = ({ params }) => {
           loading={loading}
           athletesInterested={(data?.school?.athletesInterested as any) || []}
         />
-      </Grid>
+      </Grid> */}
       <Grid numItemsMd={1} numItemsLg={1} className="mt-6 gap-6">
         <SchoolCard loading={loading} school={data?.school as any} />
       </Grid>
