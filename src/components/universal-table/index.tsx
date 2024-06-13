@@ -22,7 +22,15 @@ interface UniversalTableProps {
   loading: boolean;
   headerItems: HeaderItems[];
   title: string;
-  renderItems: ({ item, id }: { item: {}; id: number }) => React.ReactNode;
+  renderItems: ({
+    item,
+    id,
+    key,
+  }: {
+    item: {};
+    id: number;
+    key?: any;
+  }) => React.ReactNode;
 }
 
 export type HeaderItems = {
@@ -59,7 +67,7 @@ const UniversalTable: FC<UniversalTableProps> = ({
       <Table className="mt-3 w-full p-0 text-base whitespace-nowrap">
         <TableHeader>
           <TableRow className="hover:bg-transparent">
-            {headerItems.map((item, id) => {
+            {headerItems?.map((item, id) => {
               const firstElem = id !== 0 ? "text-center" : "";
               return (
                 <TableHead className={`${firstElem} py-6`} key={id}>
