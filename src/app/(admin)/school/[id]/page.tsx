@@ -6,14 +6,17 @@ import { FC, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
+  GetAthletesQuery,
   GetAthletesWithSkillsQuery,
   QueryMode,
   SortOrder,
   useGetAthletesQuery,
   useGetAthletesWithSkillsQuery,
   useGetCoachesQuery,
+  useGetPositionsQuery,
   useGetSchoolQuery,
   useGetSkillTypesQuery,
+  useUpdateAthleteMutation,
   useUpdateSchoolMutation,
 } from "@/services/graphql";
 import { useRouter } from "next/navigation";
@@ -27,11 +30,14 @@ import { CheckIcon } from "lucide-react";
 import { CommandItem } from "@/components/ui/command";
 import UserAvatar from "@/components/user-avatar";
 import { useDebouncedValue } from "@mantine/hooks";
-import { cn, formatDate } from "@/lib/utils";
+import { cn, formatDate, getYears } from "@/lib/utils";
 import PromptAlert from "@/components/prompt-alert";
 import { toast } from "@/hooks/use-toast";
 import SchoolCoaches from "@/components/school-coaches";
-import { PromptStatusEnum } from "@/lib/enums/updating-profile.enum";
+import {
+  PromptStatusEnum,
+  StatusEnum,
+} from "@/lib/enums/updating-profile.enum";
 import ContentHeader from "@/components/content-header";
 import { getPermission } from "@/lib/helpers";
 import { useRootStore } from "@/mobx";
@@ -43,12 +49,31 @@ import Accesscontrol from "@/components/accesscontrol";
 import MenubarCard from "@/components/menubar";
 import { MoreHorizontalIcon } from "@/components/Icons";
 import Pagination from "@/components/pagination";
+import athlete from "@/components/Icons/athlete";
+import { SearchInput } from "@/components/search-input";
+import MultiSelector from "@/components/multi-selector";
 
 interface PageProps {
   params: {
     id: number;
   };
 }
+
+const groupIds = {
+  defense: [5, 7, 8, 9, 12, 14],
+  special: [4],
+  offense: [13, 15, 16, 17, 18, 1, 2, 3, 5, 11],
+};
+
+export const athleteHeaderItems = [
+  { name: "Name" },
+  { name: "Username" },
+  { name: "Email" },
+  { name: "Position" },
+  { name: "Created At" },
+  { name: "Updated At" },
+  { name: "Actions" },
+];
 
 const headerItems = [
   { name: "Title" },
@@ -64,12 +89,24 @@ const Page: FC<PageProps> = ({ params }) => {
     authStore: { user },
   } = useRootStore();
   const router = useRouter();
+  const [selectedPosition, setSelectedPosition] = useState<any[]>([]);
+  const [selectedYear, setSelectedYear] = useState<any[]>([]);
+  const [selectedGroup, setSelectedGroup] = useState<any[]>([]);
+  const [value, setValue] = useState<string>("");
+  const [seachVerifyAthlete, setSeachVerifyAthlete] = useState<string>("");
+  const [athleteDebounced] = useDebouncedValue(value, 300);
+  const [verifyAthleteDebounced] = useDebouncedValue(seachVerifyAthlete, 300);
   const [indexTab, setTabIndex] = useState<number>(0);
   const [openCoach, setOpenCoach] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>("");
   const [selectedCoach, setSelectedCoach] = useState<any | number>({});
   const [debounced] = useDebouncedValue(searchValue, 300);
   const [promptStatus, setPromptStatus] = useState<PromptStatusEnum | null>();
+  const [selectedAthlete, setSelectedAthlete] = useState<any | number>({});
+  const [isVerifyingAthlete, setIsVerifyingAthlete] = useState<boolean>(false);
+  const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
+  const [updateAthlete] = useUpdateAthleteMutation();
+
   const [updateSchool, { loading: SchoolUpdateLoading }] =
     useUpdateSchoolMutation();
 
@@ -157,6 +194,15 @@ const Page: FC<PageProps> = ({ params }) => {
     },
   });
 
+  const groupFilter = useMemo(() => {
+    if (selectedGroup.length) {
+      return selectedGroup?.map((a) => a?.ids?.flat())?.flat();
+    }
+    if (selectedPosition.length) {
+      return selectedPosition?.map((a) => a?.id);
+    }
+  }, [selectedPosition, selectedGroup]);
+
   const {
     data: athletesData,
     refetch: refetchAthletes,
@@ -168,7 +214,42 @@ const Page: FC<PageProps> = ({ params }) => {
         schoolId: {
           equals: params?.id,
         },
+        graduationYear: {
+          in:
+            selectedYear?.length > 0
+              ? selectedYear.map((y) => y.value)
+              : undefined,
+        },
+        position: {
+          is: {
+            id: {
+              in: groupFilter || undefined,
+            },
+          },
+        },
         verified: { equals: true },
+        OR: [
+          {
+            user: {
+              is: {
+                firstname: {
+                  contains: athleteDebounced,
+                  mode: QueryMode.Insensitive,
+                },
+              },
+            },
+          },
+          {
+            user: {
+              is: {
+                surname: {
+                  contains: athleteDebounced,
+                  mode: QueryMode.Insensitive,
+                },
+              },
+            },
+          },
+        ],
       },
       take: 10,
       orderBy: {
@@ -177,6 +258,87 @@ const Page: FC<PageProps> = ({ params }) => {
     },
     skip: !isHighSchool,
   });
+
+  const {
+    data: verifyAthleteData,
+    loading: LoadingVerifyAthleteData,
+    refetch: refetchVerifyAthlete,
+    fetchMore: fetchMoreVerifyAthlete,
+  } = useGetAthletesQuery({
+    variables: {
+      take: 10,
+      where: {
+        verified: { equals: false },
+        schoolId: { equals: params?.id },
+        OR: [
+          {
+            user: {
+              is: {
+                username: {
+                  contains: verifyAthleteDebounced,
+                  mode: QueryMode.Insensitive,
+                },
+              },
+            },
+          },
+          {
+            user: {
+              is: {
+                firstname: {
+                  contains: verifyAthleteDebounced,
+                  mode: QueryMode.Insensitive,
+                },
+              },
+            },
+          },
+          {
+            user: {
+              is: {
+                surname: {
+                  contains: verifyAthleteDebounced,
+                  mode: QueryMode.Insensitive,
+                },
+              },
+            },
+          },
+        ],
+      },
+      orderBy: {
+        createdAt: SortOrder.Desc,
+      },
+    },
+    skip: !isHighSchool,
+  });
+
+  const { data: positionsData, loading: loadingPosition } =
+    useGetPositionsQuery({
+      variables: {
+        orderBy: { name: SortOrder.Asc },
+      },
+      skip: !isHighSchool,
+    });
+
+  const positions = useMemo(
+    () =>
+      positionsData?.positions?.map((position) => ({
+        label: position?.name,
+        value: position?.id,
+        id: position?.id,
+      })) || [],
+    [positionsData?.positions]
+  );
+
+  const years = useMemo(
+    () =>
+      getYears(5, "add")
+        .map((year) => ({
+          label: year.toString(),
+          value: year.toString(),
+          id: year.toString(),
+        }))
+        .reverse() || [],
+    []
+  );
 
   const { data: skillTypesData } = useGetSkillTypesQuery({
     variables: {
@@ -477,11 +639,11 @@ const Page: FC<PageProps> = ({ params }) => {
     }
   }, [athletesData?.athleteProfiles, skillTypesData]);
 
-  let newDataNew = tableData?.map((obj: any) => {
-    return Object.keys(obj).reduce((acc: any, key: any) => {
+  let filterAthlete = tableData?.map((obj: any) => {
+    return Object?.keys(obj)?.reduce((acc: any, key: any) => {
       if (!isNaN(parseInt(key))) {
         let nestedObj: any = obj[key];
-        let nestedKey: any = Object.keys(nestedObj)[0];
+        let nestedKey: any = Object?.keys(nestedObj)[0];
         acc[nestedKey] = nestedObj[nestedKey];
       } else {
         acc[key] = obj[key];
@@ -527,6 +689,34 @@ const Page: FC<PageProps> = ({ params }) => {
         },
       });
     };
+    const handleSelectOption = (selectedList: any, selectedItem: any) => {
+      setSelectedPosition((prev: any) => [...prev, selectedItem]);
+    };
+
+    const handleRemoveOption = (selectedList: any, removedItem: any) => {
+      setSelectedPosition((prev: any) => [
+        ...prev?.filter((a: any) => a?.id !== removedItem?.id),
+      ]);
+    };
+
+    const handleSelectYear = (selectedList: any, selectedItem: any) => {
+      setSelectedYear((prev: any) => [...prev, selectedItem]);
+    };
+
+    const handleRemoveYear = (selectedList: any, removedItem: any) => {
+      setSelectedYear((prev: any) => [
+        ...prev?.filter((a: any) => a?.id !== removedItem?.id),
+      ]);
+    };
+    const handleSelectGroup = (selectedList: any, selectedItem: any) => {
+      setSelectedGroup((prev: any) => [...prev, selectedItem]);
+    };
+
+    const handleRemoveGroup = (selectedList: any, removedItem: any) => {
+      setSelectedGroup((prev: any) => [
+        ...prev?.filter((a: any) => a?.id !== removedItem?.id),
+      ]);
+    };
 
     const fetchPrevious = () => {
       fetchMoreAthletes({
@@ -558,15 +748,8 @@ const Page: FC<PageProps> = ({ params }) => {
         },
       });
     };
-    const renderItems = ({
-      item,
-      id,
-      key,
-    }: {
-      item: any;
-      id: any;
-      key?: any;
-    }) => {
+
+    const renderItems = ({ item, id }: { item: any; id: any }) => {
       const atheleItems = [
         {
           name: "View Details",
@@ -582,7 +765,9 @@ const Page: FC<PageProps> = ({ params }) => {
           <TableCell className="text-center">
             <div className="flex flex-row items-center justify-start">
               <div className="flex items-start justify-center relative my-auto mx-auto rounded-full  h-[49px] w-[49px] shadow cursor-pointer p-4 text-sm capitalize bg-slate-500 text-white">
-                <div className="absolute w-full h-full"> {item?.position}</div>
+                <div className="absolute w-full text-sm h-full font-TTHovesBold">
+                  {item?.position}
+                </div>
               </div>
             </div>
           </TableCell>
@@ -656,36 +841,6 @@ const Page: FC<PageProps> = ({ params }) => {
               {item["Broad Jump"] || 0}
             </div>
           </TableCell>
-
-          {/* <TableCell className="text-center text-sm">
-            <div className="flex flex-row items-center justify-center">
-              {item?._count?.users}
-            </div>
-          </TableCell>
-          <TableCell className="text-center text-sm">
-            <div className="flex flex-row items-center justify-center">
-              {item?._count?.accountTypes}
-            </div>
-          </TableCell>
-          <TableCell className="text-center text-sm">
-            <div className="flex flex-row items-center justify-center">
-              {item?._count?.permissions}
-            </div>
-          </TableCell>
-          <TableCell className="text-center cursor-pointer text-sm">
-            <div className="text-right w-100 flex flex-row items-center justify-center">
-              {item?.updatedAt
-                ? formatDate(new Date(item?.createdAt), "MMMM dd yyyy")
-                : ""}
-            </div>
-          </TableCell>
-          <TableCell className="text-center cursor-pointer text-sm">
-            <div className="text-right w-100 flex flex-row items-center justify-center">
-              {item?.updatedAt
-                ? formatDate(new Date(item?.updatedAt), "MMMM dd yyyy")
-                : ""}
-            </div>
-          </TableCell> */}
           <Accesscontrol name={permissionName}>
             <TableCell className="text-center cursor-pointer text-sm">
               <div className="text-right w-100 flex flex-row items-center justify-center">
@@ -703,12 +858,92 @@ const Page: FC<PageProps> = ({ params }) => {
         </TableRow>
       );
     };
+
     return (
       <div className="mt-11 mb-24 gap-6">
+        <Grid numItemsMd={2} numItemsLg={3} className="mt-6 gap-6">
+          <div>
+            <div className="mb-2 text-sm font-TTHovesRegular">
+              Filter Position
+            </div>
+            <MultiSelector
+              options={positions}
+              disable={loadingPosition}
+              loading={loadingPosition}
+              displayValue="label"
+              placeholder="Select Postion"
+              showCheckbox={true}
+              hidePlaceholder={true}
+              avoidHighlightFirstOption={true}
+              selectedOptions={selectedPosition as any[]}
+              handleRemove={handleRemoveOption}
+              handleSelect={handleSelectOption}
+            />
+          </div>
+          <div>
+            <div className="mb-2 text-sm font-TTHovesRegular">Filter Year</div>
+            <MultiSelector
+              options={years}
+              disable={false}
+              loading={false}
+              displayValue="label"
+              placeholder="Select Year"
+              showCheckbox={true}
+              hidePlaceholder={true}
+              avoidHighlightFirstOption={true}
+              selectedOptions={selectedYear as any[]}
+              handleRemove={handleRemoveYear}
+              handleSelect={handleSelectYear}
+            />
+          </div>
+          <div>
+            <div className="mb-2 text-sm font-TTHovesRegular">Filter Group</div>
+            <MultiSelector
+              options={[
+                {
+                  label: "Offense",
+                  value: "offense",
+                  id: "offense",
+                  ids: [13, 15, 16, 17, 18, 1, 2, 3, 5, 11],
+                },
+                {
+                  label: "Defense",
+                  value: "defense",
+                  id: "defense",
+                  ids: [5, 7, 8, 9, 12, 14],
+                },
+                {
+                  label: "Special Teams",
+                  value: "special",
+                  id: "special",
+                  ids: [4],
+                },
+              ]}
+              disable={false}
+              loading={false}
+              displayValue="label"
+              placeholder="Select Group"
+              showCheckbox={true}
+              hidePlaceholder={true}
+              avoidHighlightFirstOption={true}
+              selectedOptions={selectedGroup as any[]}
+              handleRemove={handleRemoveGroup}
+              handleSelect={handleSelectGroup}
+            />
+          </div>
+        </Grid>
+        <div className="flex mt-6 gap-6 w-full justify-end">
+          <div className="w-full md:w-1/2 order-2">
+            <SearchInput
+              onChange={(e) => setValue(e.target.value)}
+              placeholder="Type to search..."
+            />
+          </div>
+        </div>
         <UniversalTable
-          title="Role List"
+          title="Team Players"
           headerItems={tableHead as HeaderItems[]}
-          items={newDataNew as any[]}
+          items={filterAthlete as any[]}
           loading={LoadingAthletes}
           renderItems={renderItems}
         />
@@ -719,16 +954,254 @@ const Page: FC<PageProps> = ({ params }) => {
     );
   };
 
-  const tabsHeader = [{ name: "Coaches" }, { name: "Athletes Interested" }];
+  const renderLockerRoom = () => {
+    return <div>In Progress</div>;
+  };
 
-  const tabsContnet = [
-    { content: renderSchoolCoaches() },
-    { content: renderSchoolInterestedAthletes() },
-  ];
+  const handleVerifyAthlete = (item: any) => {
+    setUpdatingProfile(StatusEnum.VERIFYING);
+    setSelectedAthlete(item);
+  };
 
-  if (isHighSchool) {
-    tabsHeader.push({ name: "Team Players" });
-    tabsContnet.push({ content: renderSchoolTeamPlayers() });
+  const handleVerifyAthleteConfirmPrompt = async (item: any) => {
+    setIsVerifyingAthlete(true);
+    setUpdatingProfile(StatusEnum.VERIFYING);
+    try {
+      console.log("item", item);
+      await updateAthlete({
+        variables: {
+          where: { id: item?.id },
+          data: {
+            verified: { set: true },
+            verifiedBy: { connect: { id: user?.coachProfile?.id } },
+          },
+        },
+      });
+      await refetchVerifyAthlete({});
+      toast({
+        title: "Profile successfully updated.",
+        description: `@${item?.user?.username} profile has been verified`,
+        variant: "successfull",
+      });
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not successfully verify profile. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    } finally {
+      setUpdatingProfile(null);
+      setSelectedAthlete(null);
+    }
+  };
+
+  const lastVerifyAthleteId = useMemo(() => {
+    const lastPostInResults =
+      verifyAthleteData?.athleteProfiles[
+        verifyAthleteData?.athleteProfiles?.length - 1
+      ];
+    return lastPostInResults?.id;
+  }, [verifyAthleteData?.athleteProfiles]);
+
+  const renderVerifyAthletes = () => {
+    const fetchPrevious = () => {
+      fetchMoreVerifyAthlete({
+        variables: {
+          take: -10,
+          skip: verifyAthleteData?.athleteProfiles?.length,
+          cursor: {
+            id: lastVerifyAthleteId,
+          },
+          orderBy: {
+            createdAt: SortOrder.Desc,
+          },
+        },
+        updateQuery: (
+          previousResult: GetAthletesQuery,
+          { fetchMoreResult }
+        ): GetAthletesQuery => {
+          if (
+            !fetchMoreResult ||
+            fetchMoreResult?.athleteProfiles?.length === 0
+          ) {
+            return previousResult;
+          } else {
+            const previousPosts = previousResult?.athleteProfiles;
+            const fetchMorePosts = fetchMoreResult?.athleteProfiles;
+            fetchMoreResult.athleteProfiles = [...fetchMorePosts];
+            return { ...fetchMoreResult };
+          }
+        },
+      });
+    };
+
+    const fetchNext = () => {
+      fetchMoreVerifyAthlete({
+        variables: {
+          take: 10,
+          skip: 1,
+          cursor: {
+            id: lastVerifyAthleteId,
+          },
+          orderBy: {
+            createdAt: SortOrder.Desc,
+          },
+        },
+        updateQuery: (
+          previousResult: GetAthletesQuery,
+          { fetchMoreResult }
+        ): GetAthletesQuery => {
+          if (
+            !fetchMoreResult ||
+            fetchMoreResult?.athleteProfiles?.length === 0
+          ) {
+            return previousResult;
+          } else {
+            const previousPosts = previousResult?.athleteProfiles;
+            const fetchMorePosts = fetchMoreResult?.athleteProfiles;
+            fetchMoreResult.athleteProfiles = [...fetchMorePosts];
+            return { ...fetchMoreResult };
+          }
+        },
+      });
+    };
+
+    const renderItems = ({ item, id }: { item: any; id: any }) => {
+      const verifyAtheleItems = [
+        {
+          name: "View Details",
+          onClick: () => {
+            router.push(`/athlete/${item?.athleteId}`, {
+              scroll: true,
+            });
+          },
+        },
+      ];
+      if (permissionName !== ("" || null || undefined)) {
+        verifyAtheleItems.push({
+          name: "Verify Profile",
+          onClick: () => handleVerifyAthlete(item),
+        });
+      }
+
+      return (
+        <TableRow key={id} className="text-base">
+          <TableCell>
+            <div
+              className="flex flex-row items-center justify-start"
+              onClick={() =>
+                router.push(`/athlete/${item?.user?.id}`, {
+                  scroll: true,
+                })
+              }
+            >
+              <UserAvatar
+                className="h-[79px] w-[79px] shadow cursor-pointer"
+                fallbackType="name"
+                avatar={item?.user?.avatar as string}
+                fallback={`${item?.user?.username?.charAt(
+                  0
+                )} ${item?.user?.firstname?.charAt(0)}`}
+              />
+              <div className="ml-4 cursor-pointer text-base">
+                {item?.user?.firstname} {item?.user?.surname}
+              </div>
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div>
+              {item?.user?.username
+                ? `@${item?.user?.username?.toLowerCase()}`
+                : ""}
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div>{item?.user?.email?.toLowerCase()}</div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center">
+              <div className="mr-2">{item?.position?.name}</div>{" "}
+              <div>({item?.position?.shortName})</div>
+            </div>
+          </TableCell>
+          <TableCell className="text-center cursor-pointer text-sm">
+            <div className="text-right w-100 flex flex-row items-center justify-center">
+              {item?.createdAt
+                ? formatDate(new Date(item?.createdAt), "MMMM dd yyyy")
+                : ""}
+            </div>
+          </TableCell>
+          <TableCell className="text-center cursor-pointer text-sm">
+            <div className="text-right w-100 flex flex-row items-center justify-center">
+              {item?.updatedAt
+                ? formatDate(new Date(item?.updatedAt), "MMMM dd yyyy")
+                : ""}
+            </div>
+          </TableCell>
+          <Accesscontrol name={permissionName}>
+            <TableCell className="text-center cursor-pointer text-sm">
+              <div className="text-right w-100 flex flex-row items-center justify-center">
+                <MenubarCard
+                  trigger={
+                    <Button size="icon" variant="outline">
+                      <MoreHorizontalIcon className="cursor-pointer" />
+                    </Button>
+                  }
+                  items={verifyAtheleItems}
+                />
+              </div>
+            </TableCell>
+          </Accesscontrol>
+        </TableRow>
+      );
+    };
+
+    return (
+      <div className="mt-11 mb-24 gap-6">
+        <div className="flex mt-6 gap-6 w-full justify-end">
+          <div className="w-full md:w-1/2 order-2">
+            <SearchInput
+              onChange={(e) => setSeachVerifyAthlete(e.target.value)}
+              placeholder="Type to search..."
+            />
+          </div>
+        </div>
+        <UniversalTable
+          title="Verify Athletes"
+          headerItems={athleteHeaderItems as HeaderItems[]}
+          items={verifyAthleteData?.athleteProfiles as any[]}
+          loading={LoadingVerifyAthleteData}
+          renderItems={renderItems}
+        />
+        {LoadingVerifyAthleteData ||
+        !verifyAthleteData?.athleteProfiles?.length ? null : (
+          <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
+        )}
+      </div>
+    );
+  };
+
+  const tabsHeader = [{ name: "Coaches" }];
+  const tabsContent = [{ content: renderSchoolCoaches() }];
+
+  if (!loading) {
+    if (isHighSchool) {
+      tabsHeader?.push(
+        { name: "Team Players" },
+        { name: "Verify Athletes" },
+        { name: "Locker Room" }
+      );
+      tabsContent?.push(
+        { content: renderSchoolTeamPlayers() },
+        { content: renderVerifyAthletes() },
+        { content: renderLockerRoom() }
+      );
+    } else {
+      tabsHeader?.push({ name: "Athletes Interested" });
+      tabsContent?.push({ content: renderSchoolInterestedAthletes() });
+    }
   }
 
   return (
@@ -765,7 +1238,7 @@ const Page: FC<PageProps> = ({ params }) => {
         className="font-TTHovesDemiBold "
         tabClassName="my-11"
         tabs={tabsHeader}
-        tabContent={tabsContnet}
+        tabContent={tabsContent}
       />
       <Separator className="my-6 mb-16" />{" "}
       {/* <Grid numItemsMd={2} numItemsLg={2} className="mt-6 gap-6">
@@ -802,6 +1275,18 @@ const Page: FC<PageProps> = ({ params }) => {
         }}
         handleConfirmPrompt={() =>
           handleConfirmRemoveCoachPrompt(selectedCoach)
+        }
+      />
+      <PromptAlert
+        loading={isVerifyingAthlete}
+        content={`This action will permanently delete @${selectedAthlete?.user?.username} from our servers.`}
+        showPrompt={updatingProfile === StatusEnum.VERIFYING}
+        handleHidePrompt={() => {
+          setUpdatingProfile(null);
+          setSelectedAthlete({});
+        }}
+        handleConfirmPrompt={() =>
+          handleVerifyAthleteConfirmPrompt(selectedAthlete)
         }
       />
     </main>

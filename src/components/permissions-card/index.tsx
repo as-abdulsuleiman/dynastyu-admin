@@ -36,10 +36,12 @@ import Accesscontrol from "../accesscontrol";
 import Pagination from "../pagination";
 import { SearchInput } from "../search-input";
 import { useDebouncedValue } from "@mantine/hooks";
+import { observer } from "mobx-react-lite";
+import { Grid } from "@tremor/react";
 
 type FormData = yup.InferType<typeof PermissionValidator>;
 
-export const PermissionsCard: FC = () => {
+const PermissionsCard: FC = () => {
   const router = useRouter();
   const {
     authStore: { user },
@@ -422,7 +424,7 @@ export const PermissionsCard: FC = () => {
       <Separator className="my-6" />
       <Accesscontrol name={permissionName}>
         <Button
-          className="flex flex-row ml-auto"
+          className="flex flex-row ml-auto mt-3"
           onClick={() => {
             setIsNew(true);
             setIsOpen(true);
@@ -432,11 +434,15 @@ export const PermissionsCard: FC = () => {
           <PlusIcon className="ml-3 h-[18px] w-[18px]" />
         </Button>
       </Accesscontrol>
-      <Separator className="my-6" />
-      <SearchInput
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="Type to search..."
-      />
+      {/* <Separator className="my-6" /> */}
+      <Grid numItemsMd={1} numItemsLg={2} className="mt-6 gap-6">
+        <SearchInput
+          className="my-8"
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Type to search..."
+        />
+      </Grid>
+
       <UniversalTable
         title="Permissions List"
         headerItems={permissionsHeaderItems}
@@ -476,3 +482,5 @@ export const PermissionsCard: FC = () => {
     </div>
   );
 };
+
+export default observer(PermissionsCard);

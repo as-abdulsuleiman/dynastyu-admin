@@ -1,7 +1,7 @@
 /** @format */
 
-import { PermissionsCard } from "@/components/permissions-card";
 import { FC } from "react";
+import PermissionsCard from "@/components/permissions-card";
 
 interface PageProps {}
 
