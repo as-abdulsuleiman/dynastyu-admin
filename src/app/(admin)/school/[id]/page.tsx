@@ -47,11 +47,16 @@ import UniversalTable, { HeaderItems } from "@/components/universal-table";
 import { TableCell, TableRow } from "@/components/ui/table";
 import Accesscontrol from "@/components/accesscontrol";
 import MenubarCard from "@/components/menubar";
-import { MoreHorizontalIcon } from "@/components/Icons";
+import {
+  BadgeAlertIcon,
+  BadgeCheckIcon,
+  MoreHorizontalIcon,
+} from "@/components/Icons";
 import Pagination from "@/components/pagination";
 import athlete from "@/components/Icons/athlete";
 import { SearchInput } from "@/components/search-input";
 import MultiSelector from "@/components/multi-selector";
+import BadgeCard from "@/components/badge-card";
 
 interface PageProps {
   params: {
@@ -65,13 +70,25 @@ const groupIds = {
   offense: [13, 15, 16, 17, 18, 1, 2, 3, 5, 11],
 };
 
-export const athleteHeaderItems = [
+const athleteHeaderItems = [
   { name: "Name" },
   { name: "Username" },
   { name: "Email" },
   { name: "Position" },
   { name: "Created At" },
   { name: "Updated At" },
+  { name: "Status" },
+  { name: "Actions" },
+];
+
+const LockerHeaderItems = [
+  { name: "Name" },
+  { name: "Username" },
+  { name: "Email" },
+  { name: "Position" },
+  { name: "Created At" },
+  { name: "Updated At" },
+  { name: "Status" },
   { name: "Actions" },
 ];
 
@@ -95,6 +112,8 @@ const Page: FC<PageProps> = ({ params }) => {
   const [value, setValue] = useState<string>("");
   const [seachVerifyAthlete, setSeachVerifyAthlete] = useState<string>("");
   const [athleteDebounced] = useDebouncedValue(value, 300);
+  const [searchLockerAthlete, setSeachLockerAthlete] = useState<string>("");
+  const [lockerAthleteDebounced] = useDebouncedValue(searchLockerAthlete, 300);
   const [verifyAthleteDebounced] = useDebouncedValue(seachVerifyAthlete, 300);
   const [indexTab, setTabIndex] = useState<number>(0);
   const [openCoach, setOpenCoach] = useState<boolean>(false);
@@ -121,6 +140,8 @@ const Page: FC<PageProps> = ({ params }) => {
       },
     },
   });
+
+  console.log("selectedAthlete", selectedAthlete);
 
   const isHighSchool =
     data?.school?.schoolType?.name === "High School" ?? false;
@@ -296,6 +317,57 @@ const Page: FC<PageProps> = ({ params }) => {
               is: {
                 surname: {
                   contains: verifyAthleteDebounced,
+                  mode: QueryMode.Insensitive,
+                },
+              },
+            },
+          },
+        ],
+      },
+      orderBy: {
+        createdAt: SortOrder.Desc,
+      },
+    },
+    skip: !isHighSchool,
+  });
+
+  const {
+    data: lockerAthleteData,
+    loading: LoadingLockerAthleteData,
+    refetch: refetchLockerAthlete,
+    fetchMore: fetchMoreLockerAthlete,
+  } = useGetAthletesQuery({
+    variables: {
+      take: 10,
+      where: {
+        verified: { equals: true },
+        schoolId: { equals: params?.id },
+        OR: [
+          {
+            user: {
+              is: {
+                username: {
+                  contains: lockerAthleteDebounced,
+                  mode: QueryMode.Insensitive,
+                },
+              },
+            },
+          },
+          {
+            user: {
+              is: {
+                firstname: {
+                  contains: lockerAthleteDebounced,
+                  mode: QueryMode.Insensitive,
+                },
+              },
+            },
+          },
+          {
+            user: {
+              is: {
+                surname: {
+                  contains: lockerAthleteDebounced,
                   mode: QueryMode.Insensitive,
                 },
               },
@@ -954,8 +1026,246 @@ const Page: FC<PageProps> = ({ params }) => {
     );
   };
 
+  const lastLockerAthleteId = useMemo(() => {
+    const lastPostInResults =
+      lockerAthleteData?.athleteProfiles[
+        lockerAthleteData?.athleteProfiles?.length - 1
+      ];
+    return lastPostInResults?.id;
+  }, [lockerAthleteData?.athleteProfiles]);
+
+  const handleRemoveLockerAthlete = (item: any) => {
+    setUpdatingProfile(StatusEnum.DELETING);
+    setSelectedAthlete(item);
+  };
+
+  const handleRemoveLockerAthleteConfirmPrompt = async (item: any) => {
+    try {
+      await updateSchool({
+        variables: {
+          where: {
+            id: params?.id,
+          },
+          data: {
+            athletes: {
+              disconnect: [{ userId: item?.user?.id }],
+            },
+          },
+        },
+      });
+      await refetchLockerAthlete();
+      toast({
+        title: "Profile successfully removed.",
+        description: `@${item?.user?.username} profile has been removed`,
+        variant: "successfull",
+      });
+    } catch (error) {
+      toast({
+        title: "Something went wrong.",
+        description: `${
+          error || "Could not successfully remove profile. Please try again."
+        }`,
+        variant: "destructive",
+      });
+    } finally {
+      setUpdatingProfile(null);
+      setSelectedAthlete(null);
+    }
+  };
+
   const renderLockerRoom = () => {
-    return <div>In Progress</div>;
+    const fetchPrevious = () => {
+      fetchMoreLockerAthlete({
+        variables: {
+          take: -10,
+          skip: lockerAthleteData?.athleteProfiles?.length,
+          cursor: {
+            id: lastLockerAthleteId,
+          },
+          orderBy: {
+            createdAt: SortOrder.Desc,
+          },
+        },
+        updateQuery: (
+          previousResult: GetAthletesQuery,
+          { fetchMoreResult }
+        ): GetAthletesQuery => {
+          if (
+            !fetchMoreResult ||
+            fetchMoreResult?.athleteProfiles?.length === 0
+          ) {
+            return previousResult;
+          } else {
+            const previousPosts = previousResult?.athleteProfiles;
+            const fetchMorePosts = fetchMoreResult?.athleteProfiles;
+            fetchMoreResult.athleteProfiles = [...fetchMorePosts];
+            return { ...fetchMoreResult };
+          }
+        },
+      });
+    };
+
+    const fetchNext = () => {
+      fetchMoreLockerAthlete({
+        variables: {
+          take: 10,
+          skip: 1,
+          cursor: {
+            id: lastLockerAthleteId,
+          },
+          orderBy: {
+            createdAt: SortOrder.Desc,
+          },
+        },
+        updateQuery: (
+          previousResult: GetAthletesQuery,
+          { fetchMoreResult }
+        ): GetAthletesQuery => {
+          if (
+            !fetchMoreResult ||
+            fetchMoreResult?.athleteProfiles?.length === 0
+          ) {
+            return previousResult;
+          } else {
+            const previousPosts = previousResult?.athleteProfiles;
+            const fetchMorePosts = fetchMoreResult?.athleteProfiles;
+            fetchMoreResult.athleteProfiles = [...fetchMorePosts];
+            return { ...fetchMoreResult };
+          }
+        },
+      });
+    };
+
+    const renderItems = ({ item, id }: { item: any; id: any }) => {
+      const lockerAtheleItems = [
+        {
+          name: "View Details",
+          onClick: () => {
+            router.push(`/athlete/${item?.userId}`, {
+              scroll: true,
+            });
+          },
+        },
+      ];
+      if (permissionName !== ("" || null || undefined)) {
+        lockerAtheleItems.push({
+          name: "Remove Profile",
+          onClick: () => handleRemoveLockerAthlete(item),
+        });
+      }
+
+      return (
+        <TableRow key={id} className="text-base">
+          <TableCell>
+            <div
+              className="flex flex-row items-center justify-start"
+              onClick={() =>
+                router.push(`/athlete/${item?.user?.id}`, {
+                  scroll: true,
+                })
+              }
+            >
+              <UserAvatar
+                className="h-[79px] w-[79px] shadow cursor-pointer"
+                fallbackType="name"
+                avatar={item?.user?.avatar as string}
+                fallback={`${item?.user?.username?.charAt(
+                  0
+                )} ${item?.user?.firstname?.charAt(0)}`}
+              />
+              <div className="ml-4 cursor-pointer text-base">
+                {item?.user?.firstname} {item?.user?.surname}
+              </div>
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div>
+              {item?.user?.username
+                ? `@${item?.user?.username?.toLowerCase()}`
+                : ""}
+            </div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div>{item?.user?.email?.toLowerCase()}</div>
+          </TableCell>
+          <TableCell className="text-center text-sm">
+            <div className="flex flex-row items-center justify-center">
+              <div className="mr-2">{item?.position?.name}</div>{" "}
+              <div>({item?.position?.shortName})</div>
+            </div>
+          </TableCell>
+          <TableCell className="text-center cursor-pointer text-sm">
+            <div className="text-right w-100 flex flex-row items-center justify-center">
+              {item?.createdAt
+                ? formatDate(new Date(item?.createdAt), "MMMM dd yyyy")
+                : ""}
+            </div>
+          </TableCell>
+          <TableCell className="text-center cursor-pointer text-sm">
+            <div className="text-right w-100 flex flex-row items-center justify-center">
+              {item?.updatedAt
+                ? formatDate(new Date(item?.updatedAt), "MMMM dd yyyy")
+                : ""}
+            </div>
+          </TableCell>
+          <TableCell className="text-sm">
+            <div className="text-right w-100 flex flex-row items-center justify-center">
+              <BadgeCard
+                size="xs"
+                className="px-[8px]"
+                color={"sky"}
+                icon={() => {
+                  return (
+                    <BadgeCheckIcon className="h-4 w-4 mr-1" color="sky" />
+                  );
+                }}
+                datatype="moderateDecrease"
+              >
+                Verified
+              </BadgeCard>
+            </div>
+          </TableCell>
+          <Accesscontrol name={permissionName}>
+            <TableCell className="text-center cursor-pointer text-sm">
+              <div className="text-right w-100 flex flex-row items-center justify-center">
+                <MenubarCard
+                  trigger={
+                    <Button size="icon" variant="outline">
+                      <MoreHorizontalIcon className="cursor-pointer" />
+                    </Button>
+                  }
+                  items={lockerAtheleItems}
+                />
+              </div>
+            </TableCell>
+          </Accesscontrol>
+        </TableRow>
+      );
+    };
+
+    return (
+      <div className="mt-11 mb-24 gap-6">
+        <div className="flex mt-6 gap-6 w-full justify-end">
+          <div className="w-full md:w-1/2 order-2">
+            <SearchInput
+              onChange={(e) => setSeachLockerAthlete(e.target.value)}
+              placeholder="Type to search..."
+            />
+          </div>
+        </div>
+        <UniversalTable
+          title="Locker Room Athletes"
+          headerItems={LockerHeaderItems as HeaderItems[]}
+          items={lockerAthleteData?.athleteProfiles as any[]}
+          loading={LoadingLockerAthleteData}
+          renderItems={renderItems}
+        />
+        {LoadingLockerAthleteData ||
+        !lockerAthleteData?.athleteProfiles?.length ? null : (
+          <Pagination onNext={fetchNext} onPrevious={fetchPrevious} />
+        )}
+      </div>
+    );
   };
 
   const handleVerifyAthlete = (item: any) => {
@@ -967,7 +1277,6 @@ const Page: FC<PageProps> = ({ params }) => {
     setIsVerifyingAthlete(true);
     setUpdatingProfile(StatusEnum.VERIFYING);
     try {
-      console.log("item", item);
       await updateAthlete({
         variables: {
           where: { id: item?.id },
@@ -1073,7 +1382,7 @@ const Page: FC<PageProps> = ({ params }) => {
         {
           name: "View Details",
           onClick: () => {
-            router.push(`/athlete/${item?.athleteId}`, {
+            router.push(`/athlete/${item?.userId}`, {
               scroll: true,
             });
           },
@@ -1138,6 +1447,23 @@ const Page: FC<PageProps> = ({ params }) => {
               {item?.updatedAt
                 ? formatDate(new Date(item?.updatedAt), "MMMM dd yyyy")
                 : ""}
+            </div>
+          </TableCell>
+          <TableCell className="text-sm">
+            <div className="text-right w-100 flex flex-row items-center justify-center">
+              <BadgeCard
+                size="xs"
+                className="px-[8px]"
+                color={"rose"}
+                icon={() => {
+                  return (
+                    <BadgeAlertIcon className="h-4 w-4 mr-1" color="rose" />
+                  );
+                }}
+                datatype="moderateDecrease"
+              >
+                Not Verified
+              </BadgeCard>
             </div>
           </TableCell>
           <Accesscontrol name={permissionName}>
@@ -1279,7 +1605,7 @@ const Page: FC<PageProps> = ({ params }) => {
       />
       <PromptAlert
         loading={isVerifyingAthlete}
-        content={`This action will permanently delete @${selectedAthlete?.user?.username} from our servers.`}
+        content={`This action will verify @${selectedAthlete?.user?.username}.`}
         showPrompt={updatingProfile === StatusEnum.VERIFYING}
         handleHidePrompt={() => {
           setUpdatingProfile(null);
@@ -1287,6 +1613,18 @@ const Page: FC<PageProps> = ({ params }) => {
         }}
         handleConfirmPrompt={() =>
           handleVerifyAthleteConfirmPrompt(selectedAthlete)
+        }
+      />
+      <PromptAlert
+        loading={SchoolUpdateLoading}
+        content={`This action will remove @${selectedAthlete?.user?.username} from this school.`}
+        showPrompt={updatingProfile === StatusEnum.DELETING}
+        handleHidePrompt={() => {
+          setUpdatingProfile(null);
+          setSelectedAthlete({});
+        }}
+        handleConfirmPrompt={() =>
+          handleRemoveLockerAthleteConfirmPrompt(selectedAthlete)
         }
       />
     </main>
