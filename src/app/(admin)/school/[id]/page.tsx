@@ -43,6 +43,7 @@ import Accesscontrol from "@/components/accesscontrol";
 import MenubarCard from "@/components/menubar";
 import { MoreHorizontalIcon } from "@/components/Icons";
 import Pagination from "@/components/pagination";
+import CompareAthleteCard from "@/components/compare-athlete-card";
 
 interface PageProps {
   params: {
@@ -719,6 +720,10 @@ const Page: FC<PageProps> = ({ params }) => {
     );
   };
 
+  const renderSchoolComparePlayers = () => {
+    return <CompareAthleteCard params={params} />;
+  };
+
   const tabsHeader = [{ name: "Coaches" }, { name: "Athletes Interested" }];
 
   const tabsContnet = [
@@ -727,8 +732,13 @@ const Page: FC<PageProps> = ({ params }) => {
   ];
 
   if (isHighSchool) {
-    tabsHeader.push({ name: "Team Players" });
-    tabsContnet.push({ content: renderSchoolTeamPlayers() });
+    tabsHeader.push({ name: "Team Players" }, { name: "Compare Players" });
+    tabsContnet.push(
+      {
+        content: renderSchoolTeamPlayers(),
+      },
+      { content: renderSchoolComparePlayers() }
+    );
   }
 
   return (
