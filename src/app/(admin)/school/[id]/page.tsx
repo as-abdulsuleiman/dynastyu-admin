@@ -77,7 +77,6 @@ const athleteHeaderItems = [
   { name: "Position" },
   { name: "Created At" },
   { name: "Updated At" },
-  { name: "Status" },
   { name: "Actions" },
 ];
 
@@ -123,6 +122,8 @@ const Page: FC<PageProps> = ({ params }) => {
   const [promptStatus, setPromptStatus] = useState<PromptStatusEnum | null>();
   const [selectedAthlete, setSelectedAthlete] = useState<any | number>({});
   const [isVerifyingAthlete, setIsVerifyingAthlete] = useState<boolean>(false);
+  const [isRemovingLockerAthlete, setIsRemovingLockerAthlete] =
+    useState<boolean>(false);
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
   const [updateAthlete] = useUpdateAthleteMutation();
 
@@ -1040,20 +1041,19 @@ const Page: FC<PageProps> = ({ params }) => {
   };
 
   const handleRemoveLockerAthleteConfirmPrompt = async (item: any) => {
+    setIsRemovingLockerAthlete(true);
     try {
-      await updateSchool({
+      await updateAthlete({
         variables: {
-          where: {
-            id: params?.id,
-          },
+          where: { id: item?.id },
           data: {
-            athletes: {
-              disconnect: [{ userId: item?.user?.id }],
-            },
+            verified: { set: false },
+            verifiedBy: { disconnect: true },
           },
         },
       });
       await refetchLockerAthlete();
+      await refetchVerifyAthlete();
       toast({
         title: "Profile successfully removed.",
         description: `@${item?.user?.username} profile has been removed`,
@@ -1070,6 +1070,7 @@ const Page: FC<PageProps> = ({ params }) => {
     } finally {
       setUpdatingProfile(null);
       setSelectedAthlete(null);
+      setIsRemovingLockerAthlete(false);
     }
   };
 
@@ -1286,7 +1287,8 @@ const Page: FC<PageProps> = ({ params }) => {
           },
         },
       });
-      await refetchVerifyAthlete({});
+      await refetchVerifyAthlete();
+      await refetchLockerAthlete();
       toast({
         title: "Profile successfully updated.",
         description: `@${item?.user?.username} profile has been verified`,
@@ -1303,6 +1305,7 @@ const Page: FC<PageProps> = ({ params }) => {
     } finally {
       setUpdatingProfile(null);
       setSelectedAthlete(null);
+      setIsVerifyingAthlete(false);
     }
   };
 
@@ -1449,23 +1452,7 @@ const Page: FC<PageProps> = ({ params }) => {
                 : ""}
             </div>
           </TableCell>
-          <TableCell className="text-sm">
-            <div className="text-right w-100 flex flex-row items-center justify-center">
-              <BadgeCard
-                size="xs"
-                className="px-[8px]"
-                color={"rose"}
-                icon={() => {
-                  return (
-                    <BadgeAlertIcon className="h-4 w-4 mr-1" color="rose" />
-                  );
-                }}
-                datatype="moderateDecrease"
-              >
-                Not Verified
-              </BadgeCard>
-            </div>
-          </TableCell>
+
           <Accesscontrol name={permissionName}>
             <TableCell className="text-center cursor-pointer text-sm">
               <div className="text-right w-100 flex flex-row items-center justify-center">
@@ -1616,8 +1603,8 @@ const Page: FC<PageProps> = ({ params }) => {
         }
       />
       <PromptAlert
-        loading={SchoolUpdateLoading}
-        content={`This action will remove @${selectedAthlete?.user?.username} from this school.`}
+        loading={isRemovingLockerAthlete}
+        content={`This action will remove @${selectedAthlete?.user?.username}`}
         showPrompt={updatingProfile === StatusEnum.DELETING}
         handleHidePrompt={() => {
           setUpdatingProfile(null);
