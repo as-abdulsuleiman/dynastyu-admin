@@ -76,6 +76,7 @@ const Fans: FC<FansProps> = ({}) => {
   const [ActiveUser, setActiveUser] = useState<any>({});
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
   const [deletingProfile, setDeletingProfile] = useState<boolean>(false);
+  const [verifyingProfile, setVerifyingProfile] = useState<boolean>(false);
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
   const [deleteUser] = useDeleteUserMutation();
   useState<boolean>(false);
@@ -194,16 +195,20 @@ const Fans: FC<FansProps> = ({}) => {
     setActiveUser(item);
   };
 
-  const handleVerifyFan = async (item: any) => {
+  const handleVerifyFan = (item: any) => {
     setUpdatingProfile(StatusEnum.VERIFYING);
-    setSelectedUser(item?.id);
+    setActiveUser(item);
+  };
+
+  const handleConfirmVerifyFan = async (item: any) => {
+    setVerifyingProfile(true);
     try {
-      const isVerified = item?.user?.verified;
+      const isVerified = item?.fanVerified;
       await updateUser({
         variables: {
-          where: { id: item?.user?.id },
+          where: { id: item?.id },
           data: {
-            // verified: { set: !isVerified },
+            fanVerified: { set: !isVerified },
             // verifiedBy: { connect: { id: user?.coachProfile?.id } },
           },
         },
@@ -227,6 +232,7 @@ const Fans: FC<FansProps> = ({}) => {
     } finally {
       setUpdatingProfile(null);
       setSelectedUser(null);
+      setVerifyingProfile(false);
     }
   };
 
@@ -357,6 +363,12 @@ const Fans: FC<FansProps> = ({}) => {
           name: `${item?.isActive ? "Deactivate" : "Activate"} Profile`,
           onClick: async () => await handleActiveUser(item),
         },
+        {
+          name: `${item?.fanVerified ? "Unverify" : "Verify"} Profile`,
+          onClick: () => {
+            handleVerifyFan(item);
+          },
+        },
 
         {
           name: "Delete Profile",
@@ -426,17 +438,15 @@ const Fans: FC<FansProps> = ({}) => {
             updatingProfile === StatusEnum.VERIFYING ? (
               <div className="text-center flex flex-row justify-center items-center">
                 <Loader2Icon className="mr-1 h-4 w-4 animate-spin " />
-                {item?.athleteProfile?.verified
-                  ? "Unverifying..."
-                  : "Verifying..."}
+                {item?.fanVerified ? "Unverifying..." : "Verifying..."}
               </div>
             ) : (
               <BadgeCard
                 size="xs"
                 className="px-[8px]"
-                color={item?.athleteProfile?.verified ? "sky" : "rose"}
+                color={item?.fanVerified ? "sky" : "rose"}
                 icon={() => {
-                  return item?.athleteProfile?.verified ? (
+                  return item?.fanVerified ? (
                     <BadgeCheckIcon className="h-4 w-4 mr-1" color="sky" />
                   ) : (
                     <BadgeAlertIcon className="h-4 w-4 mr-1" color="rose" />
@@ -444,7 +454,7 @@ const Fans: FC<FansProps> = ({}) => {
                 }}
                 datatype="moderateDecrease"
               >
-                {item?.athleteProfile?.verified ? "Verified" : "Not Verified"}
+                {item?.fanVerified ? "Verified" : "Not Verified"}
               </BadgeCard>
             )}
           </div>
@@ -518,6 +528,18 @@ const Fans: FC<FansProps> = ({}) => {
           setActiveUser({});
         }}
         handleConfirmPrompt={() => handleDeleteFanConfirmPrompt(ActiveUser)}
+      />
+      <PromptAlert
+        loading={verifyingProfile}
+        content={`This action will ${
+          ActiveUser?.fanVerified ? "unverify" : "verify"
+        }  @${ActiveUser?.username}.`}
+        showPrompt={updatingProfile === StatusEnum.VERIFYING}
+        handleHidePrompt={() => {
+          setUpdatingProfile(null);
+          setActiveUser({});
+        }}
+        handleConfirmPrompt={() => handleConfirmVerifyFan(ActiveUser)}
       />
     </main>
   );

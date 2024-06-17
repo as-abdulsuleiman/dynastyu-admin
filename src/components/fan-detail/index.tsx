@@ -28,6 +28,7 @@ import {
   Users2Icon,
   UsersRoundIcon,
   UserIcon,
+  VerifiedIcon,
 } from "../Icons";
 import UserAvatar from "../user-avatar";
 import UsersAnalytics from "@/components/analytics/users";
@@ -68,6 +69,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
   const [viewAnalytics, setViewAnalytics] = useState(false);
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
   const [deletingFan, setDeletingFan] = useState(false);
+  const [isverifyingFan, setIsverifyingFan] = useState(false);
   const [updateUser] = useUpdateUserMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
@@ -142,16 +144,20 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
     }
   };
 
-  const handleVerifyFan = async (item: any) => {
+  const handleVerifyFan = () => {
     setUpdatingProfile(StatusEnum.VERIFYING);
+  };
+
+  const handleVerifyFanConfrimPropmt = async (item: any) => {
+    setIsverifyingFan(true);
 
     try {
-      const isVerified = item?.athleteProfile?.verified;
+      const isVerified = item?.fanVerified;
       await updateUser({
         variables: {
-          where: { id: item?.athleteProfile?.id },
+          where: { id: item?.id },
           data: {
-            // verified: { set: !isVerified },
+            fanVerified: { set: !isVerified },
             // verifiedBy: { connect: { id: fanData?.user?.coachProfile?.id } },
           },
         },
@@ -159,14 +165,11 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
       toast({
         title: "Fan profile successfully updated.",
         description: `${fanData?.user?.username} profile has been ${
-          isVerified ? "Unverified" : "Verified"
+          isVerified ? "unverified" : "verified"
         } `,
         variant: "successfull",
       });
-      // if (resp?.data?.updateOneAthleteProfile) {
-      //   // await refetch();
-
-      // }
+      await refetch();
     } catch (error) {
       toast({
         title: "Something went wrong.",
@@ -177,6 +180,7 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
       });
     } finally {
       setUpdatingProfile(null);
+      setIsverifyingFan(false);
     }
   };
 
@@ -243,14 +247,11 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
       onClick: () => setViewAnalytics(true),
     },
     {
-      // name: `${
-      //   athleteData?.athleteProfile?.verified
-      //     ? "Unverify Profile"
-      //     : "Verify Profile"
-      // }`,
-      name: "Verify Profile",
-      // onClick: () => handleVerifyAthlete(athleteData),
-      onClick: () => console.log("clicked"),
+      name: `${
+        fanData?.user?.fanVerified ? "Unverify Profile" : "Verify Profile"
+      }`,
+
+      onClick: () => handleVerifyFan(),
     },
     {
       name: "Delete Profile",
@@ -519,6 +520,9 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
               <Text className="text-sm relative mr-1">
                 @{fanData?.user?.username?.toLowerCase()}
               </Text>
+              {fanData?.user?.fanVerified ? (
+                <VerifiedIcon className="cursor-pointer" />
+              ) : null}
             </div>
           )}
           <div className="xl:hidden ml-0 absolute left-0 top-0">
@@ -574,6 +578,19 @@ const FanDetail: FC<FanDetailProps> = ({ params }) => {
           setUpdatingProfile(null);
         }}
         handleConfirmPrompt={() => handleDeleteFanConfirmPrompt(fanData?.user)}
+      />
+      <PromptAlert
+        title={`Are you absolutely sure?`}
+        loading={isverifyingFan}
+        content={`This will permanently ${
+          fanData?.user?.fanVerified ? "unverify" : "verify"
+        } @${fanData?.user?.username} from our servers.`}
+        showPrompt={updatingProfile === StatusEnum.VERIFYING}
+        handleHidePrompt={() => {
+          setUpdatingProfile(null);
+          setIsverifyingFan(false);
+        }}
+        handleConfirmPrompt={() => handleVerifyFanConfrimPropmt(fanData?.user)}
       />
     </main>
   );
