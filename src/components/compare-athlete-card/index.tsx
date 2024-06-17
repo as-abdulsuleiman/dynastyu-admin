@@ -11,7 +11,7 @@ import { Button } from "../ui/button";
 import { useDebouncedValue } from "@mantine/hooks";
 import { PromptStatusEnum } from "@/lib/enums/updating-profile.enum";
 import UserAvatar from "../user-avatar";
-import { CheckIcon } from "../Icons";
+import { ArrowLeftRightIcon, CheckIcon } from "../Icons";
 import { CommandItem } from "../ui/command";
 import { cn } from "@/lib/utils";
 import {
@@ -138,28 +138,30 @@ const CompareAthleteCard: FC<CompareProps> = ({ params }) => {
     console.log("No matching player found");
     return false;
   };
-  const hh = skillTypesData?.skillTypes?.map((a) => {
-    return getHigher(
-      selectedUser?.items?.skills,
-      a,
-      a.id === 6 || a.id === 8 ? "lower" : "higher"
-    );
-  });
+  // const hh = skillTypesData?.skillTypes?.map((a) => {
+  //   return getHigher(
+  //     selectedUser?.items?.skills,
+  //     a,
+  //     a.id === 6 || a.id === 8 ? "lower" : "higher"
+  //   );
+  // });
 
-  const check = skillTypesData?.skillTypes?.map((a, id) => {
-    const second =
-      secondSelectedUser?.items?.skills?.find(
-        (b: any) => b?.skillType?.id === a?.id
-      )?.value || 0;
+  // const check = skillTypesData?.skillTypes?.map((a, id) => {
+  //   const second =
+  //     secondSelectedUser?.items?.skills?.find(
+  //       (b: any) => b?.skillType?.id === a?.id
+  //     )?.value || 0;
 
-    const first =
-      selectedUser?.items?.skills?.find((b: any) => b?.skillType?.id === a?.id)
-        ?.value || 0;
+  //   const first =
+  //     selectedUser?.items?.skills?.find((b: any) => b?.skillType?.id === a?.id)
+  //       ?.value || 0;
 
-    return console.log("second", second, first);
-  });
+  //   return console.log("second", second, first);
+  // });
 
-  console.log("check", check);
+  console.log("selectedUser", selectedUser);
+
+  // console.log("check", check);
 
   const userCustomItems = ({ item, id }: { item: any; id: number }) => {
     return (
@@ -254,6 +256,7 @@ const CompareAthleteCard: FC<CompareProps> = ({ params }) => {
         skills: a?.skills,
         position: a?.position?.name,
         school: a?.school?.name,
+        class: a?.graduationYear,
       };
     });
   }, [athletesData?.athleteProfiles]);
@@ -268,6 +271,7 @@ const CompareAthleteCard: FC<CompareProps> = ({ params }) => {
         skills: a?.skills,
         position: a?.position?.name,
         school: a?.school?.name,
+        class: a?.graduationYear,
       };
     });
   }, [athletesData?.athleteProfiles]);
@@ -307,7 +311,7 @@ const CompareAthleteCard: FC<CompareProps> = ({ params }) => {
                 }}
                 disabled={Object?.keys(selectedUser)?.length === 0}
               >
-                Add User
+                Select Athlete
               </Button>
             </div>
           </div>
@@ -339,93 +343,136 @@ const CompareAthleteCard: FC<CompareProps> = ({ params }) => {
                 variant="default"
                 onClick={() => {
                   setSecondPromptStatus(PromptStatusEnum.ADDING);
-                  // setIsAddingUser(true);
                 }}
                 disabled={Object?.keys(secondSelectedUser)?.length === 0}
               >
-                Add User
+                Select Athlete
               </Button>
             </div>
           </div>
         </div>
       </CardContainer>
       <div className="mt-[30px]">
-        <div className="grid grid-cols-2 gap-3 sm:gap-10 flex-col sm:flex-row item-center justify-between  w-full">
+        <div className="grid grid-cols-[1fr_45px_1fr] sm:grid-cols-[1fr_50px_1fr]  gap-2 sm:gap-6 lg:gap-10 flex-col sm:flex-row item-center justify-between  w-full">
           <CardContainer className="flex flex-col  sm:items-start items-center justify-center  w-full min-h-[140px]">
             {Object.keys(selectedUser).length > 0 ? (
-              <div className="flex flex-col items-center sm:items-start">
-                {" "}
-                <div className="text-base sm:text-xl mb-2 ">
-                  {selectedUser?.items?.school}
-                </div>
-                <strong className="text-base sm:text-xl ">
+              <div className="flex flex-col items-center justify-center w-full">
+                <UserAvatar
+                  fallbackClassName="h-[110px] w-[110px]"
+                  className="h-[110px] w-[110px] shadow mb-8"
+                  fallbackType="name"
+                  avatar={selectedUser?.items?.avatar as string}
+                  fallback={`${selectedUser?.items?.label?.charAt(0)} `}
+                />
+
+                <strong className="flex items-center justify-center text-base sm:text-xl mb-6">
                   {selectedUser?.items?.label}
                 </strong>
-                <div className="text-sm sm:text-lg mt-2">
-                  Position: <strong> {selectedUser?.items?.position}</strong>
+
+                <div className="text-xs sm:text-sm md:text-base mb-2 ">
+                  {selectedUser?.items?.school}
                 </div>
+                <Separator className="my-3 w-full" />
+                <div className="flex flex-col items-center justify-center text-xs sm:text-sm md:text-base mt-2">
+                  Position{" "}
+                  <strong className="text-sm sm:text-base md:text-lg">
+                    {" "}
+                    {selectedUser?.items?.position}
+                  </strong>
+                </div>
+                <Separator className="my-3 w-full" />
+                <div className="flex flex-col items-center justify-center text-xs sm:text-sm md:text-base mt-2">
+                  Class{" "}
+                  <strong className="text-sm sm:text-base md:text-lg">
+                    {" "}
+                    {selectedUser?.items?.class}
+                  </strong>
+                </div>
+
                 {skillTypesData?.skillTypes?.map((a, id) => {
                   return (
-                    <div
-                      key={id}
-                      className="flex flex-col sm:flex-row  mt-2 text-sm sm:text-lg items-center sm:items-start"
-                    >
-                      <div className="">
-                        {`${a?.name}:  `}
-                        {""}
-                      </div>
-                      <strong className="ml-0 sm:ml-2">
-                        {selectedUser?.items?.skills?.find(
-                          (b: any) => b?.skillType?.id === a?.id
-                        )?.value || 0}{" "}
-                        {a?.unit}
-                      </strong>
-
-                      {/* {getHigher(
+                    <>
+                      <Separator className="my-3 w-full" />
+                      <div
+                        key={id}
+                        className="flex flex-col  mt-1  items-center "
+                      >
+                        <div className="text-xs sm:text-sm md:text-base">{`${a?.name}`}</div>
+                        <strong className="text-sm sm:text-base md:text-lg">
+                          {selectedUser?.items?.skills?.find(
+                            (b: any) => b?.skillType?.id === a?.id
+                          )?.value || 0}{" "}
+                          {a?.unit}
+                        </strong>
+                        {/* {getHigher(
                         selectedUser,
                         a,
                         a.id === 6 || a.id === 8 ? "lower" : "higher"
                       ) ? (
                         <CheckIcon />
                       ) : null} */}
-                    </div>
+                      </div>
+                    </>
                   );
                 })}
               </div>
             ) : null}
           </CardContainer>
-          <CardContainer className="min-h-[140px] flex flex-col items-center sm:items-start justify-center w-full">
+          <div className="flex w-[50px] items-center justify-center">
+            <ArrowLeftRightIcon className="w-[20px] h-[20px] sm:w-[40px] sm:h-[40px]" />
+          </div>
+          <CardContainer className=" min-h-[140px] flex flex-col items-center sm:items-start justify-center w-full">
             {Object.keys(secondSelectedUser).length > 0 ? (
-              <div className="flex flex-col items-center sm:items-start">
-                {" "}
-                <div className="text-base sm:text-xl mb-2">
-                  {secondSelectedUser?.items?.school}
-                </div>
-                <strong className="text-base sm:text-xl ">
+              <div className="flex flex-col items-center justify-center w-full">
+                <UserAvatar
+                  fallbackClassName="h-[110px] w-[110px]"
+                  className="h-[110px] w-[110px] shadow mb-8"
+                  fallbackType="name"
+                  avatar={secondSelectedUser?.items?.avatar as string}
+                  fallback={`${secondSelectedUser?.items?.label?.charAt(0)} `}
+                />
+
+                <strong className="text-base sm:text-xl mb-6">
                   {secondSelectedUser?.items?.label}
                 </strong>
-                <div className="text-sm sm:text-lg  mt-2">
-                  Position:{" "}
-                  <strong> {secondSelectedUser?.items?.position}</strong>
+
+                <div className="text-xs sm:text-sm md:text-base mb-2">
+                  {secondSelectedUser?.items?.school}
                 </div>
+                <Separator className="my-3 w-full" />
+                <div className=" flex flex-col items-center justify-center text-xs sm:text-sm md:text-base mt-2">
+                  Position
+                  <strong className="text-sm sm:text-base md:text-lg">
+                    {" "}
+                    {secondSelectedUser?.items?.position}
+                  </strong>
+                </div>
+                <Separator className="my-3 w-full" />
+                <div className="flex flex-col items-center justify-center text-xs sm:text-sm md:text-base mt-2">
+                  Class{" "}
+                  <strong className="text-sm sm:text-base md:text-lg">
+                    {" "}
+                    {secondSelectedUser?.items?.class}
+                  </strong>
+                </div>
+
                 {skillTypesData?.skillTypes?.map((a, id) => {
                   return (
-                    <div
-                      key={id}
-                      className="flex flex-col sm:flex-row mt-2 sm:text-lg text-sm items-center sm:items-start"
-                    >
-                      <div className="">
-                        {`${a?.name}:  `}
-                        {""}
+                    <>
+                      <Separator className="my-3 w-full" />
+                      <div
+                        key={id}
+                        className="flex flex-col mt-1  items-center "
+                      >
+                        <div className="text-xs sm:text-sm md:text-base ">{`${a?.name}`}</div>
+                        <strong className="text-sm sm:text-base md:text-lg">
+                          {secondSelectedUser?.items?.skills?.find(
+                            (b: any) => b?.skillType?.id === a?.id
+                          )?.value || 0}{" "}
+                          {a?.unit}
+                        </strong>
                       </div>
-                      <strong className="ml-1 sm:ml-2">
-                        {secondSelectedUser?.items?.skills?.find(
-                          (b: any) => b?.skillType?.id === a?.id
-                        )?.value || 0}{" "}
-                        {a?.unit}
-                      </strong>
-                      <div className="ml-1"></div>
-                    </div>
+                    </>
                   );
                 })}
               </div>
