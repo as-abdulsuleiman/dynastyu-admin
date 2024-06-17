@@ -40,7 +40,7 @@ import BadgeCard from "../badge-card";
 import ContentHeader from "../content-header";
 import MultiSelector from "../multi-selector";
 import { fanFilter } from "@/lib/filters";
-import { getURLParams } from "@/lib/helpers";
+import { getPermission, getURLParams } from "@/lib/helpers";
 import PromptAlert from "../prompt-alert";
 import { StatusEnum } from "@/lib/enums/updating-profile.enum";
 import { useRootStore } from "@/mobx";
@@ -63,6 +63,7 @@ const Fans: FC<FansProps> = ({}) => {
   const router = useRouter();
   const {
     fanStore: { setFans },
+    authStore: { user },
   } = useRootStore();
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
   const [value, setValue] = useState<string>("");
@@ -78,6 +79,11 @@ const Fans: FC<FansProps> = ({}) => {
   const [deleteFirebaseUser] = useDeleteFirebaseUserMutation();
   const [deleteUser] = useDeleteUserMutation();
   useState<boolean>(false);
+
+  const permissionName = getPermission(
+    user?.role?.permissions,
+    "fans.accesslevel.update"
+  );
 
   const {
     data: fansData,
@@ -336,23 +342,28 @@ const Fans: FC<FansProps> = ({}) => {
         name: "View Details",
         onClick: () => router.push(`/fan/${item?.id}`, { scroll: true }),
       },
-      {
-        name: `Edit Profile`,
-        onClick: () =>
-          router.push(`/fans/edit?fan=${item?.id}`, {
-            scroll: true,
-          }),
-      },
-      {
-        name: `${item?.isActive ? "Deactivate" : "Activate"} Profile`,
-        onClick: async () => await handleActiveUser(item),
-      },
-
-      {
-        name: "Verify Profile",
-        onClick: () => console.log("first"),
-      },
     ];
+
+    if (permissionName !== ("" || null || undefined)) {
+      fanItems?.push(
+        {
+          name: `Edit Profile`,
+          onClick: () =>
+            router.push(`/fans/edit?fan=${item?.id}`, {
+              scroll: true,
+            }),
+        },
+        {
+          name: `${item?.isActive ? "Deactivate" : "Activate"} Profile`,
+          onClick: async () => await handleActiveUser(item),
+        },
+
+        {
+          name: "Delete Profile",
+          onClick: () => handleDeleteFan(item),
+        }
+      );
+    }
     return (
       <TableRow key={item?.id}>
         <TableCell>

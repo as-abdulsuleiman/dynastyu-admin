@@ -20,6 +20,7 @@ import {
   NotificationIcon,
   CogIcon,
 } from "@/components/Icons";
+import { hasSideBarPermissions } from "@/lib/helpers";
 
 interface SidebarItemsProps {
   handleNavigation: (val: string) => void;
@@ -65,6 +66,7 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
     coachVerificationRequestStore: { caochVerificationRequest: coachesCount },
     flaggedPostStore: { flaggedPost: flaggedPostCount },
     skillTypeStore: { skillTypes: skillTypeCount },
+    authStore: { user },
   } = useRootStore();
 
   const pathname = usePathname();
@@ -75,6 +77,7 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       name: "Dashboard",
       path: "/dashboard",
       parentCount: [],
+      acl: "dashboard.accesslevel.get",
       items: [],
       hasFill: false,
       hasBadge: false,
@@ -94,6 +97,7 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       name: "Athletes",
       hasFill: false,
       path: "/athletes",
+      acl: "athletes.accesslevel.get",
       items: [],
       hasBadge: false,
       parentCount: [],
@@ -107,16 +111,19 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       path: "/coaches",
       hasBadge: true,
       parentCount: [coachesCount?.aggregateCoachProfile?._count?.id],
+      acl: "coaches.accesslevel.get",
       items: [
         {
           name: "Create Coach",
           path: "/coaches/new",
+          acl: "coches.accesslevel.update",
         },
         {
           name: "Verification Request",
           path: "/coaches/verification-request",
           count: coachesCount?.aggregateCoachProfile?._count?.id,
           hasBadge: true,
+          acl: "coches.accesslevel.update",
         },
       ],
       icon: ({ className, color }: IconProps) => (
@@ -129,12 +136,8 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       path: "/fans",
       hasBadge: false,
       parentCount: [],
-      // items: [
-      //   {
-      //     name: "Create Fan",
-      //     path: "/fans/new",
-      //   },
-      // ],
+      acl: "fans.accesslevel.get",
+      items: [],
       icon: ({ className, color }: IconProps) => (
         <FanIcon className={className} color={color} />
       ),
@@ -145,23 +148,27 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       path: "/schools/college",
       hasBadge: false,
       parentCount: [],
+      acl: "schools.accesslevel.get",
       items: [
         {
           name: "College",
           path: "/schools/college",
           hasBadge: false,
           count: 0,
+          acl: "schools.accesslevel.get",
         },
         {
           name: "High School",
           path: "/schools/high-school",
           hasBadge: false,
+          acl: "schools.accesslevel.get",
           count: 0,
         },
         {
           name: "Create School",
           path: "/schools/new",
           hasBadge: false,
+          acl: "schools.accesslevel.update",
           count: 0,
         },
       ],
@@ -175,6 +182,7 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       path: "/flagged-posts",
       hasBadge: false,
       parentCount: [flaggedPostCount?.aggregatePostFlag?._count?.id],
+      acl: "flaggedposts.accesslevel.get",
       items: [],
       icon: ({ className, color }: IconProps) => (
         <FlagOffIcon className={cn(className, "h-4 w-4")} color={color} />
@@ -186,16 +194,19 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       path: "/skill-types",
       hasBadge: false,
       parentCount: [skillVerificationRequest?.length],
+      acl: "skilltypes.accesslevel.get",
       items: [
         {
           name: "Create Skill Type",
           path: "/skill-types/new",
+          acl: "skilltypes.accesslevel.update",
         },
         {
           name: "Verification Request",
           path: "/skill-types/verification-request",
           hasBadge: skillVerificationRequest.length > 0 ? true : false,
           count: skillVerificationRequest?.length,
+          acl: "skilltypes.accesslevel.get",
         },
       ],
       icon: ({ className, color }: IconProps) => (
@@ -205,7 +216,6 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
         />
       ),
     },
-
     {
       name: "Notifications",
       hasFill: false,
@@ -215,12 +225,8 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
         flaggedPostCount?.aggregatePostFlag?._count?.id,
         coachesCount?.aggregateCoachProfile?._count?.id,
       ],
-      // items: [
-      //   {
-      //     name: "Create Fan",
-      //     path: "/fans/new",
-      //   },
-      // ],
+      acl: "notifications.accesslevel.get",
+      items: [],
       icon: ({ className, color }: IconProps) => (
         <NotificationIcon className={className} color={color} />
       ),
@@ -231,24 +237,28 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       path: "/profile-settings",
       hasBadge: false,
       parentCount: [],
+      acl: "settings.accesslevel.get",
       items: [
         {
           name: "Profile",
           path: "/profile-settings",
           hasBadge: false,
           count: 0,
+          acl: "settings.accesslevel.get",
         },
         {
           name: "Staff",
           path: "/staff-settings",
           hasBadge: false,
           count: 0,
+          acl: "settings.accesslevel.get",
         },
         {
           name: "Security",
           path: "/security-settings",
           hasBadge: false,
           count: 0,
+          acl: "settings.accesslevel.get",
         },
       ],
       icon: ({ className, color }: IconProps) => (
@@ -261,24 +271,35 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
       path: "/account-types",
       hasBadge: false,
       parentCount: [],
+      acl: "admin.accesslevel.get",
       items: [
         {
           name: "Account Types",
           path: "/account-types",
           hasBadge: false,
           count: 0,
+          acl: "admin.accesslevel.get",
         },
         {
           name: "School Types",
           path: "/school-types",
           hasBadge: false,
           count: 0,
+          acl: "admin.accesslevel.get",
         },
         {
           name: "Roles",
           path: "/roles",
           hasBadge: false,
           count: 0,
+          acl: "admin.accesslevel.get",
+        },
+        {
+          name: "Permissions",
+          path: "/permissions",
+          hasBadge: false,
+          count: 0,
+          acl: "admin.accesslevel.get",
         },
       ],
       icon: ({ className, color }: IconProps) => (
@@ -289,113 +310,122 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
 
   return (
     <>
-      {items?.map((val, index) => {
-        const parentPath = val?.path;
-        let pathToCheck: any = parentPath?.split("?");
-        pathToCheck = pathToCheck?.length ? pathToCheck[0] : null;
-        const childPath = val?.items?.some((data: any) =>
-          pathname?.includes(data?.path)
-        );
-        const isActive = pathname?.includes(pathToCheck) || childPath;
+      {hasSideBarPermissions(items, user?.role?.permissions)?.map(
+        (val: any, index: number) => {
+          const parentPath = val?.path;
+          let pathToCheck: any = parentPath?.split("?");
+          pathToCheck = pathToCheck?.length ? pathToCheck[0] : null;
+          const childPath = val?.items?.some((data: any) =>
+            pathname?.includes(data?.path)
+          );
+          const isActive = pathname?.includes(pathToCheck) || childPath;
 
-        const hasChildren = val?.items ? val?.items.length > 0 : false;
+          const hasChildren = val?.items ? val?.items.length > 0 : false;
 
-        const iconColor = "";
-        let activeIconColor = "";
+          const iconColor = "";
+          let activeIconColor = "";
 
-        if (isActive) {
-          if (val?.hasFill) {
-            activeIconColor = "fill-white";
+          if (isActive) {
+            if (val?.hasFill) {
+              activeIconColor = "fill-white";
+            } else {
+              activeIconColor = "stroke-white";
+            }
           } else {
-            activeIconColor = "stroke-white";
+            if (val?.hasFill) {
+              activeIconColor = "fill-foreground";
+            } else {
+              activeIconColor = "stroke-foreground";
+            }
           }
-        } else {
-          if (val?.hasFill) {
-            activeIconColor = "fill-foreground";
-          } else {
-            activeIconColor = "stroke-foreground";
-          }
-        }
-        const iconClass = `h-[19px] w-[19px] ${activeIconColor}`;
-        const Icon = () =>
-          val?.icon({ className: iconClass, color: iconColor });
+          const iconClass = `h-[19px] w-[19px] ${activeIconColor}`;
+          const Icon = () =>
+            val?.icon({ className: iconClass, color: iconColor });
 
-        const showCount = val?.parentCount?.length > 0;
+          const showCount = val?.parentCount?.length > 0;
 
-        return (
-          <div key={index}>
-            <Link
-              href={val?.path}
-              scroll={true}
-              shallow
-              className={`group flex-row flex cursor-pointer items-center mt-4 transition-transform ease-linear duration-200`}
-            >
-              <div
-                className={`flex flex-row w-full h-full py-[8px] px-[16px] rounded-md items-center ${
-                  isActive ? "bg-primary" : "bg-secondary"
-                }`}
+          return (
+            <div key={index}>
+              <Link
+                href={val?.path}
+                scroll={true}
+                shallow
+                className={`group flex-row flex cursor-pointer items-center mt-4 transition-transform ease-linear duration-200`}
               >
-                <Icon />
                 <div
-                  className={`text-[16px] font-TTHovesDemiBold ml-4 mt-[0px] text-base ${
-                    isActive ? "text-primary-foreground" : ""
-                  } `}
+                  className={`flex flex-row w-full h-full py-[8px] px-[16px] rounded-md items-center ${
+                    isActive ? "bg-primary" : "bg-secondary"
+                  }`}
                 >
-                  {val?.name}
-                </div>
-                {(!isActive && showCount) || (!hasChildren && showCount) ? (
-                  <div className="ml-auto flex flex-row -space-x-[8px] relative">
-                    {val?.parentCount?.slice(0, 2)?.map((count: any, idx) => {
-                      return (
-                        <CountBadge
-                          key={idx}
-                          countValue={count}
-                          className={`z-${
-                            idx + 1
-                            // idx === 0
-                            //   ? "z-10 shadow-2xl bg-destructive"
-                            //   : "z-[5] bg-popover-foreground"
-                          }`}
-                        />
-                      );
-                    })}
+                  <Icon />
+                  <div
+                    className={`text-[16px] font-TTHovesDemiBold ml-4 mt-[0px] text-base ${
+                      isActive ? "text-primary-foreground" : ""
+                    } `}
+                  >
+                    {val?.name}
                   </div>
-                ) : isActive ? (
-                  <ChevronDownIcon className="ml-auto h-5 w-5 stroke-primary-foreground dark:stroke-primary-foreground" />
-                ) : null}
-              </div>
-            </Link>
-            {isActive && hasChildren ? (
-              <div className="pr-2 pl-4 pb-3 mt-3">
-                {val?.items?.map((value: any, index) => {
-                  return (
-                    <Link key={index} href={value?.path} scroll={true} shallow>
-                      <div className="flex flex-row items-center h-[35px]">
-                        <div
-                          className={`font-TTHovesDemiBold ${
-                            isActive && pathname === value?.path
-                              ? "text-teal-700"
-                              : ""
-                          } cursor-pointer text-sm`}
-                          // onClick={() => handleNavigation()}
-                        >
-                          {value?.name}
+                  {(!isActive && showCount) || (!hasChildren && showCount) ? (
+                    <div className="ml-auto flex flex-row -space-x-[8px] relative">
+                      {val?.parentCount
+                        ?.slice(0, 2)
+                        ?.map((count: any, idx: number) => {
+                          return (
+                            <CountBadge
+                              key={idx}
+                              countValue={count}
+                              className={`z-${
+                                idx + 1
+                                // idx === 0
+                                //   ? "z-10 shadow-2xl bg-destructive"
+                                //   : "z-[5] bg-popover-foreground"
+                              }`}
+                            />
+                          );
+                        })}
+                    </div>
+                  ) : isActive ? (
+                    <ChevronDownIcon className="ml-auto h-5 w-5 stroke-primary-foreground dark:stroke-primary-foreground" />
+                  ) : null}
+                </div>
+              </Link>
+              {isActive && hasChildren ? (
+                <div className="pr-2 pl-4 pb-3 mt-3">
+                  {val?.items?.map((value: any, index: number) => {
+                    return (
+                      <Link
+                        key={index}
+                        href={value?.path}
+                        scroll={true}
+                        shallow
+                      >
+                        <div className="flex flex-row items-center h-[35px]">
+                          <div
+                            className={`font-TTHovesDemiBold ${
+                              isActive && pathname === value?.path
+                                ? "text-teal-700"
+                                : ""
+                            } cursor-pointer text-sm`}
+                            // onClick={() => handleNavigation()}
+                          >
+                            {value?.name}
+                          </div>
+                          {value?.count ? (
+                            <CountBadge
+                              countValue={value?.count}
+                              className="ml-auto"
+                            />
+                          ) : null}
                         </div>
-                        {value?.count ? (
-                          <CountBadge
-                            countValue={value?.count}
-                            className="ml-auto"
-                          />
-                        ) : null}
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            ) : null}
-          </div>
-        );
-      })}
+                      </Link>
+                    );
+                  })}
+                </div>
+              ) : null}
+            </div>
+          );
+        }
+      )}
     </>
   );
 };

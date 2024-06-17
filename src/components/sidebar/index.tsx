@@ -14,9 +14,12 @@ import {
   GetAggregateCoachProfileQuery,
   GetAggregatePostFlagQuery,
   GetAggregateSkillTypeQuery,
+  GetPermissionsQuery,
+  SortOrder,
   useGetAggregateCoachProfileQuery,
   useGetAggregatePostFlagQuery,
   useGetAggregateSkillTypeQuery,
+  useGetPermissionsQuery,
   useGetSkillVerificationRequestsQuery,
 } from "@/services/graphql";
 import { useRootStore } from "@/mobx";
@@ -37,6 +40,7 @@ const SideBar: FC<SideBarProps> = ({ sidebarOpen, setSidebarOpen }) => {
     flaggedPostStore: { setFlaggedPost },
     skillTypeStore: { setSkillTypes },
     skillVerificationRequestStore: { setSkillVerificationRequest },
+    permissionStore: { setPermission, permissions },
   } = useRootStore();
 
   let storedSidebarExpanded = "true";
@@ -98,6 +102,17 @@ const SideBar: FC<SideBarProps> = ({ sidebarOpen, setSidebarOpen }) => {
   useGetAggregateSkillTypeQuery({
     onCompleted: (data: GetAggregateSkillTypeQuery) => {
       setSkillTypes(data as any);
+    },
+  });
+
+  useGetPermissionsQuery({
+    variables: {
+      orderBy: {
+        createdAt: SortOrder.Desc,
+      },
+    },
+    onCompleted: (data: GetPermissionsQuery) => {
+      setPermission(data as any);
     },
   });
 

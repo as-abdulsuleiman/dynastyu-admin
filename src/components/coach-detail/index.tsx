@@ -66,6 +66,9 @@ import CardContainer from "../card-container";
 import { renderLoader } from "@/lib/loader-helper";
 import { CalloutCardProps } from "@/interface/calloutOptions";
 import { useRootStore } from "@/mobx";
+import { getPermission } from "@/lib/helpers";
+import AccessControl from "../accesscontrol";
+import { observer } from "mobx-react-lite";
 
 interface CoachDetailProps {
   params: {
@@ -78,6 +81,7 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   const { toast } = useToast();
   const {
     coacheStore: { setCoaches },
+    authStore: { user },
   } = useRootStore();
   const [viewPlayerCardUrl, setViewPlayerCardUrl] = useState(false);
   const [updatingProfile, setUpdatingProfile] = useState<StatusEnum | null>();
@@ -103,6 +107,11 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   });
 
   const coachData = data?.user;
+
+  const permissionName = getPermission(
+    user?.role?.permissions,
+    "coches.accesslevel.update"
+  );
 
   const coachSchoolId = useMemo(() => {
     if (coachData?.coachProfile?.schoolId) {
@@ -729,39 +738,41 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
         </div>
       )}
       <Separator className="my-6" />
-      <div className="mb-6 w-full  sm:w-1/2 ml-auto flex flex-col">
-        <ComboboxCard
-          valueKey="value"
-          displayKey="label"
-          IdKey="value"
-          label="Add School"
-          id="school-coach-add"
-          placeholder={"Select School"}
-          isOpen={openSchool}
-          scrollAreaClass="h-72"
-          hasSearch
-          shouldFilter={false}
-          searchValue={searchValue}
-          handleSearch={(search) => setSearchValue(search)}
-          loading={loadingSchool}
-          onClose={() => setOpenSchool(!openSchool)}
-          items={schoolDataOptions as any}
-          selectedValue={selectedSchool}
-          customRenderItems={CustomSchoolItems}
-        />
-        {Object?.keys(selectedSchool)?.length === 0 ? null : (
-          <div className="w-full flex mt-6 ">
-            <Button
-              size="sm"
-              className="ml-auto"
-              variant="default"
-              onClick={() => setPromptStatus(PromptStatusEnum.ADDING)}
-            >
-              Add School
-            </Button>
-          </div>
-        )}
-      </div>
+      <AccessControl name={permissionName}>
+        <div className="mb-6 w-full  sm:w-1/2 ml-auto flex flex-col">
+          <ComboboxCard
+            valueKey="value"
+            displayKey="label"
+            IdKey="value"
+            label="Add School"
+            id="school-coach-add"
+            placeholder={"Select School"}
+            isOpen={openSchool}
+            scrollAreaClass="h-72"
+            hasSearch
+            shouldFilter={false}
+            searchValue={searchValue}
+            handleSearch={(search) => setSearchValue(search)}
+            loading={loadingSchool}
+            onClose={() => setOpenSchool(!openSchool)}
+            items={schoolDataOptions as any}
+            selectedValue={selectedSchool}
+            customRenderItems={CustomSchoolItems}
+          />
+          {Object?.keys(selectedSchool)?.length === 0 ? null : (
+            <div className="w-full flex mt-6 ">
+              <Button
+                size="sm"
+                className="ml-auto"
+                variant="default"
+                onClick={() => setPromptStatus(PromptStatusEnum.ADDING)}
+              >
+                Add School
+              </Button>
+            </div>
+          )}
+        </div>
+      </AccessControl>
       <Grid numItemsMd={1} numItemsLg={1} className="mt-6 gap-6">
         <CardContainer className="p-4 md:p-4">
           <div className="flex flex-col items-center justify-center relative">
@@ -823,14 +834,16 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
                 {loading ? (
                   <Skeleton className="w-[40px] h-[20px]" />
                 ) : (
-                  <MenubarCard
-                    trigger={
-                      <Button size="icon" variant="outline">
-                        <MoreHorizontalIcon className="cursor-pointer" />
-                      </Button>
-                    }
-                    items={dropdownItems}
-                  />
+                  <AccessControl name={permissionName}>
+                    <MenubarCard
+                      trigger={
+                        <Button size="icon" variant="outline">
+                          <MoreHorizontalIcon className="cursor-pointer" />
+                        </Button>
+                      }
+                      items={dropdownItems}
+                    />
+                  </AccessControl>
                 )}
               </div>
             </div>
@@ -879,4 +892,4 @@ const CoachDetail: FC<CoachDetailProps> = ({ params }) => {
   );
 };
 
-export default CoachDetail;
+export default observer(CoachDetail);

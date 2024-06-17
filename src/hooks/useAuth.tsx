@@ -19,6 +19,7 @@ import { User, useGetUserLazyQuery } from "@/services/graphql";
 import { useRootStore } from "@/mobx";
 import { projectAuth } from "@/services/firebase/config";
 import { useToast } from "./use-toast";
+import { hasSideBarPermissions, sidebarItem } from "@/lib/helpers";
 
 const AuthContext = createContext<{
   isLoggedIn: boolean;
@@ -73,14 +74,36 @@ function useAuthProvider() {
           },
         },
       });
+
+      const permissionCount =
+        dbUser?.data?.user?.role?.permissions?.length &&
+        dbUser?.data?.user?.role?.permissions?.length > 0;
+      const path = hasSideBarPermissions(
+        sidebarItem,
+        dbUser?.data?.user?.role?.permissions
+      )[0];
       if (dbUser?.data?.user && dbUser?.data?.user?.coachProfile) {
-        setUser(dbUser?.data?.user as User);
-        window.location.href = `${siteUrl}/dashboard`;
+        if (!dbUser?.data?.user?.coachProfile?.verified) {
+          toast({
+            title: "Access Denied",
+            description: "Sorry, this user is not verified",
+            variant: "destructive",
+          });
+        } else if (!permissionCount) {
+          toast({
+            title: "Access Denied",
+            description:
+              "Sorry, this user doesn't have permission to access the database",
+            variant: "destructive",
+          });
+        } else {
+          setUser(dbUser?.data?.user as User);
+          window.location.href = `${siteUrl}/${path["path"]}`;
+        }
       } else {
         toast({
           title: "Access Denied",
-          description:
-            "Sorry, you don't have permission to access the admin database",
+          description: "Sorry, you don't have to permission to the database",
           variant: "destructive",
         });
       }

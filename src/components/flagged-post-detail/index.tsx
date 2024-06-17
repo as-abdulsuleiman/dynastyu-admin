@@ -18,13 +18,13 @@ import MediaCard from "../media-card";
 import TabCard from "../tab-card";
 import UserAvatar from "../user-avatar";
 import { FlagOffIcon, UserIcon } from "../Icons";
-import { Card, CardContent } from "../ui/card";
 import { Separator } from "../ui/separator";
-import { generateProfilePath } from "@/lib/helpers";
+import { generateProfilePath, getPermission } from "@/lib/helpers";
 import ContentHeader from "../content-header";
 import CardContainer from "../card-container";
 import { formatDate } from "@/lib/utils";
 import { useRootStore } from "@/mobx";
+import Accesscontrol from "../accesscontrol";
 
 interface FlaggedPostDetailProps {
   params: {
@@ -35,7 +35,14 @@ interface FlaggedPostDetailProps {
 const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
   const { toast } = useToast();
   const router = useRouter();
+  const {
+    authStore: { user },
+  } = useRootStore();
 
+  const permissionName = getPermission(
+    user?.role?.permissions,
+    "flaggedposts.accesslevel.update"
+  );
   const {
     flaggedPostStore: { setFlaggedPost },
   } = useRootStore();
@@ -190,14 +197,16 @@ const FlaggedPostDetail: FC<FlaggedPostDetailProps> = ({ params }) => {
           { content: renderFlaggedBy(data?.postFlag?.user) },
         ]}
       />
-      <Button
-        variant="default"
-        className="my-6 ml-auto flex flex-row"
-        disabled
-        onClick={handleDisablePost}
-      >
-        Disable Post
-      </Button>
+      <Accesscontrol name={permissionName}>
+        <Button
+          variant="default"
+          className="my-6 ml-auto flex flex-row"
+          disabled
+          onClick={handleDisablePost}
+        >
+          Disable Post
+        </Button>
+      </Accesscontrol>
       <CardContainer className="p-4 md:p-6">
         <MediaCard
           loading={loading}

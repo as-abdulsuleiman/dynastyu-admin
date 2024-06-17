@@ -1,8 +1,9 @@
 /** @format */
 
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import Multiselect from "multiselect-react-dropdown";
 import { ChevronDownIcon } from "../Icons";
+import { key } from "localforage";
 
 interface MultiSelectorProps {
   groupBy?: string;
@@ -18,12 +19,14 @@ interface MultiSelectorProps {
   disable?: boolean;
   handleSelect: (selectedList: Options[], selectedItem: Options) => void;
   handleRemove: (selectedList: Options[], removedItem: Options) => void;
+  selectedValueDecorator?: () => ReactNode;
 }
 
 type Options = {
   id: string | number;
   value: any;
   label: string;
+  [key: string]: any;
 };
 
 const MultiSelector: FC<MultiSelectorProps> = ({
@@ -39,6 +42,7 @@ const MultiSelector: FC<MultiSelectorProps> = ({
   hidePlaceholder,
   displayValue = "label",
   avoidHighlightFirstOption,
+  selectedValueDecorator,
 }) => {
   return (
     <div className="relative">
@@ -59,6 +63,7 @@ const MultiSelector: FC<MultiSelectorProps> = ({
         avoidHighlightFirstOption={avoidHighlightFirstOption}
         hidePlaceholder={hidePlaceholder}
         showArrow
+        selectedValueDecorator={selectedValueDecorator}
         customArrow={<ChevronDownIcon className="chevron-down_dir" />}
         style={{
           chips: {

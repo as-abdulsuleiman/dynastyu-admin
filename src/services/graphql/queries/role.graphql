@@ -12,6 +12,25 @@ query getRole($where: RoleWhereUniqueInput!) {
       users
       accountTypes
     }
+    permissions {
+      id
+      title
+      query
+      createdAt
+      updatedAt
+    }
+    users {
+      firstname
+      surname
+      id
+      username
+      createdAt
+      updatedAt
+      accountType {
+        id
+        title
+      }
+    }
   }
 }
 
@@ -41,15 +60,19 @@ query getRoles(
       users
       accountTypes
     }
+    permissions {
+      id
+      title
+      query
+      createdAt
+      updatedAt
+    }
   }
 }
 
-mutation updateRole(
-  $data: RoleUpdateInput!
-  $where: RoleWhereUniqueInput!
-) {
+mutation updateRole($data: RoleUpdateInput!, $where: RoleWhereUniqueInput!) {
   updateOneRole(where: $where, data: $data) {
-   id
+    id
     uuid
     title
     createdAt
@@ -61,7 +84,6 @@ mutation updateRole(
     }
   }
 }
-
 
 mutation createRole($data: RoleCreateInput!) {
   createOneRole(data: $data) {
@@ -77,7 +99,7 @@ mutation createRole($data: RoleCreateInput!) {
 
 mutation deleteRole($where: RoleWhereUniqueInput!) {
   deleteOneRole(where: $where) {
-   id
+    id
     uuid
     _count {
       permissions

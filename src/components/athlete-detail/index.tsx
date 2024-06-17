@@ -64,6 +64,9 @@ import AthleteSkillCard from "../athlete-skill-card";
 import { renderLoader } from "@/lib/loader-helper";
 import { CalloutCardProps } from "@/interface/calloutOptions";
 import PromptAlert from "../prompt-alert";
+import AccessControl from "../accesscontrol";
+import { getPermission } from "@/lib/helpers";
+import { observer } from "mobx-react-lite";
 interface AthleteDetailProps {
   params: {
     id: number;
@@ -94,6 +97,11 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
     },
   });
   const athleteData = data?.user;
+
+  const permissionName = getPermission(
+    user?.role?.permissions,
+    "athletes.accesslevel.update"
+  );
 
   const socialAccounts = useMemo(() => {
     return athleteData?.athleteProfile?.socialAccounts?.map((val: any) => {
@@ -822,14 +830,16 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
                 {loading ? (
                   <Skeleton className="w-[40px] h-[35px]" />
                 ) : (
-                  <MenubarCard
-                    trigger={
-                      <Button size="icon" variant="outline">
-                        <MoreHorizontalIcon className="cursor-pointer" />
-                      </Button>
-                    }
-                    items={dropdownItems}
-                  />
+                  <AccessControl name={permissionName}>
+                    <MenubarCard
+                      trigger={
+                        <Button size="icon" variant="outline">
+                          <MoreHorizontalIcon className="cursor-pointer" />
+                        </Button>
+                      }
+                      items={dropdownItems}
+                    />
+                  </AccessControl>
                 )}
               </div>
             </div>
@@ -870,4 +880,4 @@ const AthleteDetail: FC<AthleteDetailProps> = ({ params }) => {
   );
 };
 
-export default AthleteDetail;
+export default observer(AthleteDetail);

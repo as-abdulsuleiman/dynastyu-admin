@@ -219,7 +219,7 @@ export const usersFilter = [
   },
   {
     id: 6,
-    label: "Coachs",
+    label: "Coaches",
     value: {
       accountType: {
         is: {

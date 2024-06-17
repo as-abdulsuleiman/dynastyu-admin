@@ -19,6 +19,7 @@ query getAthletes(
     id
     uuid
     createdAt
+    updatedAt
     verified
     featured
     socialAccounts {
@@ -257,6 +258,87 @@ query getAthleteProfile($where: AthleteProfileWhereUniqueInput!) {
         firstname
         surname
         username
+      }
+    }
+  }
+}
+
+
+query getAthletesWithSkills(
+  $where: AthleteProfileWhereInput
+  $orderBy: [AthleteProfileOrderByWithRelationInput!]
+  $cursor: AthleteProfileWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [AthleteProfileScalarFieldEnum!]
+) {
+  athleteProfiles(
+    where: $where
+    orderBy: $orderBy
+    cursor: $cursor
+    skip: $skip
+    take: $take
+    distinct: $distinct
+  ) {
+    id
+    uuid
+    createdAt
+    verified
+    graduationYear
+    school {
+      id
+      name
+      logo
+      schoolType {
+        name
+        id
+      }
+    }
+    skills(orderBy: { skillType: { position: asc } }) {
+      value
+      secondValue
+      skillType {
+        id
+        name
+        options
+        numberOfVideos
+        secondFieldName
+        secondValueOptions
+        videosLabels
+        unit
+      }
+    }
+    featured
+    schoolId
+    userId
+    user {
+      id
+      firstname
+      surname
+      email
+      avatar
+      username
+      city
+      state
+    }
+    country {
+      name
+      id
+      flag
+      abbreviation
+    }
+    position {
+      name
+      id
+      uuid
+      shortName
+    }
+    verifiedBy {
+      id
+      user {
+        id
+        firstname
+        surname
       }
     }
   }

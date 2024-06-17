@@ -377,6 +377,15 @@ query getUser($where: UserWhereUniqueInput!, $userId: BigInt) {
         surname
       }
     }
+    role {
+      id
+      title
+      permissions {
+        id
+        title
+        query
+      }
+    }
   }
 }
 
@@ -411,6 +420,24 @@ query GetUsers(
         id
         flag
         abbreviation
+      }
+    }
+    role {
+      id
+      title
+      users {
+        firstname
+        surname
+        id
+      }
+      permissions {
+        id
+        title
+        query
+      }
+      accountTypes {
+        id
+        title
       }
     }
   }
