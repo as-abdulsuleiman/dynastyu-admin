@@ -19,6 +19,7 @@ query getAthletes(
     id
     uuid
     createdAt
+    updatedAt
     verified
     featured
     socialAccounts {
