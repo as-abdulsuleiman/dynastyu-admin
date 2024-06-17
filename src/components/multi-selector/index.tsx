@@ -3,6 +3,7 @@
 import { FC, ReactNode } from "react";
 import Multiselect from "multiselect-react-dropdown";
 import { ChevronDownIcon } from "../Icons";
+import { key } from "localforage";
 
 interface MultiSelectorProps {
   groupBy?: string;
@@ -25,6 +26,7 @@ type Options = {
   id: string | number;
   value: any;
   label: string;
+  [key: string]: any;
 };
 
 const MultiSelector: FC<MultiSelectorProps> = ({
