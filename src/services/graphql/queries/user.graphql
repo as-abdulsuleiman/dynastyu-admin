@@ -377,6 +377,7 @@ query getUser($where: UserWhereUniqueInput!, $userId: BigInt) {
         surname
       }
     }
+    fanVerified
     role {
       id
       title
@@ -414,6 +415,7 @@ query GetUsers(
     username
     city
     state
+    fanVerified
     athleteProfile {
       country {
         name
@@ -511,6 +513,7 @@ mutation updateUser($data: UserUpdateInput!, $where: UserWhereUniqueInput!) {
     address
     city
     state
+    fanVerified
     _count {
       following
       followedBy

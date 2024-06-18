@@ -161,6 +161,15 @@ export const fanFilter = [
   //     },
   //   },
   // },
+  {
+    id: 3,
+    label: "Verified",
+    value: {
+      fanVerified: {
+        equals: true,
+      },
+    },
+  },
   // {
   //   id: 4,
   //   label: "Not Verified",
