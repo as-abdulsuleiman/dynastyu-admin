@@ -225,7 +225,7 @@ const Fans: FC<FansProps> = ({}) => {
       toast({
         title: "Something went wrong.",
         description: `${
-          error || "Could not successfully created a coach. Please try again."
+          error || "Could not verify fan profile. Please try again."
         }`,
         variant: "destructive",
       });
