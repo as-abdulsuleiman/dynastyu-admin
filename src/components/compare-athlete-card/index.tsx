@@ -146,22 +146,23 @@ const CompareAthleteCard: FC<CompareProps> = ({ params }) => {
   //   );
   // });
 
-  // const check = skillTypesData?.skillTypes?.map((a, id) => {
-  //   const second =
-  //     secondSelectedUser?.items?.skills?.find(
-  //       (b: any) => b?.skillType?.id === a?.id
-  //     )?.value || 0;
+  const check = skillTypesData?.skillTypes?.map((a, id) => {
+    const second =
+      secondSelectedUser?.items?.skills?.find(
+        (b: any) => b?.skillType?.id === a?.id
+      ) || 0;
 
-  //   const first =
-  //     selectedUser?.items?.skills?.find((b: any) => b?.skillType?.id === a?.id)
-  //       ?.value || 0;
+    const first =
+      selectedUser?.items?.skills?.find(
+        (b: any) => b?.skillType?.id === a?.id
+      ) || 0;
 
-  //   return console.log("second", second, first);
-  // });
+    return console.log("second- first", second, first);
+  });
 
   console.log("selectedUser", selectedUser);
 
-  // console.log("check", check);
+  console.log("check", check);
 
   const userCustomItems = ({ item, id }: { item: any; id: number }) => {
     return (
@@ -404,13 +405,13 @@ const CompareAthleteCard: FC<CompareProps> = ({ params }) => {
                           )?.value || 0}{" "}
                           {a?.unit}
                         </strong>
-                        {/* {getHigher(
-                        selectedUser,
-                        a,
-                        a.id === 6 || a.id === 8 ? "lower" : "higher"
-                      ) ? (
-                        <CheckIcon />
-                      ) : null} */}
+                        {getHigher(
+                          selectedUser,
+                          a,
+                          a.id === 6 || a.id === 8 ? "lower" : "higher"
+                        ) ? (
+                          <CheckIcon />
+                        ) : null}
                       </div>
                     </>
                   );

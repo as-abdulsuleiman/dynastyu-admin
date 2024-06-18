@@ -1274,10 +1274,6 @@ const Page: FC<PageProps> = ({ params }) => {
     return <CompareAthleteCard params={params} />;
   };
 
-  // const renderSchoolComparePlayers = () => {
-  //   return <CompareAthleteCard params={params} />;
-  // };
-
   const handleVerifyAthlete = (item: any) => {
     setUpdatingProfile(StatusEnum.VERIFYING);
     setSelectedAthlete(item);
@@ -1520,9 +1516,9 @@ const Page: FC<PageProps> = ({ params }) => {
         {
           content: renderSchoolTeamPlayers(),
         },
-        { content: renderSchoolComparePlayers() },
         { content: renderVerifyAthletes() },
-        { content: renderLockerRoom() }
+        { content: renderLockerRoom() },
+        { content: renderSchoolComparePlayers() }
       );
     } else {
       tabsHeader?.push({ name: "Athletes Interested" });
