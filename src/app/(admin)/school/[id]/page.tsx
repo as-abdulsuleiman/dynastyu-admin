@@ -1507,7 +1507,7 @@ const Page: FC<PageProps> = ({ params }) => {
   if (!loading) {
     if (isHighSchool) {
       tabsHeader?.push(
-        { name: "Team Players" },
+        { name: "Team Data" },
         { name: "Verify Athletes" },
         { name: "Locker Room" },
         { name: "Compare Players" }
