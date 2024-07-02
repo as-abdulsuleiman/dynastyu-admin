@@ -8175,6 +8175,7 @@ export type MessageWhereUniqueInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  compressVideo?: Maybe<Return>;
   createManyAccountType: AffectedRowsOutput;
   createManyAthleteProfile: AffectedRowsOutput;
   createManyBlocks: AffectedRowsOutput;
@@ -8419,6 +8420,11 @@ export type Mutation = {
   upsertOneSocialAccount: SocialAccount;
   upsertOneTranscripts: Transcripts;
   upsertOneUser: User;
+};
+
+
+export type MutationCompressVideoArgs = {
+  data: ProcessVideoInput;
 };
 
 
@@ -27036,7 +27042,19 @@ export type GetPositionsQueryVariables = Exact<{
 }>;
 
 
-export type GetPositionsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', name: string, id: any, uuid: string, shortName: string }> };
+export type GetPositionsQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', name: string, id: any, uuid: string, shortName: string, createdAt: any, updatedAt: any, _count?: { __typename?: 'PositionCount', athleteProfiles: number } | null, category?: { __typename?: 'PositionCategory', name: string, id: any } | null }> };
+
+export type GetFindFirstPositionQueryVariables = Exact<{
+  where?: InputMaybe<PositionWhereInput>;
+  orderBy?: InputMaybe<Array<PositionOrderByWithRelationInput> | PositionOrderByWithRelationInput>;
+  cursor?: InputMaybe<PositionWhereUniqueInput>;
+  take?: InputMaybe<Scalars['Int']['input']>;
+  skip?: InputMaybe<Scalars['Int']['input']>;
+  distinct?: InputMaybe<Array<PositionScalarFieldEnum> | PositionScalarFieldEnum>;
+}>;
+
+
+export type GetFindFirstPositionQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', name: string, id: any, uuid: string, shortName: string, createdAt: any, updatedAt: any, athleteProfiles: Array<{ __typename?: 'AthleteProfile', id: any, userId: any }> }> };
 
 export type GetAggregateAthleteProfileQueryVariables = Exact<{
   where?: InputMaybe<AthleteProfileWhereInput>;
@@ -27089,6 +27107,50 @@ export type CreateAthleteProfileMutationVariables = Exact<{
 
 
 export type CreateAthleteProfileMutation = { __typename?: 'Mutation', createOneAthleteProfile: { __typename?: 'AthleteProfile', id: any, uuid: string, userId: any } };
+
+export type CreateAthletePositionMutationVariables = Exact<{
+  data: PositionCreateInput;
+}>;
+
+
+export type CreateAthletePositionMutation = { __typename?: 'Mutation', createOnePosition: { __typename?: 'Position', id: any, uuid: string, name: string, createdAt: any, updatedAt: any, shortName: string } };
+
+export type UpdateAthletePositionMutationVariables = Exact<{
+  data: PositionUpdateInput;
+  where: PositionWhereUniqueInput;
+}>;
+
+
+export type UpdateAthletePositionMutation = { __typename?: 'Mutation', updateOnePosition?: { __typename?: 'Position', id: any, uuid: string, name: string, createdAt: any, updatedAt: any, shortName: string } | null };
+
+export type DeleteAthletePositionMutationVariables = Exact<{
+  where: PositionWhereUniqueInput;
+}>;
+
+
+export type DeleteAthletePositionMutation = { __typename?: 'Mutation', deleteOnePosition?: { __typename?: 'Position', id: any, uuid: string } | null };
+
+export type CreateAthletePositionCategoryMutationVariables = Exact<{
+  data: PositionCategoryCreateInput;
+}>;
+
+
+export type CreateAthletePositionCategoryMutation = { __typename?: 'Mutation', createOnePositionCategory: { __typename?: 'PositionCategory', id: any, uuid: string, name: string, createdAt: any, updatedAt: any } };
+
+export type UpdateAthletePositionCategoryMutationVariables = Exact<{
+  data: PositionCategoryUpdateInput;
+  where: PositionCategoryWhereUniqueInput;
+}>;
+
+
+export type UpdateAthletePositionCategoryMutation = { __typename?: 'Mutation', updateOnePositionCategory?: { __typename?: 'PositionCategory', id: any, uuid: string, name: string, createdAt: any, updatedAt: any } | null };
+
+export type DeleteAthletePositionCategoryMutationVariables = Exact<{
+  where: PositionCategoryWhereUniqueInput;
+}>;
+
+
+export type DeleteAthletePositionCategoryMutation = { __typename?: 'Mutation', deleteOnePositionCategory?: { __typename?: 'PositionCategory', id: any, uuid: string } | null };
 
 export type GetCoachesQueryVariables = Exact<{
   where?: InputMaybe<CoachProfileWhereInput>;
@@ -28910,6 +28972,15 @@ export const GetPositionsDocument = gql`
     id
     uuid
     shortName
+    createdAt
+    updatedAt
+    _count {
+      athleteProfiles
+    }
+    category {
+      name
+      id
+    }
   }
 }
     `;
@@ -28951,6 +29022,67 @@ export type GetPositionsQueryHookResult = ReturnType<typeof useGetPositionsQuery
 export type GetPositionsLazyQueryHookResult = ReturnType<typeof useGetPositionsLazyQuery>;
 export type GetPositionsSuspenseQueryHookResult = ReturnType<typeof useGetPositionsSuspenseQuery>;
 export type GetPositionsQueryResult = Apollo.QueryResult<GetPositionsQuery, GetPositionsQueryVariables>;
+export const GetFindFirstPositionDocument = gql`
+    query getFindFirstPosition($where: PositionWhereInput, $orderBy: [PositionOrderByWithRelationInput!], $cursor: PositionWhereUniqueInput, $take: Int, $skip: Int, $distinct: [PositionScalarFieldEnum!]) {
+  positions(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    name
+    id
+    uuid
+    shortName
+    createdAt
+    updatedAt
+    athleteProfiles {
+      id
+      userId
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetFindFirstPositionQuery__
+ *
+ * To run a query within a React component, call `useGetFindFirstPositionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFindFirstPositionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFindFirstPositionQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      orderBy: // value for 'orderBy'
+ *      cursor: // value for 'cursor'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *      distinct: // value for 'distinct'
+ *   },
+ * });
+ */
+export function useGetFindFirstPositionQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetFindFirstPositionQuery, GetFindFirstPositionQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetFindFirstPositionQuery, GetFindFirstPositionQueryVariables>(GetFindFirstPositionDocument, options);
+      }
+export function useGetFindFirstPositionLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetFindFirstPositionQuery, GetFindFirstPositionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetFindFirstPositionQuery, GetFindFirstPositionQueryVariables>(GetFindFirstPositionDocument, options);
+        }
+export function useGetFindFirstPositionSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetFindFirstPositionQuery, GetFindFirstPositionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetFindFirstPositionQuery, GetFindFirstPositionQueryVariables>(GetFindFirstPositionDocument, options);
+        }
+export type GetFindFirstPositionQueryHookResult = ReturnType<typeof useGetFindFirstPositionQuery>;
+export type GetFindFirstPositionLazyQueryHookResult = ReturnType<typeof useGetFindFirstPositionLazyQuery>;
+export type GetFindFirstPositionSuspenseQueryHookResult = ReturnType<typeof useGetFindFirstPositionSuspenseQuery>;
+export type GetFindFirstPositionQueryResult = Apollo.QueryResult<GetFindFirstPositionQuery, GetFindFirstPositionQueryVariables>;
 export const GetAggregateAthleteProfileDocument = gql`
     query getAggregateAthleteProfile($where: AthleteProfileWhereInput, $orderBy: [AthleteProfileOrderByWithRelationInput!], $cursor: AthleteProfileWhereUniqueInput, $take: Int, $skip: Int) {
   aggregateAthleteProfile(
@@ -29248,6 +29380,226 @@ export function useCreateAthleteProfileMutation(baseOptions?: ApolloReactHooks.M
 export type CreateAthleteProfileMutationHookResult = ReturnType<typeof useCreateAthleteProfileMutation>;
 export type CreateAthleteProfileMutationResult = Apollo.MutationResult<CreateAthleteProfileMutation>;
 export type CreateAthleteProfileMutationOptions = Apollo.BaseMutationOptions<CreateAthleteProfileMutation, CreateAthleteProfileMutationVariables>;
+export const CreateAthletePositionDocument = gql`
+    mutation createAthletePosition($data: PositionCreateInput!) {
+  createOnePosition(data: $data) {
+    id
+    uuid
+    name
+    createdAt
+    updatedAt
+    shortName
+  }
+}
+    `;
+export type CreateAthletePositionMutationFn = Apollo.MutationFunction<CreateAthletePositionMutation, CreateAthletePositionMutationVariables>;
+
+/**
+ * __useCreateAthletePositionMutation__
+ *
+ * To run a mutation, you first call `useCreateAthletePositionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAthletePositionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAthletePositionMutation, { data, loading, error }] = useCreateAthletePositionMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateAthletePositionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateAthletePositionMutation, CreateAthletePositionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateAthletePositionMutation, CreateAthletePositionMutationVariables>(CreateAthletePositionDocument, options);
+      }
+export type CreateAthletePositionMutationHookResult = ReturnType<typeof useCreateAthletePositionMutation>;
+export type CreateAthletePositionMutationResult = Apollo.MutationResult<CreateAthletePositionMutation>;
+export type CreateAthletePositionMutationOptions = Apollo.BaseMutationOptions<CreateAthletePositionMutation, CreateAthletePositionMutationVariables>;
+export const UpdateAthletePositionDocument = gql`
+    mutation updateAthletePosition($data: PositionUpdateInput!, $where: PositionWhereUniqueInput!) {
+  updateOnePosition(where: $where, data: $data) {
+    id
+    uuid
+    name
+    createdAt
+    updatedAt
+    shortName
+  }
+}
+    `;
+export type UpdateAthletePositionMutationFn = Apollo.MutationFunction<UpdateAthletePositionMutation, UpdateAthletePositionMutationVariables>;
+
+/**
+ * __useUpdateAthletePositionMutation__
+ *
+ * To run a mutation, you first call `useUpdateAthletePositionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAthletePositionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAthletePositionMutation, { data, loading, error }] = useUpdateAthletePositionMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useUpdateAthletePositionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateAthletePositionMutation, UpdateAthletePositionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateAthletePositionMutation, UpdateAthletePositionMutationVariables>(UpdateAthletePositionDocument, options);
+      }
+export type UpdateAthletePositionMutationHookResult = ReturnType<typeof useUpdateAthletePositionMutation>;
+export type UpdateAthletePositionMutationResult = Apollo.MutationResult<UpdateAthletePositionMutation>;
+export type UpdateAthletePositionMutationOptions = Apollo.BaseMutationOptions<UpdateAthletePositionMutation, UpdateAthletePositionMutationVariables>;
+export const DeleteAthletePositionDocument = gql`
+    mutation deleteAthletePosition($where: PositionWhereUniqueInput!) {
+  deleteOnePosition(where: $where) {
+    id
+    uuid
+  }
+}
+    `;
+export type DeleteAthletePositionMutationFn = Apollo.MutationFunction<DeleteAthletePositionMutation, DeleteAthletePositionMutationVariables>;
+
+/**
+ * __useDeleteAthletePositionMutation__
+ *
+ * To run a mutation, you first call `useDeleteAthletePositionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAthletePositionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAthletePositionMutation, { data, loading, error }] = useDeleteAthletePositionMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteAthletePositionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteAthletePositionMutation, DeleteAthletePositionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteAthletePositionMutation, DeleteAthletePositionMutationVariables>(DeleteAthletePositionDocument, options);
+      }
+export type DeleteAthletePositionMutationHookResult = ReturnType<typeof useDeleteAthletePositionMutation>;
+export type DeleteAthletePositionMutationResult = Apollo.MutationResult<DeleteAthletePositionMutation>;
+export type DeleteAthletePositionMutationOptions = Apollo.BaseMutationOptions<DeleteAthletePositionMutation, DeleteAthletePositionMutationVariables>;
+export const CreateAthletePositionCategoryDocument = gql`
+    mutation createAthletePositionCategory($data: PositionCategoryCreateInput!) {
+  createOnePositionCategory(data: $data) {
+    id
+    uuid
+    name
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export type CreateAthletePositionCategoryMutationFn = Apollo.MutationFunction<CreateAthletePositionCategoryMutation, CreateAthletePositionCategoryMutationVariables>;
+
+/**
+ * __useCreateAthletePositionCategoryMutation__
+ *
+ * To run a mutation, you first call `useCreateAthletePositionCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAthletePositionCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAthletePositionCategoryMutation, { data, loading, error }] = useCreateAthletePositionCategoryMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateAthletePositionCategoryMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateAthletePositionCategoryMutation, CreateAthletePositionCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateAthletePositionCategoryMutation, CreateAthletePositionCategoryMutationVariables>(CreateAthletePositionCategoryDocument, options);
+      }
+export type CreateAthletePositionCategoryMutationHookResult = ReturnType<typeof useCreateAthletePositionCategoryMutation>;
+export type CreateAthletePositionCategoryMutationResult = Apollo.MutationResult<CreateAthletePositionCategoryMutation>;
+export type CreateAthletePositionCategoryMutationOptions = Apollo.BaseMutationOptions<CreateAthletePositionCategoryMutation, CreateAthletePositionCategoryMutationVariables>;
+export const UpdateAthletePositionCategoryDocument = gql`
+    mutation updateAthletePositionCategory($data: PositionCategoryUpdateInput!, $where: PositionCategoryWhereUniqueInput!) {
+  updateOnePositionCategory(where: $where, data: $data) {
+    id
+    uuid
+    name
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export type UpdateAthletePositionCategoryMutationFn = Apollo.MutationFunction<UpdateAthletePositionCategoryMutation, UpdateAthletePositionCategoryMutationVariables>;
+
+/**
+ * __useUpdateAthletePositionCategoryMutation__
+ *
+ * To run a mutation, you first call `useUpdateAthletePositionCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateAthletePositionCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateAthletePositionCategoryMutation, { data, loading, error }] = useUpdateAthletePositionCategoryMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useUpdateAthletePositionCategoryMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateAthletePositionCategoryMutation, UpdateAthletePositionCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateAthletePositionCategoryMutation, UpdateAthletePositionCategoryMutationVariables>(UpdateAthletePositionCategoryDocument, options);
+      }
+export type UpdateAthletePositionCategoryMutationHookResult = ReturnType<typeof useUpdateAthletePositionCategoryMutation>;
+export type UpdateAthletePositionCategoryMutationResult = Apollo.MutationResult<UpdateAthletePositionCategoryMutation>;
+export type UpdateAthletePositionCategoryMutationOptions = Apollo.BaseMutationOptions<UpdateAthletePositionCategoryMutation, UpdateAthletePositionCategoryMutationVariables>;
+export const DeleteAthletePositionCategoryDocument = gql`
+    mutation deleteAthletePositionCategory($where: PositionCategoryWhereUniqueInput!) {
+  deleteOnePositionCategory(where: $where) {
+    id
+    uuid
+  }
+}
+    `;
+export type DeleteAthletePositionCategoryMutationFn = Apollo.MutationFunction<DeleteAthletePositionCategoryMutation, DeleteAthletePositionCategoryMutationVariables>;
+
+/**
+ * __useDeleteAthletePositionCategoryMutation__
+ *
+ * To run a mutation, you first call `useDeleteAthletePositionCategoryMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteAthletePositionCategoryMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteAthletePositionCategoryMutation, { data, loading, error }] = useDeleteAthletePositionCategoryMutation({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteAthletePositionCategoryMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteAthletePositionCategoryMutation, DeleteAthletePositionCategoryMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteAthletePositionCategoryMutation, DeleteAthletePositionCategoryMutationVariables>(DeleteAthletePositionCategoryDocument, options);
+      }
+export type DeleteAthletePositionCategoryMutationHookResult = ReturnType<typeof useDeleteAthletePositionCategoryMutation>;
+export type DeleteAthletePositionCategoryMutationResult = Apollo.MutationResult<DeleteAthletePositionCategoryMutation>;
+export type DeleteAthletePositionCategoryMutationOptions = Apollo.BaseMutationOptions<DeleteAthletePositionCategoryMutation, DeleteAthletePositionCategoryMutationVariables>;
 export const GetCoachesDocument = gql`
     query getCoaches($where: CoachProfileWhereInput, $orderBy: [CoachProfileOrderByWithRelationInput!], $cursor: CoachProfileWhereUniqueInput, $take: Int, $skip: Int, $distinct: [CoachProfileScalarFieldEnum!]) {
   coachProfiles(
