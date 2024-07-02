@@ -74,10 +74,4 @@ export { default as PanelRightOpenIcon } from "./panel-right-open";
 export { default as ActivityIcon } from "./activity";
 export { default as CogIcon } from "./cog";
 export { default as PlusIcon } from "./plus";
-
-
-
-
-
-
-
+export { default as ArrowLeftRightIcon } from "./arrow-left-right";

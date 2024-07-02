@@ -57,6 +57,7 @@ import athlete from "@/components/Icons/athlete";
 import { SearchInput } from "@/components/search-input";
 import MultiSelector from "@/components/multi-selector";
 import BadgeCard from "@/components/badge-card";
+import CompareAthleteCard from "@/components/compare-athlete-card";
 
 interface PageProps {
   params: {
@@ -1269,6 +1270,10 @@ const Page: FC<PageProps> = ({ params }) => {
     );
   };
 
+  const renderSchoolComparePlayers = () => {
+    return <CompareAthleteCard params={params} />;
+  };
+
   const handleVerifyAthlete = (item: any) => {
     setUpdatingProfile(StatusEnum.VERIFYING);
     setSelectedAthlete(item);
@@ -1504,12 +1509,16 @@ const Page: FC<PageProps> = ({ params }) => {
       tabsHeader?.push(
         { name: "Team Data" },
         { name: "Verify Athletes" },
-        { name: "Locker Room" }
+        { name: "Locker Room" },
+        { name: "Compare Players" }
       );
       tabsContent?.push(
-        { content: renderSchoolTeamPlayers() },
+        {
+          content: renderSchoolTeamPlayers(),
+        },
         { content: renderVerifyAthletes() },
-        { content: renderLockerRoom() }
+        { content: renderLockerRoom() },
+        { content: renderSchoolComparePlayers() }
       );
     } else {
       tabsHeader?.push({ name: "Athletes Interested" });
