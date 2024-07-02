@@ -281,6 +281,13 @@ const SidebarLinkGroup: FC<SidebarItemsProps> = ({
           acl: "admin.accesslevel.get",
         },
         {
+          name: "Athlete Positions",
+          path: "/athlete-positions",
+          hasBadge: false,
+          count: 0,
+          acl: "admin.accesslevel.get",
+        },
+        {
           name: "School Types",
           path: "/school-types",
           hasBadge: false,

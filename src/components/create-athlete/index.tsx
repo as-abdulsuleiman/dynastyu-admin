@@ -286,12 +286,16 @@ const CreateAthlete: FC<CreateAthleteProps> = ({ params, searchParams }) => {
         <div className="flex flex-row items-center">
           <ContentHeader
             title={`${
-              fetchAthlete ? `Edit Athlete Profile` : " Add New Athlete"
+              fetchAthlete ? `Edit Athlete Profile` : "Add New Athlete"
             }`}
             // icon={
             //   <AthleteIcon className="h-4 w-4 ml-2 stroke-tremor-content-emphasis dark:stroke-dark-tremor-content-emphasis" />
             // }
-            subHeader="Athletes Details"
+            subHeader={
+              !loading && fetchAthlete
+                ? `${athleteData?.athleteProfile?.user?.firstname} ${athleteData?.athleteProfile?.user?.surname}`
+                : ""
+            }
           />
         </div>
       </div>

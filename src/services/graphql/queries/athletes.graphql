@@ -364,6 +364,45 @@ query getPositions(
     id
     uuid
     shortName
+    createdAt
+    updatedAt
+    _count{
+      athleteProfiles
+    }
+    category{
+      name
+      id
+    }
+  }
+}
+
+
+query getFindFirstPosition(
+  $where: PositionWhereInput
+  $orderBy: [PositionOrderByWithRelationInput!]
+  $cursor: PositionWhereUniqueInput
+  $take: Int
+  $skip: Int
+  $distinct: [PositionScalarFieldEnum!]
+) {
+  positions(
+    where: $where
+    orderBy: $orderBy
+    take: $take
+    skip: $skip
+    distinct: $distinct
+    cursor: $cursor
+  ) {
+    name
+    id
+    uuid
+    shortName
+    createdAt
+    updatedAt
+    athleteProfiles{
+      id
+      userId
+    }
   }
 }
 
@@ -486,3 +525,67 @@ mutation createAthleteProfile($data: AthleteProfileCreateInput!) {
     userId
   }
 }
+
+mutation createAthletePosition($data: PositionCreateInput!) {
+  createOnePosition(data: $data) {
+    id
+    uuid
+    name
+    createdAt
+    updatedAt
+    shortName
+  }
+}
+
+mutation updateAthletePosition(
+  $data: PositionUpdateInput!
+  $where: PositionWhereUniqueInput!
+) {
+  updateOnePosition(where: $where, data: $data) {
+    id
+    uuid
+    name
+    createdAt
+    updatedAt
+    shortName
+  }
+}
+
+mutation deleteAthletePosition($where: PositionWhereUniqueInput!) {
+  deleteOnePosition(where: $where) {
+    id
+    uuid
+  }
+}
+
+mutation createAthletePositionCategory($data: PositionCategoryCreateInput!) {
+  createOnePositionCategory(data: $data) {
+    id
+    uuid
+    name
+    createdAt
+    updatedAt
+  }
+}
+
+mutation updateAthletePositionCategory(
+  $data: PositionCategoryUpdateInput!
+  $where: PositionCategoryWhereUniqueInput!
+) {
+  updateOnePositionCategory(where: $where, data: $data) {
+    id
+    uuid
+    name
+    createdAt
+    updatedAt
+  }
+}
+
+mutation deleteAthletePositionCategory($where: PositionCategoryWhereUniqueInput!) {
+  deleteOnePositionCategory(where: $where) {
+    id
+    uuid
+  }
+}
+
+
