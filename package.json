@@ -47,6 +47,7 @@
     "date-fns": "^3.2.0",
     "embla-carousel-react": "^8.0.0-rc21",
     "firebase": "^10.6.0",
+    "framer-motion": "^11.2.0",
     "graphql": "^16.8.1",
     "localforage": "^1.10.0",
     "lottie-react": "^2.4.0",

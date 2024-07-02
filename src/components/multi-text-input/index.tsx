@@ -1,6 +1,6 @@
 /** @format */
 
-import { FC } from "react";
+import { FC, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { cn } from "@/lib/utils";
@@ -35,6 +35,52 @@ const MultiTextInput: FC<MultiTextInputProps> = ({
   handleRemoveItem,
   placeholder,
 }) => {
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [newItems, setItems] = useState<string[]>([]);
+  useEffect(() => {
+    setItems([...items]);
+  }, [items]);
+
+  const handleDragStart = (
+    e: React.DragEvent<HTMLDivElement>,
+    index: number
+  ) => {
+    setDraggedIndex(index);
+  };
+
+  const handleDragOver = (
+    e: React.DragEvent<HTMLDivElement>,
+    index: number
+  ) => {
+    e.preventDefault();
+    if (draggedIndex !== null) {
+      console.log("dragIndex", draggedIndex);
+      const draggedItem = items[draggedIndex];
+      const newItems = [...items];
+      newItems.splice(draggedIndex, 1);
+      newItems.splice(index, 0, draggedItem);
+      console.log("newItemsDrag", newItems);
+      setDraggedIndex(index);
+    }
+  };
+
+  console.log("newItems", newItems);
+  console.log("items", [...items]);
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
+    e.preventDefault();
+    if (draggedIndex !== null && onChange) {
+      const draggedItem = items[draggedIndex];
+      console.log("draggedItem", draggedItem);
+      const newItems = [...items];
+      newItems.splice(draggedIndex, 1);
+      newItems.splice(index, 0, draggedItem);
+      onChange(newItems as any);
+      setDraggedIndex(null);
+      console.log("newItems", newItems);
+    }
+  };
+
   const className = `${
     error?.length
       ? "focus-within:ring-1 focus-within:ring-ring border border-input"
@@ -74,10 +120,11 @@ const MultiTextInput: FC<MultiTextInputProps> = ({
             }
           }}
         />
-        {items?.length ? (
+        {newItems?.length ? (
           <ScrollArea className="h-32 flex flex-row">
             <div className="flex flex-row flex-wrap items-center pt-8 pb-2">
-              {items?.map((val: string, index) => {
+              {/* <div className="flex flex-row flex-wrap items-center pt-8 pb-2"> */}
+              {newItems?.map((val: string, index) => {
                 return (
                   <div
                     className="mr-2 flex flex-row items-center justify-center bg-primary w-fit h-6 py-3 px-2 rounded-xl mb-2"
@@ -93,8 +140,28 @@ const MultiTextInput: FC<MultiTextInputProps> = ({
                       className="h-[16px] w-[16px] cursor-pointer dark:stroke-gray-200 stroke-gray-200 ml-1.5"
                     />
                   </div>
+                  // <div
+                  //   draggable
+                  //   onDragStart={(e) => handleDragStart(e, index)}
+                  //   onDragOver={(e) => handleDragOver(e, index)}
+                  //   onDrop={(e) => handleDrop(e, index)}
+                  //   className="mr-2 flex flex-row items-center justify-center bg-primary w-fit h-6 py-3 px-2 rounded-xl mb-2"
+                  //   key={index}
+                  // >
+
+                  //   {/* <div className="text-[14px] dark:text-gray-200 text-gray-200">
+                  //     {val}
+                  //   </div> */}
+                  //   <CloseCircleLineIcon
+                  //     onClick={() =>
+                  //       handleRemoveItem ? handleRemoveItem(val) : {}
+                  //     }
+                  //     className="h-[16px] w-[16px] cursor-pointer dark:stroke-gray-200 stroke-gray-200 ml-1.5"
+                  //   />
+                  // </div>
                 );
               })}
+              {/* </div> */}
             </div>
           </ScrollArea>
         ) : null}

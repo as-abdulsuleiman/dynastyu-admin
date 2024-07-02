@@ -6,6 +6,7 @@ import { Suspense, useState } from "react";
 import Navbar from "@/components/navbar";
 import SideBar from "@/components/sidebar";
 import SuspenseLoader from "@/components/suspense-loader";
+import { AnimatePresence, motion } from "framer-motion";
 
 export default function AdminLayout({
   children,
@@ -15,7 +16,7 @@ export default function AdminLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <>
+    <AnimatePresence mode="wait" initial={true}>
       <div className="flex h-screen overflow-hidden w-full">
         <SideBar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <div className="relative flex flex-1 flex-col overflow-y-scroll overflow-x-hidden p-0">
@@ -27,6 +28,6 @@ export default function AdminLayout({
           </main>
         </div>
       </div>
-    </>
+    </AnimatePresence>
   );
 }
