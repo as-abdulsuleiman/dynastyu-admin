@@ -27061,7 +27061,7 @@ export type GetPositionQueryVariables = Exact<{
 }>;
 
 
-export type GetPositionQuery = { __typename?: 'Query', position?: { __typename?: 'Position', name: string, id: any, uuid: string, shortName: string, createdAt: any, updatedAt: any, athleteProfiles: Array<{ __typename?: 'AthleteProfile', id: any, userId: any }> } | null };
+export type GetPositionQuery = { __typename?: 'Query', position?: { __typename?: 'Position', name: string, id: any, uuid: string, shortName: string, createdAt: any, updatedAt: any, athleteProfiles: Array<{ __typename?: 'AthleteProfile', id: any, userId: any }>, category?: { __typename?: 'PositionCategory', name: string, id: any, createdAt: any, updatedAt: any } | null } | null };
 
 export type GetAggregateAthleteProfileQueryVariables = Exact<{
   where?: InputMaybe<AthleteProfileWhereInput>;
@@ -29102,6 +29102,12 @@ export const GetPositionDocument = gql`
     athleteProfiles {
       id
       userId
+    }
+    category {
+      name
+      id
+      createdAt
+      updatedAt
     }
   }
 }

@@ -166,9 +166,45 @@ const PositionDetail: FC<PositionDetailProps> = ({ params }) => {
     });
   }, [addUsersdata?.users]);
 
-  const renderPositionList = () => {
-    return <div>Hello</div>;
-  };
+  const subHeaderItems = [
+    {
+      title: "Position:",
+
+      content:
+        `${positionData?.position?.name} ${positionData?.position?.shortName}` ||
+        "N/A",
+    },
+    {
+      title: "Category Name:",
+
+      content: positionData?.position?.category?.name || "N/A",
+    },
+
+    {
+      title: "Created At:",
+      content:
+        `${
+          positionData?.position?.category?.createdAt
+            ? formatDate(
+                new Date(positionData?.position?.category?.createdAt),
+                "MMMM dd yyyy"
+              )
+            : ""
+        }` || "N/A",
+    },
+    {
+      title: "UpdatedAt:",
+      content:
+        `${
+          positionData?.position?.category?.createdAt
+            ? formatDate(
+                new Date(positionData?.position?.category?.createdAt),
+                "MMMM dd yyyy"
+              )
+            : ""
+        }` || "N/A",
+    },
+  ];
 
   const userCustomItems = ({ item, id }: { item: any; id: number }) => {
     return (
@@ -504,21 +540,12 @@ const PositionDetail: FC<PositionDetailProps> = ({ params }) => {
       >
         Go Back
       </Button>
-      <ContentHeader
-        title="Role "
-        subHeader={
-          `${positionData?.position?.name} ${positionData?.position?.shortName}` ||
-          "Position Overview"
-        }
-      />
+      <ContentHeader title="Position Detail" subItems={subHeaderItems} />
       <Separator className="my-6" />
 
       <TabCard
-        tabs={[{ name: "Athlete Position" }, { name: "Athletes" }]}
-        tabContent={[
-          { content: renderPositionList() },
-          { content: renderUserList() },
-        ]}
+        tabs={[{ name: "Athletes" }]}
+        tabContent={[{ content: renderUserList() }]}
       />
     </>
   );
