@@ -263,7 +263,6 @@ query getAthleteProfile($where: AthleteProfileWhereUniqueInput!) {
   }
 }
 
-
 query getAthletesWithSkills(
   $where: AthleteProfileWhereInput
   $orderBy: [AthleteProfileOrderByWithRelationInput!]
@@ -366,16 +365,15 @@ query getPositions(
     shortName
     createdAt
     updatedAt
-    _count{
+    _count {
       athleteProfiles
     }
-    category{
+    category {
       name
       id
     }
   }
 }
-
 
 query getFindFirstPosition(
   $where: PositionWhereInput
@@ -399,9 +397,30 @@ query getFindFirstPosition(
     shortName
     createdAt
     updatedAt
-    athleteProfiles{
+    athleteProfiles {
       id
       userId
+    }
+  }
+}
+
+query getPosition($where: PositionWhereUniqueInput!) {
+  position(where: $where) {
+    name
+    id
+    uuid
+    shortName
+    createdAt
+    updatedAt
+    athleteProfiles {
+      id
+      userId
+    }
+    category {
+      name
+      id
+      createdAt
+      updatedAt
     }
   }
 }
@@ -581,11 +600,11 @@ mutation updateAthletePositionCategory(
   }
 }
 
-mutation deleteAthletePositionCategory($where: PositionCategoryWhereUniqueInput!) {
+mutation deleteAthletePositionCategory(
+  $where: PositionCategoryWhereUniqueInput!
+) {
   deleteOnePositionCategory(where: $where) {
     id
     uuid
   }
 }
-
-

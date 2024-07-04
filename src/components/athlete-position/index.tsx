@@ -38,6 +38,7 @@ import { getPermission } from "@/lib/helpers";
 import Accesscontrol from "../accesscontrol";
 import { observer } from "mobx-react-lite";
 import { AthletePositionValidator } from "@/lib/validators/athlete-position";
+import { useRouter } from "next/navigation";
 
 type FormData = yup.InferType<typeof AthletePositionValidator>;
 
@@ -45,6 +46,7 @@ interface AthletePositionProps {}
 
 const AthletePosition: FC<AthletePositionProps> = ({}) => {
   const { toast } = useToast();
+  const router = useRouter();
   const {
     authStore: { user },
   } = useRootStore();
@@ -389,6 +391,14 @@ const AthletePosition: FC<AthletePositionProps> = ({}) => {
     const renderItems = ({ item, id }: { item: any; id: any }) => {
       const positionItems = [
         {
+          name: "View Details",
+          onClick: () => {
+            router.push(`/athlete-position/${item?.id}`, {
+              scroll: true,
+            });
+          },
+        },
+        {
           name: "Edit  Position",
           onClick: () => {
             setActivePosition(item);
@@ -589,7 +599,7 @@ const AthletePosition: FC<AthletePositionProps> = ({}) => {
   return (
     <main className="w-full h-full">
       <div className="flex flex-row items-center">
-        <ContentHeader title="Athlete Positions" subHeader="In Progress" />
+        <ContentHeader title="Athlete Positions" subHeader="" />
       </div>
       <Separator className="my-6" />
       <Accesscontrol name={permissionName}>
