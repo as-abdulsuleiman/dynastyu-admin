@@ -420,7 +420,7 @@ const PermissionsCard: FC = () => {
   };
   return (
     <div className="w-full h-full">
-      <ContentHeader title="Permissions" subHeader="Permisssions Overview" />
+      <ContentHeader title="Permissions" subHeader="Permission Overview" />
       <Separator className="my-6" />
       <Accesscontrol name={permissionName}>
         <Button

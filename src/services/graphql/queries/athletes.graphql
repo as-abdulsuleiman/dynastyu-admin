@@ -406,6 +406,25 @@ query getFindFirstPosition(
   }
 }
 
+query getPosition(
+  $where: PositionWhereUniqueInput!
+) {
+  position(
+    where: $where
+  ) {
+    name
+    id
+    uuid
+    shortName
+    createdAt
+    updatedAt
+    athleteProfiles{
+      id
+      userId
+    }
+  }
+}
+
 query getAggregateAthleteProfile(
   $where: AthleteProfileWhereInput
   $orderBy: [AthleteProfileOrderByWithRelationInput!]

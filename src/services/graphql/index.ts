@@ -27056,6 +27056,13 @@ export type GetFindFirstPositionQueryVariables = Exact<{
 
 export type GetFindFirstPositionQuery = { __typename?: 'Query', positions: Array<{ __typename?: 'Position', name: string, id: any, uuid: string, shortName: string, createdAt: any, updatedAt: any, athleteProfiles: Array<{ __typename?: 'AthleteProfile', id: any, userId: any }> }> };
 
+export type GetPositionQueryVariables = Exact<{
+  where: PositionWhereUniqueInput;
+}>;
+
+
+export type GetPositionQuery = { __typename?: 'Query', position?: { __typename?: 'Position', name: string, id: any, uuid: string, shortName: string, createdAt: any, updatedAt: any, athleteProfiles: Array<{ __typename?: 'AthleteProfile', id: any, userId: any }> } | null };
+
 export type GetAggregateAthleteProfileQueryVariables = Exact<{
   where?: InputMaybe<AthleteProfileWhereInput>;
   orderBy?: InputMaybe<Array<AthleteProfileOrderByWithRelationInput> | AthleteProfileOrderByWithRelationInput>;
@@ -29083,6 +29090,55 @@ export type GetFindFirstPositionQueryHookResult = ReturnType<typeof useGetFindFi
 export type GetFindFirstPositionLazyQueryHookResult = ReturnType<typeof useGetFindFirstPositionLazyQuery>;
 export type GetFindFirstPositionSuspenseQueryHookResult = ReturnType<typeof useGetFindFirstPositionSuspenseQuery>;
 export type GetFindFirstPositionQueryResult = Apollo.QueryResult<GetFindFirstPositionQuery, GetFindFirstPositionQueryVariables>;
+export const GetPositionDocument = gql`
+    query getPosition($where: PositionWhereUniqueInput!) {
+  position(where: $where) {
+    name
+    id
+    uuid
+    shortName
+    createdAt
+    updatedAt
+    athleteProfiles {
+      id
+      userId
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPositionQuery__
+ *
+ * To run a query within a React component, call `useGetPositionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPositionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPositionQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useGetPositionQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetPositionQuery, GetPositionQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetPositionQuery, GetPositionQueryVariables>(GetPositionDocument, options);
+      }
+export function useGetPositionLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetPositionQuery, GetPositionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetPositionQuery, GetPositionQueryVariables>(GetPositionDocument, options);
+        }
+export function useGetPositionSuspenseQuery(baseOptions?: ApolloReactHooks.SuspenseQueryHookOptions<GetPositionQuery, GetPositionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetPositionQuery, GetPositionQueryVariables>(GetPositionDocument, options);
+        }
+export type GetPositionQueryHookResult = ReturnType<typeof useGetPositionQuery>;
+export type GetPositionLazyQueryHookResult = ReturnType<typeof useGetPositionLazyQuery>;
+export type GetPositionSuspenseQueryHookResult = ReturnType<typeof useGetPositionSuspenseQuery>;
+export type GetPositionQueryResult = Apollo.QueryResult<GetPositionQuery, GetPositionQueryVariables>;
 export const GetAggregateAthleteProfileDocument = gql`
     query getAggregateAthleteProfile($where: AthleteProfileWhereInput, $orderBy: [AthleteProfileOrderByWithRelationInput!], $cursor: AthleteProfileWhereUniqueInput, $take: Int, $skip: Int) {
   aggregateAthleteProfile(

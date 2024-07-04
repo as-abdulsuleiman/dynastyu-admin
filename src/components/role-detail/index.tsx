@@ -58,6 +58,8 @@ const UserHeaderItems = [
 ];
 
 const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
+  const router = useRouter();
+  const { toast } = useToast();
   const [permissionValue, setPermissionValue] = useState<string>("");
   const [userValue, setUserValue] = useState<string>("");
   const [userSearchValue, setUserSearchValue] = useState<string>("");
@@ -72,9 +74,8 @@ const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
   const [selectedUser, setSelectedUser] = useState<any | number>({});
   const [isAddingUser, setIsAddingUser] = useState<boolean>(false);
   const [promptStatus, setPromptStatus] = useState<PromptStatusEnum | null>();
-  const router = useRouter();
-  const { toast } = useToast();
   const [updateRole, { loading: updatingRole }] = useUpdateRoleMutation();
+
   const { data, loading } = useGetRoleQuery({
     variables: {
       where: {
@@ -727,7 +728,7 @@ const RoleDetail: FC<RoleDetailProps> = ({ params }) => {
       <Separator className="my-6" />
 
       <TabCard
-        tabs={[{ name: "Permissions" }, { name: "Users" }]}
+        tabs={[{ name: "Permission" }, { name: "Users" }]}
         tabContent={[
           { content: renderPermissionList() },
           { content: renderUserList() },
