@@ -215,16 +215,12 @@ const PositionDetail: FC<PositionDetailProps> = ({ params }) => {
             where: {
               id: params?.id,
             },
-            data: {
-              users: {
-                connect: [{ id: selectedUser?.id }],
-              },
-            },
+            data: {},
           },
         });
         toast({
           title: "User successfully Added.",
-          description: `User has been successfully added to ${data?.role?.title} `,
+          // description: `User has been successfully added to ${data?.role?.title} `,
           variant: "successfull",
         });
       } else {
@@ -233,20 +229,15 @@ const PositionDetail: FC<PositionDetailProps> = ({ params }) => {
             where: {
               id: params?.id,
             },
-            data: {
-              users: {
-                disconnect: [{ id: activeUser?.id }],
-              },
-            },
+            data: {},
           },
         });
         toast({
           title: "User successfully removed.",
-          description: `User has been successfully removed from ${data?.role?.title} `,
+          // description: `User has been successfully removed from ${data?.role?.title} `,
           variant: "successfull",
         });
       }
-      await refetchUsers();
     } catch (error) {
       toast({
         title: "Something went wrong.",
